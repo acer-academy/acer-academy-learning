@@ -4,15 +4,15 @@ import react from '@vitejs/plugin-react';
 import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
 
 export default defineConfig({
-  cacheDir: '../../node_modules/.vite/admin-frontend',
+  cacheDir: '../../node_modules/.vite/teacher-frontend',
 
   server: {
-    port: 3001,
+    port: 3002,
     host: 'localhost',
   },
 
   preview: {
-    port: 3101,
+    port: 3102,
     host: 'localhost',
   },
 
