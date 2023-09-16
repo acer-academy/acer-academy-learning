@@ -15,7 +15,7 @@ export const AAButton = () => {
       }
     >
       {contextHolder}
-      Button
+      Acer Academy Button
     </Button>
   );
 };

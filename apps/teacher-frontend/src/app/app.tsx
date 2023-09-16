@@ -1,4 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { AAButton } from '@acer-academy-learning/common-ui';
 import styles from './app.module.css';
 
 import NxWelcome from './nx-welcome';
@@ -8,6 +9,7 @@ import { Route, Routes, Link } from 'react-router-dom';
 export function App() {
   return (
     <div>
+      <AAButton />
       <NxWelcome title="teacher-frontend" />
 
       {/* START: routes */}
