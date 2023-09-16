@@ -1,13 +1,33 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { Button } from '@chakra-ui/react';
 import styles from './app.module.css';
 
 import NxWelcome from './nx-welcome';
 
 import { Route, Routes, Link } from 'react-router-dom';
+import api from '@acer-academy-learning/data-access';
 
 export function App() {
+  // async function createStudent() {
+  //   api.students.createStudent({
+  //     name: 'Test 1',
+  //     email: 'test1@gmail.com',
+  //   });
+  // }
+  async function createStudent() {
+    console.log('create student');
+    try {
+      await api.students.createStudent({
+        name: 'Test 1',
+        email: 'test1@gmail.com',
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  }
   return (
     <div>
+      <Button onClick={() => createStudent()}>Create student</Button>
       <NxWelcome title="student-frontend" />
 
       {/* START: routes */}

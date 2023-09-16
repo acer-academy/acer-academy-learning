@@ -7,6 +7,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import * as path from 'path';
+import studentRouter from './routers/studentRouter';
 
 dotenv.config();
 
@@ -26,6 +27,10 @@ app.get('/api', (req, res) => {
   res.send({ message: 'Welcome to backend!' });
 });
 
+// Routes
+app.use('/api/v1/students', studentRouter);
+
+// Start the server
 const server = app.listen(port, () => {
   console.log(`Listening on port ${port}`);
 });

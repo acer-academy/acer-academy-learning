@@ -15,7 +15,8 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@acer-academy-learning/common-ui": ["libs/common-ui/src/index.ts"]
+      "@acer-academy-learning/common-ui": ["libs/common-ui/src/index.ts"],
+      "@acer-academy-learning/data-access": ["libs/data-access/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
