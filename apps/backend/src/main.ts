@@ -7,6 +7,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import * as path from 'path';
+import adminRouter from './routes/admin.routes';
 
 dotenv.config();
 
@@ -25,6 +26,8 @@ app.use('/assets', express.static(path.join(__dirname, 'assets')));
 app.get('/api', (req, res) => {
   res.send({ message: 'Welcome to backend!' });
 });
+
+app.use('/admin', adminRouter);
 
 const server = app.listen(port, () => {
   console.log(`Listening on port ${port}`);
