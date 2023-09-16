@@ -1,0 +1,19 @@
+.topNavMisc {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.topMenuItems>* {
+  align-self: center;
+}
+
+.topMenuQuestionButton {
+  height: 100%;
+  /* Hardcoding this for now */
+  color: rgba(255, 255, 255, 0.65)
+}
+
+.topNavMain {
+  width: 100%;
+}

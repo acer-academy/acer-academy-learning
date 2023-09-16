@@ -1,1 +1,16 @@
 /* You can add global styles to this file, and also import other style files */
+
+/* more consistent/predictable box model using border-box */
+:root {
+  box-sizing: border-box;
+}
+
+*,
+::before,
+::after {
+  box-sizing: inherit;
+}
+
+body {
+  margin: 0;
+}
