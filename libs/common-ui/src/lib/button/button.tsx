@@ -10,11 +10,12 @@ export const AAButton = () => {
         messageApi.success({
           type: 'success',
           content: 'Button works!',
-          duration: 3000,
+          duration: 1,
         })
       }
     >
-      {contextHolder}Button
+      {contextHolder}
+      Button
     </Button>
   );
 };

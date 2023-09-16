@@ -24,7 +24,7 @@ export function NxWelcome({ title }: { title: string }) {
             notifApi.success({
               message: 'Account created.',
               description: "We've created your account for you.",
-              duration: 9000,
+              duration: 3,
             })
           }
         >
