@@ -7,6 +7,7 @@
   "dependencies": {
     "@prisma/client": "^5.3.1",
     "@swc/helpers": "~0.5.0",
+    "antd": "^5.9.1",
     "axios": "^1.0.0",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
