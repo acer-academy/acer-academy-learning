@@ -1,9 +1,20 @@
-import { Button, Stack } from '@chakra-ui/react';
+import { Button, message } from 'antd';
 
 export const AAButton = () => {
+  const [messageApi, contextHolder] = message.useMessage();
+
   return (
-    <Stack>
-      <Button colorScheme="blue">Button</Button>
-    </Stack>
+    <Button
+      type="primary"
+      onClick={() =>
+        messageApi.success({
+          type: 'success',
+          content: 'Button works!',
+          duration: 3000,
+        })
+      }
+    >
+      {contextHolder}Button
+    </Button>
   );
 };
