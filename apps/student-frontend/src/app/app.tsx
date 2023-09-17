@@ -1,5 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { Button } from '@chakra-ui/react';
+import { AAButton } from '@acer-academy-learning/common-ui';
 import styles from './app.module.css';
 import NxWelcome from './nx-welcome';
 import { Route, Routes, Link } from 'react-router-dom';
@@ -7,6 +7,7 @@ import { Route, Routes, Link } from 'react-router-dom';
 export function App() {
   return (
     <div>
+      <AAButton />
       <NxWelcome title="student-frontend" />
 
       {/* START: routes */}

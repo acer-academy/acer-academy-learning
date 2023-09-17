@@ -6,31 +6,32 @@
  * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  */
 import { AAButton } from '@acer-academy-learning/common-ui';
-import {
-  Button,
-  useToast
-} from '@chakra-ui/react';
+import { Row, Button, Calendar, notification } from 'antd';
 
 export function NxWelcome({ title }: { title: string }) {
-  const toast = useToast();
-
+  // const toast = useToast();
+  const [notifApi, contextHolder] = notification.useNotification();
   return (
     <div>
       Hello world
-      <AAButton />
-      <Button
-        onClick={() =>
-          toast({
-            title: 'Account created.',
-            description: "We've created your account for you.",
-            status: 'success',
-            duration: 9000,
-            isClosable: true,
-          })
-        }
-      >
-        Show Toast
-      </Button>
+      <Row>
+        <AAButton />
+      </Row>
+      <Row>
+        {contextHolder}
+        <Button
+          onClick={() =>
+            notifApi.success({
+              message: 'Account created.',
+              description: "We've created your account for you.",
+              duration: 3,
+            })
+          }
+        >
+          Show Toast
+        </Button>
+      </Row>
+      <Calendar />
     </div>
   );
 }
