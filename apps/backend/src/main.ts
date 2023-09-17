@@ -8,6 +8,7 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import * as path from 'path';
 import studentRouter from './routers/studentRouter';
+import adminRouter from './routers/adminRouter';
 
 dotenv.config();
 
@@ -29,6 +30,7 @@ app.get('/api', (req, res) => {
 
 // Routes
 app.use('/api/v1/students', studentRouter);
+app.use('/api/v1/admins', adminRouter);
 
 // Start the server
 const server = app.listen(port, () => {
