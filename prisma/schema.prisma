@@ -23,3 +23,16 @@ model Student {
 
   status StudentStatusEnum @default(ACTIVE)
 }
+
+enum AdminTypeEnum {
+  STANDARD_ADMIN
+  SUPER_ADMIN
+}
+
+model Admin {
+  id       String @id @default(uuid()) @db.Uuid
+  name     String
+  email    String @unique
+  password String
+  type AdminTypeEnum
+}
