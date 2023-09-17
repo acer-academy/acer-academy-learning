@@ -1,3 +1,4 @@
+const defaultTheme = require('tailwindcss/defaultTheme');
 // tailwind.config.js
 import forms from '@tailwindcss/forms'
 
