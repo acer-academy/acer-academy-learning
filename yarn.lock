@@ -7993,11 +7993,6 @@ portfinder@^1.0.28:
     debug "^3.2.7"
     mkdirp "^0.5.6"
 
-postcss-antd-fixes@^0.1.0:
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/postcss-antd-fixes/-/postcss-antd-fixes-0.1.0.tgz#5a3129ff14170dc8eb88824744938a8e92e772b6"
-  integrity sha512-5BOKPDnruwAr2+vgFvAhnjjrDL/a/exDkVR8TK1tGqOiAOz42DRONYQw18dmSFM880UtT67z8qkIZ6tVREIS6w==
-
 postcss-calc@^9.0.0:
   version "9.0.1"
   resolved "https://registry.yarnpkg.com/postcss-calc/-/postcss-calc-9.0.1.tgz#a744fd592438a93d6de0f1434c572670361eb6c6"
