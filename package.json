@@ -5,6 +5,8 @@
   "scripts": {},
   "private": true,
   "dependencies": {
+    "@headlessui/react": "^1.7.17",
+    "@heroicons/react": "^2.0.18",
     "@prisma/client": "^5.3.1",
     "@swc/helpers": "~0.5.0",
     "@tailwindcss/forms": "^0.5.6",
