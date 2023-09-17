@@ -1,15 +1,12 @@
 import { Button, Menu, MenuProps, Row } from 'antd';
 import React from 'react';
 import styles from './TopNav.module.scss';
-import {
-  PrimaryLayoutTypeEnum,
-  StudentTopNavEnum,
-  TeacherTopNavEnum,
-  useGetAccountMenuItem,
-} from '../lib/layout/utils';
 import { QuestionCircleOutlined, LogoutOutlined } from '@ant-design/icons';
-import { useMenuItemsContext } from '../lib/layout/context';
-import { useGetPrimaryTopNavMenuItems } from '../lib/hooks/layouts/useGetPrimaryTopNavMenuItems';
+import { useMenuItemsContext } from '../layout/context';
+import { useGetTopNavMenuItems } from '../hooks/layouts/useGetTopNavMenuItems';
+import { PrimaryLayoutTypeEnum } from '../layout/constants';
+import { useGetAccountMenuItem } from '../hooks/layouts/useGetAccountMenuItem';
+import { ItemType, MenuItemType } from 'antd/es/menu/hooks/useItems';
 
 export type TopNavProps = {
   type: PrimaryLayoutTypeEnum;
@@ -18,18 +15,10 @@ export type TopNavProps = {
 };
 
 export const TopNav = ({ name, imageUrl, type }: TopNavProps) => {
-  const { setActiveTab } = useMenuItemsContext();
+  const { menuTree } = useMenuItemsContext();
   const accountMenuItem = useGetAccountMenuItem(name, imageUrl);
-  const topNavSubMenuItems = useGetPrimaryTopNavMenuItems(type);
+  const topNavSubMenuItems = useGetTopNavMenuItems(menuTree);
 
-  // Handlers
-  const handleOnSelect: MenuProps['onSelect'] = (info) => {
-    const key =
-      info.key in StudentTopNavEnum
-        ? (info.key as StudentTopNavEnum)
-        : (info.key as unknown as TeacherTopNavEnum);
-    setActiveTab(key);
-  };
   return (
     <>
       <nav className={styles.topNavMisc}>
@@ -46,7 +35,7 @@ export const TopNav = ({ name, imageUrl, type }: TopNavProps) => {
             className={styles.topMenuItems}
             theme="dark"
             mode="horizontal"
-            items={accountMenuItem}
+            items={accountMenuItem as ItemType<MenuItemType>[]}
           />
           <Button
             type="text"
@@ -57,11 +46,11 @@ export const TopNav = ({ name, imageUrl, type }: TopNavProps) => {
         </Row>
       </nav>
       <Menu
+        selectedKeys={[]}
         className={styles.topNavMain}
         theme="dark"
         mode="horizontal"
         items={topNavSubMenuItems}
-        onSelect={handleOnSelect}
       />
     </>
   );

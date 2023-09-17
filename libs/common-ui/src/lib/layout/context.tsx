@@ -1,11 +1,8 @@
 import { Dispatch, SetStateAction, createContext, useContext } from 'react';
-import { StudentTopNavEnum, TeacherTopNavEnum } from './utils';
+import { MenuTree } from '../types';
 
 type MenuStates = {
-  activeTab: StudentTopNavEnum | TeacherTopNavEnum | undefined;
-  setActiveTab: Dispatch<
-    SetStateAction<StudentTopNavEnum | TeacherTopNavEnum | undefined>
-  >;
+  menuTree: MenuTree;
 };
 
 export const MenuItemsContext = createContext<MenuStates>({} as MenuStates);

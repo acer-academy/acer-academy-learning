@@ -1,58 +1,39 @@
-import React, { PropsWithChildren, useMemo, useState } from 'react';
+import { PropsWithChildren, useState } from 'react';
 // Components
-import { Breadcrumb, Layout, Menu, theme } from 'antd';
-import { TopNav } from '../../components/TopNav';
+import { Breadcrumb, Layout } from 'antd';
 
 // Utils
 import { MenuItemsContext } from './context';
 
 // Constants/Types
 import styles from './PrimaryLayout.module.scss';
-import {
-  PrimaryLayoutTypeEnum,
-  StudentTopNavEnum,
-  TeacherTopNavEnum,
-  getPrimaryLayoutSideBarMenuItems,
-} from './utils';
+import { PrimaryLayoutTypeEnum } from './constants';
+import { TopNav } from '../components/TopNav';
+import { MenuTree } from '../types';
 
-const { Header, Content, Sider } = Layout;
+const { Header, Content } = Layout;
 
 export type PrimaryLayoutProps = {
   type: PrimaryLayoutTypeEnum;
+  sider?: React.ReactNode;
+  menuTree: MenuTree;
 } & PropsWithChildren;
 
-export const PrimaryLayout = ({ children, type }: PrimaryLayoutProps) => {
-  const {
-    token: { colorBgContainer },
-  } = theme.useToken();
-
-  // States
-  const [activeTab, setActiveTab] = useState<
-    StudentTopNavEnum | TeacherTopNavEnum | undefined
-  >(undefined);
-  const sideBarMenuItems = useMemo(
-    () => (activeTab ? getPrimaryLayoutSideBarMenuItems(activeTab) : undefined),
-    [activeTab],
-  );
-
+export const PrimaryLayout = ({
+  children,
+  type,
+  sider,
+  menuTree,
+}: PrimaryLayoutProps) => {
   return (
     <Layout className={styles.primaryLayoutContainer}>
-      <MenuItemsContext.Provider value={{ activeTab, setActiveTab }}>
+      <MenuItemsContext.Provider value={{ menuTree }}>
         <Header className={styles.primaryHeader}>
           <TopNav name={'John Apple Seed'} type={type} />
         </Header>
       </MenuItemsContext.Provider>
       <Layout>
-        <Sider collapsible width={200} style={{ background: colorBgContainer }}>
-          <Menu
-            theme="dark"
-            mode="inline"
-            defaultSelectedKeys={['1']}
-            defaultOpenKeys={['sub1']}
-            className={styles.sideMenu}
-            items={sideBarMenuItems}
-          />
-        </Sider>
+        {sider}
         <Layout className={styles.mainLayout}>
           <Breadcrumb className={styles.breadCrumb}>
             <Breadcrumb.Item>Home</Breadcrumb.Item>
