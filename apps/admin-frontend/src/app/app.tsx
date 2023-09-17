@@ -1,12 +1,12 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import styles from './app.module.css';
-
-import NxWelcome from './nx-welcome';
+// import { BrowserRouter } from 'react-router-dom';
+import { AuthWrapper } from '../auth/AuthWrapper';
 
 export function App() {
   return (
-    <div>
-      <NxWelcome title="admin-frontend" />
+    <div className="App">
+      {/* <BrowserRouter> */}
+      <AuthWrapper />
+      {/* </BrowserRouter> */}
     </div>
   );
 }

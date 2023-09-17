@@ -1,6 +1,6 @@
 // admin.service.ts
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
+// import jwt from 'jsonwebtoken';
 import AdminDao from '../dao/admin.dao';
 import {
   RegisterAdminData,
@@ -19,12 +19,21 @@ class AdminService {
     if (!admin || !(await bcrypt.compare(data.password, admin.password))) {
       throw new Error('Invalid credentials');
     }
-    const token = jwt.sign(
-      { id: admin.id, type: admin.type },
-      'your_secret_key',
-      { expiresIn: '1h' },
-    );
-    return { token };
+
+    //jwt token version
+    // const token = jwt.sign(
+    //   { id: admin.id, type: admin.type, email: admin.email, name: admin.name },
+    //   'your_secret_key',
+    //   { expiresIn: '1h' },
+    // );
+    // return { token };
+
+
+    // Destructure admin object to omit id, password, and type
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { id, password, type, ...rest } = admin;
+
+    return rest;
   }
 
   async updateAdmin(email: string, data: UpdateAdminData) {
