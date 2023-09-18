@@ -1,21 +1,10 @@
-import { Button, message } from 'antd';
-
 export const AAButton = () => {
-  const [messageApi, contextHolder] = message.useMessage();
-
   return (
-    <Button
-      type="primary"
-      onClick={() =>
-        messageApi.success({
-          type: 'success',
-          content: 'Button works!',
-          duration: 1,
-        })
-      }
+    <button
+      type="button"
+      className="rounded bg-indigo-600 px-2 py-1 text-xs font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
     >
-      {contextHolder}
-      Acer Academy Button
-    </Button>
+      Button text
+    </button>
   );
 };

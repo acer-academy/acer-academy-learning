@@ -1,13 +1,14 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import styles from './app.module.css';
+// app.jsx
 
-import NxWelcome from './nx-welcome';
+import 'antd/dist/reset.css';
+import { AuthWrapper } from '../auth/AuthContext';
+import LayoutComponent from '../components/structure/Layout';
 
-export function App() {
+function App() {
   return (
-    <div>
-      <NxWelcome title="admin-frontend" />
-    </div>
+    <AuthWrapper>
+      <LayoutComponent />
+    </AuthWrapper>
   );
 }
 
