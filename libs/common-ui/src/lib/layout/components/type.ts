@@ -7,9 +7,19 @@ export type NavigationMenuItem = {
       titleId?: string | undefined;
     } & React.RefAttributes<SVGSVGElement>
   >;
+  children?: NavigationMenuItem[];
+  defaultChild?: string;
 };
 
 export type NavigationSection = {
   name: string;
   menu: NavigationMenuItem[];
+};
+
+export type MobileProps = {
+  setSidebarOpen: (open: boolean) => void;
+};
+
+export type SideBarProps = {
+  navigationSections: NavigationSection[];
 };
