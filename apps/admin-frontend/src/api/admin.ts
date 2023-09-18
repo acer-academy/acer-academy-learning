@@ -3,10 +3,10 @@ import axios from 'axios';
 const baseURL = 'http://localhost:8000/api/v1/admins';
 
 interface RegisterAdminData {
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
   password: string;
-  type?: 'STANDARD_ADMIN' | 'SUPER_ADMIN';
 }
 
 interface LoginAdminData {
@@ -15,19 +15,22 @@ interface LoginAdminData {
 }
 
 interface UpdateAdminData {
-  name?: string;
-  email?: string;
+  firstName?: string;
+  lastName?: string;
   password?: string;
-  type?: 'STANDARD_ADMIN' | 'SUPER_ADMIN';
 }
 
 export const registerAdmin = async (data: RegisterAdminData): Promise<any> => {
   // eslint-disable-next-line no-useless-catch
   try {
     const response = await axios.post(`${baseURL}/register`, data);
-    return response.data;
-  } catch (error) {
-    throw error;
+    if (response.status >= 200 && response.status < 300) {
+      return response.data;
+    } else {
+      throw new Error('Received unsuccessful status code');
+    }
+  } catch (error: any) {
+    throw new Error(`An error occurred: ${error.message}`);
   }
 };
 

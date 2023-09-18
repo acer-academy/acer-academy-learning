@@ -2,9 +2,16 @@ import { createContext, useContext, useState, ReactNode } from 'react';
 import { loginAdmin } from '../api/admin';
 
 interface User {
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
+  type: AdminType;
   isAuthenticated: boolean;
+}
+
+enum AdminType {
+  SUPER_ADMIN = 'super',
+  STANDARD_ADMIN = 'standard',
 }
 
 interface AuthContextProps {
@@ -24,7 +31,9 @@ export const useAuth = () => {
 };
 
 const defaultUser: User = {
-  name: '',
+  firstName: '',
+  lastName: '',
+  type: AdminType.STANDARD_ADMIN,
   email: '',
   isAuthenticated: false,
 };
@@ -36,13 +45,17 @@ interface AuthWrapperProps {
 export const AuthWrapper: React.FC<AuthWrapperProps> = ({ children }) => {
   const [user, setUser] = useState(defaultUser);
 
+  console.log(user);
+
   const login = async (email: string, password: string) => {
     try {
       const response = await loginAdmin({ email, password });
+      console.log(response);
       setUser({
         ...response,
         isAuthenticated: true,
       });
+     
     } catch (error) {
       console.error('Login failed', error);
       // Optionally, provide user feedback here
@@ -54,7 +67,11 @@ export const AuthWrapper: React.FC<AuthWrapperProps> = ({ children }) => {
     setUser(defaultUser);
   };
 
-  return <AuthContext.Provider value={{ user, login, logout }}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={{ user, login, logout }}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
 export default AuthContext;
