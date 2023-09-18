@@ -1,14 +1,13 @@
 // app.jsx
-
-import 'antd/dist/reset.css';
-import { AuthWrapper } from '../auth/AuthContext';
-import LayoutComponent from '../components/structure/Layout';
+import { AAButton } from "@acer-academy-learning/common-ui";
 
 function App() {
   return (
-    <AuthWrapper>
-      <LayoutComponent />
-    </AuthWrapper>
+    <>
+      <p>Hello world</p>
+      <p>Admin frontend</p>
+      <AAButton />
+    </>
   );
 }
 
