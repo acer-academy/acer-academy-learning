@@ -7,3 +7,7 @@ export { StudentAuthWrapper } from './lib/wrapper/StudentAuthWrapper';
 export { AdminAuthWrapper } from './lib/wrapper/AdminAuthWrapper';
 export { TeacherAuthWrapper } from './lib/wrapper/TeacherAuthWrapper';
 export { ToastProvider, useToast } from './lib/wrapper/ToastProvider';
+export * from './lib/logo/logo';
+export * from './lib/wrapper/wrapper';
+export * from './lib/layout/SecondaryLayout';
+export * from './lib/layout/components/DisclosureMenuItem';
