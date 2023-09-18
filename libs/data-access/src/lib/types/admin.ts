@@ -4,17 +4,16 @@ export enum AdminType {
   }
   
   export interface AdminPostData {
-    name: string;
+    firstName: string;
+    lastName: string;
     email: string;
     password: string;
-    type: AdminType;
   }
   
   export interface AdminPutData {
-    name?: string;
-    email?: string;
+    firstName?: string;
+    lastName?: string;
     password?: string;
-    type?: AdminType;
   }
   
   export interface AdminGetData {
