@@ -41,3 +41,5 @@ Thumbs.db
 
 # env
 /apps/backend/src/.env
+.env
+apps/backend/.env

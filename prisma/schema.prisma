@@ -36,3 +36,12 @@ model Admin {
   password String
   type AdminTypeEnum
 }
+
+model Promotion {
+  id    String @id @default(uuid()) @db.Uuid
+  startDate DateTime 
+  endDate  DateTime
+  promoCode String 
+  percentageDiscount Float
+  description String
+}
