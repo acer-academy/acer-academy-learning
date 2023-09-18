@@ -40,5 +40,5 @@ testem.log
 Thumbs.db
 
 # env
-/apps/backend/src/.env
+/apps/backend/.env
 .env
