@@ -1,4 +1,6 @@
 // tailwind.config.js
+import forms from '@tailwindcss/forms'
+
 module.exports = {
   content: [
     './apps/admin-frontend/src/**/*.{html,js,ts,jsx,tsx}',
@@ -9,6 +11,8 @@ module.exports = {
   theme: {
     extend: {},
   },
-  plugins: [],
+  plugins: [
+    require('@tailwindcss/forms')
+  ],
   // ...
 };

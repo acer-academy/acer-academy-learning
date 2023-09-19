@@ -10,6 +10,8 @@ import * as path from 'path';
 import studentRouter from './routers/studentRouter';
 import adminRouter from './routers/adminRouter';
 import promotionRouter from './routers/promotionRouter';
+import teacherRouter from './routers/teacherRouter';
+import centreRouter from './routers/centreRouter';
 
 dotenv.config();
 
@@ -32,7 +34,12 @@ app.get('/api', (req, res) => {
 // Routes
 app.use('/api/v1/students', studentRouter);
 app.use('/api/v1/admins', adminRouter);
+<<<<<<< HEAD
 app.use('/api/v1/promotions', promotionRouter);
+=======
+app.use('/api/v1/teachers', teacherRouter);
+app.use('/api/v1/centres', centreRouter);
+>>>>>>> 56983dfa41338e481e30213fa1c35037be97767c
 
 // Start the server
 const server = app.listen(port, () => {

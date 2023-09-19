@@ -9,7 +9,7 @@ class AdminDao {
     return prisma.admin.create({ data });
   }
 
-  async findAdminByEmail(email: string) {
+  async getAdminByEmail(email: string) {
     return prisma.admin.findUnique({ where: { email } });
   }
 

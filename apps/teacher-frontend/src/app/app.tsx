@@ -1,53 +1,27 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { AAButton } from '@acer-academy-learning/common-ui';
+import { ToastProvider } from '@acer-academy-learning/common-ui';
 import styles from './app.module.css';
-
-import NxWelcome from './nx-welcome';
-
+import TeacherLogin from '../pages/entry/TeacherLogin';
+import TeacherSignUp from '../pages/entry/TeacherSignUp';
 import { Route, Routes, Link } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { AuthWrapper } from '../auth/AuthContext';
+import TeacherAccount from '../pages/entry/TeacherAccount';
 
 export function App() {
   return (
-    <div>
-      <AAButton />
-      <NxWelcome title="teacher-frontend" />
-
-      {/* START: routes */}
-      {/* These routes and navigation have been generated for you */}
-      {/* Feel free to move and update them to fit your needs */}
-      <br />
-      <hr />
-      <br />
-      <div role="navigation">
-        <ul>
-          <li>
-            <Link to="/">Home</Link>
-          </li>
-          <li>
-            <Link to="/page-2">Page 2</Link>
-          </li>
-        </ul>
-      </div>
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <div>
-              This is the generated root route.{' '}
-              <Link to="/page-2">Click here for page 2.</Link>
-            </div>
-          }
-        />
-        <Route
-          path="/page-2"
-          element={
-            <div>
-              <Link to="/">Click here to go back to root page.</Link>
-            </div>
-          }
-        />
-      </Routes>
-      {/* END: routes */}
+    <div className="h-full">
+      <AuthWrapper>
+        <ToastProvider>
+          <ToastContainer />
+          <Routes>
+            <Route path="/" element={<TeacherLogin />} />
+            <Route path="/sign-up" element={<TeacherSignUp />} />
+            <Route path="/account" element={<TeacherAccount />} />
+          </Routes>
+        </ToastProvider>
+      </AuthWrapper>
     </div>
   );
 }

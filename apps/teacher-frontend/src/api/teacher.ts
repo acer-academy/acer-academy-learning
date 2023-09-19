@@ -1,26 +1,50 @@
 import axios from 'axios';
 
-const baseURL = 'http://localhost:8000/api/v1/admins';
+const baseURL = 'http://localhost:8000/api/v1/teachers';
 
-interface RegisterAdminData {
+enum LevelEnum {
+  P1,
+  P2,
+  P3,
+  P4,
+  P5,
+  P6,
+  S1,
+  S2,
+  S3,
+  S4,
+  S5,
+  J1,
+  J2,
+}
+
+enum SubjectEnum {
+  MATHEMATICS,
+  ENGLISH,
+  SCIENCE,
+}
+
+interface RegisterTeacherData {
   firstName: string;
   lastName: string;
   email: string;
   password: string;
+  levels:    LevelEnum[]
+  subjects:  SubjectEnum[]
 }
 
-interface LoginAdminData {
+interface LoginTeacherData {
   email: string;
   password: string;
 }
 
-interface UpdateAdminData {
+interface UpdateTeacherData {
   firstName?: string;
   lastName?: string;
   password?: string;
 }
 
-export const registerAdmin = async (data: RegisterAdminData): Promise<any> => {
+export const registerTeacher = async (data: RegisterTeacherData): Promise<any> => {
   // eslint-disable-next-line no-useless-catch
   try {
     const response = await axios.post(`${baseURL}/register`, data);
@@ -34,7 +58,7 @@ export const registerAdmin = async (data: RegisterAdminData): Promise<any> => {
   }
 };
 
-export const loginAdmin = async (data: LoginAdminData): Promise<any> => {
+export const loginTeacher = async (data: LoginTeacherData): Promise<any> => {
   // eslint-disable-next-line no-useless-catch
   try {
     
@@ -45,9 +69,9 @@ export const loginAdmin = async (data: LoginAdminData): Promise<any> => {
   }
 };
 
-export const updateAdmin = async (
+export const updateTeacher = async (
   email: string,
-  data: UpdateAdminData,
+  data: UpdateTeacherData,
 ): Promise<any> => {
   // eslint-disable-next-line no-useless-catch
   try {
@@ -58,7 +82,7 @@ export const updateAdmin = async (
   }
 };
 
-export const deleteAdmin = async (email: string): Promise<any> => {
+export const deleteTeacher = async (email: string): Promise<any> => {
   // eslint-disable-next-line no-useless-catch
   try {
     const response = await axios.delete(`${baseURL}/delete/${email}`);

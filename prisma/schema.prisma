@@ -17,11 +17,24 @@ enum StudentStatusEnum {
 }
 
 model Student {
-  id    String @id @default(uuid()) @db.Uuid
-  email String @unique
-  name  String
+  id        String            @id @default(uuid()) @db.Uuid
+  firstName String
+  lastName  String
+  email     String            @unique
+  password  String
+  level    LevelEnum
+  subjects  SubjectEnum[]
+  status    StudentStatusEnum @default(ACTIVE)
+  parents   Parent[]
+}
 
-  status StudentStatusEnum @default(ACTIVE)
+model Parent {
+  id          String   @id @default(uuid()) @db.Uuid
+  firstName   String
+  lastName    String
+  phoneNumber String
+  Student     Student? @relation(fields: [studentId], references: [id])
+  studentId   String?  @db.Uuid
 }
 
 enum AdminTypeEnum {
@@ -30,11 +43,58 @@ enum AdminTypeEnum {
 }
 
 model Admin {
-  id       String @id @default(uuid()) @db.Uuid
-  name     String
-  email    String @unique
-  password String
-  type AdminTypeEnum
+  id        String        @id @default(uuid()) @db.Uuid
+  firstName String
+  lastName  String
+  email     String        @unique
+  password  String
+  type      AdminTypeEnum @default(STANDARD_ADMIN)
+}
+
+enum SubjectEnum {
+  MATHEMATICS
+  ENGLISH
+  SCIENCE
+}
+
+enum LevelEnum {
+  P1
+  P2
+  P3
+  P4
+  P5
+  P6
+  S1
+  S2
+  S3
+  S4
+  S5
+  J1
+  J2
+}
+
+model Teacher {
+  id        String        @id @default(uuid()) @db.Uuid
+  email     String        @unique
+  firstName String
+  lastName  String
+  password  String
+  levels    LevelEnum[]
+  subjects  SubjectEnum[]
+  centre    Centre        @relation(fields: [centreId], references: [id])
+  centreId  String        @db.Uuid
+  // sessions Session[]
+  // announcements Announcement[]
+  // assignments Assignment[]
+  // quizzes Quiz[]
+}
+
+model Centre {
+  id       String    @id @default(uuid()) @db.Uuid
+  name     String    @unique
+  address  String    @unique
+  teachers Teacher[]
+  //classrooms Classroom[]
 }
 
 model Promotion {
