@@ -26,21 +26,21 @@ export const DisclosureMenuItem = ({ item }: DisclosureMenuItemProps) => {
               to={item.href}
               className={classNames(
                 isActive
-                  ? 'bg-admin-secondary-500'
-                  : 'hover:bg-admin-secondary-500',
+                  ? 'bg-admin-primary-500'
+                  : 'hover:bg-admin-primary-500',
                 'flex items-center w-full text-left rounded-md p-2 gap-x-3 text-sm leading-6 font-semibold text-gray-700',
               )}
             >
               {item.icon && (
                 <item.icon
-                  className="h-6 w-6 shrink-0 text-admin-primary-400"
+                  className="h-6 w-6 shrink-0 text-icon-primary"
                   aria-hidden="true"
                 />
               )}
               {item.name}
               <ChevronRightIcon
                 className={classNames(
-                  open ? 'rotate-90 text-admin-primary-500' : 'text-gray-400',
+                  open ? 'rotate-90 text-icon-primary' : 'text-icon-primary',
                   'ml-auto h-5 w-5 shrink-0',
                 )}
                 aria-hidden="true"
