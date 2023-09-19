@@ -4,6 +4,7 @@ import { Fragment, useContext } from 'react';
 import { SideBarSection } from './SideBarSection';
 import { MobileContext } from '../contexts/mobile.context';
 import { SideBarProps } from './type';
+import { AcerAcademyLogo } from '../../logo/logo';
 
 export const MobileSideBar = ({ navigationSections }: SideBarProps) => {
   const { sidebarOpen, setSidebarOpen } = useContext(MobileContext);
@@ -61,12 +62,8 @@ export const MobileSideBar = ({ navigationSections }: SideBarProps) => {
               </Transition.Child>
               {/* Sidebar component, swap this element with another sidebar if you like */}
               <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-admin-primary-600 px-6 pb-2">
-                <div className="flex h-16 shrink-0 items-center">
-                  <img
-                    className="h-8 w-auto"
-                    src="https://tailwindui.com/img/logos/mark.svg?color=white"
-                    alt="Your Company"
-                  />
+                <div className="flex h-16 shrink-0 items-center mt-4">
+                  <AcerAcademyLogo />
                 </div>
                 <nav className="flex flex-1 flex-col">
                   <ul role="list" className="flex flex-1 flex-col gap-y-7">
