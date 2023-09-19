@@ -1,14 +1,14 @@
 import { AcerAcademyLogo, useToast } from '@acer-academy-learning/common-ui';
 
 export default function StudentLogin() {
-    const { displayToast, ToastType } = useToast();
+  const { displayToast, ToastType } = useToast();
 
-    const handleSubmit = async (e: React.FormEvent) => {
-      e.preventDefault();
-  
-      displayToast('Great it works', ToastType.SUCCESS);
-      return;
-    };
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    displayToast('Great it works', ToastType.SUCCESS);
+    return;
+  };
   return (
     <>
       {/*
