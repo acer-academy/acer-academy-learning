@@ -30,7 +30,7 @@ class AdminService {
 
     // Destructure admin object to omit id, password, and type
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { id, password, type, ...rest } = admin;
+    const { id, password, ...rest } = admin;
 
     return rest;
   }
