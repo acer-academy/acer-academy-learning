@@ -15,7 +15,7 @@ class AdminService {
   }
 
   async login(data: AdminGetData) {
-    const admin = await AdminDao.findAdminByEmail(data.email);
+    const admin = await AdminDao.getAdminByEmail(data.email);
     if (!admin || !(await bcrypt.compare(data.password, admin.password))) {
       throw new Error('Invalid credentials');
     }
@@ -36,7 +36,7 @@ class AdminService {
   }
 
   async updateAdmin(email: string, data: AdminPutData) {
-    const admin = await AdminDao.findAdminByEmail(email);
+    const admin = await AdminDao.getAdminByEmail(email);
     if (!admin) {
       throw new Error(`Admin not found for email: ${email}`);
     }
@@ -45,7 +45,7 @@ class AdminService {
   }
 
   async deleteAdmin(email: string) {
-    const admin = await AdminDao.findAdminByEmail(email);
+    const admin = await AdminDao.getAdminByEmail(email);
     if (!admin) {
       throw new Error(`Admin not found for email: ${email}`);
     }
