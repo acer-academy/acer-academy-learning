@@ -28,15 +28,15 @@ export default function App() {
               <Route
                 path={HUMAN_RESOURCES}
                 element={
-                  <h1>
+                  <div>
                     Common HR stuff
                     <Outlet />
-                  </h1>
+                  </div>
                 }
               >
-                <Route path={TEACHERS} element={<h1>Teacher</h1>} />
-                <Route path={STUDENTS} element={<h1>Student</h1>} />
-                <Route path={ADMINS} element={<h1>Admin</h1>} />
+                <Route path={TEACHERS} element={<h2>Teacher</h2>} />
+                <Route path={STUDENTS} element={<h2>Student</h2>} />
+                <Route path={ADMINS} element={<h2>Admin</h2>} />
               </Route>
             </Route>
             <Route path="/login" element={<AdminLogin />} />

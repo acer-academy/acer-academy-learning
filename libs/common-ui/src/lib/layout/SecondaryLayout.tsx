@@ -22,7 +22,7 @@ export const SecondaryLayout = ({
         <body class="h-full">
         ```
       */}
-      <div>
+      <div className="relative h-full">
         <MobileProvider>
           <MobileSideBar navigationSections={navigationSections} />
           <MobileTopNav />
