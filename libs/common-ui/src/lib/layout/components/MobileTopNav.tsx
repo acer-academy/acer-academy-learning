@@ -19,7 +19,7 @@ export const MobileTopNav = () => {
         Dashboard
       </div>
       <section>
-        <Avatar firstName="Student" />
+        <Avatar firstName="Admin" />
       </section>
     </div>
   );

@@ -22,7 +22,7 @@ export const DesktopSideBar = ({ navigationSections }: SideBarProps) => {
             ))}
             <li className="-mx-6 flex gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-text-primary justify-between">
               {/* @TODO: Use AuthContext to pass in name here */}
-              <Avatar firstName="Student" />
+              <Avatar firstName="Admin" />
               {/* @TODO: Use AuthContext to sign out from here */}
               <button>
                 <ArrowRightOnRectangleIcon className="h-6 w-6 shrink-0 text-icon-primary hover:text-admin-primary-500" />
