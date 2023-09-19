@@ -2,50 +2,16 @@
 import AdminLogin from '../pages/entry/AdminLogin';
 import AdminSignUp from '../pages/entry/AdminSignUp';
 import { AuthWrapper } from '../auth/AuthContext';
-import { ToastProvider } from '@acer-academy-learning/common-ui';
-import { Routes, Route } from 'react-router-dom';
+import {
+  SecondaryLayout,
+  ToastProvider,
+} from '@acer-academy-learning/common-ui';
+import { Routes, Route, Outlet } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; // Import toastify CSS
 import Account from '../pages/entry/Account';
-import {
-  NavigationMenuItem,
-  NavigationSection,
-} from 'libs/common-ui/src/lib/layout/components/type';
-import { AuthWrapper } from '../auth/AuthContext';
-import { SecondaryLayout } from '@acer-academy-learning/common-ui';
-import {
-  BuildingStorefrontIcon,
-  // CalendarDaysIcon,
-  // CircleStackIcon,
-  Cog6ToothIcon,
-  QuestionMarkCircleIcon,
-  UsersIcon,
-} from '@heroicons/react/24/outline';
-const navigation: NavigationSection[] = [
-  {
-    name: 'MANAGEMENT',
-    menu: [
-      {
-        name: 'Human Resources',
-        href: '/human-resources',
-        icon: UsersIcon,
-        children: [
-          { name: 'Teachers', href: '/human-resources/teachers' },
-          { name: 'Students', href: '/human-resources/students' },
-          { name: 'Admins', href: '/human-resources/admins' },
-        ],
-      },
-      // { name: 'Scheduling', href: '/scheduling', icon: CalendarDaysIcon },
-      { name: 'Centre', href: '/centre', icon: BuildingStorefrontIcon },
-      // { name: 'Class Credits', href: '/class-credits', icon: CircleStackIcon },
-      { name: 'FAQ', href: '/faq', icon: QuestionMarkCircleIcon },
-    ],
-  },
-  {
-    name: 'OTHERS',
-    menu: [{ name: 'Settings', href: '/settings', icon: Cog6ToothIcon }],
-  },
-];
+import { NAV_SECTIONS } from '../libs/layout';
+import { ADMINS, HUMAN_RESOURCES, STUDENTS, TEACHERS } from '../libs/routes';
 
 export default function App() {
   return (
@@ -54,7 +20,26 @@ export default function App() {
         <ToastProvider>
           <ToastContainer />
           <Routes>
-            <Route path="/" element={<AdminLogin />} />
+            <Route
+              element={<SecondaryLayout navigationSections={NAV_SECTIONS} />}
+            >
+              {/* Nest all routes that has a SecondaryLayout here */}
+              <Route path="/" element={<h1>Main</h1>} />
+              <Route
+                path={HUMAN_RESOURCES}
+                element={
+                  <h1>
+                    Common HR stuff
+                    <Outlet />
+                  </h1>
+                }
+              >
+                <Route path={TEACHERS} element={<h1>Teacher</h1>} />
+                <Route path={STUDENTS} element={<h1>Student</h1>} />
+                <Route path={ADMINS} element={<h1>Admin</h1>} />
+              </Route>
+            </Route>
+            <Route path="/login" element={<AdminLogin />} />
             <Route path="/account" element={<Account />} />
             <Route path="sign-up" element={<AdminSignUp />} />
           </Routes>

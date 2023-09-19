@@ -1,6 +1,6 @@
 import { Dialog, Transition } from '@headlessui/react';
 import { XMarkIcon } from '@heroicons/react/24/outline';
-import React, { Fragment, useContext } from 'react';
+import { Fragment, useContext } from 'react';
 import { SideBarSection } from './SideBarSection';
 import { MobileContext } from '../contexts/mobile.context';
 import { SideBarProps } from './type';
@@ -53,14 +53,14 @@ export const MobileSideBar = ({ navigationSections }: SideBarProps) => {
                   >
                     <span className="sr-only">Close sidebar</span>
                     <XMarkIcon
-                      className="h-6 w-6 text-white"
+                      className="h-6 w-6 text-text-primary"
                       aria-hidden="true"
                     />
                   </button>
                 </div>
               </Transition.Child>
               {/* Sidebar component, swap this element with another sidebar if you like */}
-              <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-white px-6 pb-2">
+              <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-admin-primary-600 px-6 pb-2">
                 <div className="flex h-16 shrink-0 items-center">
                   <img
                     className="h-8 w-auto"

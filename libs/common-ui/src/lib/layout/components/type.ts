@@ -1,6 +1,6 @@
 export type NavigationMenuItem = {
   name: string;
-  href: string;
+  path?: string;
   icon?: React.ForwardRefExoticComponent<
     Omit<React.SVGProps<SVGSVGElement>, 'ref'> & {
       title?: string | undefined;
