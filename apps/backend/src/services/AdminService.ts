@@ -40,7 +40,9 @@ class AdminService {
     if (!admin) {
       throw new Error(`Admin not found for email: ${email}`);
     }
-    data.password = await bcrypt.hash(data.password, 10);
+    if (data.password) {
+      data.password = await bcrypt.hash(data.password, 10);
+    }
     return AdminDao.updateAdmin(email, data);
   }
 
