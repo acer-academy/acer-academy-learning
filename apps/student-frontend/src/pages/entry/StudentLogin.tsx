@@ -1,6 +1,14 @@
-import { AcerAcademyLogo } from '@acer-academy-learning/common-ui';
+import { AcerAcademyLogo, useToast } from '@acer-academy-learning/common-ui';
 
 export default function StudentLogin() {
+    const { displayToast, ToastType } = useToast();
+
+    const handleSubmit = async (e: React.FormEvent) => {
+      e.preventDefault();
+  
+      displayToast('Great it works', ToastType.SUCCESS);
+      return;
+    };
   return (
     <>
       {/*
@@ -15,6 +23,13 @@ export default function StudentLogin() {
         <div className="flex flex-1 flex-col justify-center px-4 py-12 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
           <div className="mx-auto w-full max-w-sm lg:w-96">
             <div>
+              <button
+                type="button"
+                onClick={handleSubmit}
+                className="rounded bg-indigo-600 px-2 py-1 text-xs font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              >
+                TRY THIS BUTTON
+              </button>
               <AcerAcademyLogo className="mx-auto h-20 w-auto" />
               <h2 className="mt-8 text-2xl font-bold leading-9 tracking-tight text-gray-900">
                 Sign in to your account
