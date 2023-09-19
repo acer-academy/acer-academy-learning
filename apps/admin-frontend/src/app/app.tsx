@@ -8,21 +8,19 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; // Import toastify CSS
 import Account from '../pages/entry/Account';
 
-function App() {
+export default function App() {
   return (
-    <AuthWrapper>
-      <ToastProvider>
-        <ToastContainer />
-        <div className="h-full bg-gray-50">
-          <Routes>
-            <Route path="/" element={<AdminLogin />} />
-            <Route path="/account" element={<Account />} />
-            <Route path="sign-up" element={<AdminSignUp />} />
-          </Routes>
-        </div>
-      </ToastProvider>
-    </AuthWrapper>
+    <div className="h-full">
+      <AuthWrapper>
+        <ToastProvider>
+          <ToastContainer />
+            <Routes>
+              <Route path="/" element={<AdminLogin />} />
+              <Route path="/account" element={<Account />} />
+              <Route path="sign-up" element={<AdminSignUp />} />
+            </Routes>
+        </ToastProvider>
+      </AuthWrapper>
+    </div>
   );
 }
-
-export default App;
