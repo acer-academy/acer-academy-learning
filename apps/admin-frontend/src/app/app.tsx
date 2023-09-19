@@ -14,11 +14,11 @@ export default function App() {
       <AuthWrapper>
         <ToastProvider>
           <ToastContainer />
-            <Routes>
-              <Route path="/" element={<AdminLogin />} />
-              <Route path="/account" element={<Account />} />
-              <Route path="sign-up" element={<AdminSignUp />} />
-            </Routes>
+          <Routes>
+            <Route path="/" element={<AdminLogin />} />
+            <Route path="/account" element={<Account />} />
+            <Route path="sign-up" element={<AdminSignUp />} />
+          </Routes>
         </ToastProvider>
       </AuthWrapper>
     </div>
