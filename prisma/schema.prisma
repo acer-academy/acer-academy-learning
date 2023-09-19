@@ -98,6 +98,6 @@ model Centre {
   name     String    @unique
   address  String    @unique
   teachers Teacher[]
-  //classrooms Classroom[]
   Student  Student[]
+  //classrooms Classroom[]
 }
