@@ -27,13 +27,13 @@ export const DisclosureLeafItem = ({
       <NavLink
         to={`${item.href}`}
         className={classNames(
-          isActive ? 'bg-admin-secondary-500' : 'hover:bg-admin-secondary-500',
+          isActive ? 'bg-admin-primary-500' : 'hover:bg-admin-primary-500',
           sizeStyles,
         )}
       >
         {item.icon && (
           <item.icon
-            className="h-6 w-6 shrink-0 text-gray-400"
+            className="h-6 w-6 shrink-0 text-icon-primary"
             aria-hidden="true"
           />
         )}

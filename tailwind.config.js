@@ -1,4 +1,5 @@
 const defaultTheme = require('tailwindcss/defaultTheme');
+const colors = require('tailwindcss/colors');
 // tailwind.config.js
 import forms from '@tailwindcss/forms'
 
@@ -47,6 +48,8 @@ module.exports = {
           900: '#1F4B4C',
           950: '#173738',
         },
+        'text-primary': colors.gray[900],
+        'icon-primary': colors.gray[700],
       },
     },
   },

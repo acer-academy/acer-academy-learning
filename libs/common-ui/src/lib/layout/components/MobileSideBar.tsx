@@ -60,7 +60,7 @@ export const MobileSideBar = ({ navigationSections }: SideBarProps) => {
                 </div>
               </Transition.Child>
               {/* Sidebar component, swap this element with another sidebar if you like */}
-              <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-admin-primary-600 px-6 pb-2">
+              <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-white px-6 pb-2">
                 <div className="flex h-16 shrink-0 items-center">
                   <img
                     className="h-8 w-auto"

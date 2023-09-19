@@ -11,7 +11,7 @@ export const SideBarSection = ({ section }: SideBarSection) => {
   return (
     <li>
       {section.name && (
-        <div className="text-xs font-semibold leading-6 text-admin-primary-200">
+        <div className="text-xs font-semibold leading-6 text-text-primary">
           {section.name}
         </div>
       )}
