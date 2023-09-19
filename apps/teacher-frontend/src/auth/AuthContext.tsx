@@ -72,12 +72,9 @@ interface AuthWrapperProps {
 export const AuthWrapper: React.FC<AuthWrapperProps> = ({ children }) => {
   const [user, setUser] = useState(defaultUser);
 
-  console.log(user);
-
   const login = async (email: string, password: string) => {
     try {
       const response = await loginTeacher({ email, password });
-      console.log(response);
       setUser({
         ...response,
         isAuthenticated: true,

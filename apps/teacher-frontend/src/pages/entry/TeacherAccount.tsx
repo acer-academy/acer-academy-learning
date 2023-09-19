@@ -46,6 +46,10 @@ const Account: React.FC = () => {
                   {user.levels.join(', ')}
                 </span>
               </div>
+              <div className="flex justify-between items-center">
+                <span className="font-semibold text-gray-600">Centre:</span>
+                <span className="text-gray-800">{user.centre?.name}</span>
+              </div>
             </div>
           </div>
         </div>
