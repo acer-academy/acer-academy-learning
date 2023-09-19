@@ -4,6 +4,7 @@ import styles from './app.module.css';
 import TeacherLogin from '../pages/entry/TeacherLogin';
 import { Route, Routes, Link } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export function App() {
   return (
