@@ -1,3 +1,15 @@
+import { LevelEnum, SubjectEnum } from './CommonTypes';
+import { Teacher } from './teacher';
+// import { Centre } from './CommonTypes';
+
+export interface Centre {
+  id: string;
+  name: string;
+  address: string;
+  students?: Student[];
+  teachers?: Teacher[];
+}
+
 export enum StudentStatus {
   ACTIVE = 'active',
   INACTIVE = 'inactive',
@@ -14,3 +26,34 @@ export interface StudentData {
   email: string;
   status: StudentStatus;
 }
+
+export interface Parent {
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
+}
+
+export interface Student {
+  email: string;
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
+  school: string;
+  level: LevelEnum[];
+  subjects: SubjectEnum[];
+  centre?: Centre;
+  parents: Parent[];
+  isAuthenticated: boolean;
+}
+
+export const defaultStudent: Student = {
+  email: '',
+  firstName: '',
+  lastName: '',
+  phoneNumber: '',
+  school: '',
+  level: [],
+  subjects: [],
+  parents: [],
+  isAuthenticated: false,
+};

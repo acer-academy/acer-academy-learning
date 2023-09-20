@@ -6,13 +6,13 @@ import TeacherSignUp from '../pages/entry/TeacherSignUp';
 import { Route, Routes, Link } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { AuthWrapper } from '../auth/AuthContext';
+import { TeacherAuthWrapper } from '@acer-academy-learning/common-ui';
 import TeacherAccount from '../pages/entry/TeacherAccount';
 
 export function App() {
   return (
     <div className="h-full">
-      <AuthWrapper>
+      <TeacherAuthWrapper>
         <ToastProvider>
           <ToastContainer />
           <Routes>
@@ -21,7 +21,7 @@ export function App() {
             <Route path="/account" element={<TeacherAccount />} />
           </Routes>
         </ToastProvider>
-      </AuthWrapper>
+      </TeacherAuthWrapper>
     </div>
   );
 }

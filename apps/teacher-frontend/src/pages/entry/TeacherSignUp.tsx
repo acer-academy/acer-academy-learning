@@ -1,11 +1,38 @@
 import { AcerAcademyLogo } from '@acer-academy-learning/common-ui';
-import { useState } from 'react';
+import { retrieveCentres } from '../../api/centre';
+import { useState, useEffect } from 'react';
+import { registerTeacher } from '../../api/teacher';
+import { useToast } from '@acer-academy-learning/common-ui';
 
 export default function TeacherSignUp() {
+  const { displayToast, ToastType } = useToast();
+
+  enum LevelEnum {
+    P1 = 'P1',
+    P2 = 'P2',
+    P3 = 'P3',
+    P4 = 'P4',
+    P5 = 'P5',
+    P6 = 'P6',
+    S1 = 'S1',
+    S2 = 'S2',
+    S3 = 'S3',
+    S4 = 'S4',
+    S5 = 'S5',
+    J1 = 'J1',
+    J2 = 'J2',
+  }
+
+  enum SubjectEnum {
+    MATHEMATICS = 'MATHEMATICS',
+    ENGLISH = 'ENGLISH',
+    SCIENCE = 'SCIENCE',
+  }
+
   const subjects = [
-    { id: 'english', label: 'English' },
-    { id: 'science', label: 'Science' },
-    { id: 'math', label: 'Math' },
+    { id: 'english', label: 'English', value: 'ENGLISH' },
+    { id: 'science', label: 'Science', value: 'SCIENCE' },
+    { id: 'math', label: 'Math', value: 'MATHEMATICS' },
     // add more subjects as needed
   ];
 
@@ -16,6 +43,12 @@ export default function TeacherSignUp() {
     // add more rows as needed
   ];
 
+  interface Centre {
+    id: string;
+    name: string;
+    address: string;
+  }
+
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
@@ -23,6 +56,23 @@ export default function TeacherSignUp() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [selectedSubjects, setSelectedSubjects] = useState<string[]>([]);
   const [selectedLevels, setSelectedLevels] = useState<string[]>([]);
+  const [centres, setCentres] = useState<Centre[]>([]);
+  const [selectedCentre, setSelectedCentre] = useState('');
+
+  useEffect(() => {
+    const fetchCentres = async () => {
+      try {
+        const data = await retrieveCentres();
+        setCentres(data);
+      } catch (err) {
+        // setError(err);
+      } finally {
+        // setLoading(false);
+      }
+    };
+
+    fetchCentres();
+  }, []);
 
   const handleSubjectChange = (subject: string) => {
     setSelectedSubjects((prevSubjects) =>
@@ -40,19 +90,43 @@ export default function TeacherSignUp() {
     );
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    const levelEnumArray: LevelEnum[] = selectedLevels
+      .filter((level) => level in LevelEnum)
+      .map((level) => LevelEnum[level as keyof typeof LevelEnum]);
+
+    const subjectEnumArray: SubjectEnum[] = selectedSubjects
+      .filter((subject) => subject in SubjectEnum)
+      .map((subject) => SubjectEnum[subject as keyof typeof SubjectEnum]);
 
     const payload = {
       firstName,
       lastName,
       email,
       password,
-      levels: selectedLevels,
-      subjects: selectedSubjects,
+      levels: levelEnumArray,
+      subjects: subjectEnumArray,
+      centreId: selectedCentre,
     };
 
-    console.log(payload);
+    if (password !== confirmPassword) {
+      displayToast('Password do not match', ToastType.ERROR);
+      return;
+    }
+
+    if (selectedCentre === '') {
+      displayToast('You need to select a centre', ToastType.ERROR);
+      return;
+    }
+
+    try {
+      await registerTeacher(payload);
+      displayToast('Account created!', ToastType.SUCCESS);
+    } catch (error: any) {
+      displayToast(`${error}`, ToastType.ERROR);
+    }
 
     // Here, send the `payload` object to your server using fetch or axios
   };
@@ -160,6 +234,32 @@ export default function TeacherSignUp() {
             />
           </div>
 
+          <div className="flex items-center space-x-4">
+            <label
+              htmlFor="location"
+              className="block w-1/4 text-sm font-medium leading-6 text-gray-900"
+            >
+              Location
+            </label>
+            <select
+              id="location"
+              name="location"
+              required
+              value={selectedCentre}
+              onChange={(e) => setSelectedCentre(e.target.value)}
+              className="mt-2 block w-3/4 space-y-2 rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
+            >
+              <option value="" disabled>
+                Select a centre
+              </option>
+              {centres.map((centre, index) => (
+                <option key={index} value={centre.id}>
+                  {centre.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
           <div className="flex items-center">
             <label
               htmlFor="subjects"
@@ -173,8 +273,8 @@ export default function TeacherSignUp() {
                   <label key={subject.id} className="flex items-center">
                     <input
                       type="checkbox"
-                      checked={selectedSubjects.includes(subject.label)}
-                      onChange={() => handleSubjectChange(subject.label)}
+                      checked={selectedSubjects.includes(subject.value)}
+                      onChange={() => handleSubjectChange(subject.value)}
                       className="h-5 w-5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
                     />
                     <span className="ml-2 text-gray-700">{subject.label}</span>

@@ -1,9 +1,10 @@
-import { useAuth } from '@acer-academy-learning/common-ui';
+// import { useAuth } from '../../auth/AuthContext';
 import { AcerAcademyLogo } from '@acer-academy-learning/common-ui';
-import { Teacher } from 'libs/data-access/src/lib/types/teacher';
+import { useAuth } from '@acer-academy-learning/common-ui';
+import { Student } from 'libs/data-access/src/lib/types/student';
 
 const Account: React.FC = () => {
-  const { user } = useAuth<Teacher>();
+  const { user } = useAuth<Student>();
 
   return (
     <div className="h-full bg-gray-50">
@@ -12,7 +13,7 @@ const Account: React.FC = () => {
           <AcerAcademyLogo className="mx-auto h-20 w-auto" />
 
           <h2 className="mt-6 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-            Teacher System
+            Student System
           </h2>
         </div>
 
@@ -33,7 +34,7 @@ const Account: React.FC = () => {
               </div>
               <div className="flex justify-between items-center">
                 <span className="font-semibold text-gray-600">
-                  Teacher Subjects:
+                  Student Subjects:
                 </span>
                 <span className="text-gray-800 capitalize">
                   {user.subjects.join(', ')}
@@ -41,16 +42,47 @@ const Account: React.FC = () => {
               </div>
               <div className="flex justify-between items-center">
                 <span className="font-semibold text-gray-600">
-                  Teacher Levels:
+                  Student Levels:
                 </span>
-                <span className="text-gray-800 capitalize">
-                  {user.levels.join(', ')}
+                <span className="text-gray-800 capitalize">{user.level}</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="font-semibold text-gray-600">School:</span>
+                <span className="text-gray-800">{user.school}</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="font-semibold text-gray-600">
+                  Phone Number:
                 </span>
+                <span className="text-gray-800">{user.phoneNumber}</span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="font-semibold text-gray-600">Centre:</span>
                 <span className="text-gray-800">{user.centre?.name}</span>
               </div>
+              <br></br>
+              {user.parents.map((parent, index) => (
+                <div key={index}>
+                  <div className="flex justify-between items-center">
+                    <span className="font-semibold text-gray-600">
+                      Parent {index + 1} First Name:
+                    </span>
+                    <span className="text-gray-800">{parent.firstName}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="font-semibold text-gray-600">
+                      Parent {index + 1} Last Name:
+                    </span>
+                    <span className="text-gray-800">{parent.lastName}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="font-semibold text-gray-600">
+                      Parent {index + 1} Phone Number:
+                    </span>
+                    <span className="text-gray-800">{parent.phoneNumber}</span>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>
