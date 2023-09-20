@@ -8,6 +8,7 @@ import {
   AdminGetData,
 } from 'libs/data-access/src/lib/types/admin';
 
+import { PrismaClient, Prisma } from '@prisma/client';
 class AdminService {
   async register(data: AdminPostData) {
     data.password = await bcrypt.hash(data.password, 10);
@@ -15,7 +16,7 @@ class AdminService {
   }
 
   async login(data: AdminGetData) {
-    const admin = await AdminDao.findAdminByEmail(data.email);
+    const admin = await AdminDao.getAdminByEmail(data.email);
     if (!admin || !(await bcrypt.compare(data.password, admin.password))) {
       throw new Error('Invalid credentials');
     }
@@ -35,17 +36,20 @@ class AdminService {
     return rest;
   }
 
-  async updateAdmin(email: string, data: AdminPutData) {
-    const admin = await AdminDao.findAdminByEmail(email);
+  async updateAdmin(email: string, data: Prisma.AdminUpdateInput) {
+    const admin = await AdminDao.getAdminByEmail(email);
     if (!admin) {
       throw new Error(`Admin not found for email: ${email}`);
     }
-    data.password = await bcrypt.hash(data.password, 10);
+    if (data.password) {
+      data.password = await bcrypt.hash(data.password, 10);
+    }
+
     return AdminDao.updateAdmin(email, data);
   }
 
   async deleteAdmin(email: string) {
-    const admin = await AdminDao.findAdminByEmail(email);
+    const admin = await AdminDao.getAdminByEmail(email);
     if (!admin) {
       throw new Error(`Admin not found for email: ${email}`);
     }

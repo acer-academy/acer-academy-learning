@@ -191,4 +191,26 @@ teacherRouter.delete(
   },
 );
 
+/**
+ * POST /teacher/login
+ * Logs in a teacher using their email and password.
+ */
+teacherRouter.post('/login', async (req: Request, res: Response) => {
+  try {
+    const { email, password } = req.body;
+
+    // Assuming teacherService is where the login method resides
+    const teacher = await teacherService.login(email, password);
+
+    if (!teacher) {
+      return res.status(401).json({ error: 'Invalid credentials' });
+    }
+
+    res.status(200).json(teacher);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+
 export default teacherRouter;

@@ -32,6 +32,9 @@ export class TeacherDao {
   ): Promise<Teacher | null> {
     return this.prismaClient.teacher.findFirst({
       where: { email: teacherEmail },
+      include: {
+        centre: true,
+      }
     });
   }
 

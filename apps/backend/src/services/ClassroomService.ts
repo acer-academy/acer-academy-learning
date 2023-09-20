@@ -20,6 +20,10 @@ export class ClassroomService {
     return this.classroomDao.getClassroomById(classroomId);
   }
 
+  public async getClassroomsByCentre(centreId: string): Promise<Classroom[]> {
+    return this.classroomDao.getClassroomsByCentre(centreId);
+  }
+
   public async updateClassroom(
     classroomId: string,
     classroomData: Prisma.ClassroomUpdateInput,
@@ -29,9 +33,5 @@ export class ClassroomService {
 
   public async deleteClassroom(classroomId: string): Promise<Classroom | null> {
     return this.classroomDao.deleteClassroom(classroomId);
-  }
-
-  public async getClassroomByCentre(centreId: string): Promise<Classroom[]> {
-    return this.classroomDao.getClassroomsByCentre(centreId);
   }
 }

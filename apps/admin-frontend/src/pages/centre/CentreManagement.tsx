@@ -1,4 +1,3 @@
-import api from '@acer-academy-learning/data-access';
 import {
   CentreCreateData,
   CentreData,
@@ -7,6 +6,11 @@ import { useEffect, useState } from 'react';
 import { CentreDeleteModal } from './CentreDeleteModal';
 import { CentreCreateModal } from './CentreCreateModal';
 import { useToast } from '@acer-academy-learning/common-ui';
+import {
+  getAllCentres as apiGetAllCentres,
+  createCentre as apiCreateCentre,
+  deleteCentre as apiDeleteCentre,
+} from '@acer-academy-learning/data-access';
 
 export const CentreManagement: React.FC = () => {
   const [centres, setCentres] = useState<CentreData[]>([]);
@@ -19,7 +23,7 @@ export const CentreManagement: React.FC = () => {
 
   const getAllCentres = async () => {
     try {
-      const response = await api.centres.getAllCentres();
+      const response = await apiGetAllCentres();
       const allCentres: CentreData[] = response.data;
       console.log(response);
       setCentres(allCentres);
@@ -36,7 +40,7 @@ export const CentreManagement: React.FC = () => {
     try {
       centreData.name = centreData.name.trim();
       centreData.address = centreData.address.trim();
-      const response = await api.centres.createCentre(centreData);
+      const response = await apiCreateCentre(centreData);
       console.log(response);
 
       displayToast('Centre created successfully.', ToastType.SUCCESS);
@@ -57,7 +61,7 @@ export const CentreManagement: React.FC = () => {
 
   const deleteCentre = async () => {
     try {
-      const response = await api.centres.deleteCentre(deleteCentreId);
+      const response = await apiDeleteCentre(deleteCentreId);
       console.log(response);
       displayToast('Centre deleted successfully.', ToastType.INFO);
     } catch (error: any) {

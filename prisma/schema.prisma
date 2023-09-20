@@ -17,11 +17,28 @@ enum StudentStatusEnum {
 }
 
 model Student {
-  id    String @id @default(uuid()) @db.Uuid
-  email String @unique
-  name  String
+  id          String            @id @default(uuid()) @db.Uuid
+  firstName   String
+  lastName    String
+  email       String            @unique
+  password    String
+  level       LevelEnum
+  subjects    SubjectEnum[]
+  status      StudentStatusEnum @default(ACTIVE)
+  parents     Parent[]
+  school      String
+  phoneNumber String
+  centre      Centre            @relation(fields: [centreId], references: [id])
+  centreId    String            @db.Uuid
+}
 
-  status StudentStatusEnum @default(ACTIVE)
+model Parent {
+  id          String   @id @default(uuid()) @db.Uuid
+  firstName   String
+  lastName    String
+  phoneNumber String
+  Student     Student? @relation(fields: [studentId], references: [id])
+  studentId   String?  @db.Uuid
 }
 
 enum AdminTypeEnum {
@@ -81,6 +98,7 @@ model Centre {
   name       String      @unique
   address    String      @unique
   teachers   Teacher[]
+  Student    Student[]
   classrooms Classroom[]
 }
 
