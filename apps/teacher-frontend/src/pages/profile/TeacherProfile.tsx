@@ -1,11 +1,12 @@
 import { useAuth } from '@acer-academy-learning/common-ui';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useToast } from '@acer-academy-learning/common-ui';
 import { updateTeacher } from '../../api/teacher';
 
 const TeacherProfile: React.FC = () => {
-    // const { user } = useAuth<Teacher>();
-    const user = {firstName: 'user1', lastName: 'user2', email: 'email@gmail.com', subjects: ['English', 'Math'], levels: ['P1', 'P2']}
+    const { user } = useAuth<Teacher>();
+    // const user = {firstName: 'user1', lastName: 'user2', email: 'email@gmail.com', subjects: ['English', 'Math'], levels: ['P1', 'P2']}
 
     const [updateUser, setUpdateUser] = useState({
         firstName: user.firstName, 
@@ -15,6 +16,7 @@ const TeacherProfile: React.FC = () => {
     }) 
 
     const [isEditing, setIsEditing] = useState(false)
+    const navigate = useNavigate();
 
     const subjects = [
         { id: 'english', label: 'English' },
@@ -132,6 +134,7 @@ const TeacherProfile: React.FC = () => {
               <div className="flex justify-between items-center">
                 <span className="font-semibold text-gray-600">Change Password:</span>
                 <button
+                onClick={() => { navigate('/changePassword')}}
                 className="rounded bg-indigo-600 px-2 py-1 text-xs font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                 >
                   Change Password
