@@ -7,6 +7,7 @@ import {
   validateBodyClassroomCapacity,
   validateParamsCentreExists,
   restrictBodyId,
+  validateBodyCentreExists,
 } from '../middleware/validationMiddleware';
 
 const classroomRouter = Router();
@@ -20,6 +21,7 @@ classroomRouter.post(
   '/',
   validateBodyClassroomNameNotEmpty,
   validateBodyClassroomCapacity,
+  validateBodyCentreExists,
   async (req: Request, res: Response) => {
     try {
       const classroomData: Prisma.ClassroomCreateInput = req.body;
@@ -97,6 +99,7 @@ classroomRouter.put(
   validateParamsClassroomExists,
   validateBodyClassroomNameNotEmpty,
   validateBodyClassroomCapacity,
+  validateBodyCentreExists,
   async (req: Request, res: Response) => {
     try {
       const { classroomId } = req.params;
