@@ -1,14 +1,18 @@
 import { NavigationMenuItem } from 'libs/common-ui/src/lib/layout/components/type';
 import {
+  ACCOUNT,
   ASSIGNMENTS,
   BOOKING,
   BOOK_CLASSES,
   BUY_CREDITS,
   DASHBOARD,
+  NOTIFICATIONS,
   PAST_TRANSACTIONS,
+  PROFILE,
   QUIZZES,
   RECORDINGS,
   REWARDS,
+  SETTINGS,
   SUBJECTS,
   VIEW_CLASSES,
   ZOOM_LINK,
@@ -18,6 +22,9 @@ import {
   CalculatorIcon,
   VideoCameraIcon,
   LinkIcon,
+  UserIcon,
+  BellIcon,
+  Cog6ToothIcon,
 } from '@heroicons/react/24/outline';
 export const NAV_SECTIONS: NavigationMenuItem[] = [
   {
@@ -49,3 +56,13 @@ export const NAV_SECTIONS: NavigationMenuItem[] = [
     path: REWARDS,
   },
 ];
+
+export const ACCOUNT_NAV: NavigationMenuItem = {
+  name: 'Account',
+  path: ACCOUNT,
+  children: [
+    { name: 'Profile', path: PROFILE, icon: UserIcon },
+    { name: 'Notifications', path: NOTIFICATIONS, icon: BellIcon },
+    { name: 'Settings', path: SETTINGS, icon: Cog6ToothIcon },
+  ],
+};

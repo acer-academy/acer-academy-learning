@@ -4,9 +4,8 @@ import { Fragment, useContext } from 'react';
 import { SideBarSection } from './SideBarSection';
 import { MobileContext } from '../contexts/mobile.context';
 import { SideBarProps } from './type';
-import { AcerAcademyLogo } from '../../logo/logo';
 
-export const MobileSideBar = ({ navigationSections }: SideBarProps) => {
+export const MobileSideBar = ({ navigationMenu, logo }: SideBarProps) => {
   const { sidebarOpen, setSidebarOpen } = useContext(MobileContext);
   return (
     <Transition.Root show={sidebarOpen} as={Fragment}>
@@ -63,11 +62,11 @@ export const MobileSideBar = ({ navigationSections }: SideBarProps) => {
               {/* Sidebar component, swap this element with another sidebar if you like */}
               <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-admin-primary-600 px-6 pb-2">
                 <div className="flex h-16 shrink-0 items-center mt-4">
-                  <AcerAcademyLogo />
+                  {logo}
                 </div>
                 <nav className="flex flex-1 flex-col">
-                  <ul role="list" className="flex flex-1 flex-col gap-y-7">
-                    {navigationSections.map((section) => (
+                  <ul className="flex flex-1 flex-col gap-y-7">
+                    {navigationMenu.map((section) => (
                       <SideBarSection section={section} key={section.name} />
                     ))}
                   </ul>

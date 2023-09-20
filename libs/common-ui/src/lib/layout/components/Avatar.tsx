@@ -27,7 +27,7 @@ export const Avatar = ({ imageUrl, firstName }: AvatarProps) => {
       )}
       <span className="sr-only">Your profile</span>
       <span aria-hidden="true" className="ml-4 text-text-primary">
-        {firstName}
+        {firstName.charAt(0).toLocaleUpperCase() + firstName.slice(1)}
       </span>
     </div>
   );

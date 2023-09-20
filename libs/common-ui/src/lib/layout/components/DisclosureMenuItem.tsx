@@ -5,7 +5,9 @@ import { NavLink } from 'react-router-dom';
 import { classNames } from '../../utils/classNames';
 import { DisclosureLeafItem } from './DisclosureLeafItem';
 import { useMenuItem } from '../hooks/useMenuItem';
-import { ElementType, useEffect, useMemo } from 'react';
+import { ElementType, useMemo } from 'react';
+import { getThemeClassName } from '../../utils/getThemeClassName';
+import { useThemeContext } from '../contexts/ThemeContext';
 
 export type DisclosureMenuItemProps = {
   item: NavigationMenuItem;
@@ -13,6 +15,7 @@ export type DisclosureMenuItemProps = {
 
 export const DisclosureMenuItem = ({ item }: DisclosureMenuItemProps) => {
   const [isActive] = useMenuItem(item);
+  const { role } = useThemeContext();
 
   const disclosureProps = useMemo<Partial<DisclosureButtonProps<ElementType>>>(
     () =>
@@ -25,49 +28,66 @@ export const DisclosureMenuItem = ({ item }: DisclosureMenuItemProps) => {
     [item],
   );
   return (
-    <li key={item.name}>
-      <Disclosure as="div">
-        {({ open }) => (
-          <>
-            <Disclosure.Button
-              {...disclosureProps}
-              className={classNames(
-                isActive
-                  ? 'bg-admin-primary-700 text-white'
-                  : 'text-admin-primary-200 hover:text-white hover:bg-admin-primary-700',
-                'group flex items-center w-full text-left rounded-md p-2 gap-x-3 text-sm leading-6 font-semibold',
-              )}
-            >
-              {item.icon && (
-                <item.icon
-                  className={classNames(
-                    isActive
-                      ? 'text-admin-secondary'
-                      : 'text-admin-primary-200 group-hover:text-admin-secondary',
-                    'h-6 w-6 shrink-0',
-                  )}
-                  aria-hidden="true"
-                />
-              )}
-              {item.name}
-              <ChevronRightIcon
+    <Disclosure as="div">
+      {({ open }) => (
+        <>
+          <Disclosure.Button
+            {...disclosureProps}
+            className={classNames(
+              isActive
+                ? `${getThemeClassName('bg', role, true, 700)} text-white`
+                : // : 'text-admin-primary-200 hover:text-white hover:bg-admin-primary-700',
+                  `
+                    ${getThemeClassName('text', role, true, 200)}
+                   hover:text-white ${getThemeClassName(
+                     'hover:bg',
+                     role,
+                     true,
+                     700,
+                   )}`,
+              'group flex items-center w-full text-left rounded-md p-2 gap-x-3 text-sm leading-6 font-semibold',
+            )}
+          >
+            {item.icon && (
+              <item.icon
                 className={classNames(
                   isActive
-                    ? 'rotate-90 text-admin-secondary'
-                    : 'text-admin-primary-200 group-hover:text-admin-secondary',
-                  'ml-auto h-5 w-5 shrink-0',
+                    ? `text-white`
+                    : // : `text-admin-primary-200 group-hover:text-white`,
+                      `${getThemeClassName(
+                        'text',
+                        role,
+                        true,
+                        200,
+                      )} group-hover:text-white`,
+                  'h-6 w-6 shrink-0',
                 )}
                 aria-hidden="true"
               />
-            </Disclosure.Button>
-            <Disclosure.Panel as="ul" className="mt-1 px-2">
-              {item.children?.map((subItem) => (
-                <DisclosureLeafItem key={subItem.name} item={subItem} />
-              ))}
-            </Disclosure.Panel>
-          </>
-        )}
-      </Disclosure>
-    </li>
+            )}
+            {item.name}
+            <ChevronRightIcon
+              className={classNames(
+                isActive
+                  ? 'rotate-90 text-white'
+                  : `${getThemeClassName(
+                      'text',
+                      role,
+                      true,
+                      200,
+                    )}  group-hover:text-admin-secondary`,
+                'ml-auto h-5 w-5 shrink-0',
+              )}
+              aria-hidden="true"
+            />
+          </Disclosure.Button>
+          <Disclosure.Panel as="ul" className="mt-1 px-2">
+            {item.children?.map((subItem) => (
+              <DisclosureLeafItem key={subItem.name} item={subItem} />
+            ))}
+          </Disclosure.Panel>
+        </>
+      )}
+    </Disclosure>
   );
 };
