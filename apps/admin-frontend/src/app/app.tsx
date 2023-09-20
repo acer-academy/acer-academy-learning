@@ -7,7 +7,7 @@ import { Routes, Route } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; // Import toastify CSS
 import Account from '../pages/entry/Account';
-import Profile from '../pages/profile/Profile';
+import AdminProfile from '../pages/profile/AdminProfile';
 
 export default function App() {
   return (
@@ -18,7 +18,7 @@ export default function App() {
           <Routes>
             <Route path="/" element={<AdminLogin />} />
             <Route path="/account" element={<Account />} />
-            <Route path="/profile" element={<Profile />} />
+            <Route path="/profile" element={<AdminProfile />} />
             <Route path="sign-up" element={<AdminSignUp />} />
           </Routes>
         </ToastProvider>
