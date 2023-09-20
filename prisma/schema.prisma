@@ -94,10 +94,20 @@ model Teacher {
 }
 
 model Centre {
-  id       String    @id @default(uuid()) @db.Uuid
-  name     String    @unique
-  address  String    @unique
-  teachers Teacher[]
-  Student  Student[]
-  //classrooms Classroom[]
+  id         String      @id @default(uuid()) @db.Uuid
+  name       String      @unique
+  address    String      @unique
+  teachers   Teacher[]
+  Student    Student[]
+  classrooms Classroom[]
+}
+
+model Classroom {
+  id        String  @id @default(uuid()) @db.Uuid
+  name      String
+  available Boolean @default(true)
+  capacity  Int
+  centre    Centre  @relation(fields: [centreId], references: [id])
+  centreId  String  @db.Uuid
+  // sessions Session[]
 }
