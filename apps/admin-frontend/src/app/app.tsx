@@ -7,6 +7,8 @@ import { Routes, Route } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; // Import toastify CSS
 import Account from '../pages/entry/Account';
+import { CentreManagement } from '../pages/centre/CentreManagement';
+import { CentreDetails } from '../pages/centre/CentreDetails';
 
 export default function App() {
   return (
@@ -14,11 +16,16 @@ export default function App() {
       <AuthWrapper>
         <ToastProvider>
           <ToastContainer />
-            <Routes>
-              <Route path="/" element={<AdminLogin />} />
-              <Route path="/account" element={<Account />} />
-              <Route path="sign-up" element={<AdminSignUp />} />
-            </Routes>
+          <Routes>
+            <Route path="/" element={<AdminLogin />} />
+            <Route path="/account" element={<Account />} />
+            <Route path="sign-up" element={<AdminSignUp />} />
+            <Route path="centre-management" element={<CentreManagement />} />
+            <Route
+              path="centre-management/:centreId"
+              element={<CentreDetails />}
+            />
+          </Routes>
         </ToastProvider>
       </AuthWrapper>
     </div>
