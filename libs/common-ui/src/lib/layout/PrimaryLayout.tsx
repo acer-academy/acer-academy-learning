@@ -84,14 +84,11 @@ export const PrimaryLayout = ({
                 <Bars3Icon className="h-6 w-6" aria-hidden="true" />
               </button>
             </div>
-            <div className="flex">
-              <div className="hidden lg:flex">
-                <AccountPopover
-                  firstName={role}
-                  menuItems={accountNavigation.children}
-                />
-                {/* <Avatar firstName={role} /> */}
-              </div>
+            <div className="hidden lg:flex">
+              <AccountPopover
+                firstName={role}
+                menuItems={accountNavigation.children}
+              />
               <button>
                 <ArrowRightOnRectangleIcon
                   className={`h-6 w-6 shrink-0 text-icon-primary  ${
@@ -132,24 +129,24 @@ export const PrimaryLayout = ({
               <div className="mt-6 flow-root">
                 <div className="-my-6 divide-y divide-gray-500/10">
                   <div className="space-y-2 py-6">
-                    {navigationMenu.map((item) => (
+                    {[...navigationMenu, accountNavigation].map((item) => (
                       <a
                         key={item.name}
                         href={item.path}
                         className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                       >
-                        {item.name}
+                        {item.name.toUpperCase()}
                       </a>
                     ))}
                   </div>
-                  {/* <div className="py-6">
+                  <div className="py-6">
                     <a
                       href="#"
                       className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                     >
-                      Log in
+                      Sign Out
                     </a>
-                  </div> */}
+                  </div>
                 </div>
               </div>
             </Dialog.Panel>
