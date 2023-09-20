@@ -11,7 +11,14 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; // Import toastify CSS
 import Account from '../pages/entry/Account';
 import { NAV_SECTIONS } from '../libs/layout';
-import { ADMINS, HUMAN_RESOURCES, STUDENTS, TEACHERS } from '../libs/routes';
+import {
+  ADMINS,
+  CENTRE,
+  FAQ,
+  HUMAN_RESOURCES,
+  STUDENTS,
+  TEACHERS,
+} from '../libs/routes';
 
 export default function App() {
   return (
@@ -38,6 +45,8 @@ export default function App() {
                 <Route path={STUDENTS} element={<h2>Student</h2>} />
                 <Route path={ADMINS} element={<h2>Admin</h2>} />
               </Route>
+              <Route path={CENTRE} />
+              <Route path={FAQ} />
             </Route>
             <Route path="/login" element={<AdminLogin />} />
             <Route path="/account" element={<Account />} />

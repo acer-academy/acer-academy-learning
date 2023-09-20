@@ -5,14 +5,15 @@ import { NavLink } from 'react-router-dom';
 import { classNames } from '../../utils/classNames';
 import { DisclosureLeafItem } from './DisclosureLeafItem';
 import { useMenuItem } from '../hooks/useMenuItem';
-import { ElementType, useMemo } from 'react';
+import { ElementType, useEffect, useMemo } from 'react';
 
 export type DisclosureMenuItemProps = {
   item: NavigationMenuItem;
 };
 
 export const DisclosureMenuItem = ({ item }: DisclosureMenuItemProps) => {
-  const isActive = useMenuItem(item);
+  const [isActive] = useMenuItem(item);
+
   const disclosureProps = useMemo<Partial<DisclosureButtonProps<ElementType>>>(
     () =>
       item.path
@@ -34,12 +35,17 @@ export const DisclosureMenuItem = ({ item }: DisclosureMenuItemProps) => {
                 isActive
                   ? 'bg-admin-primary-700 text-white'
                   : 'text-admin-primary-200 hover:text-white hover:bg-admin-primary-700',
-                'flex items-center w-full text-left rounded-md p-2 gap-x-3 text-sm leading-6 font-semibold text-gray-700',
+                'group flex items-center w-full text-left rounded-md p-2 gap-x-3 text-sm leading-6 font-semibold',
               )}
             >
               {item.icon && (
                 <item.icon
-                  className="h-6 w-6 shrink-0 text-icon-primary"
+                  className={classNames(
+                    isActive
+                      ? 'text-admin-secondary'
+                      : 'text-admin-primary-200 group-hover:text-admin-secondary',
+                    'h-6 w-6 shrink-0',
+                  )}
                   aria-hidden="true"
                 />
               )}
