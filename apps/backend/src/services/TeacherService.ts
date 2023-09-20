@@ -42,6 +42,9 @@ export class TeacherService {
     teacherId: string,
     teacherData: Prisma.TeacherUpdateInput,
   ): Promise<Teacher | null> {
+    if (teacherData.password) {
+      teacherData.password = await bcrypt.hash(teacherData.password, 10);
+    }
     return this.teacherDao.updateTeacher(teacherId, teacherData);
   }
 
@@ -51,7 +54,10 @@ export class TeacherService {
 
   async login(teacherEmail: string, teacherPassword: string) {
     const teacher = await this.teacherDao.getTeacherByEmail(teacherEmail);
-    if (!teacher || !(await bcrypt.compare(teacherPassword, teacher.password))) {
+    if (
+      !teacher ||
+      !(await bcrypt.compare(teacherPassword, teacher.password))
+    ) {
       throw new Error('Invalid credentials');
     }
 
