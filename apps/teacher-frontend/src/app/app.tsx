@@ -16,7 +16,16 @@ import TeacherForgotPassword from '../pages/entry/TeacherForgotPassword';
 import TeacherResetPassword from '../pages/entry/TeacherResetPassword';
 import { NAV_SECTIONS } from '../libs/layout';
 import { ACCOUNT_NAV, NAV_SECTIONS } from '../libs/layout';
-import { ACCOUNT, PROFILE, SETTINGS } from '../libs/routes';
+import {
+  ACCOUNT,
+  ANALYTICS,
+  DASHBOARD,
+  PROFILE,
+  REWARDS,
+  SCHEDULING,
+  SETTINGS,
+  SUBJECTS,
+} from '../libs/routes';
 
 export function App() {
   return (
@@ -35,6 +44,11 @@ export function App() {
               }
             >
               <Route path="/" />
+              <Route path={DASHBOARD} />
+              <Route path={SUBJECTS} />
+              <Route path={ANALYTICS} />
+              <Route path={SCHEDULING} />
+              <Route path={REWARDS} />
               <Route path={ACCOUNT}>
                 <Route path={PROFILE} />
                 <Route path={SETTINGS} />

@@ -14,6 +14,8 @@ import { ThemeProvider } from './contexts/ThemeContext';
 import { useGetSecondaryMenu } from './hooks/useGetSecondaryMenu';
 import { PrimaryDesktopSideBar } from './components/PrimaryDesktopSideBar';
 import { AccountPopover } from './components/AccountPopover';
+import { AcerAcademyLogo } from '../logo/logo';
+import logo from '../assets/acer-academy-logo-white.png';
 
 export type PrimaryLayoutProps = {
   accountNavigation: NavigationMenuItem;
@@ -49,11 +51,20 @@ export const PrimaryLayout = ({
             <div className="flex items-center gap-x-12">
               <a href="#" className="-m-1.5 p-1.5">
                 <span className="sr-only">Your Company</span>
-                <img
+                {/* <img
                   className="h-8 w-auto"
                   src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
                   alt=""
-                />
+                /> */}
+                {role === LayoutRole.Student ? (
+                  <img
+                    className={'h-9 w-auto'}
+                    src={logo}
+                    alt="Acer Academy Logo"
+                  />
+                ) : (
+                  <AcerAcademyLogo className="h-8 w-auto" />
+                )}
               </a>
               <div className="hidden lg:flex lg:gap-x-12">
                 {navigationMenu.map((item) => (
