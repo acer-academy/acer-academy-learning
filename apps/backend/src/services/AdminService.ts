@@ -8,6 +8,7 @@ import {
   AdminGetData,
 } from 'libs/data-access/src/lib/types/admin';
 
+import { PrismaClient, Prisma } from '@prisma/client';
 class AdminService {
   async register(data: AdminPostData) {
     data.password = await bcrypt.hash(data.password, 10);
@@ -35,7 +36,7 @@ class AdminService {
     return rest;
   }
 
-  async updateAdmin(email: string, data: AdminPutData) {
+  async updateAdmin(email: string, data: Prisma.AdminUpdateInput) {
     const admin = await AdminDao.getAdminByEmail(email);
     if (!admin) {
       throw new Error(`Admin not found for email: ${email}`);

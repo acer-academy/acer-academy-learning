@@ -19,7 +19,12 @@ class StudentDao {
   }
 
   public async getAllStudents(): Promise<Student[]> {
-    return this.prisma.student.findMany();
+    return this.prisma.student.findMany({
+      include: {
+        parents: true,
+        centre: true,
+      },
+    });
   }
 
   async getStudentByEmail(email: string) {
@@ -27,6 +32,7 @@ class StudentDao {
       where: { email },
       include: {
         parents: true,
+        centre: true,
       },
     });
   }

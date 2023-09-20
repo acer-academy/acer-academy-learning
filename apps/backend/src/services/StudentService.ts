@@ -5,8 +5,9 @@ import { Prisma } from '@prisma/client';
 import bcrypt from 'bcrypt';
 
 class StudentService {
-
-  public async createStudent(input: Prisma.StudentCreateInput): Promise<Student> {
+  public async createStudent(
+    input: Prisma.StudentCreateInput,
+  ): Promise<Student> {
     input.password = await bcrypt.hash(input.password, 10);
     return StudentDao.createStudent(input);
   }
@@ -17,13 +18,16 @@ class StudentService {
 
   async login(studentEmail: string, studentPassword: string) {
     const student = await StudentDao.getStudentByEmail(studentEmail);
-    if (!student || !(await bcrypt.compare(studentPassword, student.password))) {
+    if (
+      !student ||
+      !(await bcrypt.compare(studentPassword, student.password))
+    ) {
       throw new Error('Invalid credentials');
     }
 
     // Destructure admin object to omit id, password, and type
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { id, password, ...rest } = student;
+    const { id, password, centreId, ...rest } = student;
 
     return rest;
   }
