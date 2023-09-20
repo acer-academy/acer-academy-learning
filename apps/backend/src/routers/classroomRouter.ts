@@ -78,7 +78,7 @@ classroomRouter.get(
   async (req: Request, res: Response) => {
     try {
       const { centreId } = req.params;
-      const classrooms = await classroomService.getClassroomByCentre(centreId);
+      const classrooms = await classroomService.getClassroomsByCentre(centreId);
 
       return res.status(200).json(classrooms);
     } catch (error) {

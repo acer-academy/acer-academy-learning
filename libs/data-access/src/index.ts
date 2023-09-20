@@ -1,4 +1,8 @@
+// import * as students from './lib/api/student';
+// import * as admins from './lib/api/admin';
+
 export * from './lib/data-access';
+export * from './lib/api/centre';
 
 // Object.freeze(api);
 
