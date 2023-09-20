@@ -4,9 +4,11 @@ import { CentreService } from '../services/CentreService';
 import { FaqArticleService } from '../services/FaqArticleService';
 import { FaqTopicService } from '../services/FaqTopicService';
 import { TeacherService } from '../services/TeacherService';
+import { ClassroomService } from '../services/ClassroomService';
 
 const teacherService = new TeacherService();
 const centreService = new CentreService();
+const classroomService = new ClassroomService();
 const faqArticleService = new FaqArticleService();
 const faqTopicService = new FaqTopicService();
 
@@ -346,6 +348,82 @@ export async function validateParamsCentreDeletable(
       return res.status(400).json({
         error:
           'Centre cannot be deleted. Teachers associated with this centre still exist.',
+      });
+    }
+    const classroomsInCentre = await classroomService.getClassroomByCentre(
+      centreId,
+    );
+    if (classroomsInCentre.length > 0) {
+      return res.status(400).json({
+        error:
+          'Centre cannot be deleted. Classrooms associated with this centre still exist.',
+      });
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+/** Validates if a classroomId passed in params exists */
+export async function validateParamsClassroomExists(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { classroomId } = req.params;
+    const classroomExists = await classroomService.getClassroomById(
+      classroomId,
+    );
+    if (!classroomExists || !classroomId) {
+      return res.status(400).json({
+        error: 'Classroom does not exist.',
+      });
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+/** Validates if name passed in body is not empty */
+export async function validateBodyClassroomNameNotEmpty(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { name } = req.body;
+    if (name.trim() === '') {
+      return res.status(400).json({
+        error: 'Classroom name cannot be empty or contain only whitespace.',
+      });
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+/** Validates if capacity passed in body is a positive integer */
+export async function validateBodyClassroomCapacity(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { capacity } = req.body;
+    const parsedCapacity = parseInt(capacity, 10);
+    if (isNaN(parsedCapacity) || parsedCapacity <= 0) {
+      return res.status(400).json({
+        error: 'Classroom capacity must be a positive integer.',
       });
     }
     next();
