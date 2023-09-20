@@ -3,17 +3,27 @@ import { NavigationMenuItem } from './type';
 import { NavLink } from 'react-router-dom';
 import { classNames } from '../../utils/classNames';
 import { useMenuItem } from '../hooks/useMenuItem';
+import { getThemeClassName } from '../../utils/getThemeClassName';
+import { useThemeContext } from '../contexts/ThemeContext';
+import { useThemeColorsOnClass } from '../hooks/useThemeColorOnClass';
 
 export type DisclosureChildItem = {
   item: NavigationMenuItem;
   isChild?: boolean;
+  textColor?: string;
+  bgColor?: string;
+  bgHoverColor?: string;
 };
 
 export const DisclosureLeafItem = ({
   item,
   isChild = true,
+  textColor,
+  bgColor,
+  bgHoverColor,
 }: DisclosureChildItem) => {
   const [isActive] = useMenuItem(item);
+  const { role } = useThemeContext();
   const sizeStyles = useMemo(
     () =>
       isChild
@@ -21,30 +31,45 @@ export const DisclosureLeafItem = ({
         : 'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold',
     [isChild],
   );
+
+  const defaultTextColor = useThemeColorsOnClass('text', role, true, 200);
+  const defaultBgColor = useThemeColorsOnClass('bg', role, true, 700);
+  const defaultBgHoverColor = useThemeColorsOnClass(
+    'hover:bg',
+    role,
+    true,
+    700,
+  );
+
   return (
-    <li>
-      <NavLink
-        to={`${item.path}`}
-        className={classNames(
-          isActive
-            ? 'bg-admin-primary-700 text-white'
-            : 'text-admin-primary-200 hover:text-white hover:bg-admin-primary-700',
-          sizeStyles,
-        )}
-      >
-        {item.icon && (
-          <item.icon
-            className={classNames(
-              isActive
-                ? 'text-admin-secondary'
-                : 'text-admin-primary-200 group-hover:text-admin-secondary',
-              'h-6 w-6 shrink-0',
-            )}
-            aria-hidden="true"
-          />
-        )}
-        {item.name}
-      </NavLink>
-    </li>
+    <NavLink
+      to={`${item.path}`}
+      className={classNames(
+        isActive
+          ? `${bgColor ?? defaultBgColor} text-white`
+          : `${textColor ?? defaultTextColor} hover:text-white ${
+              bgHoverColor ?? defaultBgHoverColor
+            }`,
+        sizeStyles,
+      )}
+    >
+      {item.icon && (
+        <item.icon
+          className={classNames(
+            isActive
+              ? 'text-white'
+              : `${getThemeClassName(
+                  'text',
+                  role,
+                  true,
+                  200,
+                )} group-hover:text-white`,
+            'h-6 w-6 shrink-0',
+          )}
+          aria-hidden="true"
+        />
+      )}
+      {item.name}
+    </NavLink>
   );
 };

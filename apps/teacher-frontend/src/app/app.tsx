@@ -15,6 +15,7 @@ import TeacherAccount from '../pages/entry/TeacherAccount';
 import TeacherForgotPassword from '../pages/entry/TeacherForgotPassword';
 import TeacherResetPassword from '../pages/entry/TeacherResetPassword';
 import { NAV_SECTIONS } from '../libs/layout';
+import { ACCOUNT_NAV, NAV_SECTIONS } from '../libs/layout';
 import { ACCOUNT, PROFILE, SETTINGS } from '../libs/routes';
 
 export function App() {
@@ -24,21 +25,22 @@ export function App() {
         <ToastProvider>
           <ToastContainer />
           <Routes>
-            {/* <Route path="/" element={<TeacherLogin />} /> */}
             <Route
-              path="/"
               element={
                 <PrimaryLayout
                   role={LayoutRole.Teacher}
                   navigationMenu={NAV_SECTIONS}
+                  accountNavigation={ACCOUNT_NAV}
                 />
               }
             >
+              <Route path="/" />
               <Route path={ACCOUNT}>
                 <Route path={PROFILE} />
                 <Route path={SETTINGS} />
               </Route>
             </Route>
+            <Route path="/login" element={<TeacherLogin />} />
             <Route path="/sign-up" element={<TeacherSignUp />} />
             <Route
               path="/forgot-password"

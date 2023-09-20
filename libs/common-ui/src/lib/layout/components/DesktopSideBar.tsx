@@ -4,7 +4,7 @@ import { SideBarProps } from './type';
 import { ArrowRightOnRectangleIcon } from '@heroicons/react/24/outline';
 import { AcerAcademyLogo } from '../../logo/logo';
 
-export const DesktopSideBar = ({ navigationSections }: SideBarProps) => {
+export const DesktopSideBar = ({ navigationMenu }: SideBarProps) => {
   return (
     <div className="hidden lg:absolute lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
       {/* Sidebar component, swap this element with another sidebar if you like */}
@@ -14,8 +14,10 @@ export const DesktopSideBar = ({ navigationSections }: SideBarProps) => {
         </div>
         <nav className="flex flex-1 flex-col">
           <ul className="flex flex-1 flex-col gap-y-7 justify-between content-between">
-            {navigationSections.map((section) => (
-              <SideBarSection section={section} key={section.name} />
+            {navigationMenu.map((section) => (
+              <li key={section.name}>
+                <SideBarSection section={section} key={section.name} />
+              </li>
             ))}
             <li className="-mx-6 flex gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-text-primary justify-between">
               {/* @TODO: Use AuthContext to pass in name here */}

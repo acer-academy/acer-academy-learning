@@ -10,4 +10,6 @@ export { ToastProvider, useToast } from './lib/wrapper/ToastProvider';
 export * from './lib/logo/logo';
 export * from './lib/wrapper/wrapper';
 export * from './lib/layout/SecondaryLayout';
+export * from './lib/layout/PrimaryLayout';
+export * from './lib/layout/constants';
 export * from './lib/layout/components/DisclosureMenuItem';

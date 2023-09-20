@@ -6,6 +6,7 @@ type MobileContextStates = {
 };
 
 export const MobileContext = createContext({} as MobileContextStates);
+
 export const MobileProvider = ({ children }: PropsWithChildren) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 

@@ -11,7 +11,7 @@ export const ZOOM_LINK = `${SUBJECTS}/zoom-link`;
 // Booking routes
 export const BOOKING = '/booking';
 export const VIEW_CLASSES = `${BOOKING}/view-classes`;
-export const BOOK_CLASSES = `${BOOKING}/view-classes`;
+export const BOOK_CLASSES = `${BOOKING}/book-classes`;
 export const BUY_CREDITS = `${BOOKING}/buy-credits`;
 export const PAST_TRANSACTIONS = `${BOOKING}/past-transactions`;
 
@@ -20,6 +20,6 @@ export const REWARDS = '/rewards';
 
 // Account routes
 export const ACCOUNT = '/account';
-export const PROFILE = '/profile';
-export const NOTIFICATIONS = '/notifications';
-export const SETTINGS = '/settings';
+export const PROFILE = `${ACCOUNT}/profile`;
+export const NOTIFICATIONS = `${ACCOUNT}/notifications`;
+export const SETTINGS = `${ACCOUNT}/settings`;

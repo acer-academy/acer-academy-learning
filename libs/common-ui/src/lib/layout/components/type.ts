@@ -21,5 +21,6 @@ export type MobileProps = {
 };
 
 export type SideBarProps = {
-  navigationSections: NavigationSection[];
+  navigationMenu: NavigationMenuItem[];
+  logo?: React.ReactNode;
 };
