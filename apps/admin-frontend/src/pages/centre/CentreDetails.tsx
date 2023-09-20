@@ -1,5 +1,4 @@
 import { useToast } from '@acer-academy-learning/common-ui';
-import api from '@acer-academy-learning/data-access';
 import {
   CentreData,
   CentreUpdateData,
@@ -7,6 +6,11 @@ import {
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { CentreDeleteModal } from './CentreDeleteModal';
+import {
+  getCentreById,
+  updateCentre as apiUpdateCentre,
+  deleteCentre as apiDeleteCentre,
+} from '@acer-academy-learning/data-access';
 
 export const CentreDetails: React.FC = () => {
   const [centre, setCentre] = useState<CentreData>();
@@ -32,7 +36,7 @@ export const CentreDetails: React.FC = () => {
 
   const getCurrentCentre = async (id: string) => {
     try {
-      const response = await api.centres.getCentreById(id);
+      const response = await getCentreById(id);
       const centreData: CentreData = response.data;
       console.log(centreData);
       setCentre(centreData);
@@ -52,7 +56,7 @@ export const CentreDetails: React.FC = () => {
     centreData: CentreUpdateData,
   ) => {
     try {
-      const response = await api.centres.updateCentre(centreId, centreData);
+      const response = await apiUpdateCentre(centreId, centreData);
       const updatedCentre: CentreData = response.data;
       console.log(updatedCentre);
       displayToast('Centre updated successfully.', ToastType.SUCCESS);
@@ -76,7 +80,7 @@ export const CentreDetails: React.FC = () => {
   const deleteCentre = async () => {
     if (!centreId) return;
     try {
-      const response = await api.centres.deleteCentre(centreId);
+      const response = await apiDeleteCentre(centreId);
       console.log(response);
       displayToast('Centre deleted successfully.', ToastType.INFO);
       navigate('/centre-management');

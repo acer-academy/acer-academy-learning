@@ -350,7 +350,7 @@ export async function validateParamsCentreDeletable(
           'Centre cannot be deleted. Teachers associated with this centre still exist.',
       });
     }
-    const classroomsInCentre = await classroomService.getClassroomByCentre(
+    const classroomsInCentre = await classroomService.getClassroomsByCentre(
       centreId,
     );
     if (classroomsInCentre.length > 0) {
