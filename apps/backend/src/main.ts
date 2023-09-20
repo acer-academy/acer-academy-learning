@@ -11,6 +11,7 @@ import studentRouter from './routers/studentRouter';
 import adminRouter from './routers/adminRouter';
 import teacherRouter from './routers/teacherRouter';
 import centreRouter from './routers/centreRouter';
+import classroomRouter from './routers/classroomRouter';
 
 dotenv.config();
 
@@ -35,6 +36,7 @@ app.use('/api/v1/students', studentRouter);
 app.use('/api/v1/admins', adminRouter);
 app.use('/api/v1/teachers', teacherRouter);
 app.use('/api/v1/centres', centreRouter);
+app.use('/api/v1/classrooms', classroomRouter);
 
 // Start the server
 const server = app.listen(port, () => {

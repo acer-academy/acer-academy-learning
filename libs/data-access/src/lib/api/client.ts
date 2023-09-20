@@ -18,7 +18,7 @@ const client = axios.create({
 
 // TODO: work on access token implementation
 client.interceptors.request.use((config: InternalAxiosRequestConfig) => {
-  const accessToken = ''; 
+  const accessToken = '';
   config.headers.Authorization = accessToken ? `Bearer ${accessToken}` : '';
   return config;
 });
