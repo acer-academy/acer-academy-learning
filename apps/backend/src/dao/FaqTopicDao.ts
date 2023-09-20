@@ -45,23 +45,16 @@ export class FaqTopicDao {
   }
 
   public async deleteFaqTopic(faqTopicId: string): Promise<FaqTopic | null> {
-    const deleteArticles = this.prismaClient.faqArticle.deleteMany({
+    const deleteArticles = await this.prismaClient.faqArticle.deleteMany({
       where: {
         faqTopicId: faqTopicId,
       },
     });
 
-    const deleteTopic = this.prismaClient.faqTopic.delete({
+    return this.prismaClient.faqTopic.delete({
       where: {
         id: faqTopicId,
       },
     });
-
-    const transaction = await this.prismaClient.$transaction([
-      deleteArticles,
-      deleteTopic,
-    ]);
-
-    return deleteTopic;
   }
 }

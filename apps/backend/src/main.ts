@@ -14,8 +14,6 @@ import centreRouter from './routers/centreRouter';
 import faqArticleRouter from './routers/faqArticleRouter';
 import faqTopicRouter from './routers/faqTopicRouter';
 import classroomRouter from './routers/classroomRouter';
-import faqArticleRouter from './routers/faqArticleRouter';
-import faqTopicRouter from './routers/faqTopicRouter';
 
 dotenv.config();
 
