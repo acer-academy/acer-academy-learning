@@ -1,47 +1,121 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+import React, { useState, useEffect, useMemo } from 'react';
 import { AcerAcademyLogo } from '@acer-academy-learning/common-ui';
 import { retrieveCentres } from '../../api/centre';
-import { useState, useEffect } from 'react';
 import { registerStudent } from '../../api/student';
 import { useToast } from '@acer-academy-learning/common-ui';
+import { LevelEnum, SubjectEnum } from '@acer-academy-learning/data-access';
+import { Centre } from 'libs/data-access/src/lib/types/student';
+
+interface InputFieldProps {
+  label: string;
+  id: string;
+  name: string;
+  type: string;
+  value: string;
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  additionalClasses?: string;
+}
+
+//Input field component
+const InputField: React.FC<InputFieldProps> = ({
+  label,
+  id,
+  name,
+  type,
+  value,
+  onChange,
+  additionalClasses,
+}) => (
+  <div className={`flex items-center space-x-4 ${additionalClasses}`}>
+    <label
+      htmlFor={id}
+      className="w-1/4 text-sm font-medium leading-6 text-gray-900"
+    >
+      {label}
+    </label>
+    <input
+      id={id}
+      name={name}
+      type={type}
+      required
+      value={value}
+      onChange={onChange}
+      className={`w-3/4 block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`}
+    />
+  </div>
+);
+
+interface ParentFieldsProps {
+  label: string;
+  firstName: string;
+  setFirstName: React.Dispatch<React.SetStateAction<string>>;
+  lastName: string;
+  setLastName: React.Dispatch<React.SetStateAction<string>>;
+  phoneNumber: string;
+  setPhoneNumber: React.Dispatch<React.SetStateAction<string>>;
+}
+
+//Parent fields component
+const ParentFields: React.FC<ParentFieldsProps> = ({
+  label,
+  firstName,
+  setFirstName,
+  lastName,
+  setLastName,
+  phoneNumber,
+  setPhoneNumber,
+}) => (
+  <>
+    <h2 className="text-base font-semibold leading-7 text-gray-900 mb-6">
+      {label}
+    </h2>
+    <InputField
+      label="First Name"
+      id={`${label}-firstName`}
+      name="firstName"
+      type="text"
+      value={firstName}
+      onChange={(e) => setFirstName(e.target.value)}
+      additionalClasses="mb-7"
+    />
+    <InputField
+      label="Last Name"
+      id={`${label}-lastName`}
+      name="lastName"
+      type="text"
+      value={lastName}
+      onChange={(e) => setLastName(e.target.value)}
+      additionalClasses="mb-7"
+    />
+    <InputField
+      label="Phone Number"
+      id={`${label}-phoneNumber`}
+      name="phoneNumber"
+      type="number"
+      value={phoneNumber}
+      onChange={(e) => setPhoneNumber(e.target.value)}
+      additionalClasses="mb-7"
+    />
+  </>
+);
 
 export default function StudentSignUp() {
+  //used for displaying notification
   const { displayToast, ToastType } = useToast();
 
-  enum LevelEnum {
-    P1 = 'P1',
-    P2 = 'P2',
-    P3 = 'P3',
-    P4 = 'P4',
-    P5 = 'P5',
-    P6 = 'P6',
-    S1 = 'S1',
-    S2 = 'S2',
-    S3 = 'S3',
-    S4 = 'S4',
-    S5 = 'S5',
-    J1 = 'J1',
-    J2 = 'J2',
-  }
+  //map it to subject json to display the subjects on the page
+  const subjects = useMemo(
+    () =>
+      Object.entries(SubjectEnum).map(([key, value]) => ({
+        id: key.toLowerCase(),
+        label: key.charAt(0).toUpperCase() + key.toLowerCase().slice(1),
+        value: value,
+      })),
+    [],
+  );
 
-  enum SubjectEnum {
-    MATHEMATICS = 'MATHEMATICS',
-    ENGLISH = 'ENGLISH',
-    SCIENCE = 'SCIENCE',
-  }
-
-  const subjects = [
-    { id: 'english', label: 'English', value: 'ENGLISH' },
-    { id: 'science', label: 'Science', value: 'SCIENCE' },
-    { id: 'math', label: 'Math', value: 'MATHEMATICS' },
-    // add more subjects as needed
-  ];
-
-  interface Centre {
-    id: string;
-    name: string;
-    address: string;
-  }
-
+  //student particulars
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
@@ -54,7 +128,7 @@ export default function StudentSignUp() {
   const [centres, setCentres] = useState<Centre[]>([]);
   const [selectedCentre, setSelectedCentre] = useState('');
 
-  //parent
+  //parent particualrs
   const [parent1FirstName, setParent1FirstName] = useState('');
   const [parent1LastName, setParent1LastName] = useState('');
   const [parent1PhoneNumber, setParent1PhoneNumber] = useState('');
@@ -89,16 +163,18 @@ export default function StudentSignUp() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    //map the selected subjects to SubjectEnum[]
     const subjectEnumArray: SubjectEnum[] = selectedSubjects
       .filter((subject) => subject in SubjectEnum)
       .map((subject) => SubjectEnum[subject as keyof typeof SubjectEnum]);
 
+    //map the level to LevelEnum
     let selectedLevelEnum;
-
     if (selectedLevel! in LevelEnum) {
       selectedLevelEnum = LevelEnum[selectedLevel as keyof typeof LevelEnum];
     }
 
+    //map the parents according to format of "parents": { "create":[{}, {}]} to create parents along withs tudent
     const parents = {
       create: [
         {
@@ -172,97 +248,50 @@ export default function StudentSignUp() {
           Student Particulars
         </h2>
         <form className="space-y-6" onSubmit={handleSubmit}>
-          <div className="flex items-center space-x-4">
-            <label
-              htmlFor="firstName"
-              className="w-1/4 text-sm font-medium leading-6 text-gray-900"
-            >
-              First Name
-            </label>
-            <input
-              id="firstName"
-              name="firstName"
-              type="text"
-              required
-              value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
-              className="w-3/4 block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-            />
-          </div>
+          <InputField
+            id="firstName"
+            label="First Name"
+            name="firstName"
+            type="text"
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
+          />
 
-          <div className="flex items-center space-x-4">
-            <label
-              htmlFor="lastName"
-              className="w-1/4 text-sm font-medium leading-6 text-gray-900"
-            >
-              Last Name
-            </label>
-            <input
-              id="lastName"
-              name="lastName"
-              type="text"
-              required
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
-              className="w-3/4 block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-            />
-          </div>
+          <InputField
+            id="lastName"
+            label="Last Name"
+            name="lastName"
+            type="text"
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
+          />
 
-          <div className="flex items-center space-x-4">
-            <label
-              htmlFor="email"
-              className="block w-1/4 text-sm font-medium leading-6 text-gray-900"
-            >
-              Email Address
-            </label>
-            <input
-              id="email"
-              name="email"
-              type="email"
-              autoComplete="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className=" w-3/4 block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-            />
-          </div>
+          <InputField
+            id="email"
+            label="Email Address"
+            name="email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
 
-          <div className="flex items-center space-x-4">
-            <label
-              htmlFor="password"
-              className="block w-1/4 text-sm font-medium leading-6 text-gray-900"
-            >
-              Password
-            </label>
-            <input
-              id="password"
-              name="password"
-              type="password"
-              autoComplete="current-password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-3/4 block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-            />
-          </div>
+          <InputField
+            id="password"
+            label="Password"
+            name="password"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
 
-          <div className="flex items-center space-x-4">
-            <label
-              htmlFor="confirmPassword"
-              className="block w-1/4 text-sm font-medium leading-6 text-gray-900"
-            >
-              Reconfirm Password
-            </label>
-            <input
-              id="confirmPassword"
-              name="confirmPassword"
-              type="password"
-              required
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              className="w-3/4 block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-            />
-          </div>
+          <InputField
+            id="confirmPassword"
+            label="Confirm Password"
+            name="password"
+            type="password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+          />
 
           <div className="flex items-center space-x-4">
             <label
@@ -340,41 +369,23 @@ export default function StudentSignUp() {
             </select>
           </div>
 
-          <div className="flex items-center space-x-4">
-            <label
-              htmlFor="firstName"
-              className="w-1/4 text-sm font-medium leading-6 text-gray-900"
-            >
-              School
-            </label>
-            <input
-              id="school"
-              name="school"
-              type="text"
-              required
-              value={school}
-              onChange={(e) => setSchool(e.target.value)}
-              className="w-3/4 block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-            />
-          </div>
+          <InputField
+            id="school"
+            label="School"
+            name="school"
+            type="text"
+            value={school}
+            onChange={(e) => setSchool(e.target.value)}
+          />
 
-          <div className="flex items-center space-x-4">
-            <label
-              htmlFor="phoneNumber"
-              className="w-1/4 text-sm font-medium leading-6 text-gray-900"
-            >
-              Phone Number
-            </label>
-            <input
-              id="phoneNumber"
-              name="phoneNumber"
-              type="text"
-              required
-              value={phoneNumber}
-              onChange={(e) => setPhoneNumber(e.target.value)}
-              className="w-3/4 block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-            />
-          </div>
+          <InputField
+            id="phoneNumber"
+            label="Phone Number"
+            name="phoneNumber"
+            type="number"
+            value={phoneNumber}
+            onChange={(e) => setPhoneNumber(e.target.value)}
+          />
 
           <div>
             <h2 className="text-base font-semibold leading-7 text-gray-900 mb-6">
@@ -382,27 +393,27 @@ export default function StudentSignUp() {
             </h2>
 
             {/* Parent 1 Fields */}
-            {renderParentFields(
-              showParent2 ? 'Parent 1' : 'Parent',
-              parent1FirstName,
-              setParent1FirstName,
-              parent1LastName,
-              setParent1LastName,
-              parent1PhoneNumber,
-              setParent1PhoneNumber,
-            )}
+            {ParentFields({
+              label: showParent2 ? 'Parent 1' : 'Parent',
+              firstName: parent1FirstName,
+              setFirstName: setParent1FirstName,
+              lastName: parent1LastName,
+              setLastName: setParent1LastName,
+              phoneNumber: parent1PhoneNumber,
+              setPhoneNumber: setParent1PhoneNumber,
+            })}
 
             {/* Parent 2 Fields */}
             {showParent2 &&
-              renderParentFields(
-                'Parent 2',
-                parent2FirstName,
-                setParent2FirstName,
-                parent2LastName,
-                setParent2LastName,
-                parent2PhoneNumber,
-                setParent2PhoneNumber,
-              )}
+              ParentFields({
+                label: 'Parent 2',
+                firstName: parent2FirstName,
+                setFirstName: setParent2FirstName,
+                lastName: parent2LastName,
+                setLastName: setParent2LastName,
+                phoneNumber: parent2PhoneNumber,
+                setPhoneNumber: setParent2PhoneNumber,
+              })}
 
             {/* Button to add Parent 2 Fields */}
             <div className="mt-4">
@@ -446,74 +457,5 @@ export default function StudentSignUp() {
         </p>
       </div>
     </div>
-  );
-}
-
-function renderParentFields(
-  label: string,
-  firstName: string,
-  setFirstName: React.Dispatch<React.SetStateAction<string>>,
-  lastName: string,
-  setLastName: React.Dispatch<React.SetStateAction<string>>,
-  phoneNumber: string,
-  setPhoneNumber: React.Dispatch<React.SetStateAction<string>>,
-) {
-  return (
-    <>
-      <h2 className="text-base font-semibold leading-7 text-gray-900 mb-6">
-        {label}
-      </h2>
-      <div className="flex items-center space-x-4 mb-8">
-        <label
-          htmlFor="firstName"
-          className="w-1/4 text-sm font-medium leading-6 text-gray-900"
-        >
-          First Name
-        </label>
-        <input
-          id="firstName"
-          name="firstName"
-          type="text"
-          required
-          value={firstName}
-          onChange={(e) => setFirstName(e.target.value)}
-          className="w-3/4 block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-        />
-      </div>
-      <div className="flex items-center space-x-4 mb-8">
-        <label
-          htmlFor="lastName"
-          className="w-1/4 text-sm font-medium leading-6 text-gray-900"
-        >
-          Last Name
-        </label>
-        <input
-          id="lastName"
-          name="lastName"
-          type="text"
-          required
-          value={lastName}
-          onChange={(e) => setLastName(e.target.value)}
-          className="w-3/4 block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-        />
-      </div>
-      <div className="flex items-center space-x-4 mb-8">
-        <label
-          htmlFor="phoneNumber"
-          className="w-1/4 text-sm font-medium leading-6 text-gray-900"
-        >
-          Phone Number
-        </label>
-        <input
-          id="phoneNumber"
-          name="phoneNumber"
-          type="text"
-          required
-          value={phoneNumber}
-          onChange={(e) => setPhoneNumber(e.target.value)}
-          className="w-3/4 block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-        />
-      </div>
-    </>
   );
 }

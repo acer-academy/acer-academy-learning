@@ -6,13 +6,14 @@ import StudentSignUp from '../pages/entry/StudentSignUp';
 import { Route, Routes, Link } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { AuthWrapper } from '../auth/AuthContext';
+// import { AuthWrapper } from '../auth/AuthContext';
 import StudentAccount from '../pages/entry/StudentAccount';
+import { StudentAuthWrapper } from '@acer-academy-learning/common-ui';
 
 export function App() {
   return (
     <div className="h-full">
-      <AuthWrapper>
+      <StudentAuthWrapper>
         <ToastProvider>
           <ToastContainer />
           <Routes>
@@ -21,7 +22,7 @@ export function App() {
             <Route path="/account" element={<StudentAccount />} />
           </Routes>
         </ToastProvider>
-      </AuthWrapper>
+      </StudentAuthWrapper>
     </div>
   );
 }
