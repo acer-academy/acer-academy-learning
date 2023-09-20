@@ -1,12 +1,17 @@
 import express from "express";
-import { PromotionPostData, PromotionPutData } from "libs/data-access/src/lib/types/promotion";
 import PromotionService from "../services/PromotionService";
+import { Prisma } from "@prisma/client";
+import { validateDateFormat, validatePromotionPromoCodeUnique, validatePromotionPercentageDiscount } from "../middleware/validationMiddleware";
 
 const promotionRouter = express.Router();
 
-promotionRouter.post('/createPromotion', async (req, res) => {
+promotionRouter.post('/createPromotion',
+validateDateFormat,
+validatePromotionPromoCodeUnique, 
+validatePromotionPercentageDiscount,
+ async (req, res) => {
     try {
-        const body = req.body as PromotionPostData
+        const body = req.body as Prisma.PromotionCreateInput
         const promotion = await PromotionService.createPromotion(body)
         return res.status(200).json(promotion)
     } catch(err) {
@@ -36,10 +41,25 @@ promotionRouter.get('/getPromotionById/:id', async(req, res) => {
     }
 })
 
-promotionRouter.put('/updatePromotion/:id', async(req, res) => {
+promotionRouter.get('/getPromotionByPromoCode/:promoCode', async(req, res) => {
+    try {
+        const {promoCode} = req.params
+        const promotion = await PromotionService.getPromotionByPromoCode(promoCode)
+        return res.status(200).json(promotion)
+    } catch(err) {
+        console.log(err);
+        return res.status(400).json({error: err})
+    }
+})
+
+promotionRouter.put('/updatePromotion/:id', 
+validatePromotionPercentageDiscount, 
+validatePromotionPromoCodeUnique,
+validateDateFormat,
+async(req, res) => {
     try {
         const {id} = req.params
-        const input = req.body as PromotionPutData
+        const input = req.body as Prisma.PromotionUpdateInput
         const updatedPromotion = await PromotionService.updatePromotion(id, input)
         return res.status(200).json(updatedPromotion)
     } catch(err) {
