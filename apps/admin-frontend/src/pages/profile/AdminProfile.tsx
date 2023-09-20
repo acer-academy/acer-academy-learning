@@ -20,8 +20,9 @@ const AdminProfile: React.FC = () => {
     const onSaveProfile = async () => {
       try {
         await updateAdmin(user.email, {firstName: firstName, lastName: lastName});
-          displayToast('Profile updated!', ToastType.SUCCESS);
-          setIsEditing(false);
+        //@TODO: SET USER HERE FOR AUTH CONTEXT
+        displayToast('Profile updated!', ToastType.SUCCESS);
+        setIsEditing(false);
       } catch(error) {
           displayToast('Update first name failed', ToastType.ERROR);
       }
