@@ -191,10 +191,7 @@ export async function validateBodyFirstNameLastNameNotEmpty(
 ) {
   try {
     const { firstName, lastName } = req.body;
-    if (
-      (firstName && firstName.trim() === '') ||
-      (lastName && lastName.trim() === '')
-    ) {
+    if (firstName.trim() === '' || lastName.trim() === '') {
       return res.status(400).json({
         error:
           'First name and last name cannot be empty or contain only whitespace.',
@@ -292,7 +289,7 @@ export async function validateBodyCentreNameAddressNotEmpty(
 ) {
   try {
     const { name, address } = req.body;
-    if ((name && name.trim() === '') || (address && address.trim() === '')) {
+    if (name.trim().length == 0 || address.trim().length == 0) {
       return res.status(400).json({
         error: 'Name and address cannot be empty or contain only whitespace.',
       });
