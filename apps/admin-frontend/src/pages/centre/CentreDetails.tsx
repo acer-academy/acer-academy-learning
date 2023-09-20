@@ -7,6 +7,7 @@ import {
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { CentreDeleteModal } from './CentreDeleteModal';
+import { ClassroomData } from 'libs/data-access/src/lib/types/classroom';
 
 export const CentreDetails: React.FC = () => {
   const [centre, setCentre] = useState<CentreData>();
@@ -17,6 +18,7 @@ export const CentreDetails: React.FC = () => {
   const [isEditingCentreName, setIsEditingCentreName] = useState(false);
   const [isEditingCentreAddress, setIsEditingCentreAddress] = useState(false);
   const [updatesMade, setUpdatesMade] = useState(false);
+  const [classrooms, setClassrooms] = useState<ClassroomData[]>([]);
 
   const { displayToast, ToastType } = useToast();
   const navigate = useNavigate();
@@ -41,6 +43,21 @@ export const CentreDetails: React.FC = () => {
     } catch (error) {
       displayToast(
         'Centre could not be retrieved from the server.',
+        ToastType.ERROR,
+      );
+      console.log(error);
+    }
+  };
+
+  const getCentreClassrooms = async (id: string) => {
+    try {
+      const response = await api.classrooms.getClassroomsByCentre(id);
+      const classroomsData: ClassroomData[] = response.data;
+      console.log(classroomsData);
+      setClassrooms(classroomsData);
+    } catch (error) {
+      displayToast(
+        'Classrooms could not be retrieved from the server.',
         ToastType.ERROR,
       );
       console.log(error);
@@ -96,7 +113,11 @@ export const CentreDetails: React.FC = () => {
   };
 
   useEffect(() => {
-    getCurrentCentre(centreId || '');
+    if (centreId) getCentreClassrooms(centreId);
+  }, [centre]);
+
+  useEffect(() => {
+    if (centreId) getCurrentCentre(centreId);
   }, []);
 
   useEffect(() => {
@@ -236,6 +257,73 @@ export const CentreDetails: React.FC = () => {
             </svg>
             Add Classroom
           </button>
+        </div>
+        <div className="flow-root">
+          <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+            <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+              <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
+                <table className="min-w-full divide-y divide-gray-300">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th
+                        scope="col"
+                        className="py-3.5 pl-4 pr-3 text-left text-lg font-bold text-gray-900 sm:pl-6"
+                      >
+                        Classroom Name
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-3 py-3.5 text-left text-lg font-bold text-gray-900"
+                      >
+                        Capacity
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-3 py-3.5 text-left text-lg font-bold text-gray-900"
+                      >
+                        Available
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-3 py-3.5 text-left text-lg font-bold text-gray-900"
+                      >
+                        Actions
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-200 bg-white">
+                    {classrooms.length === 0 ? (
+                      <tr>
+                        <td
+                          colSpan={4}
+                          className="whitespace-nowrap py-4 px-4 font-light italic text-gray-400 text-center"
+                        >
+                          No classrooms have been added yet.
+                        </td>
+                      </tr>
+                    ) : (
+                      classrooms.map((classroom) => (
+                        <tr key={classroom.id}>
+                          <td className="whitespace-nowrap py-4 pl-4 pr-3 text-m font-medium text-gray-900 sm:pl-6">
+                            {classroom.name}
+                          </td>
+                          <td className="whitespace-nowrap px-3 py-4 text-m text-gray-500">
+                            {classroom.capacity}
+                          </td>
+                          <td className="whitespace-nowrap px-3 py-4 text-m text-gray-500">
+                            {classroom.available ? 'Yes' : 'No'}
+                          </td>
+                          <td className="whitespace-nowrap px-3 py-4 text-m text-gray-500">
+                            Actions
+                          </td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       {isDeleteModalOpen && centreId && (
