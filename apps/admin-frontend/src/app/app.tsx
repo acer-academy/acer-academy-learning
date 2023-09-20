@@ -23,6 +23,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { AuthWrapper } from '../auth/AuthContext';
 import {
+  LayoutRole,
   SecondaryLayout,
   ToastProvider,
 } from '@acer-academy-learning/common-ui';
@@ -68,10 +69,17 @@ export default function App() {
             <Route path="/" element={<AdminLogin />} />
             <Route path="account" element={<Account />} />
             <Route
-              element={<SecondaryLayout navigationSections={NAV_SECTIONS} />}
+              element={
+                <SecondaryLayout
+                  navigationMenu={NAV_SECTIONS}
+                  role={LayoutRole.Admin}
+                />
+              }
             >
               {/* Nest all routes that has a SecondaryLayout here */}
               <Route path="/" element={<h1>Main</h1>} />
+              <Route path={CENTRE} element={<h1>Main</h1>} />
+              <Route path={FAQ} element={<h1>Main</h1>} />
               <Route
                 path={HUMAN_RESOURCES}
                 element={

@@ -1,4 +1,4 @@
-import { NavigationSection } from 'libs/common-ui/src/lib/layout/components/type';
+import { NavigationMenuItem } from 'libs/common-ui/src/lib/layout/components/type';
 import {
   BuildingStorefrontIcon,
   // CalendarDaysIcon,
@@ -15,14 +15,13 @@ import {
   STUDENTS,
   TEACHERS,
 } from './routes';
-export const NAV_SECTIONS: NavigationSection[] = [
+export const NAV_SECTIONS: NavigationMenuItem[] = [
   {
     name: 'MANAGEMENT',
-    menu: [
+    children: [
       {
         name: 'Human Resources',
-        // Default to Teachers
-        path: TEACHERS,
+        path: HUMAN_RESOURCES,
         icon: UsersIcon,
         children: [
           { name: 'Teachers', path: TEACHERS },
@@ -38,6 +37,6 @@ export const NAV_SECTIONS: NavigationSection[] = [
   },
   {
     name: 'OTHERS',
-    menu: [{ name: 'Settings', path: '/settings', icon: Cog6ToothIcon }],
+    children: [{ name: 'Settings', path: '/settings', icon: Cog6ToothIcon }],
   },
 ];
