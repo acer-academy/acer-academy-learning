@@ -1,3 +1,4 @@
+import { LevelEnum, SubjectEnum, Centre } from './CommonTypes';
 export interface TeacherData {
   id: string;
   email: string;
@@ -8,7 +9,6 @@ export interface TeacherData {
   subjects: SubjectEnum[];
   centreId: string;
 }
-import { LevelEnum, SubjectEnum, Centre } from './CommonTypes';
 
 export interface Teacher {
   email: string;
