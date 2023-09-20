@@ -1,5 +1,6 @@
 import { TeacherDao } from '../dao/TeacherDao';
 import { LevelEnum, Prisma, SubjectEnum, Teacher } from '@prisma/client';
+import bcrypt from 'bcrypt';
 
 export class TeacherService {
   constructor(private teacherDao: TeacherDao = new TeacherDao()) {}
@@ -7,6 +8,7 @@ export class TeacherService {
   public async createTeacher(
     teacherData: Prisma.TeacherCreateInput,
   ): Promise<Teacher> {
+    teacherData.password = await bcrypt.hash(teacherData.password, 10);
     return this.teacherDao.createTeacher(teacherData);
   }
 
@@ -40,10 +42,29 @@ export class TeacherService {
     teacherId: string,
     teacherData: Prisma.TeacherUpdateInput,
   ): Promise<Teacher | null> {
+    if (teacherData.password) {
+      teacherData.password = await bcrypt.hash(teacherData.password, 10);
+    }
     return this.teacherDao.updateTeacher(teacherId, teacherData);
   }
 
   public async deleteTeacher(teacherId: string): Promise<Teacher | null> {
     return this.teacherDao.deleteTeacher(teacherId);
+  }
+
+  async login(teacherEmail: string, teacherPassword: string) {
+    const teacher = await this.teacherDao.getTeacherByEmail(teacherEmail);
+    if (
+      !teacher ||
+      !(await bcrypt.compare(teacherPassword, teacher.password))
+    ) {
+      throw new Error('Invalid credentials');
+    }
+
+    // Destructure admin object to omit id, password, and type
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { id, password, centreId, ...rest } = teacher;
+
+    return rest;
   }
 }

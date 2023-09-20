@@ -1,9 +1,9 @@
 import { useAuth } from '@acer-academy-learning/common-ui';
 import { AcerAcademyLogo } from '@acer-academy-learning/common-ui';
-import { Admin } from 'libs/data-access/src/lib/types/admin';
+import { Teacher } from 'libs/data-access/src/lib/types/teacher';
 
 const Account: React.FC = () => {
-  const { user } = useAuth<Admin>();
+  const { user } = useAuth<Teacher>();
 
   return (
     <div className="h-full bg-gray-50">
@@ -12,7 +12,7 @@ const Account: React.FC = () => {
           <AcerAcademyLogo className="mx-auto h-20 w-auto" />
 
           <h2 className="mt-6 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-            Admin System
+            Teacher System
           </h2>
         </div>
 
@@ -32,8 +32,24 @@ const Account: React.FC = () => {
                 <span className="text-gray-800">{user.email}</span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="font-semibold text-gray-600">Admin Type:</span>
-                <span className="text-gray-800 capitalize">{user.type}</span>
+                <span className="font-semibold text-gray-600">
+                  Teacher Subjects:
+                </span>
+                <span className="text-gray-800 capitalize">
+                  {user.subjects.join(', ')}
+                </span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="font-semibold text-gray-600">
+                  Teacher Levels:
+                </span>
+                <span className="text-gray-800 capitalize">
+                  {user.levels.join(', ')}
+                </span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="font-semibold text-gray-600">Centre:</span>
+                <span className="text-gray-800">{user.centre?.name}</span>
               </div>
             </div>
           </div>
