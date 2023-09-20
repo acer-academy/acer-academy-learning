@@ -18,11 +18,11 @@ export const SideBarSection = ({ section }: SideBarSection) => {
       <ul className="-mx-2 space-y-1">
         {section.children?.map((item) => (
           <li key={item.name}>
-            (item.children && (
-            <DisclosureMenuItem key={item.name} item={item} />
+            {(item.children && (
+              <DisclosureMenuItem key={item.name} item={item} />
             )) || (
-            <DisclosureLeafItem isChild={false} key={item.name} item={item} />
-            ),
+              <DisclosureLeafItem isChild={false} key={item.name} item={item} />
+            )}
           </li>
         ))}
       </ul>
