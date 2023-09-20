@@ -17,8 +17,8 @@ export const DisclosureLeafItem = ({
   const sizeStyles = useMemo(
     () =>
       isChild
-        ? 'block rounded-md py-2 pr-2 pl-9 text-sm leading-6 text-gray-700'
-        : 'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold text-gray-700',
+        ? 'block rounded-md py-2 pr-2 pl-9 text-sm leading-6'
+        : 'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold',
     [isChild],
   );
   return (

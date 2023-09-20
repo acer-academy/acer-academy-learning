@@ -3,11 +3,7 @@ import AdminLogin from '../pages/entry/AdminLogin';
 import AdminSignUp from '../pages/entry/AdminSignUp';
 import AdminForgotPassword from '../pages/entry/AdminForgotPassword';
 import { AdminAuthWrapper } from '@acer-academy-learning/common-ui';
-import { ToastProvider } from '@acer-academy-learning/common-ui';
-import { Routes, Route } from 'react-router-dom';
-import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; // Import toastify CSS
-import Account from '../pages/entry/Account';
 import { CentreManagement } from '../pages/centre/CentreManagement';
 import { CentreDetails } from '../pages/centre/CentreDetails';
 import AdminResetPassword from '../pages/entry/AdminResetPassword';
@@ -89,6 +85,8 @@ export default function App() {
                 <Route path={STUDENTS} element={<h2>Student</h2>} />
                 <Route path={ADMINS} element={<h2>Admin</h2>} />
               </Route>
+              <Route path={CENTRE} />
+              <Route path={FAQ} />
             </Route>
             <Route path="/login" element={<AdminLogin />} />
             <Route path="/account" element={<Account />} />
