@@ -98,7 +98,7 @@ model Centre {
   name       String      @unique
   address    String      @unique
   teachers   Teacher[]
-  Student    Student[]
+  tudent     Student[]
   classrooms Classroom[]
 }
 
@@ -110,4 +110,19 @@ model Classroom {
   centre    Centre  @relation(fields: [centreId], references: [id])
   centreId  String  @db.Uuid
   // sessions Session[]
+}
+
+model FaqTopic {
+  id          String       @id @default(uuid()) @db.Uuid
+  title       String       @unique
+  faqArticles FaqArticle[]
+}
+
+model FaqArticle {
+  id         String   @id @default(uuid()) @db.Uuid
+  title      String
+  imageUrl   String
+  body       String
+  faqTopic   FaqTopic @relation(fields: [faqTopicId], references: [id])
+  faqTopicId String   @db.Uuid
 }
