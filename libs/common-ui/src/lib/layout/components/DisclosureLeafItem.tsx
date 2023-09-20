@@ -6,6 +6,7 @@ import { useMenuItem } from '../hooks/useMenuItem';
 import { getThemeClassName } from '../../utils/getThemeClassName';
 import { useThemeContext } from '../contexts/ThemeContext';
 import { useThemeColorsOnClass } from '../hooks/useThemeColorOnClass';
+import { LayoutRole } from '../constants';
 
 export type DisclosureChildItem = {
   item: NavigationMenuItem;
@@ -32,23 +33,27 @@ export const DisclosureLeafItem = ({
     [isChild],
   );
 
-  const defaultTextColor = useThemeColorsOnClass('text', role, true, 200);
-  const defaultBgColor = useThemeColorsOnClass('bg', role, true, 700);
-  const defaultBgHoverColor = useThemeColorsOnClass(
-    'hover:bg',
-    role,
-    true,
-    700,
-  );
-
   return (
     <NavLink
       to={`${item.path}`}
       className={classNames(
         isActive
-          ? `${bgColor ?? defaultBgColor} text-white`
-          : `${textColor ?? defaultTextColor} hover:text-white ${
-              bgHoverColor ?? defaultBgHoverColor
+          ? `${
+              bgColor ??
+              (role === LayoutRole.Student
+                ? 'bg-student-primary-700'
+                : 'bg-teacher-primary-700')
+            } text-white`
+          : `${
+              textColor ??
+              (role === LayoutRole.Student
+                ? 'text-student-primary-200'
+                : 'text-teacher-primary-200')
+            } hover:text-white ${
+              bgHoverColor ??
+              (role === LayoutRole.Student
+                ? 'hover:bg-student-primary-700'
+                : 'hover:bg-teacher-primary-700')
             }`,
         sizeStyles,
       )}

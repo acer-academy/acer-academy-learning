@@ -43,6 +43,7 @@ export function App() {
               />
             }
           >
+            <Route path={'/'} element={<div>Home</div>} />
             <Route path={DASHBOARD} element={<div>Home</div>} />
             <Route path={SUBJECTS} element={<div>Home</div>}>
               <Route path={ASSIGNMENTS} element={<div>Home</div>} />

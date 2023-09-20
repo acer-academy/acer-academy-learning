@@ -1,15 +1,36 @@
 import { NavigationMenuItem } from 'libs/common-ui/src/lib/layout/components/type';
-import { ACCOUNT, PROFILE, SETTINGS } from './routes';
+import {
+  ACCOUNT,
+  ANALYTICS,
+  DASHBOARD,
+  PROFILE,
+  REWARDS,
+  SCHEDULING,
+  SETTINGS,
+  SUBJECTS,
+} from './routes';
 import { UserIcon, Cog6ToothIcon } from '@heroicons/react/24/outline';
 
 export const NAV_SECTIONS: NavigationMenuItem[] = [
   {
-    name: 'ACCOUNT',
-    path: ACCOUNT,
-    children: [
-      { name: 'Profile', path: PROFILE, icon: UserIcon },
-      { name: 'Settings', path: SETTINGS, icon: Cog6ToothIcon },
-    ],
+    name: 'DASHBOARD',
+    path: DASHBOARD,
+  },
+  {
+    name: 'SUBJECTS',
+    path: SUBJECTS,
+  },
+  {
+    name: 'ANALYTICS',
+    path: ANALYTICS,
+  },
+  {
+    name: 'SCHEDULING',
+    path: SCHEDULING,
+  },
+  {
+    name: 'REWARDS',
+    path: REWARDS,
   },
 ];
 
