@@ -1,5 +1,4 @@
 import { useState } from 'react';
-// import { useAuth } from '../../auth/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { AcerAcademyLogo } from '@acer-academy-learning/common-ui';
 import { useAuth } from '@acer-academy-learning/common-ui';
