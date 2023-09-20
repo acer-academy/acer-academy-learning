@@ -23,6 +23,14 @@ export class FaqArticleDao {
     });
   }
 
+  public async getFaqArticleByFaqTopic(
+    faqTopicId: string,
+  ): Promise<FaqArticle[] | null> {
+    return this.prismaClient.faqArticle.findMany({
+      where: { faqTopicId: faqTopicId },
+    });
+  }
+
   public async updateFaqArticle(
     faqArticleId: string,
     faqArticleData: Prisma.FaqArticleUpdateInput,

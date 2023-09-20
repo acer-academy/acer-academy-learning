@@ -28,6 +28,12 @@ export class FaqTopicDao {
     });
   }
 
+  public async getFaqTopicByTitle(title: string): Promise<FaqTopic | null> {
+    return this.prismaClient.faqTopic.findUnique({
+      where: { title: title },
+    });
+  }
+
   public async updateFaqTopic(
     faqTopicId: string,
     faqTopicData: Prisma.FaqTopicUpdateInput,
