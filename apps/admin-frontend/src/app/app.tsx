@@ -8,6 +8,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; // Import toastify CSS
 import Account from '../pages/entry/Account';
 import AdminProfile from '../pages/profile/AdminProfile';
+import ChangePassword from '../pages/profile/ChangePassword';
 
 export default function App() {
   return (
@@ -19,6 +20,7 @@ export default function App() {
             <Route path="/" element={<AdminLogin />} />
             <Route path="/account" element={<Account />} />
             <Route path="/profile" element={<AdminProfile />} />
+            <Route path="/changePassword" element={<ChangePassword />} />
             <Route path="sign-up" element={<AdminSignUp />} />
           </Routes>
         </ToastProvider>

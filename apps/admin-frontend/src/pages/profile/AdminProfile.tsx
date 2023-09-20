@@ -1,5 +1,7 @@
 import { useAuth } from '@acer-academy-learning/common-ui';
-import { useState, useEffect, useRef } from 'react';
+import { useState} from 'react';
+import { useNavigate } from 'react-router-dom';
+
 import { updateAdmin } from '../../api/admin';
 import { useToast } from '@acer-academy-learning/common-ui';
 
@@ -10,6 +12,8 @@ const AdminProfile: React.FC = () => {
     const [firstName, setFirstName] = useState(user.firstName);
     const [isEditing, setIsEditing] = useState(false);
     const [lastName, setLastName] = useState(user.lastName);
+
+    const navigate = useNavigate();
 
     const { displayToast, ToastType } = useToast();
 
@@ -87,6 +91,7 @@ const AdminProfile: React.FC = () => {
                 <span className="font-semibold text-gray-600">Change Password:</span>
                 <button
                 className="rounded bg-indigo-600 px-2 py-1 text-xs font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                onClick={() => navigate('/changePassword')}
                 >
                   Change Password
                 </button>
