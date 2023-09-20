@@ -22,6 +22,10 @@ module.exports = {
       colors: {
         'admin-primary': colors.indigo,
         'admin-secondary': colors.white,
+        'teacher-primary': colors.gray,
+        'teacher-secondary': colors.indigo,
+        'student-primary': colors.indigo,
+        'student-secondary': colors.gray,
         'text-primary': colors.white,
         'icon-primary': colors.white,
       },
