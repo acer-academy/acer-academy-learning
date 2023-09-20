@@ -9,6 +9,9 @@ import cors from 'cors';
 import * as path from 'path';
 import studentRouter from './routers/studentRouter';
 import adminRouter from './routers/adminRouter';
+import promotionRouter from './routers/promotionRouter';
+import teacherRouter from './routers/teacherRouter';
+import centreRouter from './routers/centreRouter';
 
 dotenv.config();
 
@@ -31,6 +34,9 @@ app.get('/api', (req, res) => {
 // Routes
 app.use('/api/v1/students', studentRouter);
 app.use('/api/v1/admins', adminRouter);
+app.use('/api/v1/promotions', promotionRouter);
+app.use('/api/v1/teachers', teacherRouter);
+app.use('/api/v1/centres', centreRouter);
 
 // Start the server
 const server = app.listen(port, () => {

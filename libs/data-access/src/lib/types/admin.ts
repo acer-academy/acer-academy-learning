@@ -1,24 +1,37 @@
 export enum AdminType {
-    STANDARD_ADMIN = 'STANDARD_ADMIN',
-    SUPER_ADMIN = 'SUPER_ADMIN',
-  }
-  
-  export interface AdminPostData {
-    name: string;
-    email: string;
-    password: string;
-    type: AdminType;
-  }
-  
-  export interface AdminPutData {
-    name?: string;
-    email?: string;
-    password?: string;
-    type?: AdminType;
-  }
-  
-  export interface AdminGetData {
-    email: string;
-    password: string;
-  }
-  
+  STANDARD_ADMIN = 'STANDARD_ADMIN',
+  SUPER_ADMIN = 'SUPER_ADMIN',
+}
+
+export interface AdminPostData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+}
+
+export interface AdminPutData {
+  firstName?: string;
+  lastName?: string;
+}
+
+export interface AdminGetData {
+  email: string;
+  password: string;
+}
+
+export interface Admin {
+  firstName: string;
+  lastName: string;
+  email: string;
+  type: AdminType;
+  isAuthenticated: boolean;
+}
+
+export const defaultAdmin: Admin = {
+  firstName: '',
+  lastName: '',
+  type: AdminType.STANDARD_ADMIN,
+  email: '',
+  isAuthenticated: false,
+};

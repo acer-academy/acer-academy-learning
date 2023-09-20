@@ -2407,6 +2407,13 @@
   dependencies:
     defer-to-connect "^2.0.0"
 
+"@tailwindcss/forms@^0.5.6":
+  version "0.5.6"
+  resolved "https://registry.yarnpkg.com/@tailwindcss/forms/-/forms-0.5.6.tgz#29c6c2b032b363e0c5110efed1499867f6d7e868"
+  integrity sha512-Fw+2BJ0tmAwK/w01tEFL5TiaJBX1NLT1/YbWgvm7ws3Qcn11kiXxzNTEQDMs5V3mQemhB56l3u0i9dwdzSQldA==
+  dependencies:
+    mini-svg-data-uri "^1.2.3"
+
 "@testing-library/dom@^9.0.0":
   version "9.3.1"
   resolved "https://registry.yarnpkg.com/@testing-library/dom/-/dom-9.3.1.tgz#8094f560e9389fb973fe957af41bf766937a9ee9"
@@ -3992,6 +3999,11 @@ clone-response@^1.0.2:
   integrity sha512-ROoL94jJH2dUVML2Y/5PEDNaSHgeOdSDicUyS7izcF63G6sTc/FTjLub4b8Il9S8S0beOfYt0TaA5qvFK+w0wA==
   dependencies:
     mimic-response "^1.0.0"
+
+clsx@^1.1.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/clsx/-/clsx-1.2.1.tgz#0ddc4a20a549b59c93a4116bb26f5294ca17dc12"
+  integrity sha512-EcR6r5a8bj6pu3ycsa/E/cKVGuTgZJZdsyUYHOksG/UHIiKfjxzRxYJpyVBwYaQeOvghal9fcc4PidlgzugAQg==
 
 co@^4.6.0:
   version "4.6.0"
@@ -7297,6 +7309,11 @@ mini-css-extract-plugin@~2.4.7:
   dependencies:
     schema-utils "^4.0.0"
 
+mini-svg-data-uri@^1.2.3:
+  version "1.4.4"
+  resolved "https://registry.yarnpkg.com/mini-svg-data-uri/-/mini-svg-data-uri-1.4.4.tgz#8ab0aabcdf8c29ad5693ca595af19dd2ead09939"
+  integrity sha512-r9deDe9p5FJUPZAk3A59wGH7Ii9YrjjWw0jmw/liSbHl2CHiyXj6FcDXDu2K3TjVAXqiJdaw3xxwlZZr9E6nHg==
+
 minimalistic-assert@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/minimalistic-assert/-/minimalistic-assert-1.0.1.tgz#2e194de044626d4a10e7f7fbc00ce73e83e4d5c7"
@@ -8484,6 +8501,13 @@ react-router@6.11.2:
   integrity sha512-74z9xUSaSX07t3LM+pS6Un0T55ibUE/79CzfZpy5wsPDZaea1F8QkrsiyRnA2YQ7LwE/umaydzXZV80iDCPkMg==
   dependencies:
     "@remix-run/router" "1.6.2"
+
+react-toastify@^9.1.3:
+  version "9.1.3"
+  resolved "https://registry.yarnpkg.com/react-toastify/-/react-toastify-9.1.3.tgz#1e798d260d606f50e0fab5ee31daaae1d628c5ff"
+  integrity sha512-fPfb8ghtn/XMxw3LkxQBk3IyagNpF/LIKjOBflbexr2AWxAH1MJgvnESwEwBn9liLFXgTKWgBSdZpw9m4OTHTg==
+  dependencies:
+    clsx "^1.1.1"
 
 react@18.2.0:
   version "18.2.0"
