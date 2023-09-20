@@ -1,10 +1,10 @@
 import { LevelEnum, SubjectEnum } from '@prisma/client';
 import { NextFunction, Request, Response } from 'express';
 import { CentreService } from '../services/CentreService';
+import { ClassroomService } from '../services/ClassroomService';
 import { FaqArticleService } from '../services/FaqArticleService';
 import { FaqTopicService } from '../services/FaqTopicService';
 import { TeacherService } from '../services/TeacherService';
-import { ClassroomService } from '../services/ClassroomService';
 
 const teacherService = new TeacherService();
 const centreService = new CentreService();

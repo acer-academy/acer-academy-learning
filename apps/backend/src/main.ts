@@ -14,6 +14,8 @@ import centreRouter from './routers/centreRouter';
 import faqArticleRouter from './routers/faqArticleRouter';
 import faqTopicRouter from './routers/faqTopicRouter';
 import classroomRouter from './routers/classroomRouter';
+import faqArticleRouter from './routers/faqArticleRouter';
+import faqTopicRouter from './routers/faqTopicRouter';
 
 dotenv.config();
 
@@ -41,6 +43,8 @@ app.use('/api/v1/centres', centreRouter);
 app.use('/api/v1/faqArticle', faqArticleRouter);
 app.use('/api/v1/faqTopic', faqTopicRouter);
 app.use('/api/v1/classrooms', classroomRouter);
+app.use('/api/v1/faqArticle', faqArticleRouter);
+app.use('/api/v1/faqTopic', faqTopicRouter);
 
 // Start the server
 const server = app.listen(port, () => {
