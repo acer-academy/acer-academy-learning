@@ -1,6 +1,9 @@
 // admin.dao.ts
-import { PrismaClient } from '@prisma/client';
-import { AdminPostData, AdminPutData } from 'libs/data-access/src/lib/types/admin';
+import { PrismaClient, Prisma } from '@prisma/client';
+import {
+  AdminPostData,
+  AdminPutData,
+} from 'libs/data-access/src/lib/types/admin';
 
 const prisma = new PrismaClient();
 
@@ -13,7 +16,10 @@ class AdminDao {
     return prisma.admin.findUnique({ where: { email } });
   }
 
-  async updateAdmin(currentEmail: string, updatedData: AdminPutData) {
+  async updateAdmin(
+    currentEmail: string,
+    updatedData: Prisma.AdminUpdateInput,
+  ) {
     return prisma.admin.update({
       where: { email: currentEmail },
       data: updatedData,
