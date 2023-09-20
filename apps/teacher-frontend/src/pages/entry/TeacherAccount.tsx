@@ -1,8 +1,9 @@
-import { useAuth } from '../../auth/AuthContext';
+import { useAuth } from '@acer-academy-learning/common-ui';
 import { AcerAcademyLogo } from '@acer-academy-learning/common-ui';
+import { Teacher } from 'libs/data-access/src/lib/types/teacher';
 
 const Account: React.FC = () => {
-  const { user } = useAuth();
+  const { user } = useAuth<Teacher>();
 
   return (
     <div className="h-full bg-gray-50">

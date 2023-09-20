@@ -1,4 +1,7 @@
 // CommonTypes.ts
+import { Student } from './student';
+import { Teacher } from './teacher';
+
 export enum LevelEnum {
   P1 = 'P1',
   P2 = 'P2',
@@ -24,6 +27,14 @@ export enum SubjectEnum {
 export enum AdminType {
   SUPER_ADMIN = 'super',
   STANDARD_ADMIN = 'standard',
+}
+
+export interface Centre {
+  id: string;
+  name: string;
+  address: string;
+  students?: Student[];
+  teachers?: Teacher[];
 }
 
 export interface LoginData {

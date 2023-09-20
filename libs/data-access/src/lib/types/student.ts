@@ -1,4 +1,14 @@
 import { LevelEnum, SubjectEnum } from './CommonTypes';
+import { Teacher } from './teacher';
+// import { Centre } from './CommonTypes';
+
+export interface Centre {
+  id: string;
+  name: string;
+  address: string;
+  students?: Student[];
+  teachers?: Teacher[];
+}
 
 export enum StudentStatus {
   ACTIVE = 'active',
@@ -15,14 +25,6 @@ export interface StudentData {
   name: string;
   email: string;
   status: StudentStatus;
-}
-
-export interface Centre {
-  id: string;
-  name: string;
-  address: string;
-  students?: Student[]; // This field is optional because a centre might not have students initially
-  parents?: Parent[];
 }
 
 export interface Parent {
