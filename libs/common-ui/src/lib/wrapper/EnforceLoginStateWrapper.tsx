@@ -1,27 +1,17 @@
-import { useEffect, type PropsWithChildren } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { FullscreenSpinner } from './FullscreenSpinner';
 import { useAuth } from './AuthContext';
+import { Redirect } from './Redirect';
+import { PropsWithChildren } from 'react';
 
-type EnforceLoginStatePageWrapperProps = {
-  /**
-   * Route to redirect to when user is not authenticated. MUST be declared
-   */
+export type EnforceLoginStatePageWrapperProps = {
   redirectTo: string;
-};
-
-const Redirect = ({ redirectTo }: EnforceLoginStatePageWrapperProps) => {
-  const navigate = useNavigate();
-  useEffect(() => {
-    console.log('NO USER');
-    navigate(redirectTo, { replace: true });
-  }, []);
-  return <FullscreenSpinner />;
 };
 
 /**
  * Page wrapper that renders children only if the user state has been set.
  * Otherwise, will redirect to the route passed into the `redirectTo` prop.
+ *
+ * @note There is no authentication being performed by this component. This component is merely a wrapper that checks for the presence of the login flag in cookies.
  */
 export const EnforceLoginStatePageWrapper = ({
   redirectTo,
@@ -34,6 +24,7 @@ export const EnforceLoginStatePageWrapper = ({
   }
 
   if (user) {
+    // @note 🚨 choosing not to couple this with RRD's <Outlet/> component to make it more flexible
     return <>{children}</>;
   }
 
