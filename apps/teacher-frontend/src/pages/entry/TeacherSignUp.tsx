@@ -6,8 +6,11 @@ import { retrieveCentres } from '../../api/centre';
 import { useState, useEffect } from 'react';
 import { registerTeacher } from '../../api/teacher';
 import { useToast } from '@acer-academy-learning/common-ui';
+import { useNavigate } from 'react-router-dom';
+import { LOGIN } from '../../libs/routes';
 
 export default function TeacherSignUp() {
+  const navigate = useNavigate();
   const { displayToast, ToastType } = useToast();
 
   enum LevelEnum {
@@ -127,6 +130,7 @@ export default function TeacherSignUp() {
     try {
       await registerTeacher(payload);
       displayToast('Account created!', ToastType.SUCCESS);
+      navigate(LOGIN);
     } catch (error: any) {
       displayToast(`${error}`, ToastType.ERROR);
     }

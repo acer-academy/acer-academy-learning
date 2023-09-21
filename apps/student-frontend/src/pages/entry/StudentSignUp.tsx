@@ -9,6 +9,8 @@ import { registerStudent } from '../../api/student';
 import { useToast } from '@acer-academy-learning/common-ui';
 import { LevelEnum, SubjectEnum } from '@acer-academy-learning/data-access';
 import { Centre } from 'libs/data-access/src/lib/types/student';
+import { LOGIN } from '../../libs/routes';
+import { useNavigate } from 'react-router-dom';
 
 interface InputFieldProps {
   label: string;
@@ -104,6 +106,7 @@ const ParentFields: React.FC<ParentFieldsProps> = ({
 );
 
 export default function StudentSignUp() {
+  const navigate = useNavigate();
   //used for displaying notification
   const { displayToast, ToastType } = useToast();
 
@@ -223,6 +226,7 @@ export default function StudentSignUp() {
       console.log(payload);
       await registerStudent(payload);
       displayToast('Account created!', ToastType.SUCCESS);
+      navigate(LOGIN);
     } catch (error: any) {
       displayToast(`${error}`, ToastType.ERROR);
     }

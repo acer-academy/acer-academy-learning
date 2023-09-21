@@ -8,6 +8,7 @@ import {
 import { registerAdmin } from '../../api/admin';
 import { useToast } from '@acer-academy-learning/common-ui';
 import { LOGIN } from '../../libs/routes';
+import { useNavigate } from 'react-router-dom';
 
 const AdminSignUp: React.FC = () => {
   const [firstName, setFirstName] = useState('');
@@ -17,6 +18,7 @@ const AdminSignUp: React.FC = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
 
+  const navigate = useNavigate();
   const { displayToast, ToastType } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -29,6 +31,7 @@ const AdminSignUp: React.FC = () => {
     try {
       await registerAdmin({ firstName, lastName, email, password });
       displayToast('Account created!', ToastType.SUCCESS);
+      navigate(LOGIN);
     } catch (error: any) {
       displayToast(`${error}`, ToastType.ERROR);
     }
