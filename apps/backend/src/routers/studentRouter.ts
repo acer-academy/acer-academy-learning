@@ -18,10 +18,47 @@ studentRouter.get('/getAllStudents', async (_, res) => {
   }
 });
 
+studentRouter.get('/getStudentById/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const student = await StudentService.getStudentById(id);
+
+    return res.status(200).json({ student: student });
+  } catch (err) {
+    console.log(err);
+    return res.status(400).json({ error: err });
+  }
+});
+
 studentRouter.post('/create', async (req, res) => {
   try {
     const studentData: Prisma.StudentCreateInput = req.body;
     const student = await StudentService.createStudent(studentData);
+
+    return res.status(200).json({ student: student });
+  } catch (err) {
+    console.log(err);
+    return res.status(400).json({ error: err });
+  }
+});
+
+studentRouter.delete('/delete/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const student = await StudentService.deleteStudent(id);
+
+    return res.status(200).json({ student: student });
+  } catch (err) {
+    console.log(err);
+    return res.status(400).json({ error: err });
+  }
+});
+
+studentRouter.put('/update/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const studentData: Prisma.StudentUpdateInput = req.body;
+    const student = await StudentService.updateStudent(id, studentData);
 
     return res.status(200).json({ student: student });
   } catch (err) {
