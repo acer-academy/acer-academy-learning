@@ -6,9 +6,6 @@ export * from './lib/data-access';
 // Object.freeze(api);
 
 export { LevelEnum, SubjectEnum, AdminType } from './lib/types/CommonTypes';
-export { defaultStudent } from './lib/types/student';
-export { loginStudent } from './lib/api/student';
-export { defaultAdmin } from './lib/types/admin';
-export { loginAdmin } from './lib/api/admin';
-export { defaultTeacher } from './lib/types/teacher';
-export { loginTeacher } from './lib/api/teacher';
+export { loginStudent, logoutStudent, fetchStudent } from './lib/api/student';
+export { loginAdmin, logoutAdmin, fetchAdmin } from './lib/api/admin';
+export { loginTeacher, logoutTeacher, fetchTeacher } from './lib/api/teacher';

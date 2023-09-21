@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-catch */
 import { LoginData } from '../types/CommonTypes';
 import { StudentData, StudentPostData } from '../types/student';
 import client from './client';
@@ -24,12 +25,39 @@ export async function getAllStudents(): Promise<
 // }
 
 export const loginStudent = async (data: LoginData): Promise<any> => {
-  // eslint-disable-next-line no-useless-catch
   try {
     const response = await axios.post(
       `http://localhost:8000/api/v1/students/login`,
       data,
+      { withCredentials: true }, // Add this line
     );
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const logoutStudent = async (): Promise<any> => {
+  try {
+    const response = await axios.post(
+      `http://localhost:8000/api/v1/students/logout`,
+      {},
+      { withCredentials: true },
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const fetchStudent = async (): Promise<any> => {
+  try {
+    const response = await axios.get(
+      'http://localhost:8000/api/v1/students/check-auth',
+      { withCredentials: true },
+    );
+
     return response.data;
   } catch (error) {
     throw error;

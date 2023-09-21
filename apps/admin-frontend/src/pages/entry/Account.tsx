@@ -1,9 +1,22 @@
 import { useAuth } from '@acer-academy-learning/common-ui';
 import { AcerAcademyLogo } from '@acer-academy-learning/common-ui';
 import { Admin } from 'libs/data-access/src/lib/types/admin';
+import { useNavigate } from 'react-router-dom';
 
 const Account: React.FC = () => {
-  const { user } = useAuth<Admin>();
+  const { user, logout } = useAuth<Admin>();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      // Optionally, redirect the user to the login page or show a logout success message
+      navigate('/');
+    } catch (error) {
+      console.error('Logout failed', error);
+      // Optionally, show a logout failure message
+    }
+  };
 
   return (
     <div className="h-full bg-gray-50">
@@ -18,24 +31,48 @@ const Account: React.FC = () => {
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-[480px]">
           <div className="bg-white px-6 py-12 shadow sm:rounded-lg sm:px-12">
-            <div className="space-y-2">
-              <div className="flex justify-between items-center">
-                <span className="font-semibold text-gray-600">First Name:</span>
-                <span className="text-gray-800">{user.firstName}</span>
+            {user ? (
+              <div className="space-y-2">
+                <div className="flex justify-between items-center">
+                  <span className="font-semibold text-gray-600">
+                    First Name:
+                  </span>
+                  <span className="text-gray-800">{user.firstName}</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="font-semibold text-gray-600">
+                    Last Name:
+                  </span>
+                  <span className="text-gray-800">{user.lastName}</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="font-semibold text-gray-600">Email:</span>
+                  <span className="text-gray-800">{user.email}</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="font-semibold text-gray-600">
+                    Admin Type:
+                  </span>
+                  <span className="text-gray-800 capitalize">{user.type}</span>
+                </div>
+                <div className="mt-6">
+                  <button
+                    onClick={handleLogout}
+                    className="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  >
+                    Logout
+                  </button>
+                </div>
               </div>
-              <div className="flex justify-between items-center">
-                <span className="font-semibold text-gray-600">Last Name:</span>
-                <span className="text-gray-800">{user.lastName}</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="font-semibold text-gray-600">Email:</span>
-                <span className="text-gray-800">{user.email}</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="font-semibold text-gray-600">Admin Type:</span>
-                <span className="text-gray-800 capitalize">{user.type}</span>
-              </div>
-            </div>
+            ) : (
+              <span className="text-gray-800">
+                Please{' '}
+                <a href="/" className="text-blue-800 font-bold">
+                  log in
+                </a>{' '}
+                to see user details.
+              </span>
+            )}
           </div>
         </div>
       </div>

@@ -3,6 +3,8 @@ import StudentDao from '../dao/StudentDao';
 // import { StudentPostData } from 'libs/data-access/src/lib/types/student';
 import { Prisma } from '@prisma/client';
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import { JWT_SECRET_KEY } from '../config/config';
 
 class StudentService {
   public async createStudent(
@@ -25,11 +27,30 @@ class StudentService {
       throw new Error('Invalid credentials');
     }
 
+    // Generate a JWT token with necessary student details
+    const token = jwt.sign(
+      {
+        id: student.id,
+        firstName: student.firstName,
+        lastName: student.lastName,
+        email: student.email,
+        level: student.level,
+        subjects: student.subjects,
+        status: student.status,
+        school: student.school,
+        phoneNumber: student.phoneNumber,
+        parents: student.parents,
+        centre: student.centre,
+      },
+      JWT_SECRET_KEY,
+      { expiresIn: '4h' },
+    );
+
     // Destructure admin object to omit id, password, and type
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { id, password, centreId, ...rest } = student;
+    const { password, centreId, ...user } = student;
 
-    return rest;
+    return { token, user };
   }
 }
 
