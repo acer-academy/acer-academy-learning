@@ -1,6 +1,5 @@
 import { Student } from '@prisma/client';
 import StudentDao from '../dao/StudentDao';
-// import { StudentPostData } from 'libs/data-access/src/lib/types/student';
 import { Prisma } from '@prisma/client';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
@@ -16,6 +15,21 @@ class StudentService {
 
   public async getAllStudents(): Promise<Student[]> {
     return StudentDao.getAllStudents();
+  }
+
+  public async getStuentById(id: string): Promise<Student> {
+    return StudentDao.getStudentById(id);
+  }
+
+  public async updateStudent(
+    id: string,
+    input: Prisma.StudentUpdateInput,
+  ): Promise<Student> {
+    return StudentDao.updateStudent(id, input);
+  }
+
+  public async deleteStudent(id: string): Promise<Student> {
+    return StudentDao.deleteStudent(id);
   }
 
   async login(studentEmail: string, studentPassword: string) {
