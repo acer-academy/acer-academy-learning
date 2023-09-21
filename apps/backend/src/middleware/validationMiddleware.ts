@@ -618,8 +618,7 @@ export async function validatePromotionDescription(
   try {
     if (!req.body.description) {
       return res.status(500).json({
-        error:
-          'Percentage Discount should only consist of max 2 decimal points',
+        error: 'Percentage Description cannot be empty',
       });
     }
     next();
@@ -667,10 +666,11 @@ export async function validatePromotionPromoCodeUnique(
 ) {
   try {
     const { promoCode } = req.body;
+    const { id } = req.params;
     const existingPromotion = await promotionService.getPromotionByPromoCode(
       promoCode,
     );
-    if (existingPromotion) {
+    if (existingPromotion && existingPromotion.id !== id) {
       return res.status(400).json({
         error: 'Promotion Code already exists.',
       });

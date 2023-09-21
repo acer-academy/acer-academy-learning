@@ -11,6 +11,7 @@ import { CentreManagement } from '../pages/centre/CentreManagement';
 import { CentreDetails } from '../pages/centre/CentreDetails';
 import { FaqTopicManagement } from '../pages/faq/FaqManagement';
 import { FaqTopicDetails } from '../pages/faq/FaqDetails';
+import { PromotionManagement } from '../pages/promotion/PromotionManagement';
 
 export default function App() {
   return (
@@ -31,6 +32,10 @@ export default function App() {
             <Route
               path="faq-management/:faqTopicId"
               element={<FaqTopicDetails />}
+            />
+            <Route
+              path="promotion-management"
+              element={<PromotionManagement />}
             />
           </Routes>
         </ToastProvider>
