@@ -498,8 +498,8 @@ export async function validatePromotionPercentageDiscount(
 ) {
   try {
     if (req.body.percentageDiscount) {
-      let type = parseFloat(req.body.percentageDiscount);
-      if (!type) {
+      let checkType = parseFloat(req.body.percentageDiscount);
+      if (!checkType) {
         return res.status(500).json({
           error: 'Percentage Discount needs to be numbers',
         });
