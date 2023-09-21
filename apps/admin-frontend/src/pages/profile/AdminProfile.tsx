@@ -1,5 +1,5 @@
 import { useAuth } from '@acer-academy-learning/common-ui';
-import { useState} from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { updateAdmin } from '../../api/admin';
@@ -7,31 +7,41 @@ import { useToast } from '@acer-academy-learning/common-ui';
 
 const AdminProfile: React.FC = () => {
   const { user } = useAuth<Admin>();
-    //to test without linking to auth - auth need link to accounts page or login page
-    // const user = {firstName: 'user1', lastName: 'Sample', email: 'user1@gmail.com', type: 'Standard'}
-    const [firstName, setFirstName] = useState(user.firstName);
-    const [isEditing, setIsEditing] = useState(false);
-    const [lastName, setLastName] = useState(user.lastName);
+  //to test without linking to auth - auth need link to accounts page or login page
+  // const user = {firstName: 'user1', lastName: 'Sample', email: 'user1@gmail.com', type: 'Standard'}
+  const [firstName, setFirstName] = useState(user.firstName);
+  const [isEditing, setIsEditing] = useState(false);
+  const [lastName, setLastName] = useState(user.lastName);
 
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
-    const { displayToast, ToastType } = useToast();
+  const { displayToast, ToastType } = useToast();
 
-    const onSaveProfile = async () => {
-      try {
-        await updateAdmin(user.email, {firstName: firstName, lastName: lastName});
+  const onSaveProfile = async () => {
+    try {
+      if (firstName.length === 0 || lastName.length === 0) {
+        displayToast(
+          `Please fill in your First and Last name`,
+          ToastType.ERROR,
+        );
+        return;
+      } else {
+        await updateAdmin(user.email, {
+          firstName: firstName,
+          lastName: lastName,
+        });
         //@TODO: SET USER HERE FOR AUTH CONTEXT
         displayToast('Profile updated!', ToastType.SUCCESS);
         setIsEditing(false);
-      } catch(error) {
-          displayToast('Update first name failed', ToastType.ERROR);
       }
+    } catch (error) {
+      displayToast('Profile update failed', ToastType.ERROR);
     }
+  };
 
-    const onEditProfile = () => {
-      setIsEditing(true)
-    }
-
+  const onEditProfile = () => {
+    setIsEditing(true);
+  };
 
   return (
     <div className="h-full bg-gray-50">
@@ -44,55 +54,59 @@ const AdminProfile: React.FC = () => {
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-[1000px]">
           <div className="bg-white px-6 py-12 shadow sm:rounded-lg sm:px-12">
-            { isEditing ? (
-            <button
-            onClick={onSaveProfile}
-            className="justify-end rounded bg-indigo-600 px-2 py-1 text-xs font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            >
-              Save Profile
-            </button>
-            ):(
-            <button
-            onClick={onEditProfile}
-            className="justify-end rounded bg-indigo-600 px-2 py-1 text-xs font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            >
-              Edit Profile
-            </button>
-          )}
+            {isEditing ? (
+              <button
+                onClick={onSaveProfile}
+                className="justify-end rounded bg-indigo-600 px-2 py-1 text-xs font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              >
+                Save Profile
+              </button>
+            ) : (
+              <button
+                onClick={onEditProfile}
+                className="justify-end rounded bg-indigo-600 px-2 py-1 text-xs font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              >
+                Edit Profile
+              </button>
+            )}
             <div className="space-y-2">
               <div className="flex justify-between items-center">
                 <span className="font-semibold text-gray-600">First Name:</span>
-                { isEditing ? (
-                    <input
+                {isEditing ? (
+                  <input
                     type="text"
                     value={firstName}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {setFirstName(e.target.value)}}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                      setFirstName(e.target.value);
+                    }}
                     autoFocus
-                    />
-                ): 
-                (
-                <span className="text-gray-800">{firstName}</span>
+                  />
+                ) : (
+                  <span className="text-gray-800">{firstName}</span>
                 )}
               </div>
               <div className="flex justify-between items-center">
                 <span className="font-semibold text-gray-600">Last Name:</span>
-                { isEditing ? (
-                    <input
+                {isEditing ? (
+                  <input
                     type="text"
                     value={lastName}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {setLastName(e.target.value)}}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                      setLastName(e.target.value);
+                    }}
                     autoFocus
-                    />
-                ): 
-                (
-                <span className="ext-gray-800">{lastName}</span>
+                  />
+                ) : (
+                  <span className="ext-gray-800">{lastName}</span>
                 )}
               </div>
               <div className="flex justify-between items-center">
-                <span className="font-semibold text-gray-600">Change Password:</span>
+                <span className="font-semibold text-gray-600">
+                  Change Password:
+                </span>
                 <button
-                className="rounded bg-indigo-600 px-2 py-1 text-xs font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                onClick={() => navigate('/changePassword')}
+                  className="rounded bg-indigo-600 px-2 py-1 text-xs font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                  onClick={() => navigate('/changePassword')}
                 >
                   Change Password
                 </button>
