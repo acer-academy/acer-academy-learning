@@ -10,7 +10,7 @@ export const PrimaryDesktopSideBar = ({
 }: SideBarProps) => {
   const { role } = useThemeContext();
   return (
-    <div className="hidden lg:absolute lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
+    <div className="hidden lg:fixed mt-[10vh] lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
       {/* Sidebar component, swap this element with another sidebar if you like */}
       <div
         className={`flex grow flex-col gap-y-5 overflow-y-auto ${

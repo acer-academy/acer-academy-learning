@@ -1,10 +1,6 @@
 import { useState } from 'react';
 import { Dialog } from '@headlessui/react';
-import {
-  Bars3Icon,
-  XMarkIcon,
-  ArrowRightOnRectangleIcon,
-} from '@heroicons/react/24/outline';
+import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import { NavigationMenuItem } from './components/type';
 import { SidebarLayout } from './SidebarLayout';
 import { NavLink } from 'react-router-dom';
@@ -40,9 +36,9 @@ export const PrimaryLayout = ({
 
   return (
     <ThemeProvider role={role}>
-      <div className="h-full flex flex-col">
+      <div className="oh-full flex flex-col">
         <header
-          className={`${
+          className={`fixed z-[1] h-[10vh] w-full ${
             role === LayoutRole.Student
               ? 'bg-student-secondary-900'
               : 'bg-teacher-secondary-600'
@@ -160,6 +156,7 @@ export const PrimaryLayout = ({
           </Dialog>
         </header>
         <SidebarLayout
+          className="mt-[10vh]"
           desktopSidebar={
             <PrimaryDesktopSideBar navigationMenu={secondaryMenu} />
           }
