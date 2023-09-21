@@ -1,6 +1,10 @@
 import React, { ReactNode } from 'react';
 import { AuthWrapper } from './AuthContext';
-import { loginAdmin, defaultAdmin } from '@acer-academy-learning/data-access';
+import {
+  loginAdmin,
+  fetchAdmin,
+  logoutAdmin,
+} from '@acer-academy-learning/data-access';
 
 interface AdminAuthWrapperProps {
   children: ReactNode;
@@ -9,7 +13,11 @@ interface AdminAuthWrapperProps {
 export const AdminAuthWrapper: React.FC<AdminAuthWrapperProps> = ({
   children,
 }) => (
-  <AuthWrapper defaultUser={defaultAdmin} loginApi={loginAdmin}>
+  <AuthWrapper
+    loginApi={loginAdmin}
+    logoutApi={logoutAdmin}
+    fetchUserApi={fetchAdmin}
+  >
     {children}
   </AuthWrapper>
 );

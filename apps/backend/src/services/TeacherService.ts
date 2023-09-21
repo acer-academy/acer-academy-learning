@@ -1,6 +1,8 @@
 import { TeacherDao } from '../dao/TeacherDao';
 import { LevelEnum, Prisma, SubjectEnum, Teacher } from '@prisma/client';
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import { JWT_SECRET_KEY } from '../config/config';
 
 export class TeacherService {
   constructor(private teacherDao: TeacherDao = new TeacherDao()) {}
@@ -16,9 +18,9 @@ export class TeacherService {
     return this.teacherDao.getAllTeachers();
   }
 
-  public async getTeacherById(teacherId: string): Promise<Teacher | null> {
-    return this.teacherDao.getTeacherById(teacherId);
-  }
+  // public async getTeacherById(teacherId: string): Promise<Teacher | null> {
+  //   return this.teacherDao.getTeacherById(teacherId);
+  // }
 
   public async getTeacherByEmail(
     teacherEmail: string,
@@ -61,10 +63,25 @@ export class TeacherService {
       throw new Error('Invalid credentials');
     }
 
+    // Generate a JWT token with necessary student details
+    const token = jwt.sign(
+      {
+        id: teacher.id,
+        email: teacher.email,
+        firstName: teacher.firstName,
+        lastName: teacher.lastName,
+        levels: teacher.levels,
+        subjects: teacher.subjects,
+        centre: teacher.centre,
+      },
+      JWT_SECRET_KEY,
+      { expiresIn: '4h' },
+    );
+
     // Destructure admin object to omit id, password, and type
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { id, password, centreId, ...rest } = teacher;
+    const { password, centreId, ...user } = teacher;
 
-    return rest;
+    return { token, user };
   }
 }

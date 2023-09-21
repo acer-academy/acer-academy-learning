@@ -4,11 +4,13 @@ import bcrypt from 'bcrypt';
 import AdminDao from '../dao/AdminDao';
 import {
   AdminPostData,
-  AdminPutData,
   AdminGetData,
 } from 'libs/data-access/src/lib/types/admin';
 
-import { PrismaClient, Prisma } from '@prisma/client';
+import { Prisma } from '@prisma/client';
+import jwt from 'jsonwebtoken';
+import { JWT_SECRET_KEY } from '../config/config';
+
 class AdminService {
   async register(data: AdminPostData) {
     data.password = await bcrypt.hash(data.password, 10);
@@ -21,19 +23,24 @@ class AdminService {
       throw new Error('Invalid credentials');
     }
 
-    //jwt token version
-    // const token = jwt.sign(
-    //   { id: admin.id, type: admin.type, email: admin.email, name: admin.name },
-    //   'your_secret_key',
-    //   { expiresIn: '1h' },
-    // );
-    // return { token };
+    // Generate a JWT token with necessary admin details
+    const token = jwt.sign(
+      {
+        id: admin.id,
+        firstName: admin.firstName,
+        lastName: admin.lastName,
+        email: admin.email,
+        type: admin.type,
+      },
+      JWT_SECRET_KEY,
+      { expiresIn: '4h' },
+    );
 
-    // Destructure admin object to omit id, password, and type
+    // Destructure admin object to omit password and possibly other sensitive fields
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { id, password, ...rest } = admin;
+    const { password, ...user } = admin;
 
-    return rest;
+    return { token, user };
   }
 
   async updateAdmin(email: string, data: Prisma.AdminUpdateInput) {

@@ -1,13 +1,17 @@
-import { Request, Response, NextFunction } from 'express';
-import { TeacherService } from '../services/TeacherService';
-import { CentreService } from '../services/CentreService';
 import { LevelEnum, SubjectEnum } from '@prisma/client';
-import promotionService from '../services/PromotionService';
+import { NextFunction, Request, Response } from 'express';
+import { CentreService } from '../services/CentreService';
 import { ClassroomService } from '../services/ClassroomService';
+import { FaqArticleService } from '../services/FaqArticleService';
+import { FaqTopicService } from '../services/FaqTopicService';
+import { TeacherService } from '../services/TeacherService';
+import promotionService from '../services/PromotionService';
 
 const teacherService = new TeacherService();
 const centreService = new CentreService();
 const classroomService = new ClassroomService();
+const faqArticleService = new FaqArticleService();
+const faqTopicService = new FaqTopicService();
 
 /*
  * Validators Naming Convention: (Expand on as we code)
@@ -91,26 +95,26 @@ export async function validateBodyTeacherEmailUnique(
 }
 
 /** Validates if a teacherId passed in params exists */
-export async function validateParamsTeacherExists(
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) {
-  try {
-    const { teacherId } = req.params;
-    const teacherExists = await teacherService.getTeacherById(teacherId);
-    if (!teacherExists || !teacherId) {
-      return res.status(400).json({
-        error: 'Teacher does not exist.',
-      });
-    }
-    next();
-  } catch (error) {
-    return res.status(500).json({
-      error: error.message,
-    });
-  }
-}
+// export async function validateParamsTeacherExists(
+//   req: Request,
+//   res: Response,
+//   next: NextFunction,
+// ) {
+//   try {
+//     const { teacherId } = req.params;
+//     const teacherExists = await teacherService.getTeacherById(teacherId);
+//     if (!teacherExists || !teacherId) {
+//       return res.status(400).json({
+//         error: 'Teacher does not exist.',
+//       });
+//     }
+//     next();
+//   } catch (error) {
+//     return res.status(500).json({
+//       error: error.message,
+//     });
+//   }
+// }
 
 /** Validates if a centreId passed in params exists */
 export async function validateParamsCentreExists(
@@ -421,6 +425,142 @@ export async function validateBodyClassroomCapacity(
     if (isNaN(parsedCapacity) || parsedCapacity <= 0) {
       return res.status(400).json({
         error: 'Classroom capacity must be a positive integer.',
+      });
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+/** Validates if FAQ article's title and body passed in body is not empty */
+export async function validateBodyFaqArticleTitleBodyNotEmpty(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { title, body } = req.body;
+    if (title.trim() === '' || body.trim() === '') {
+      return res.status(400).json({
+        error: 'Title and body cannot be empty or contain only whitespace.',
+      });
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+/** Validates if a faqTopicId passed in body exists */
+export async function validateBodyFaqTopicExists(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { faqTopicId } = req.body;
+    if (faqTopicId) {
+      const faqTopicExists = await faqTopicService.getFaqTopicById(faqTopicId);
+      if (!faqTopicExists) {
+        return res.status(400).json({
+          error: 'FAQ Topic does not exist.',
+        });
+      }
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+/** Validates if a faqArticleId passed in params exists */
+export async function validateParamsFaqArticleExists(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { faqArticleId } = req.params;
+    const articleExists = await faqArticleService.getFaqArticleById(
+      faqArticleId,
+    );
+    if (!articleExists || !faqArticleId) {
+      return res.status(400).json({
+        error: 'FAQ article does not exist.',
+      });
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+/** Validates if FAQ topic's title passed in body is not empty */
+export async function validateBodyFaqTopicTitleNotEmpty(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { title } = req.body;
+    if (title.trim() === '') {
+      return res.status(400).json({
+        error: 'Title cannot be empty or contain only whitespace.',
+      });
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+/** Validates if a title passed in body is unique */
+export async function validateBodyFaqTopicTitleUnique(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { title } = req.body;
+    const existingTopicByTitle = await faqTopicService.getFaqTopicByTitle(
+      title,
+    );
+    if (existingTopicByTitle) {
+      return res.status(400).json({
+        error: 'FAQ Topic with this title already exists.',
+      });
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+/** Validates if a faqTopicId passed in params exists */
+export async function validateParamsFaqTopicExists(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { faqTopicId } = req.params;
+    const topicExists = await faqTopicService.getFaqTopicById(faqTopicId);
+    if (!topicExists || !faqTopicId) {
+      return res.status(400).json({
+        error: 'FAQ topic does not exist.',
       });
     }
     next();
