@@ -25,9 +25,9 @@ const TeacherProfile: React.FC = () => {
   }
 
   const subjects = [
-    { id: 'english', label: 'English', value: 'ENGLISH' },
-    { id: 'science', label: 'Science', value: 'SCIENCE' },
-    { id: 'math', label: 'Math', value: 'MATHEMATICS' },
+    { id: 'english', value: 'ENGLISH' },
+    { id: 'science', value: 'SCIENCE' },
+    { id: 'math', value: 'MATHEMATICS' },
     // add more subjects as needed
   ];
 
@@ -65,6 +65,7 @@ const TeacherProfile: React.FC = () => {
   const { displayToast, ToastType } = useToast();
 
   const editProfile = () => {
+    console.log(updateUser);
     setIsEditing(true);
   };
 
@@ -73,6 +74,14 @@ const TeacherProfile: React.FC = () => {
       if (updateUser.subjects.length === 0 || updateUser.levels.length === 0) {
         displayToast(
           `You need to choose at least a Subject and Level`,
+          ToastType.ERROR,
+        );
+      } else if (
+        updateUser.firstName.length === 0 ||
+        updateUser.lastName.length === 0
+      ) {
+        displayToast(
+          `Please fill in your First and Last name`,
           ToastType.ERROR,
         );
       } else {
@@ -90,17 +99,6 @@ const TeacherProfile: React.FC = () => {
     } catch (error) {
       displayToast('Profile update failed', ToastType.ERROR);
     }
-  };
-
-  const displaySubjects = () => {
-    let display = [];
-    for (let i = 0; i < updateUser.subjects.length; i++) {
-      display.push(
-        updateUser.subjects[i].charAt(0).toUpperCase() +
-          updateUser.subjects[i].slice(1),
-      );
-    }
-    return display.join(', ');
   };
 
   return (
@@ -241,6 +239,11 @@ const TeacherProfile: React.FC = () => {
             <div className="flex justify-between items-center">
               <span className="font-semibold text-gray-600">Email:</span>
               <span className="text-gray-800">{user.email}</span>
+            </div>
+
+            <div className="flex justify-between items-center">
+              <span className="font-semibold text-gray-600">Centre:</span>
+              <span className="text-gray-800">{user.centre.name}</span>
             </div>
           </div>
         </div>
