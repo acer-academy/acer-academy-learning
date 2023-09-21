@@ -164,19 +164,19 @@ export const FaqArticlesTable: React.FC<FaqArticlesTableProps> = ({
                     <tr>
                       <th
                         scope="col"
-                        className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                        className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6 max-w-xs"
                       >
                         Title
                       </th>
                       <th
                         scope="col"
-                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 image-column max-w-xs"
+                        className="px-3.5 py-3.5 text-left text-sm font-semibold text-gray-900 image-column max-w-xs"
                       >
                         Image
                       </th>
                       <th
                         scope="col"
-                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 max-w-sm"
                       >
                         Body
                       </th>
@@ -191,10 +191,10 @@ export const FaqArticlesTable: React.FC<FaqArticlesTableProps> = ({
                   <tbody className="divide-y divide-gray-200 bg-white">
                     {currentFaqArticles.map((faqArticle) => (
                       <tr key={faqArticle.id}>
-                        <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                        <td className="whitespace-normal py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6 max-w-xs">
                           {faqArticle.title}
                         </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 image-column max-w-xs">
+                        <td className="whitespace-nowrap px-4 py-4 text-sm text-gray-500 image-column max-w-xs">
                           {faqArticle.imageUrl ? (
                             <img
                               src={faqArticle.imageUrl}
@@ -208,7 +208,7 @@ export const FaqArticlesTable: React.FC<FaqArticlesTableProps> = ({
                           )}
                         </td>
 
-                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                        <td className="whitespace-normal px-3 py-4 text-sm text-gray-500 max-w-sm">
                           {faqArticle.body}
                         </td>
                         <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-center text-sm font-medium sm:pr-6">

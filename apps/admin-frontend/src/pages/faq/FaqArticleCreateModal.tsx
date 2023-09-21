@@ -100,11 +100,10 @@ export const FaqArticleCreateModal: React.FC<FaqArticleCreateModalProps> = ({
                 Body
               </label>
               <div className="relative rounded-md shadow-sm">
-                <input
-                  type="text"
+                <textarea
                   name="body"
                   id="body"
-                  className="block w-full rounded-md border-0 py-1.5 h-32 text-gray-900 ring-1 ring-inset ring-gray-300 text-gray-900 focus:ring-adminGreen-500 placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6 whitespace-normal"
+                  className="block w-full rounded-md break-normal align-left border-0 py-1.5 h-32 text-gray-900 ring-1 ring-inset ring-gray-300 text-gray-900 focus:ring-adminGreen-500 placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6"
                   placeholder="The curriculum can fit your child’s needs because..."
                   value={faqArticleData.body}
                   onChange={(e) => {
