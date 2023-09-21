@@ -45,7 +45,7 @@ export const FaqTopicCreateModal: React.FC<FaqTopicCreateModalProps> = ({
             </h3>
             <div className="w-full mt-3 mb-3">
               <label
-                htmlFor="email"
+                htmlFor="title"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
                 FAQ Topic Title

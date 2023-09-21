@@ -33,7 +33,7 @@ export const FaqArticleUpdateModal: React.FC<FaqArticleUpdateModalProps> = ({
             </h3>
             <div className="w-full mt-3 mb-3">
               <label
-                htmlFor="email"
+                htmlFor="title"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
                 Title
@@ -59,7 +59,7 @@ export const FaqArticleUpdateModal: React.FC<FaqArticleUpdateModalProps> = ({
             </div>
             <div className="w-full mb-5">
               <label
-                htmlFor="email"
+                htmlFor="imageUrl"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
                 Image URL
@@ -85,7 +85,7 @@ export const FaqArticleUpdateModal: React.FC<FaqArticleUpdateModalProps> = ({
             </div>
             <div className="w-full mb-5">
               <label
-                htmlFor="email"
+                htmlFor="body"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
                 Body
