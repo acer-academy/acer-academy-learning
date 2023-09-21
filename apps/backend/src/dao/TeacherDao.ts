@@ -27,6 +27,16 @@ export class TeacherDao {
   //   });
   // }
 
+  //getTeacherByID implementation
+  public async getTeacherById(teacherId: string): Promise<Teacher | null> {
+    return this.prismaClient.teacher.findUnique({
+      where: { id: teacherId },
+      include: {
+        centre: true,
+      },
+    });
+  }
+
   //removed Promise<Teacher> so that I can obtain the centre object first
   public async getTeacherByEmail(teacherEmail: string) {
     return this.prismaClient.teacher.findFirst({
