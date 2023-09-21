@@ -442,7 +442,7 @@ export async function validateBodyFaqArticleTitleBodyNotEmpty(
 ) {
   try {
     const { title, body } = req.body;
-    if ((title && title.trim() === '') || (body && body.trim() === '')) {
+    if ((!title && title.trim() === '') || (!body && body.trim() === '')) {
       return res.status(400).json({
         error: 'Title and body cannot be empty or contain only whitespace.',
       });

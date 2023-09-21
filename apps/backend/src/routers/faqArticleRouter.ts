@@ -12,7 +12,7 @@ const faqArticleRouter = Router();
 const faqArticleService = new FaqArticleService();
 
 /**
- * POST /faqArticle/
+ * POST /faq-articles/
  * Creates a new FAQ article.
  */
 faqArticleRouter.post(
@@ -35,7 +35,7 @@ faqArticleRouter.post(
 );
 
 /**
- * GET /faqArticle/
+ * GET /faq-articles/
  * Retrieves a list of all FAQ articles.
  */
 faqArticleRouter.get('/', async (req: Request, res: Response) => {
@@ -48,7 +48,7 @@ faqArticleRouter.get('/', async (req: Request, res: Response) => {
 });
 
 /**
- * GET /faqArticle/{faqArticleId}
+ * GET /faq-articles/{faqArticleId}
  * Retrieves an FAQ article by its unique ID.
  */
 faqArticleRouter.get('/:faqArticleId', async (req: Request, res: Response) => {
@@ -67,7 +67,7 @@ faqArticleRouter.get('/:faqArticleId', async (req: Request, res: Response) => {
 });
 
 /**
- * PUT /faqArticle/{faqArticleId}
+ * PUT /faq-articles/{faqArticleId}
  * Updates an FAQ article's information by its unique ID.
  */
 faqArticleRouter.put(
@@ -98,7 +98,7 @@ faqArticleRouter.put(
 );
 
 /**
- * DELETE /faqArticle/{faqArticleId}
+ * DELETE /faq-articles/{faqArticleId}
  * Deletes an FAQ article by its unique ID.
  */
 faqArticleRouter.delete(

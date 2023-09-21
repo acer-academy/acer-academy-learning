@@ -12,7 +12,7 @@ const faqTopicRouter = Router();
 const faqTopicService = new FaqTopicService();
 
 /**
- * POST /faqTopic/
+ * POST /faq-topics/
  * Creates a new FAQ topic.
  */
 faqTopicRouter.post(
@@ -33,7 +33,7 @@ faqTopicRouter.post(
 );
 
 /**
- * GET /faqTopic/
+ * GET /faq-topics/
  * Retrieves a list of all FAQ topics.
  */
 faqTopicRouter.get('/', async (req: Request, res: Response) => {
@@ -46,7 +46,7 @@ faqTopicRouter.get('/', async (req: Request, res: Response) => {
 });
 
 /**
- * GET /faqTopic/{faqTopicId}
+ * GET /faq-topics/{faqTopicId}
  * Retrieves an FAQ topic by its unique ID.
  */
 faqTopicRouter.get('/:faqTopicId', async (req: Request, res: Response) => {
@@ -65,7 +65,7 @@ faqTopicRouter.get('/:faqTopicId', async (req: Request, res: Response) => {
 });
 
 /**
- * PUT /faqTopic/{faqTopicId}
+ * PUT /faq-topics/{faqTopicId}
  * Updates an FAQ topic's information by its unique ID.
  */
 faqTopicRouter.put(
@@ -96,7 +96,7 @@ faqTopicRouter.put(
 );
 
 /**
- * DELETE /faqTopic/{faqTopicId}
+ * DELETE /faq-topics/{faqTopicId}
  * Deletes an FAQ topic by its unique ID.
  */
 faqTopicRouter.delete(

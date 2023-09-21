@@ -39,8 +39,8 @@ app.use('/api/v1/admins', adminRouter);
 app.use('/api/v1/teachers', teacherRouter);
 app.use('/api/v1/centres', centreRouter);
 app.use('/api/v1/classrooms', classroomRouter);
-app.use('/api/v1/faqArticle', faqArticleRouter);
-app.use('/api/v1/faqTopic', faqTopicRouter);
+app.use('/api/v1/faq-articles', faqArticleRouter);
+app.use('/api/v1/faq-topics', faqTopicRouter);
 
 // Start the server
 const server = app.listen(port, () => {
