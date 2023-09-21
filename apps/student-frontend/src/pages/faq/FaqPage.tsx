@@ -1,27 +1,35 @@
 import { Disclosure } from '@headlessui/react';
 import { MinusSmallIcon, PlusSmallIcon } from '@heroicons/react/24/outline';
-
-// TODO: replace w actual data
-const faqTopics = [
-  {
-    id: '1',
-    title: 'Topic 1',
-    faqArticles: [
-      { id: '1', title: 'Question 1', body: 'Answer 1', imageUrl: '' },
-      { id: '2', title: 'Question 2', body: 'Answer 2', imageUrl: '' },
-    ],
-  },
-  {
-    id: '2',
-    title: 'Topic 2',
-    faqArticles: [
-      { id: '3', title: 'Question 3', body: 'Answer 3', imageUrl: '' },
-      { id: '4', title: 'Question 4', body: 'Answer 4', imageUrl: '' },
-    ],
-  },
-];
+import { getAllFaqTopics } from '@acer-academy-learning/data-access';
+import { FaqTopicData } from 'libs/data-access/src/lib/types/faqTopic';
+import { useEffect, useState } from 'react';
+import { useToast } from '@acer-academy-learning/common-ui';
 
 export const FaqPage: React.FC = () => {
+  const [faqTopics, setFaqTopics] = useState<FaqTopicData[]>([]);
+
+  const { displayToast, ToastType } = useToast();
+
+  const getFaqTopics = async () => {
+    try {
+      const response = await getAllFaqTopics();
+      const allFaqTopics: FaqTopicData[] = response.data;
+      console.log(response);
+      setFaqTopics(allFaqTopics);
+    } catch (error) {
+      displayToast(
+        'FAQ topics could not be retrieved from the server.',
+        ToastType.ERROR,
+      );
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    // Call the getFaqTopics function when the component is mounted
+    getFaqTopics();
+  }, []);
+
   return (
     <div className="bg-white">
       <div className="mx-auto max-w-7xl px-6 py-24 sm:py-32 lg:px-8">
@@ -54,7 +62,7 @@ export const FaqPage: React.FC = () => {
                         </span>
                       </Disclosure.Button>
                     </dt>
-                    <Disclosure.Panel as="dd" className="mt-2 pr-12">
+                    <Disclosure.Panel as="dd" className="mt-2 pl-6">
                       {topic.faqArticles.map((article) => (
                         <Disclosure as="div" key={article.id} className="pt-6">
                           {({ open }) => (
@@ -67,12 +75,12 @@ export const FaqPage: React.FC = () => {
                                   <span className="ml-6 flex h-7 items-center">
                                     {open ? (
                                       <MinusSmallIcon
-                                        className="h-6 w-6"
+                                        className="h-4 w-4"
                                         aria-hidden="true"
                                       />
                                     ) : (
                                       <PlusSmallIcon
-                                        className="h-6 w-6"
+                                        className="h-4 w-4"
                                         aria-hidden="true"
                                       />
                                     )}
