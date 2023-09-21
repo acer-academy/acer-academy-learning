@@ -5,7 +5,6 @@ import { classNames } from '../../utils/classNames';
 import { useMenuItem } from '../hooks/useMenuItem';
 import { getThemeClassName } from '../../utils/getThemeClassName';
 import { useThemeContext } from '../contexts/ThemeContext';
-import { useThemeColorsOnClass } from '../hooks/useThemeColorOnClass';
 import { LayoutRole } from '../constants';
 
 export type DisclosureChildItem = {
