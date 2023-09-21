@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { AcerAcademyLogo } from '@acer-academy-learning/common-ui';
 import { registerAdmin } from '../../api/admin';
 import { useToast } from '@acer-academy-learning/common-ui';
+import { LOGIN } from '../../libs/routes';
 
 const AdminSignUp: React.FC = () => {
   const [firstName, setFirstName] = useState('');
@@ -164,7 +165,7 @@ const AdminSignUp: React.FC = () => {
           <p className="mt-2 text-center text-sm text-gray-500">
             Have an account?{' '}
             <a
-              href="/"
+              href={LOGIN}
               className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
             >
               Sign in

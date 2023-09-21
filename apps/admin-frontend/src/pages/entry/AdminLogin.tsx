@@ -15,7 +15,7 @@ const AdminLogin: React.FC = () => {
 
     try {
       await login(email, password);
-      navigate('/account');
+      navigate('/');
     } catch (error) {
       console.error('An error occurred', error);
     }

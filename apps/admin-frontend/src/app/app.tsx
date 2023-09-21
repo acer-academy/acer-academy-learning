@@ -1,7 +1,10 @@
 // app.jsx
 import AdminLogin from '../pages/entry/AdminLogin';
 import AdminSignUp from '../pages/entry/AdminSignUp';
-import { AdminAuthWrapper } from '@acer-academy-learning/common-ui';
+import {
+  AdminAuthWrapper,
+  EnforceLoginStatePageWrapper,
+} from '@acer-academy-learning/common-ui';
 import 'react-toastify/dist/ReactToastify.css'; // Import toastify CSS
 import { CentreManagement } from '../pages/centre/CentreManagement';
 import { CentreDetails } from '../pages/centre/CentreDetails';
@@ -20,6 +23,8 @@ import {
   CENTRE,
   FAQ,
   HUMAN_RESOURCES,
+  LOGIN,
+  SIGN_UP,
   STUDENTS,
   TEACHERS,
 } from '../libs/routes';
@@ -33,10 +38,12 @@ export default function App() {
           <Routes>
             <Route
               element={
-                <SecondaryLayout
-                  navigationMenu={NAV_SECTIONS}
-                  role={LayoutRole.Admin}
-                />
+                <EnforceLoginStatePageWrapper redirectTo={LOGIN}>
+                  <SecondaryLayout
+                    navigationMenu={NAV_SECTIONS}
+                    role={LayoutRole.Admin}
+                  />
+                </EnforceLoginStatePageWrapper>
               }
             >
               {/* Nest all routes that has a SecondaryLayout here */}
@@ -59,9 +66,9 @@ export default function App() {
               <Route path={CENTRE} />
               <Route path={FAQ} />
             </Route>
-            <Route path="/login" element={<AdminLogin />} />
+            <Route path={LOGIN} element={<AdminLogin />} />
             <Route path="/account" element={<Account />} />
-            <Route path="sign-up" element={<AdminSignUp />} />
+            <Route path={SIGN_UP} element={<AdminSignUp />} />
             <Route path="centre-management" element={<CentreManagement />} />
             <Route
               path="centre-management/:centreId"
