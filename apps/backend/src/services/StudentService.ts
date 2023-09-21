@@ -13,7 +13,7 @@ class StudentService {
     input.password = await bcrypt.hash(input.password, 10);
     return StudentDao.createStudent({
       ...input,
-      NotificationPreference: {
+      notificationPreference: {
         create: {
           isUnsubscribed: false,
           subjectsPref: input.subjects,
