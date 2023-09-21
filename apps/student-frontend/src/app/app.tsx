@@ -9,6 +9,8 @@ import 'react-toastify/dist/ReactToastify.css';
 // import { AuthWrapper } from '../auth/AuthContext';
 import StudentAccount from '../pages/entry/StudentAccount';
 import { StudentAuthWrapper } from '@acer-academy-learning/common-ui';
+import StudentForgotPassword from '../pages/entry/StudentForgotPassword';
+import StudentResetPassword from '../pages/entry/StudentResetPassword';
 
 export function App() {
   return (
@@ -19,6 +21,8 @@ export function App() {
           <Routes>
             <Route path="/" element={<StudentLogin />} />
             <Route path="/sign-up" element={<StudentSignUp />} />
+            <Route path="forgot-password" element={<StudentForgotPassword />} />
+            <Route path="reset-password" element={<StudentResetPassword />} />
             <Route path="/account" element={<StudentAccount />} />
           </Routes>
         </ToastProvider>
