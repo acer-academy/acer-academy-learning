@@ -1,5 +1,4 @@
 import { PrismaClient, Prisma, Student } from '@prisma/client';
-// import { StudentPostData } from 'libs/data-access/src/lib/types/student';
 
 class StudentDao {
   private prisma: PrismaClient;
@@ -18,6 +17,27 @@ class StudentDao {
     });
   }
 
+  public async updateStudent(
+    id: string,
+    input: Prisma.StudentUpdateInput,
+  ): Promise<Student> {
+    return this.prisma.student.update({
+      where: { id },
+      data: {
+        ...input,
+      },
+    });
+  }
+
+  // soft delete student by setting status to INACTIVE
+  public async deleteStudent(id: string): Promise<Student> {
+    return this.prisma.student.update({
+      where: { id },
+      data: {
+        status: 'INACTIVE',
+      },
+    });
+  }
   public async getAllStudents(): Promise<Student[]> {
     return this.prisma.student.findMany({
       include: {
@@ -27,7 +47,17 @@ class StudentDao {
     });
   }
 
-  async getStudentByEmail(email: string) {
+  public async getStudentById(id: string): Promise<Student> {
+    return this.prisma.student.findUnique({
+      where: { id },
+      include: {
+        parents: true,
+        centre: true,
+      },
+    });
+  }
+
+  public async getStudentByEmail(email: string) {
     return this.prisma.student.findUnique({
       where: { email },
       include: {

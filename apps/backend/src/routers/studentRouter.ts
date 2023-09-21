@@ -1,8 +1,6 @@
 import express from 'express';
-// import { StudentPostData } from 'libs/data-access/src/lib/types/student';
 import StudentService from '../services/StudentService';
 import { Prisma } from '@prisma/client';
-// import { mapPrismaStudentToStudentData } from '../utils/mapper';
 import jwt from 'jsonwebtoken';
 
 import { JWT_SECRET_KEY } from '../config/config';
@@ -12,9 +10,6 @@ const studentRouter = express.Router();
 studentRouter.get('/getAllStudents', async (_, res) => {
   try {
     const students = await StudentService.getAllStudents();
-    // const formattedStudents = students.map((student) =>
-    //   mapPrismaStudentToStudentData(student),
-    // );
 
     return res.status(200).json({ students: students });
   } catch (err) {
@@ -23,12 +18,47 @@ studentRouter.get('/getAllStudents', async (_, res) => {
   }
 });
 
+studentRouter.get('/getStudentById/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const student = await StudentService.getStudentById(id);
+
+    return res.status(200).json({ student: student });
+  } catch (err) {
+    console.log(err);
+    return res.status(400).json({ error: err });
+  }
+});
+
 studentRouter.post('/create', async (req, res) => {
   try {
-    // const input = req.body as StudentPostData;
     const studentData: Prisma.StudentCreateInput = req.body;
     const student = await StudentService.createStudent(studentData);
-    // const formattedStudent = mapPrismaStudentToStudentData(student);
+
+    return res.status(200).json({ student: student });
+  } catch (err) {
+    console.log(err);
+    return res.status(400).json({ error: err });
+  }
+});
+
+studentRouter.delete('/delete/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const student = await StudentService.deleteStudent(id);
+
+    return res.status(200).json({ student: student });
+  } catch (err) {
+    console.log(err);
+    return res.status(400).json({ error: err });
+  }
+});
+
+studentRouter.put('/update/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const studentData: Prisma.StudentUpdateInput = req.body;
+    const student = await StudentService.updateStudent(id, studentData);
 
     return res.status(200).json({ student: student });
   } catch (err) {
