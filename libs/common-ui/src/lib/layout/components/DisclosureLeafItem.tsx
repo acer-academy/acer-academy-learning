@@ -37,23 +37,24 @@ export const DisclosureLeafItem = ({
     <NavLink
       to={`${item.path}`}
       className={classNames(
+        // Needs to be fixed later on
         isActive
           ? `${
               bgColor ??
-              (role === LayoutRole.Student
-                ? 'bg-student-primary-700'
-                : 'bg-teacher-primary-700')
+              (role === LayoutRole.Teacher
+                ? 'bg-teacher-primary-700'
+                : 'bg-student-primary-700')
             } text-white`
           : `${
               textColor ??
-              (role === LayoutRole.Student
-                ? 'text-student-primary-200'
-                : 'text-teacher-primary-200')
+              (role === LayoutRole.Teacher
+                ? 'text-teacher-primary-200'
+                : 'text-student-primary-200')
             } hover:text-white ${
               bgHoverColor ??
-              (role === LayoutRole.Student
-                ? 'hover:bg-student-primary-700'
-                : 'hover:bg-teacher-primary-700')
+              (role === LayoutRole.Teacher
+                ? 'hover:bg-teacher-primary-700'
+                : 'hover:bg-student-primary-700')
             }`,
         sizeStyles,
       )}
