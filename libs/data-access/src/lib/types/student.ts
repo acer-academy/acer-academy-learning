@@ -45,15 +45,3 @@ export interface Student {
   parents: Parent[];
   isAuthenticated: boolean;
 }
-
-export const defaultStudent: Student = {
-  email: '',
-  firstName: '',
-  lastName: '',
-  phoneNumber: '',
-  school: '',
-  level: [],
-  subjects: [],
-  parents: [],
-  isAuthenticated: false,
-};

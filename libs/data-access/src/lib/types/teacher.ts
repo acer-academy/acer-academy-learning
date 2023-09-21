@@ -19,12 +19,3 @@ export interface Teacher {
   centre?: Centre;
   isAuthenticated: boolean;
 }
-
-export const defaultTeacher: Teacher = {
-  firstName: '',
-  lastName: '',
-  email: '',
-  levels: [],
-  subjects: [],
-  isAuthenticated: false,
-};
