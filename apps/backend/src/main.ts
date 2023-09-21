@@ -16,6 +16,7 @@ import cookieParser from 'cookie-parser';
 import classroomRouter from './routers/classroomRouter';
 import faqArticleRouter from './routers/faqArticleRouter';
 import faqTopicRouter from './routers/faqTopicRouter';
+import notificationPreferenceRouter from './routers/notificationPreferenceRouter';
 
 dotenv.config();
 
@@ -79,6 +80,7 @@ app.use('/api/v1/centres', centreRouter);
 app.use('/api/v1/classrooms', classroomRouter);
 app.use('/api/v1/faq-articles', faqArticleRouter);
 app.use('/api/v1/faq-topics', faqTopicRouter);
+app.use('api/v1/preferences', notificationPreferenceRouter);
 
 // Start the server
 const server = app.listen(port, () => {

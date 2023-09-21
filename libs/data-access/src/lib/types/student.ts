@@ -1,4 +1,3 @@
-import { NotificationPreference } from '@prisma/client';
 import { LevelEnum, SubjectEnum } from './CommonTypes';
 import { Teacher } from './teacher';
 // import { Centre } from './CommonTypes';
@@ -29,6 +28,7 @@ export interface StudentData {
 }
 
 export interface NotificationPreference {
+  id: string;
   isUnsubscribed: boolean;
   subjectsPref: SubjectEnum[];
   levelsPref: LevelEnum[];
@@ -36,6 +36,13 @@ export interface NotificationPreference {
   centrePref: string[];
 }
 
+export interface NotificationPreferenceUpdateData {
+  isUnsubscribed?: boolean;
+  subjectsPref?: SubjectEnum[];
+  levelsPref?: LevelEnum[];
+  teacherPref?: string[];
+  centrePref?: string[];
+}
 export interface Parent {
   firstName: string;
   lastName: string;

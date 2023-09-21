@@ -22,3 +22,5 @@ notificationPreferenceRouter.put('/update/:id', async (req, res) => {
     return res.status(400).json({ error: err });
   }
 });
+
+export default notificationPreferenceRouter;
