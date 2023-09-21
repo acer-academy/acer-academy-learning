@@ -141,6 +141,7 @@ export const CentreDetails: React.FC = () => {
       }
       console.log(error);
     } finally {
+      setIsDeletingClassroom(false);
       setIsDeleteModalOpen(false);
     }
   };
