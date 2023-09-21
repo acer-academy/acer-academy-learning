@@ -11,7 +11,18 @@ class StudentService {
     input: Prisma.StudentCreateInput,
   ): Promise<Student> {
     input.password = await bcrypt.hash(input.password, 10);
-    return StudentDao.createStudent(input);
+    return StudentDao.createStudent({
+      ...input,
+      NotificationPreference: {
+        create: {
+          isUnsubscribed: false,
+          subjectsPref: input.subjects,
+          levelsPref: [input.level],
+          teacherPref: [],
+          centrePref: [],
+        },
+      },
+    });
   }
 
   public async getAllStudents(): Promise<Student[]> {

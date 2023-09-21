@@ -43,6 +43,7 @@ class StudentDao {
       include: {
         parents: true,
         centre: true,
+        NotificationPreference: true,
       },
     });
   }
@@ -53,6 +54,7 @@ class StudentDao {
       include: {
         parents: true,
         centre: true,
+        NotificationPreference: true,
       },
     });
   }
@@ -63,6 +65,7 @@ class StudentDao {
       include: {
         parents: true,
         centre: true,
+        NotificationPreference: true,
       },
     });
   }
