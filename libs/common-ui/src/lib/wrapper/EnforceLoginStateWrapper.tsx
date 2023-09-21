@@ -12,7 +12,10 @@ type EnforceLoginStatePageWrapperProps = {
 
 const Redirect = ({ redirectTo }: EnforceLoginStatePageWrapperProps) => {
   const navigate = useNavigate();
-  useEffect(() => navigate(redirectTo, { replace: true }), []);
+  useEffect(() => {
+    console.log('NO USER');
+    navigate(redirectTo, { replace: true });
+  }, []);
   return <FullscreenSpinner />;
 };
 
@@ -24,7 +27,11 @@ export const EnforceLoginStatePageWrapper = ({
   redirectTo,
   children,
 }: PropsWithChildren<EnforceLoginStatePageWrapperProps>): React.ReactElement => {
-  const { user } = useAuth();
+  const { user, isLoading } = useAuth();
+
+  if (isLoading) {
+    return <FullscreenSpinner />;
+  }
 
   if (user) {
     return <>{children}</>;
