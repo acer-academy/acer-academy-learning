@@ -127,6 +127,15 @@ model Classroom {
   // sessions Session[]
 }
 
+model Promotion {
+  id    String         @id @default(uuid()) @db.Uuid
+  startDate DateTime 
+  endDate  DateTime
+  promoCode String     @unique
+  percentageDiscount Float
+  description String
+}
+
 model FaqTopic {
   id          String       @id @default(uuid()) @db.Uuid
   title       String       @unique

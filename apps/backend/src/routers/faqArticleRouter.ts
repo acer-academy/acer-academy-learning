@@ -67,6 +67,25 @@ faqArticleRouter.get('/:faqArticleId', async (req: Request, res: Response) => {
 });
 
 /**
+ * GET /faq-articles/topic/{faqTopicId}
+ * Retrieves a list of FAQ articles by the ID of the FAQ topic it belongs to.
+ */
+faqArticleRouter.get(
+  '/topic/:faqTopicId',
+  async (req: Request, res: Response) => {
+    try {
+      const { faqTopicId } = req.params;
+      const faqArticles = await faqArticleService.getFaqArticleByFaqTopicId(
+        faqTopicId,
+      );
+      return res.status(200).json(faqArticles);
+    } catch (error) {
+      return res.status(500).json({ error: error.message });
+    }
+  },
+);
+
+/**
  * PUT /faq-articles/{faqArticleId}
  * Updates an FAQ article's information by its unique ID.
  */

@@ -11,6 +11,8 @@ import Account from '../pages/entry/Account';
 import { CentreManagement } from '../pages/centre/CentreManagement';
 import { CentreDetails } from '../pages/centre/CentreDetails';
 import AdminResetPassword from '../pages/entry/AdminResetPassword';
+import { FaqTopicManagement } from '../pages/faq/FaqManagement';
+import { FaqTopicDetails } from '../pages/faq/FaqDetails';
 
 export default function App() {
   return (
@@ -28,6 +30,11 @@ export default function App() {
             <Route
               path="centre-management/:centreId"
               element={<CentreDetails />}
+            />
+            <Route path="faq-management" element={<FaqTopicManagement />} />
+            <Route
+              path="faq-management/:faqTopicId"
+              element={<FaqTopicDetails />}
             />
           </Routes>
         </ToastProvider>

@@ -5,6 +5,7 @@ import { ClassroomService } from '../services/ClassroomService';
 import { FaqArticleService } from '../services/FaqArticleService';
 import { FaqTopicService } from '../services/FaqTopicService';
 import { TeacherService } from '../services/TeacherService';
+import promotionService from '../services/PromotionService';
 
 const teacherService = new TeacherService();
 const centreService = new CentreService();
@@ -560,6 +561,118 @@ export async function validateParamsFaqTopicExists(
     if (!topicExists || !faqTopicId) {
       return res.status(400).json({
         error: 'FAQ topic does not exist.',
+      });
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+/** Check if date in correct format */
+export async function validateDateFormat(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const postgresDatetimeRegex =
+      /^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[+-]\d{2}:\d{2}))$/;
+    let isValidStartDate, isValidEndDate;
+
+    isValidStartDate = req.body.startDate
+      ? postgresDatetimeRegex.test(req.body.startDate)
+      : true;
+    isValidEndDate = req.body.endDate
+      ? postgresDatetimeRegex.test(req.body.endDate)
+      : true;
+
+    if (!isValidStartDate || !isValidEndDate) {
+      return res.status(500).json({
+        error:
+          'Start Date and/or End Date does not comply with Postgres DateTime format',
+      });
+    }
+
+    if (req.body.startDate >= req.body.endDate) {
+      return res.status(500).json({
+        error: 'Start Date must be a date earlier than End Date',
+      });
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+/** Check if discount for promotion in 2dp */
+export async function validatePromotionDescription(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    if (!req.body.description) {
+      return res.status(500).json({
+        error:
+          'Percentage Discount should only consist of max 2 decimal points',
+      });
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+/** Check if promotion description not empty */
+export async function validatePromotionPercentageDiscount(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    if (req.body.percentageDiscount) {
+      let checkType = parseFloat(req.body.percentageDiscount);
+      if (!checkType) {
+        return res.status(500).json({
+          error: 'Percentage Discount needs to be numbers',
+        });
+      }
+      let check = req.body.percentageDiscount.toString().split('.');
+      if (check[1] && check[1].length > 2) {
+        return res.status(500).json({
+          error:
+            'Percentage Discount should only consist of max 2 decimal points',
+        });
+      }
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+export async function validatePromotionPromoCodeUnique(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { promoCode } = req.body;
+    const existingPromotion = await promotionService.getPromotionByPromoCode(
+      promoCode,
+    );
+    if (existingPromotion) {
+      return res.status(400).json({
+        error: 'Promotion Code already exists.',
       });
     }
     next();
