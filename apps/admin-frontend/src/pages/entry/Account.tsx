@@ -55,20 +55,24 @@ const Account: React.FC = () => {
                   </span>
                   <span className="text-gray-800 capitalize">{user.type}</span>
                 </div>
+                <div className="mt-6">
+                  <button
+                    onClick={handleLogout}
+                    className="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  >
+                    Logout
+                  </button>
+                </div>
               </div>
             ) : (
               <span className="text-gray-800">
-                Please log in to see user details.
+                Please{' '}
+                <a href="/" className="text-blue-800 font-bold">
+                  log in
+                </a>{' '}
+                to see user details.
               </span>
             )}
-            <div className="mt-6">
-              <button
-                onClick={handleLogout}
-                className="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-              >
-                Logout
-              </button>
-            </div>
           </div>
         </div>
       </div>
