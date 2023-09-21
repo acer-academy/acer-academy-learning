@@ -16,6 +16,10 @@ class AdminDao {
     return prisma.admin.findUnique({ where: { email } });
   }
 
+  getAdminById(id: string) {
+    return prisma.admin.findUnique({ where: { id } });
+  }
+
   async updateAdmin(
     currentEmail: string,
     updatedData: Prisma.AdminUpdateInput,
