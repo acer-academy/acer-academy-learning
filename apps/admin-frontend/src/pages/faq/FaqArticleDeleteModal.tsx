@@ -1,13 +1,11 @@
-import { Fragment } from 'react';
-
-interface FaqTopicDeleteModalProps {
+interface FaqArticleDeleteModalProps {
   setIsModalOpen: (isModalOpen: boolean) => void;
-  deleteFaqTopic: () => void;
+  deleteFaqArticle: () => void;
 }
 
-export const FaqTopicDeleteModal: React.FC<FaqTopicDeleteModalProps> = ({
+export const FaqArticleDeleteModal: React.FC<FaqArticleDeleteModalProps> = ({
   setIsModalOpen,
-  deleteFaqTopic,
+  deleteFaqArticle,
 }) => {
   return (
     <div className="fixed inset-0 z-10 flex items-center justify-center overflow-x-hidden overflow-y-auto outline-none focus:outline-none">
@@ -17,11 +15,11 @@ export const FaqTopicDeleteModal: React.FC<FaqTopicDeleteModalProps> = ({
           <div className="flex items-start justify-between">
             <div className=" w-0 flex-1 pt-0.5">
               <h3 className="text-lg font-semibold leading-6 text-gray-900">
-                Delete FAQ Topic
+                Delete FAQ Article
               </h3>
               <p className="mt-3 text-sm text-gray-500">
-                Are you sure you want to delete this FAQ topic? All articles in
-                this topic will also be deleted. This action cannot be undone.
+                Are you sure you want to delete this FAQ article? This action
+                cannot be undone.
               </p>
             </div>
           </div>
@@ -34,7 +32,7 @@ export const FaqTopicDeleteModal: React.FC<FaqTopicDeleteModalProps> = ({
             </button>
             <button
               className="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md hover:bg-red-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-red-500"
-              onClick={() => deleteFaqTopic()}
+              onClick={() => deleteFaqArticle()}
             >
               Delete
             </button>

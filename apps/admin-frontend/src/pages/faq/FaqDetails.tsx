@@ -7,12 +7,12 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { FaqTopicDeleteModal } from './FaqTopicDeleteModal';
 import { FaqArticlesTable } from './FaqArticlesTable';
-import { FaqArticleData } from 'libs/data-access/src/lib/types/faqArticle';
 import {
   getFaqTopicById,
   updateFaqTopic as apiUpdateFaqTopic,
   deleteFaqTopic as apiDeleteFaqTopic,
 } from '@acer-academy-learning/data-access';
+import { FaqArticleData } from 'libs/data-access/src/lib/types/faqArticle';
 
 export const FaqTopicDetails: React.FC = () => {
   const [faqTopic, setFaqTopic] = useState<FaqTopicData>();
@@ -21,6 +21,7 @@ export const FaqTopicDetails: React.FC = () => {
   const [updatedFaqTopicTitle, setUpdatedFaqTopicTitle] = useState('');
   const [isEditingFaqTopicTitle, setIsEditingFaqTopicTitle] = useState(false);
   const [updatesMade, setUpdatesMade] = useState(false);
+  const [faqArticles, setFaqArticles] = useState<FaqArticleData[]>([]);
 
   const { displayToast, ToastType } = useToast();
   const navigate = useNavigate();
@@ -38,6 +39,7 @@ export const FaqTopicDetails: React.FC = () => {
       console.log(faqTopicData);
       setFaqTopic(faqTopicData);
       setUpdatedFaqTopicTitle(faqTopicData.title);
+      setFaqArticles(faqTopicData.faqArticles);
     } catch (error) {
       displayToast(
         'FAQ topic could not be retrieved from the server.',
@@ -92,6 +94,10 @@ export const FaqTopicDetails: React.FC = () => {
     } finally {
       setIsDeleteModalOpen(false);
     }
+  };
+
+  const updateFaqArticles = (newFaqArticles: FaqArticleData[]) => {
+    setFaqArticles(newFaqArticles);
   };
 
   useEffect(() => {
@@ -171,7 +177,11 @@ export const FaqTopicDetails: React.FC = () => {
           </div>
         </div>
         <hr className="my-12 h-0.5 border-t-0 bg-neutral-200 opacity-100 dark:opacity-50" />
-        <FaqArticlesTable currentFaqArticles={faqTopic?.faqArticles ?? []} />
+        <FaqArticlesTable
+          currentFaqArticles={faqArticles}
+          updateFaqArticles={updateFaqArticles}
+          faqTopicId={faqTopicId ?? ''}
+        />
       </div>
       {isDeleteModalOpen && faqTopicId && (
         <FaqTopicDeleteModal

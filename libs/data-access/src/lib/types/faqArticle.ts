@@ -4,14 +4,14 @@ export interface FaqArticleCreateData {
   title: string;
   imageUrl: string;
   body: string;
-  faqTopic: FaqTopicData;
+  faqTopicId: string;
 }
 
 export interface FaqArticleUpdateData {
   title: string;
   imageUrl: string;
   body: string;
-  faqTopic: FaqTopicData;
+  faqTopicId: string;
 }
 
 export interface FaqArticleData {
