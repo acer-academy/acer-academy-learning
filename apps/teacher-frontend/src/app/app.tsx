@@ -1,5 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import {
+  EnforceLoginStatePageWrapper,
   LayoutRole,
   PrimaryLayout,
   ToastProvider,
@@ -19,10 +20,12 @@ import {
   ACCOUNT,
   ANALYTICS,
   DASHBOARD,
+  LOGIN,
   PROFILE,
   REWARDS,
   SCHEDULING,
   SETTINGS,
+  SIGN_UP,
   SUBJECTS,
 } from '../libs/routes';
 
@@ -35,14 +38,15 @@ export function App() {
           <Routes>
             <Route
               element={
-                <PrimaryLayout
-                  role={LayoutRole.Teacher}
-                  navigationMenu={NAV_SECTIONS}
-                  accountNavigation={ACCOUNT_NAV}
-                />
+                <EnforceLoginStatePageWrapper redirectTo={LOGIN}>
+                  <PrimaryLayout
+                    role={LayoutRole.Teacher}
+                    navigationMenu={NAV_SECTIONS}
+                    accountNavigation={ACCOUNT_NAV}
+                  />
+                </EnforceLoginStatePageWrapper>
               }
             >
-              <Route path="/" />
               <Route path={DASHBOARD} />
               <Route path={SUBJECTS} />
               <Route path={ANALYTICS} />
@@ -53,8 +57,8 @@ export function App() {
                 <Route path={SETTINGS} />
               </Route>
             </Route>
-            <Route path="/login" element={<TeacherLogin />} />
-            <Route path="/sign-up" element={<TeacherSignUp />} />
+            <Route path={LOGIN} element={<TeacherLogin />} />
+            <Route path={SIGN_UP} element={<TeacherSignUp />} />
             <Route
               path="/forgot-password"
               element={<TeacherForgotPassword />}
