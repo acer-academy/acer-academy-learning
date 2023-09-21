@@ -17,7 +17,7 @@ class StudentService {
     return StudentDao.getAllStudents();
   }
 
-  public async getStuentById(id: string): Promise<Student> {
+  public async getStudentById(id: string): Promise<Student> {
     return StudentDao.getStudentById(id);
   }
 
