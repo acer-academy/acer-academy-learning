@@ -21,8 +21,11 @@ export function App() {
           <Routes>
             <Route path="/" element={<StudentLogin />} />
             <Route path="/sign-up" element={<StudentSignUp />} />
-            <Route path="forgot-password" element={<StudentForgotPassword />} />
-            <Route path="reset-password" element={<StudentResetPassword />} />
+            <Route
+              path="/forgot-password"
+              element={<StudentForgotPassword />}
+            />
+            <Route path="/reset-password" element={<StudentResetPassword />} />
             <Route path="/account" element={<StudentAccount />} />
           </Routes>
         </ToastProvider>

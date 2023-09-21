@@ -1,7 +1,7 @@
 // app.jsx
 import AdminLogin from '../pages/entry/AdminLogin';
 import AdminSignUp from '../pages/entry/AdminSignUp';
-import AdminForgotPassword from '../pages/entry/AdminForgetPassword';
+import AdminForgotPassword from '../pages/entry/AdminForgotPassword';
 import { AdminAuthWrapper } from '@acer-academy-learning/common-ui';
 import { ToastProvider } from '@acer-academy-learning/common-ui';
 import { Routes, Route } from 'react-router-dom';
