@@ -23,7 +23,7 @@ export class FaqArticleDao {
     });
   }
 
-  public async getFaqArticleByFaqTopic(
+  public async getFaqArticlesByFaqTopicId(
     faqTopicId: string,
   ): Promise<FaqArticle[] | null> {
     return this.prismaClient.faqArticle.findMany({

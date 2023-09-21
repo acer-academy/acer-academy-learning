@@ -20,6 +20,12 @@ export async function getFaqArticleById(
   return client.get(`${URL}/${faqArticleId}`);
 }
 
+export async function getFaqArticlesByFaqTopicId(
+  faqTopicId: string,
+): Promise<AxiosResponse<FaqArticleData[]>> {
+  return client.get(`${URL}/topic/${faqTopicId}`);
+}
+
 export async function createFaqArticle(
   faqArticleData: FaqArticleCreateData,
 ): Promise<AxiosResponse<FaqArticleData>> {

@@ -1,12 +1,130 @@
-import { FaqArticleData } from 'libs/data-access/src/lib/types/faqArticle';
+import {
+  FaqArticleCreateData,
+  FaqArticleData,
+  FaqArticleUpdateData,
+} from 'libs/data-access/src/lib/types/faqArticle';
+import { useEffect, useState } from 'react';
+import { useToast } from '@acer-academy-learning/common-ui';
+import {
+  getFaqArticlesByFaqTopicId,
+  createFaqArticle as apiCreateFaqArticle,
+  updateFaqArticle as apiUpdateFaqArticle,
+  deleteFaqArticle as apiDeleteFaqArticle,
+} from '@acer-academy-learning/data-access';
+import { FaqArticleDeleteModal } from './FaqArticleDeleteModal';
+import { FaqArticleCreateModal } from './FaqArticleCreateModal';
+import { FaqArticleUpdateModal } from './FaqArticleUpdateModal';
 
 interface FaqArticlesTableProps {
   currentFaqArticles: FaqArticleData[];
+  updateFaqArticles: (newFaqArticles: FaqArticleData[]) => void;
+  faqTopicId: string;
 }
 
 export const FaqArticlesTable: React.FC<FaqArticlesTableProps> = ({
   currentFaqArticles,
+  updateFaqArticles,
+  faqTopicId,
 }) => {
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [updateFaqArticleId, setUpdateFaqArticleId] = useState('');
+  const [updateFaqArticleData, setUpdateFaqArticleData] =
+    useState<FaqArticleUpdateData>({
+      title: '',
+      imageUrl: '',
+      body: '',
+      faqTopicId: faqTopicId,
+    });
+  const [deleteFaqArticleId, setDeleteFaqArticleId] = useState('');
+
+  const { displayToast, ToastType } = useToast();
+
+  const createFaqArticle = async (faqArticleData: FaqArticleCreateData) => {
+    try {
+      faqArticleData.title = faqArticleData.title.trim();
+      faqArticleData.body = faqArticleData.body.trim();
+      faqArticleData.faqTopicId = faqTopicId;
+      const response = await apiCreateFaqArticle(faqArticleData);
+      console.log(response);
+
+      displayToast('FAQ article created successfully.', ToastType.SUCCESS);
+
+      // Update the parent component's state
+      const updatedFaqArticles = await getFaqArticlesByFaqTopicId(faqTopicId);
+      updateFaqArticles(updatedFaqArticles.data);
+    } catch (error: any) {
+      if (error.response) {
+        displayToast(`${error.response.data.error}`, ToastType.ERROR);
+      } else {
+        displayToast(
+          'FAQ article could not be created: Unknown error.',
+          ToastType.ERROR,
+        );
+      }
+      console.log(error);
+    } finally {
+      setIsCreateModalOpen(false);
+    }
+  };
+
+  const updateFaqArticle = async (faqArticleData: FaqArticleUpdateData) => {
+    try {
+      faqArticleData.title = faqArticleData.title.trim();
+      faqArticleData.body = faqArticleData.body.trim();
+      faqArticleData.faqTopicId = faqTopicId;
+      const response = await apiUpdateFaqArticle(
+        updateFaqArticleId,
+        faqArticleData,
+      );
+      console.log(response);
+      displayToast('FAQ article updated successfully.', ToastType.INFO);
+
+      // Update the parent component's state
+      const updatedFaqArticles = await getFaqArticlesByFaqTopicId(faqTopicId);
+      updateFaqArticles(updatedFaqArticles.data);
+    } catch (error: any) {
+      if (error.response) {
+        displayToast(`${error.response.data.error}`, ToastType.ERROR);
+      } else {
+        displayToast(
+          'FAQ article could not be updated: Unknown error.',
+          ToastType.ERROR,
+        );
+      }
+      console.log(error);
+    } finally {
+      setIsUpdateModalOpen(false);
+    }
+  };
+
+  const deleteFaqArticle = async () => {
+    try {
+      const response = await apiDeleteFaqArticle(deleteFaqArticleId);
+      console.log(response);
+      displayToast('FAQ article deleted successfully.', ToastType.INFO);
+
+      // Update the parent component's state by removing the deleted article
+      const updatedFaqArticles = currentFaqArticles.filter(
+        (article) => article.id !== deleteFaqArticleId,
+      );
+      updateFaqArticles(updatedFaqArticles);
+    } catch (error: any) {
+      if (error.response) {
+        displayToast(`${error.response.data.error}`, ToastType.ERROR);
+      } else {
+        displayToast(
+          'FAQ article could not be deleted: Unknown error.',
+          ToastType.ERROR,
+        );
+      }
+      console.log(error);
+    } finally {
+      setIsDeleteModalOpen(false);
+    }
+  };
+
   return (
     <div className="px-4 sm:px-6 lg:px-8">
       <div className="sm:flex sm:items-center">
@@ -22,7 +140,7 @@ export const FaqArticlesTable: React.FC<FaqArticlesTableProps> = ({
           <button
             className="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-adminGreen-600 border border-transparent rounded-md hover:bg-adminGreen-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-adminGreen-500"
             onClick={() => {
-              //setIsCreateModalOpen(true);
+              setIsCreateModalOpen(true);
             }}
           >
             <svg
@@ -95,10 +213,30 @@ export const FaqArticlesTable: React.FC<FaqArticlesTableProps> = ({
                         </td>
                         <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-center text-sm font-medium sm:pr-6">
                           <a
-                            href="#"
-                            className="text-indigo-600 hover:text-indigo-900"
+                            className="text-indigo-600 hover:text-indigo-900 mr-4 cursor-pointer"
+                            onClick={() => {
+                              setUpdateFaqArticleId(faqArticle.id);
+                              setUpdateFaqArticleData({
+                                title: faqArticle.title,
+                                imageUrl: faqArticle.imageUrl,
+                                body: faqArticle.body,
+                                faqTopicId: faqTopicId,
+                              });
+                              setIsUpdateModalOpen(true);
+                              console.log('updateFaqArticleData');
+                              console.log(updateFaqArticleData);
+                            }}
                           >
                             Edit
+                          </a>
+                          <a
+                            className="text-indigo-600 hover:text-indigo-900 cursor-pointer"
+                            onClick={() => {
+                              setDeleteFaqArticleId(faqArticle.id);
+                              setIsDeleteModalOpen(true);
+                            }}
+                          >
+                            Delete
                           </a>
                         </td>
                       </tr>
@@ -114,6 +252,25 @@ export const FaqArticlesTable: React.FC<FaqArticlesTableProps> = ({
           </div>
         </div>
       </div>
+      {isDeleteModalOpen && (
+        <FaqArticleDeleteModal
+          setIsModalOpen={setIsDeleteModalOpen}
+          deleteFaqArticle={deleteFaqArticle}
+        />
+      )}
+      {isCreateModalOpen && (
+        <FaqArticleCreateModal
+          setIsModalOpen={setIsCreateModalOpen}
+          createFaqArticle={createFaqArticle}
+        />
+      )}
+      {isUpdateModalOpen && (
+        <FaqArticleUpdateModal
+          setIsModalOpen={setIsUpdateModalOpen}
+          updateFaqArticle={updateFaqArticle}
+          currentFaqArticle={updateFaqArticleData}
+        />
+      )}
     </div>
   );
 };

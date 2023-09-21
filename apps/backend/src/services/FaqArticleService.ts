@@ -20,6 +20,12 @@ export class FaqArticleService {
     return this.faqArticleDao.getFaqArticleById(faqArticleId);
   }
 
+  public async getFaqArticleByFaqTopicId(
+    faqTopicId: string,
+  ): Promise<FaqArticle[]> {
+    return this.faqArticleDao.getFaqArticlesByFaqTopicId(faqTopicId);
+  }
+
   public async updateFaqArticle(
     faqArticleId: string,
     faqArticleData: Prisma.FaqArticleUpdateInput,
