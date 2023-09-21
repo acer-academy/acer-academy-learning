@@ -16,6 +16,9 @@ import { PrimaryDesktopSideBar } from './components/PrimaryDesktopSideBar';
 import { AccountPopover } from './components/AccountPopover';
 import { AcerAcademyLogo } from '../logo/logo';
 import logo from '../assets/acer-academy-logo-white.png';
+import { LogoutButton } from './components/LogoutButton';
+import { useAuth } from '../wrapper/AuthContext';
+import { Admin, Student, Teacher } from '@prisma/client';
 
 export type PrimaryLayoutProps = {
   accountNavigation: NavigationMenuItem;
@@ -33,6 +36,7 @@ export const PrimaryLayout = ({
     ...navigationMenu,
     accountNavigation,
   ]);
+  const { user } = useAuth<Admin | Student | Teacher>();
 
   return (
     <ThemeProvider role={role}>
@@ -97,18 +101,10 @@ export const PrimaryLayout = ({
             </div>
             <div className="hidden lg:flex">
               <AccountPopover
-                firstName={role}
+                firstName={user?.firstName ?? role}
                 menuItems={accountNavigation.children}
               />
-              <button>
-                <ArrowRightOnRectangleIcon
-                  className={`h-6 w-6 shrink-0 text-icon-primary  ${
-                    role === LayoutRole.Student
-                      ? 'hover:text-student-secondary-500'
-                      : 'hover:text-teacher-secondary-500'
-                  }`}
-                />
-              </button>
+              <LogoutButton />
             </div>
           </nav>
           <Dialog

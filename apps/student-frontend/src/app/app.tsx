@@ -1,5 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import {
+  EnforceLoginStatePageWrapper,
   LayoutRole,
   PrimaryLayout,
   ToastProvider,
@@ -22,6 +23,7 @@ import {
   BOOK_CLASSES,
   BUY_CREDITS,
   DASHBOARD,
+  LOGIN,
   NOTIFICATIONS,
   PAST_TRANSACTIONS,
   PROFILE,
@@ -29,6 +31,7 @@ import {
   RECORDINGS,
   REWARDS,
   SETTINGS,
+  SIGN_UP,
   SUBJECTS,
   VIEW_CLASSES,
   ZOOM_LINK,
@@ -42,53 +45,48 @@ export function App() {
         <ToastProvider>
           <ToastContainer />
           <Routes>
-            <Route path="/" element={<StudentLogin />} />
-            <Route path="/sign-up" element={<StudentSignUp />} />
-            <Route
-              path="/forgot-password"
-              element={<StudentForgotPassword />}
-            />
-            <Route path="/reset-password" element={<StudentResetPassword />} />
+            <Route path={LOGIN} element={<StudentLogin />} />
+            <Route path={SIGN_UP} element={<StudentSignUp />} />
             <Route path="/account" element={<StudentAccount />} />
+            <Route
+              element={
+                <EnforceLoginStatePageWrapper redirectTo={LOGIN}>
+                  <PrimaryLayout
+                    navigationMenu={NAV_SECTIONS}
+                    accountNavigation={ACCOUNT_NAV}
+                    role={LayoutRole.Student}
+                  />
+                </EnforceLoginStatePageWrapper>
+              }
+            >
+              <Route path={DASHBOARD} element={<div>Home</div>} />
+              <Route path={SUBJECTS} element={<div>Home</div>}>
+                <Route path={ASSIGNMENTS} element={<div>Home</div>} />
+                <Route path={QUIZZES} element={<div>Home</div>} />
+                <Route path={RECORDINGS} element={<div>Home</div>} />
+                <Route path={ZOOM_LINK} element={<div>Home</div>} />
+              </Route>
+              <Route path={BOOKING} element={<div>Home</div>}>
+                <Route path={VIEW_CLASSES} element={<div>Home</div>} />
+                <Route path={BOOK_CLASSES} element={<div>Home</div>} />
+                <Route path={BUY_CREDITS} element={<div>Home</div>} />
+                <Route path={PAST_TRANSACTIONS} element={<div>Home</div>} />
+              </Route>
+              <Route path={REWARDS} element={<div>Home</div>} />
+              <Route path={ACCOUNT} element={<div>Home</div>}>
+                <Route path={PROFILE} element={<div>Home</div>} />
+                <Route path={NOTIFICATIONS} element={<div>Home</div>} />
+                <Route path={SETTINGS} element={<div>Home</div>} />
+              </Route>
+            </Route>
           </Routes>
         </ToastProvider>
       </StudentAuthWrapper>
-      <ToastProvider>
+      {/* <ToastProvider>
         <ToastContainer />
         <Routes>
-          <Route
-            element={
-              <PrimaryLayout
-                navigationMenu={NAV_SECTIONS}
-                accountNavigation={ACCOUNT_NAV}
-                role={LayoutRole.Student}
-              />
-            }
-          >
-            <Route path={'/'} element={<div>Home</div>} />
-            <Route path={DASHBOARD} element={<div>Home</div>} />
-            <Route path={SUBJECTS} element={<div>Home</div>}>
-              <Route path={ASSIGNMENTS} element={<div>Home</div>} />
-              <Route path={QUIZZES} element={<div>Home</div>} />
-              <Route path={RECORDINGS} element={<div>Home</div>} />
-              <Route path={ZOOM_LINK} element={<div>Home</div>} />
-            </Route>
-            <Route path={BOOKING} element={<div>Home</div>}>
-              <Route path={VIEW_CLASSES} element={<div>Home</div>} />
-              <Route path={BOOK_CLASSES} element={<div>Home</div>} />
-              <Route path={BUY_CREDITS} element={<div>Home</div>} />
-              <Route path={PAST_TRANSACTIONS} element={<div>Home</div>} />
-            </Route>
-            <Route path={REWARDS} element={<div>Home</div>} />
-            <Route path={ACCOUNT} element={<div>Home</div>}>
-              <Route path={PROFILE} element={<div>Home</div>} />
-              <Route path={NOTIFICATIONS} element={<div>Home</div>} />
-              <Route path={SETTINGS} element={<div>Home</div>} />
-            </Route>
-          </Route>
-          <Route path="/login" element={<StudentLogin />} />
         </Routes>
-      </ToastProvider>
+      </ToastProvider> */}
     </div>
   );
 }
