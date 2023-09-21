@@ -21,23 +21,16 @@ router.post('/register', async (req, res) => {
   }
 });
 
-// router.post('/login', async (req, res) => {
-//   try {
-//     const input = req.body as AdminGetData;
-//     const token = await AdminService.login(input);
-//     console.log(input);
-//     res.status(200).json(token);
-//   } catch (error) {
-//     res.status(400).json({ error: error.message });
-//   }
-// });
-
+/**
+ * POST /admins/login
+ * Logs in a admin using their email and password, returns a cookie that lasts 4 hours, containing the JWT Token
+ */
 router.post('/login', async (req, res) => {
   try {
     const input = req.body as AdminGetData;
     const { token, user } = await AdminService.login(input);
 
-    res.cookie('jwtToken', token, {
+    res.cookie('jwtToken_Admin', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production', // secure in production
       sameSite: 'strict',
@@ -50,11 +43,15 @@ router.post('/login', async (req, res) => {
   }
 });
 
+/**
+ * POST /admins/logout
+ * removes the cookie for the user who sent in the request
+ */
 router.post('/logout', (req, res) => {
   // console.log('Logout endpoint hit');
   // console.log(req);
   res
-    .clearCookie('jwtToken', {
+    .clearCookie('jwtToken_Admin', {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production', // secure in production
       sameSite: 'strict',
@@ -63,21 +60,22 @@ router.post('/logout', (req, res) => {
     .send({ message: 'Logout successful' });
 });
 
-//takes in the cookie and check the jwt token
+/**
+ * GET /admins/check-auth
+ * Checks the token in the cookie and return the user information
+ */
 router.get('/check-auth', (req, res) => {
-  const token = req.cookies.jwtToken;
+  const token = req.cookies.jwtToken_Admin;
 
-  // console.log('in check auth');
-  // console.log(JWT_SECRET_KEY);
   if (token) {
     jwt.verify(token, JWT_SECRET_KEY, (err, decoded) => {
       if (err) {
         res.status(403).send({ message: 'Invalid token' });
       } else {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { iat, exp, ...user } = decoded;
 
-        res.status(200).send(user);
-        // res.status(200).send(decoded);
+        res.status(200).send(user); //returns user information
       }
     });
   } else {

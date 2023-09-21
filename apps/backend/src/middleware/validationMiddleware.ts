@@ -88,26 +88,26 @@ export async function validateBodyTeacherEmailUnique(
 }
 
 /** Validates if a teacherId passed in params exists */
-export async function validateParamsTeacherExists(
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) {
-  try {
-    const { teacherId } = req.params;
-    const teacherExists = await teacherService.getTeacherById(teacherId);
-    if (!teacherExists || !teacherId) {
-      return res.status(400).json({
-        error: 'Teacher does not exist.',
-      });
-    }
-    next();
-  } catch (error) {
-    return res.status(500).json({
-      error: error.message,
-    });
-  }
-}
+// export async function validateParamsTeacherExists(
+//   req: Request,
+//   res: Response,
+//   next: NextFunction,
+// ) {
+//   try {
+//     const { teacherId } = req.params;
+//     const teacherExists = await teacherService.getTeacherById(teacherId);
+//     if (!teacherExists || !teacherId) {
+//       return res.status(400).json({
+//         error: 'Teacher does not exist.',
+//       });
+//     }
+//     next();
+//   } catch (error) {
+//     return res.status(500).json({
+//       error: error.message,
+//     });
+//   }
+// }
 
 /** Validates if a centreId passed in params exists */
 export async function validateParamsCentreExists(

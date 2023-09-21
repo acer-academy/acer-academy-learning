@@ -4,11 +4,10 @@ import bcrypt from 'bcrypt';
 import AdminDao from '../dao/AdminDao';
 import {
   AdminPostData,
-  AdminPutData,
   AdminGetData,
 } from 'libs/data-access/src/lib/types/admin';
 
-import { PrismaClient, Prisma } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import jwt from 'jsonwebtoken';
 import { JWT_SECRET_KEY } from '../config/config';
 
@@ -28,16 +27,17 @@ class AdminService {
     const token = jwt.sign(
       {
         id: admin.id,
-        type: admin.type,
-        email: admin.email,
         firstName: admin.firstName,
         lastName: admin.lastName,
+        email: admin.email,
+        type: admin.type,
       },
       JWT_SECRET_KEY,
       { expiresIn: '4h' },
     );
 
     // Destructure admin object to omit password and possibly other sensitive fields
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password, ...user } = admin;
 
     return { token, user };

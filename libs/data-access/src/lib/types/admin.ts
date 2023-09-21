@@ -27,11 +27,3 @@ export interface Admin {
   type: AdminType;
   isAuthenticated: boolean;
 }
-
-export const defaultAdmin: Admin = {
-  firstName: '',
-  lastName: '',
-  type: AdminType.STANDARD_ADMIN,
-  email: '',
-  isAuthenticated: false,
-};
