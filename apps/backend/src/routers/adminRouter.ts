@@ -6,7 +6,6 @@ import {
   AdminPutData,
 } from 'libs/data-access/src/lib/types/admin';
 import jwt from 'jsonwebtoken';
-
 import { JWT_SECRET_KEY } from '../config/config';
 
 const router = express.Router();
@@ -99,6 +98,26 @@ router.delete('/delete/:email', async (req, res) => {
     const { email } = req.params;
     await AdminService.deleteAdmin(email);
     res.status(200).json({ message: 'Admin deleted successfully' });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+router.post('/forgot-password', async (req, res) => {
+  try {
+    const { email } = req.body;
+    await AdminService.requestPasswordReset(email);
+    res.status(200).json({ message: 'Password reset email sent successfully' });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+router.post('/reset-password', async (req, res) => {
+  try {
+    const { token, newPassword } = req.body;
+    await AdminService.resetPassword(token, newPassword);
+    res.status(200).json({ message: 'Password reset successfully' });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
