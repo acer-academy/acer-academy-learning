@@ -31,7 +31,7 @@ promotionRouter.post(
 promotionRouter.get('/getAllPromotions', async (_, res) => {
   try {
     const promotions = await PromotionService.getAllPromotions();
-    return res.status(200).json({ promotions: promotions });
+    return res.status(200).json(promotions);
   } catch (err) {
     console.log(err);
     return res.status(400).json({ error: err });
