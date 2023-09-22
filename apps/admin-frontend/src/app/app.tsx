@@ -6,12 +6,13 @@ import {
   EnforceLoginStatePageWrapper,
 } from '@acer-academy-learning/common-ui';
 import 'react-toastify/dist/ReactToastify.css'; // Import toastify CSS
-import Account from '../pages/entry/Account';
 import AdminProfile from '../pages/profile/AdminProfile';
 import ChangePassword from '../pages/profile/ChangePassword';
-
 import { CentreManagement } from '../pages/centre/CentreManagement';
 import { CentreDetails } from '../pages/centre/CentreDetails';
+import { FaqTopicManagement } from '../pages/faq/FaqManagement';
+import { FaqTopicDetails } from '../pages/faq/FaqDetails';
+import { PromotionManagement } from '../pages/promotion/PromotionManagement';
 import {
   LayoutRole,
   SecondaryLayout,
@@ -115,6 +116,15 @@ export default function App() {
             <Route
               path="centre-management/:centreId"
               element={<CentreDetails />}
+            />
+            <Route path="faq-management" element={<FaqTopicManagement />} />
+            <Route
+              path="faq-management/:faqTopicId"
+              element={<FaqTopicDetails />}
+            />
+            <Route
+              path="promotion-management"
+              element={<PromotionManagement />}
             />
           </Routes>
         </ToastProvider>
