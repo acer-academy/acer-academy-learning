@@ -213,6 +213,11 @@ export default function StudentSignUp() {
       parents: parents,
     };
 
+    if (payload.subjects.length === 0) {
+      displayToast('You need to select at least 1 subject', ToastType.ERROR);
+      return;
+    }
+
     if (password !== confirmPassword) {
       displayToast('Password do not match', ToastType.ERROR);
       return;
