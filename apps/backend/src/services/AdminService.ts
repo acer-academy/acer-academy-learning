@@ -21,14 +21,24 @@ class AdminService {
   public async register(
     data: Prisma.AdminUncheckedCreateInput,
   ): Promise<Admin> {
-    // Check if the email is whitelisted
-    const isWhitelisted = await this.whitelistService.isEmailWhitelisted(
-      data.email,
-      'ADMIN',
-    );
+    // skip whitelist check for super_admin
+    if (data.type === 'STANDARD_ADMIN') {
+      const isWhitelisted = await this.whitelistService.isEmailWhitelisted(
+        data.email,
+        'ADMIN',
+      );
 
-    if (!isWhitelisted) {
-      throw new Error('Unable to create student as email is not whitelisted!');
+      if (!isWhitelisted) {
+        throw new Error(
+          'Unable to create student as email is not whitelisted!',
+        );
+      }
+    } else {
+      // create whitelist item for super_admin
+      await this.whitelistService.createWhitelist({
+        email: data.email,
+        role: 'SUPER_ADMIN',
+      });
     }
 
     const whitelistItem = await this.whitelistService.getWhitelistByEmail(
@@ -77,9 +87,7 @@ class AdminService {
       data.password = await bcrypt.hash(data.password, 10);
     }
 
-
     return AdminDao.updateAdmin(id, data);
-
   }
 
   async deleteAdmin(email: string) {
