@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AcerAcademyLogo } from '@acer-academy-learning/common-ui';
+import {
+  AcerAcademyLogo,
+  PublicPageWrapper,
+} from '@acer-academy-learning/common-ui';
 import { useAuth } from '@acer-academy-learning/common-ui';
 
 const AdminLogin: React.FC = () => {
@@ -15,7 +18,7 @@ const AdminLogin: React.FC = () => {
 
     try {
       await login(email, password);
-      navigate('/account');
+      navigate('/');
     } catch (error) {
       console.error('An error occurred', error);
     }
@@ -127,7 +130,7 @@ const AdminLogin: React.FC = () => {
           </p>
         </div>
       </div>
-    </div>
+    </PublicPageWrapper>
   );
 };
 

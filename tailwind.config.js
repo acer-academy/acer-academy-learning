@@ -1,5 +1,5 @@
-// tailwind.config.js
-import forms from '@tailwindcss/forms';
+const defaultTheme = require('tailwindcss/defaultTheme');
+const colors = require('tailwindcss/colors');
 
 module.exports = {
   content: [
@@ -24,6 +24,20 @@ module.exports = {
           800: '#43652F',
           900: '#293E1D',
           950: '#1D2B14',
+        },
+        adminBlue: {
+          DEFAULT: '#70C0BF',
+          50: '#EFF8F8',
+          100: '#E1F2F2',
+          200: '#C5E5E5',
+          300: '#A9D9D8',
+          400: '#8CCCCC',
+          500: '#70C0BF',
+          600: '#4CACAB',
+          700: '#3B8584',
+          800: '#2A5E5E',
+          900: '#183737',
+          950: '#102424',
         },
       },
     },
