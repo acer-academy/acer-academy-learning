@@ -55,7 +55,7 @@ export function App() {
               <Route path={SCHEDULING} />
               <Route path={REWARDS} />
               <Route path={ACCOUNT}>
-                <Route path={PROFILE} />
+                <Route path={PROFILE} element={<TeacherProfile />} />
                 <Route path={SETTINGS} />
               </Route>
             </Route>
@@ -67,8 +67,10 @@ export function App() {
             />
             <Route path="/reset-password" element={<TeacherResetPassword />} />
             <Route path="/account" element={<TeacherAccount />} />
-            <Route path="/profile" element={<TeacherProfile />} />
-            <Route path="/changePassword" element={<ChangePassword />} />
+            <Route
+              path="/account/changePassword"
+              element={<ChangePassword />}
+            />
           </Routes>
         </ToastProvider>
       </TeacherAuthWrapper>
