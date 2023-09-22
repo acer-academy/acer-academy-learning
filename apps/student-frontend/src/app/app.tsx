@@ -79,11 +79,11 @@ export function App() {
                 <Route path={REWARDS} element={<div>Home</div>} />
                 <Route path={ACCOUNT} element={<div>Home</div>}>
                   <Route path={PROFILE} element={<div>Home</div>} />
-                  <Route path={NOTIFICATIONS} element={<div>Home</div>} />
                   <Route
-                    path={SETTINGS}
+                    path={NOTIFICATIONS}
                     element={<StudentNotificationPreference />}
                   />
+                  <Route path={SETTINGS} element={<div>Home</div>} />
                 </Route>
               </Route>
             </Routes>
