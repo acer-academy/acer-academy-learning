@@ -37,10 +37,12 @@ import {
   SUBJECTS,
   VIEW_CLASSES,
   ZOOM_LINK,
+  FAQ,
 } from '../libs/routes';
 import { ToastContainer } from 'react-toastify';
 import { StudentNotificationPreference } from '../pages/profile/StudentNotificationPreference';
 import { QueryClient, QueryClientProvider } from 'react-query';
+import { FaqPage } from '../pages/faq/FaqPage';
 
 export function App() {
   const queryClient = new QueryClient();
@@ -91,6 +93,7 @@ export function App() {
                     element={<StudentNotificationPreference />}
                   />
                   <Route path={SETTINGS} element={<div>Home</div>} />
+                  <Route path={FAQ} element={<FaqPage />} />
                 </Route>
               </Route>
             </Routes>
