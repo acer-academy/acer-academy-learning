@@ -54,7 +54,13 @@ export async function registerTeacher(
       // console.error('Error registering admin:', error.response.data);
       throw error.response.data.error;
     } else {
-      throw error;
+      if (
+        axios.isAxiosError(error) &&
+        error.response &&
+        error.response.status === 400
+      ) {
+        throw error.response.data.error;
+      }
     }
   }
 }
