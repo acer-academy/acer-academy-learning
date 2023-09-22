@@ -86,7 +86,7 @@ export function App() {
                   <Route path={PAST_TRANSACTIONS} element={<div>Home</div>} />
                 </Route>
                 <Route path={REWARDS} element={<div>Home</div>} />
-                <Route path={ACCOUNT} element={<div>Home</div>}>
+                <Route path={ACCOUNT}>
                   <Route path={PROFILE} element={<div>Home</div>} />
                   <Route
                     path={NOTIFICATIONS}
