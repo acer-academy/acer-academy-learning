@@ -1,6 +1,11 @@
 /* eslint-disable no-useless-catch */
 import { LoginData } from '../types/CommonTypes';
-import { Student, StudentPostData, UpdateStudentData } from '../types/student';
+import {
+  Student,
+  StudentPostData,
+  UpdateParentData,
+  UpdateStudentData,
+} from '../types/student';
 import client from './client';
 import { AxiosResponse } from 'axios';
 
@@ -50,3 +55,16 @@ export async function deleteStudent(
 ): Promise<AxiosResponse<any>> {
   return await client.delete(`${URL}/delete/${email}`);
 }
+
+export const updateParent = async (
+  id: string,
+  data: UpdateParentData,
+): Promise<any> => {
+  // eslint-disable-next-line no-useless-catch
+  try {
+    const response = await client.put(`${URL}/update-parent/${id}`, data);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
