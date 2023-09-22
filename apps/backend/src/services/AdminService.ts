@@ -22,6 +22,13 @@ class AdminService {
     data: Prisma.AdminUncheckedCreateInput,
   ): Promise<Admin> {
     // skip whitelist check for super_admin
+
+    const checkForUser = await AdminDao.getAdminByEmail(data.email);
+
+    if (checkForUser) {
+      throw new Error('Email already exists.');
+    }
+
     const adminType = data.type;
     if (!adminType || adminType === 'STANDARD_ADMIN') {
       const isWhitelisted = await this.whitelistService.isEmailWhitelisted(
