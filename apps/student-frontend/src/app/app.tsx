@@ -38,66 +38,74 @@ import {
 } from '../libs/routes';
 import { ToastContainer } from 'react-toastify';
 import { StudentNotificationPreference } from '../pages/profile/StudentNotificationPreference';
+import { QueryClient, QueryClientProvider } from 'react-query';
 
 export function App() {
+  const queryClient = new QueryClient();
   return (
     <div className="h-full">
-      <StudentAuthWrapper>
-        <ToastProvider>
-          <ToastContainer />
-          <Routes>
-            <Route path={LOGIN} element={<StudentLogin />} />
-            <Route path={SIGN_UP} element={<StudentSignUp />} />
-            <Route path="/" element={<StudentLogin />} />
-            <Route path="/sign-up" element={<StudentSignUp />} />
-            <Route
-              path="/forgot-password"
-              element={<StudentForgotPassword />}
-            />
-            <Route path="/reset-password" element={<StudentResetPassword />} />
-            <Route path="/account" element={<StudentAccount />} />
-            <Route
-              element={
-                <EnforceLoginStatePageWrapper redirectTo={LOGIN}>
-                  <PrimaryLayout
-                    navigationMenu={NAV_SECTIONS}
-                    accountNavigation={ACCOUNT_NAV}
-                    role={LayoutRole.Student}
+      <QueryClientProvider client={queryClient}>
+        <StudentAuthWrapper>
+          <ToastProvider>
+            <ToastContainer />
+            <Routes>
+              <Route path={LOGIN} element={<StudentLogin />} />
+              <Route path={SIGN_UP} element={<StudentSignUp />} />
+              <Route path="/" element={<StudentLogin />} />
+              <Route path="/sign-up" element={<StudentSignUp />} />
+              <Route
+                path="/forgot-password"
+                element={<StudentForgotPassword />}
+              />
+              <Route
+                path="/reset-password"
+                element={<StudentResetPassword />}
+              />
+              <Route path="/account" element={<StudentAccount />} />
+              <Route
+                element={
+                  <EnforceLoginStatePageWrapper redirectTo={LOGIN}>
+                    <PrimaryLayout
+                      navigationMenu={NAV_SECTIONS}
+                      accountNavigation={ACCOUNT_NAV}
+                      role={LayoutRole.Student}
+                    />
+                  </EnforceLoginStatePageWrapper>
+                }
+              >
+                <Route path={DASHBOARD} element={<div>Home</div>} />
+                <Route path={SUBJECTS} element={<div>Home</div>}>
+                  <Route path={ASSIGNMENTS} element={<div>Home</div>} />
+                  <Route path={QUIZZES} element={<div>Home</div>} />
+                  <Route path={RECORDINGS} element={<div>Home</div>} />
+                  <Route path={ZOOM_LINK} element={<div>Home</div>} />
+                </Route>
+                <Route path={BOOKING} element={<div>Home</div>}>
+                  <Route path={VIEW_CLASSES} element={<div>Home</div>} />
+                  <Route path={BOOK_CLASSES} element={<div>Home</div>} />
+                  <Route path={BUY_CREDITS} element={<div>Home</div>} />
+                  <Route path={PAST_TRANSACTIONS} element={<div>Home</div>} />
+                </Route>
+                <Route path={REWARDS} element={<div>Home</div>} />
+                <Route path={ACCOUNT} element={<div>Home</div>}>
+                  <Route path={PROFILE} element={<div>Home</div>} />
+                  <Route
+                    path={NOTIFICATIONS}
+                    element={<StudentNotificationPreference />}
                   />
-                </EnforceLoginStatePageWrapper>
-              }
-            >
-              <Route path={DASHBOARD} element={<div>Home</div>} />
-              <Route path={SUBJECTS} element={<div>Home</div>}>
-                <Route path={ASSIGNMENTS} element={<div>Home</div>} />
-                <Route path={QUIZZES} element={<div>Home</div>} />
-                <Route path={RECORDINGS} element={<div>Home</div>} />
-                <Route path={ZOOM_LINK} element={<div>Home</div>} />
+                  <Route path={SETTINGS} element={<div>Home</div>} />
+                </Route>
               </Route>
-              <Route path={BOOKING} element={<div>Home</div>}>
-                <Route path={VIEW_CLASSES} element={<div>Home</div>} />
-                <Route path={BOOK_CLASSES} element={<div>Home</div>} />
-                <Route path={BUY_CREDITS} element={<div>Home</div>} />
-                <Route path={PAST_TRANSACTIONS} element={<div>Home</div>} />
-              </Route>
-              <Route path={REWARDS} element={<div>Home</div>} />
-              <Route path={ACCOUNT} element={<div>Home</div>}>
-                <Route path={PROFILE} element={<div>Home</div>} />
-                <Route
-                  path={NOTIFICATIONS}
-                  element={<StudentNotificationPreference />}
-                />
-                <Route path={SETTINGS} element={<div>Home</div>} />
-              </Route>
-            </Route>
-          </Routes>
-        </ToastProvider>
-      </StudentAuthWrapper>
-      {/* <ToastProvider>
+            </Routes>
+          </ToastProvider>
+        </StudentAuthWrapper>
+
+        {/* <ToastProvider>
         <ToastContainer />
         <Routes>
         </Routes>
       </ToastProvider> */}
+      </QueryClientProvider>
     </div>
   );
 }
