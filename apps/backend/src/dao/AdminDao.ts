@@ -32,8 +32,8 @@ class AdminDao {
     });
   }
 
-  async deleteAdmin(email: string) {
-    return prisma.admin.delete({ where: { email } });
+  async deleteAdmin(id: string) {
+    return prisma.admin.delete({ where: { id } });
   }
 }
 

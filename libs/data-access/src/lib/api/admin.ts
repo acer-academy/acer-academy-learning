@@ -35,8 +35,8 @@ export async function updateAdmin(
   return client.put(`${URL}/update/${id}`, data);
 }
 
-export async function deleteAdmin(email: string): Promise<AxiosResponse<any>> {
-  return client.delete(`${URL}/delete/${email}`);
+export async function deleteAdmin(id: string): Promise<AxiosResponse<any>> {
+  return client.delete(`${URL}/delete/${id}`);
 }
 
 export async function logoutAdmin(): Promise<AxiosResponse<any>> {
