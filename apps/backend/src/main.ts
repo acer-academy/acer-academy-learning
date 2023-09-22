@@ -17,6 +17,7 @@ import classroomRouter from './routers/classroomRouter';
 import faqArticleRouter from './routers/faqArticleRouter';
 import faqTopicRouter from './routers/faqTopicRouter';
 import notificationPreferenceRouter from './routers/notificationPreferenceRouter';
+import whitelistRouter from './routers/whitelistRouter';
 
 dotenv.config();
 
@@ -81,6 +82,7 @@ app.use('/api/v1/classrooms', classroomRouter);
 app.use('/api/v1/faq-articles', faqArticleRouter);
 app.use('/api/v1/faq-topics', faqTopicRouter);
 app.use('/api/v1/preferences', notificationPreferenceRouter);
+app.use('/api/v1/whitelist', whitelistRouter);
 
 // Start the server
 const server = app.listen(port, () => {

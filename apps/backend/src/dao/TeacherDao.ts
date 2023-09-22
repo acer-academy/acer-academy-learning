@@ -10,7 +10,7 @@ export class TeacherDao {
   constructor(private prismaClient: PrismaClient = new PrismaClient()) {}
 
   public async createTeacher(
-    teacherData: Prisma.TeacherCreateInput,
+    teacherData: Prisma.TeacherUncheckedCreateInput,
   ): Promise<Teacher> {
     return this.prismaClient.teacher.create({
       data: teacherData,
