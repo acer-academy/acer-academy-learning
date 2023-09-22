@@ -47,6 +47,9 @@ export const PromotionUpdateModal: React.FC<PromotionUpdateModalProps> = ({
   const isPercentageDiscountInvalid = (
     percentageDiscount: number | undefined,
   ) => {
+    if (percentageDiscount === undefined || percentageDiscount > 100) {
+      return true;
+    }
     let checkDecimal =
       percentageDiscount && percentageDiscount.toString().split('.');
     return checkDecimal && checkDecimal[1] && checkDecimal[1].length > 2;
@@ -140,6 +143,7 @@ export const PromotionUpdateModal: React.FC<PromotionUpdateModalProps> = ({
                 <div className="relative rounded-md shadow-sm">
                   <input
                     type="number"
+                    step="0.01"
                     name="percentageDiscount"
                     id="percentageDiscount"
                     className={`block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ${
@@ -168,7 +172,7 @@ export const PromotionUpdateModal: React.FC<PromotionUpdateModalProps> = ({
                     className="absolute b-0 text-sm text-red-600"
                     id="address-error"
                   >
-                    Maximum 2 decimal place.
+                    Cannot be more than 100, Maximum 2 decimal place.
                   </p>
                 )}
               </div>
@@ -296,7 +300,7 @@ export const PromotionUpdateModal: React.FC<PromotionUpdateModalProps> = ({
               </button>
               <button
                 disabled={isPromotionDataInvalid()}
-                className={`inline-flex justify-center px-4 py-2 text-sm font-medium text-white rounded-md focus:outline-none bg-gray-300
+                className={`inline-flex justify-center px-4 py-2 text-sm font-medium text-white rounded-md focus:outline-none
                   ${
                     isPromotionDataInvalid()
                       ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
