@@ -1,5 +1,5 @@
 // admin.dao.ts
-import { PrismaClient, Prisma } from '@prisma/client';
+import { PrismaClient, Prisma, Admin } from '@prisma/client';
 import {
   AdminPostData,
   AdminPutData,
@@ -8,7 +8,7 @@ import {
 const prisma = new PrismaClient();
 
 class AdminDao {
-  async createAdmin(data: AdminPostData) {
+  async createAdmin(data: Prisma.AdminCreateInput): Promise<Admin> {
     return prisma.admin.create({ data });
   }
 

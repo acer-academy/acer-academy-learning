@@ -4,15 +4,40 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { JWT_SECRET_KEY } from '../config/config';
 import EmailUtility from './EmailUtility';
+import { WhitelistService } from './WhitelistService';
 
 export class TeacherService {
-  constructor(private teacherDao: TeacherDao = new TeacherDao()) {}
+  constructor(
+    private teacherDao: TeacherDao = new TeacherDao(),
+    private whitelistService: WhitelistService = new WhitelistService(),
+  ) {}
 
   public async createTeacher(
     teacherData: Prisma.TeacherCreateInput,
   ): Promise<Teacher> {
+    // Check if the email is whitelisted
+    const isWhitelisted = await this.whitelistService.isEmailWhitelisted(
+      teacherData.email,
+      'TEACHER',
+    );
+
+    if (!isWhitelisted) {
+      throw new Error('Unable to create student as email is not whitelisted!');
+    }
+
+    const whitelistItem = await this.whitelistService.getWhitelistByEmail(
+      teacherData.email,
+    );
+
     teacherData.password = await bcrypt.hash(teacherData.password, 10);
-    return this.teacherDao.createTeacher(teacherData);
+    return this.teacherDao.createTeacher({
+      ...teacherData,
+      whitelistItem: {
+        connect: {
+          email: whitelistItem.email,
+        },
+      },
+    });
   }
 
   public async getAllTeachers(): Promise<Teacher[]> {

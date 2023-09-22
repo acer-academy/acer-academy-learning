@@ -7,15 +7,41 @@ import {
   AdminGetData,
 } from 'libs/data-access/src/lib/types/admin';
 
-import { Prisma } from '@prisma/client';
+import { Admin, Prisma } from '@prisma/client';
 import jwt from 'jsonwebtoken';
 import { JWT_SECRET_KEY } from '../config/config';
 import EmailUtility from './EmailUtility';
+import { WhitelistService } from './WhitelistService';
 
 class AdminService {
-  async register(data: AdminPostData) {
+  constructor(
+    private whitelistService: WhitelistService = new WhitelistService(),
+  ) {}
+
+  public async register(data: Prisma.AdminCreateInput): Promise<Admin> {
+    // Check if the email is whitelisted
+    const isWhitelisted = await this.whitelistService.isEmailWhitelisted(
+      data.email,
+      'ADMIN',
+    );
+
+    if (!isWhitelisted) {
+      throw new Error('Unable to create student as email is not whitelisted!');
+    }
+
+    const whitelistItem = await this.whitelistService.getWhitelistByEmail(
+      data.email,
+    );
+
     data.password = await bcrypt.hash(data.password, 10);
-    return AdminDao.createAdmin(data);
+    return AdminDao.createAdmin({
+      ...data,
+      whitelistItem: {
+        connect: {
+          email: whitelistItem.email,
+        },
+      },
+    });
   }
 
   async login(data: AdminGetData) {

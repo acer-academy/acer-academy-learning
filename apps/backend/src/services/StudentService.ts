@@ -5,14 +5,38 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { JWT_SECRET_KEY } from '../config/config';
 import EmailUtility from './EmailUtility';
+import { WhitelistService } from './WhitelistService';
 
 class StudentService {
+  constructor(
+    private whitelistService: WhitelistService = new WhitelistService(),
+  ) {}
+
   public async createStudent(
     input: Prisma.StudentCreateInput,
   ): Promise<Student> {
+    // Check if the email is whitelisted
+    const isWhitelisted = await this.whitelistService.isEmailWhitelisted(
+      input.email,
+      'STUDENT',
+    );
+
+    if (!isWhitelisted) {
+      throw new Error('Unable to create student as email is not whitelisted!');
+    }
+
+    const whitelistItem = await this.whitelistService.getWhitelistByEmail(
+      input.email,
+    );
+
     input.password = await bcrypt.hash(input.password, 10);
     return StudentDao.createStudent({
       ...input,
+      whitelistItem: {
+        connect: {
+          email: whitelistItem.email,
+        },
+      },
       notificationPreference: {
         create: {
           isUnsubscribed: false,

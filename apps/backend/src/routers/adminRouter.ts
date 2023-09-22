@@ -7,12 +7,13 @@ import {
 } from 'libs/data-access/src/lib/types/admin';
 import jwt from 'jsonwebtoken';
 import { JWT_SECRET_KEY } from '../config/config';
+import { Prisma } from '@prisma/client';
 
 const router = express.Router();
 
 router.post('/register', async (req, res) => {
   try {
-    const input = req.body as AdminPostData;
+    const input: Prisma.AdminCreateInput = req.body;
     const admin = await AdminService.register(input);
     res.status(201).json(admin);
   } catch (error) {
