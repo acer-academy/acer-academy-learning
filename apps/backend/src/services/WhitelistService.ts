@@ -49,7 +49,7 @@ export class WhitelistService {
   }
 
   public async deleteWhitelist(whitelistId: string): Promise<WhitelistItem> {
-    const whitelist = await this.whitelistDao.getWhitelistByEmailWithUser(
+    const whitelist = await this.whitelistDao.getWhitelistbyIdWithUser(
       whitelistId,
     );
     if (

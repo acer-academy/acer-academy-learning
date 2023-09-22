@@ -3,10 +3,14 @@ import { getWhitelistByRole } from '@acer-academy-learning/data-access';
 import { WhitelistData } from 'libs/data-access/src/lib/types/whitelist';
 import { useEffect, useState } from 'react';
 import { AddWhitelistModal } from './AddWhitelistModal';
+import { DeleteWhitelistModal } from './DeleteWhitelistModal';
 
 export const AdminHRManagementPage: React.FC = () => {
   const [whitelistData, setWhiteListData] = useState<WhitelistData[]>([]);
   const [isAddWhitelistModalOpen, setIsAddWhitelistModalOpen] =
+    useState<boolean>(false);
+  const [selectedData, setSelectedData] = useState<WhitelistData>();
+  const [isDeleteWhitelistModalOpen, setIsDeleteWhitelistModalOpen] =
     useState<boolean>(false);
   const { displayToast, ToastType } = useToast();
 
@@ -91,8 +95,19 @@ export const AdminHRManagementPage: React.FC = () => {
                       {data.admin ? 'Yes' : 'No'}
                     </td>
                     <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
-                      <div className="text-indigo-600 hover:text-indigo-900">
-                        Delete<span className="sr-only">, {data.email}</span>
+                      <div
+                        className={`${
+                          data.admin
+                            ? `text-slate-300`
+                            : `text-indigo-600 hover:text-indigo-900 cursor-pointer`
+                        }`}
+                        onClick={() => {
+                          if (data.admin) return;
+                          setSelectedData(data);
+                          setIsDeleteWhitelistModalOpen(true);
+                        }}
+                      >
+                        Delete
                       </div>
                     </td>
                   </tr>
@@ -106,6 +121,11 @@ export const AdminHRManagementPage: React.FC = () => {
         open={isAddWhitelistModalOpen}
         setOpen={setIsAddWhitelistModalOpen}
         userRole="ADMIN"
+      />
+      <DeleteWhitelistModal
+        open={isDeleteWhitelistModalOpen}
+        setOpen={setIsDeleteWhitelistModalOpen}
+        data={selectedData}
       />
     </div>
   );
