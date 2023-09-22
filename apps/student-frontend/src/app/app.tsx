@@ -43,6 +43,7 @@ import { ToastContainer } from 'react-toastify';
 import { StudentNotificationPreference } from '../pages/profile/StudentNotificationPreference';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { FaqPage } from '../pages/faq/FaqPage';
+import { StudentProfile } from '../pages/profile/StudentProfile';
 
 export function App() {
   const queryClient = new QueryClient();
@@ -87,7 +88,7 @@ export function App() {
                 </Route>
                 <Route path={REWARDS} element={<div>Home</div>} />
                 <Route path={ACCOUNT}>
-                  <Route path={PROFILE} element={<div>Home</div>} />
+                  <Route path={PROFILE} element={<StudentProfile />} />
                   <Route
                     path={NOTIFICATIONS}
                     element={<StudentNotificationPreference />}

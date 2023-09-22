@@ -6,12 +6,14 @@ import {
   Cog6ToothIcon,
   QuestionMarkCircleIcon,
   UsersIcon,
+  MegaphoneIcon,
 } from '@heroicons/react/24/outline';
 import {
   ADMINS,
   CENTRE,
   FAQ,
   HUMAN_RESOURCES,
+  PROMOTION,
   STUDENTS,
   TEACHERS,
 } from './routes';
@@ -29,6 +31,7 @@ export const NAV_SECTIONS: NavigationMenuItem[] = [
           { name: 'Admin', path: ADMINS },
         ],
       },
+      { name: 'Promotions', path: PROMOTION, icon: MegaphoneIcon },
       // { name: 'Scheduling', path: '/scheduling', icon: CalendarDaysIcon },
       { name: 'Centre', path: CENTRE, icon: BuildingStorefrontIcon },
       // { name: 'Class Credits', path: '/class-credits', icon: CircleStackIcon },

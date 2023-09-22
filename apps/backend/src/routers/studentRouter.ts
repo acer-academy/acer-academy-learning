@@ -162,4 +162,15 @@ studentRouter.post('/reset-password', async (req, res) => {
   }
 });
 
+studentRouter.put('/update-parent/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const parentData: Prisma.ParentUpdateInput = req.body;
+    const student = await StudentService.updateParent(id, parentData);
+    res.status(200).json({ student: student });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
 export default studentRouter;

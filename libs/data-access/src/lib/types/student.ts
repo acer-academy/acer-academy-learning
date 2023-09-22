@@ -51,6 +51,7 @@ export interface NotificationPreferenceUpdateData {
   centrePref?: string[];
 }
 export interface Parent {
+  id: string;
   firstName: string;
   lastName: string;
   phoneNumber: string;
@@ -76,3 +77,9 @@ export interface UpdateStudentData {
   lastName?: string;
   password?: string;
 }
+
+export type UpdateParentData = {
+  firstName?: string;
+  lastName?: string;
+  password?: string;
+};
