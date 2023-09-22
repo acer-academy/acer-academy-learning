@@ -37,7 +37,7 @@ import AdminForgotPassword from '../pages/entry/AdminForgotPassword';
 import AdminResetPassword from '../pages/entry/AdminResetPassword';
 import { TeacherHRManagementPage } from '../pages/hr/TeacherHRManagementPage';
 import { StudentHRManagementPage } from '../pages/hr/StudentHRManagementPage';
-import { AdminHRManagementPage } from '../pages/hr/AdminHRManagement';
+import { AdminHRManagementPage } from '../pages/hr/AdminHRManagementPage';
 
 export default function App() {
   return (
