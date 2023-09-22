@@ -6,8 +6,8 @@ import {
   EnforceLoginStatePageWrapper,
 } from '@acer-academy-learning/common-ui';
 import 'react-toastify/dist/ReactToastify.css'; // Import toastify CSS
-import AdminProfile from '../pages/profile/AdminProfile';
-import ChangePassword from '../pages/profile/ChangePassword';
+// import AdminProfile from '../pages/profile/AdminProfile';
+// import ChangePassword from '../pages/profile/ChangePassword';
 import { CentreManagement } from '../pages/centre/CentreManagement';
 import { CentreDetails } from '../pages/centre/CentreDetails';
 import { FaqTopicManagement } from '../pages/faq/FaqManagement';
@@ -33,6 +33,8 @@ import {
   STUDENTS,
   TEACHERS,
 } from '../libs/routes';
+import AdminForgotPassword from '../pages/entry/AdminForgotPassword';
+import AdminResetPassword from '../pages/entry/AdminResetPassword';
 
 export default function App() {
   return (
@@ -73,8 +75,8 @@ export default function App() {
             </Route>
             <Route path={LOGIN} element={<AdminLogin />} />
             <Route path="/account" element={<Account />} />
-            <Route path="/profile" element={<AdminProfile />} />
-            <Route path="/changePassword" element={<ChangePassword />} />
+            {/* <Route path="/profile" element={<AdminProfile />} />
+            <Route path="/changePassword" element={<ChangePassword />} /> */}
             <Route path="account" element={<Account />} />
             <Route path="sign-up" element={<AdminSignUp />} />
             <Route path="forgot-password" element={<AdminForgotPassword />} />
