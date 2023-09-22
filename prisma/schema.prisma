@@ -150,12 +150,3 @@ model FaqArticle {
   faqTopic   FaqTopic @relation(fields: [faqTopicId], references: [id])
   faqTopicId String   @db.Uuid
 }
-
-model Promotion {
-  id    String         @id @default(uuid()) @db.Uuid
-  startDate DateTime 
-  endDate  DateTime
-  promoCode String     @unique
-  percentageDiscount Float
-  description String
-}
