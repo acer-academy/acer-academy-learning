@@ -13,6 +13,8 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { TeacherAuthWrapper } from '@acer-academy-learning/common-ui';
 import TeacherAccount from '../pages/entry/TeacherAccount';
+import TeacherProfile from '../pages/profile/TeacherProfile';
+import ChangePassword from '../pages/profile/ChangePassword';
 import TeacherForgotPassword from '../pages/entry/TeacherForgotPassword';
 import TeacherResetPassword from '../pages/entry/TeacherResetPassword';
 import { ACCOUNT_NAV, NAV_SECTIONS } from '../libs/layout';
@@ -65,6 +67,8 @@ export function App() {
             />
             <Route path="/reset-password" element={<TeacherResetPassword />} />
             <Route path="/account" element={<TeacherAccount />} />
+            <Route path="/profile" element={<TeacherProfile />} />
+            <Route path="/changePassword" element={<ChangePassword />} />
           </Routes>
         </ToastProvider>
       </TeacherAuthWrapper>

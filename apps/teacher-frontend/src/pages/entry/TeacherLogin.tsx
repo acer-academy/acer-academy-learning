@@ -15,7 +15,7 @@ const TeacherLogin: React.FC = () => {
 
     try {
       await login(email, password);
-      navigate('/account');
+      navigate('/profile');
     } catch (error) {
       console.error('An error occurred', error);
     }
