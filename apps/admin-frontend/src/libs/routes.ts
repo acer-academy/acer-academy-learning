@@ -13,3 +13,6 @@ export const CENTRE = '/centre';
 
 // FAQ Routs
 export const FAQ = '/faq';
+
+// Promotion
+export const PROMOTION = '/promotion';

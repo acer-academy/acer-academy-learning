@@ -29,6 +29,7 @@ import {
   FAQ,
   HUMAN_RESOURCES,
   LOGIN,
+  PROMOTION,
   SIGN_UP,
   STUDENTS,
   TEACHERS,
@@ -57,6 +58,7 @@ export default function App() {
               <Route path="/" element={<h1>Main</h1>} />
               <Route path={CENTRE} element={<h1>Main</h1>} />
               <Route path={FAQ} element={<h1>Main</h1>} />
+              <Route path={PROMOTION} element={<PromotionManagement />} />
               <Route
                 path={HUMAN_RESOURCES}
                 element={
