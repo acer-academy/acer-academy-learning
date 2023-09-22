@@ -8,7 +8,7 @@ import {
 const prisma = new PrismaClient();
 
 class AdminDao {
-  async createAdmin(data: Prisma.AdminCreateInput): Promise<Admin> {
+  async createAdmin(data: Prisma.AdminUncheckedCreateInput): Promise<Admin> {
     return prisma.admin.create({ data });
   }
 

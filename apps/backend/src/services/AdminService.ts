@@ -18,7 +18,9 @@ class AdminService {
     private whitelistService: WhitelistService = new WhitelistService(),
   ) {}
 
-  public async register(data: Prisma.AdminCreateInput): Promise<Admin> {
+  public async register(
+    data: Prisma.AdminUncheckedCreateInput,
+  ): Promise<Admin> {
     // Check if the email is whitelisted
     const isWhitelisted = await this.whitelistService.isEmailWhitelisted(
       data.email,
@@ -36,11 +38,7 @@ class AdminService {
     data.password = await bcrypt.hash(data.password, 10);
     return AdminDao.createAdmin({
       ...data,
-      whitelistItem: {
-        connect: {
-          email: whitelistItem.email,
-        },
-      },
+      whitelistItemId: whitelistItem.id,
     });
   }
 

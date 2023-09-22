@@ -13,7 +13,7 @@ const router = express.Router();
 
 router.post('/register', async (req, res) => {
   try {
-    const input: Prisma.AdminCreateInput = req.body;
+    const input: Prisma.AdminUncheckedCreateInput = req.body;
     const admin = await AdminService.register(input);
     res.status(201).json(admin);
   } catch (error) {

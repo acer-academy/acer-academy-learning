@@ -13,7 +13,7 @@ class StudentService {
   ) {}
 
   public async createStudent(
-    input: Prisma.StudentCreateInput,
+    input: Prisma.StudentUncheckedCreateInput,
   ): Promise<Student> {
     // Check if the email is whitelisted
     const isWhitelisted = await this.whitelistService.isEmailWhitelisted(
@@ -32,11 +32,7 @@ class StudentService {
     input.password = await bcrypt.hash(input.password, 10);
     return StudentDao.createStudent({
       ...input,
-      whitelistItem: {
-        connect: {
-          email: whitelistItem.email,
-        },
-      },
+      whitelistItemId: whitelistItem.id,
       notificationPreference: {
         create: {
           isUnsubscribed: false,
