@@ -1,4 +1,4 @@
-import { Prisma, PrismaClient, WhitelistItem } from '@prisma/client';
+import { Prisma, PrismaClient, Role, WhitelistItem } from '@prisma/client';
 import { WhitelistWithUser } from '../types/whitelist';
 
 export class WhitelistDao {
@@ -21,6 +21,13 @@ export class WhitelistDao {
   public async getWhitelistById(whitelistId: string): Promise<WhitelistItem> {
     return this.prismaClient.whitelistItem.findUniqueOrThrow({
       where: { id: whitelistId },
+      include: { student: true, teacher: true, admin: true },
+    });
+  }
+
+  public async getWhitelistByRole(role: Role): Promise<WhitelistItem[]> {
+    return this.prismaClient.whitelistItem.findMany({
+      where: { role: role },
       include: { student: true, teacher: true, admin: true },
     });
   }

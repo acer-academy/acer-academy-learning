@@ -8,6 +8,7 @@ export * from './lib/api/faqArticle';
 export * from './lib/api/faqTopic';
 export * from './lib/api/promotion';
 export * from './lib/api/notif';
+export * from './lib/api/whitelist';
 
 // Object.freeze(api);
 

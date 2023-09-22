@@ -18,6 +18,10 @@ export class WhitelistService {
     return this.whitelistDao.getWhitelistById(whitelistId);
   }
 
+  public async getWhitelistByRole(role: Role): Promise<WhitelistItem[]> {
+    return this.whitelistDao.getWhitelistByRole(role);
+  }
+
   public async getWhitelistByEmail(
     whitelistEmail: string,
   ): Promise<WhitelistItem | null> {
