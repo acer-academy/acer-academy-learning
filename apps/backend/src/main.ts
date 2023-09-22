@@ -80,7 +80,7 @@ app.use('/api/v1/centres', centreRouter);
 app.use('/api/v1/classrooms', classroomRouter);
 app.use('/api/v1/faq-articles', faqArticleRouter);
 app.use('/api/v1/faq-topics', faqTopicRouter);
-app.use('api/v1/preferences', notificationPreferenceRouter);
+app.use('/api/v1/preferences', notificationPreferenceRouter);
 
 // Start the server
 const server = app.listen(port, () => {

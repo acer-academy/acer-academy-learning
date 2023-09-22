@@ -8,8 +8,9 @@ import { AxiosResponse } from 'axios';
 const URL = '/preferences';
 
 export async function updateNotificationPreference(
-  studentId: string,
+  preferenceId: string,
   preferenceData: NotificationPreferenceUpdateData,
 ): Promise<AxiosResponse<NotificationPreference>> {
-  return client.put(`${URL}/update/${studentId}`, preferenceData);
+  console.log('calling....');
+  return client.put(`${URL}/${preferenceId}`, preferenceData);
 }

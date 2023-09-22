@@ -23,10 +23,12 @@ export const StudentNotificationPreference: React.FC = () => {
   const [selectedCentres, setSelectedCentres] = useState<string[]>([]);
   const [hasUnsubscribed, setHasUnsubscribed] = useState(false);
   const [centres, setCentres] = useState<Centre[]>([]);
+  const [notifId, setNotifId] = useState<string>('');
 
   const { isLoading, isError, data, error } = useQuery(['student', user], () =>
     getStudentById(user?.id ?? '').then((res) => {
       const notif = res.data.student.notificationPreference;
+      setNotifId(notif.id);
       setSelectedCentres(notif.centrePref);
       setSelectedSubjects(notif.subjectsPref);
       setSelectedLevels(notif.levelsPref);
@@ -102,8 +104,8 @@ export const StudentNotificationPreference: React.FC = () => {
   const handleSaveChange = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!user) {
-      displayToast('Missing student', ToastType.ERROR);
+    if (!notifId) {
+      displayToast('Missing student preference id to update!', ToastType.ERROR);
       return;
     }
 
@@ -122,9 +124,8 @@ export const StudentNotificationPreference: React.FC = () => {
       centrePref: selectedCentres,
     };
 
-    console.log(input);
     try {
-      await updateNotificationPreference(user.id, input);
+      await updateNotificationPreference(notifId, input);
       displayToast('Preferences updated!', ToastType.SUCCESS);
     } catch (err) {
       displayToast(`${error}`, ToastType.ERROR);

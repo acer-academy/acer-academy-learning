@@ -1,7 +1,7 @@
 import { NotificationPreference, Prisma, Student } from '@prisma/client';
 import NotificationPreferenceDao from '../dao/NotificationPreferenceDao';
 
-class NotificationPreferenceService {
+export class NotificationPreferenceService {
   public async createDefault(
     student: Student,
   ): Promise<NotificationPreference> {
@@ -28,5 +28,3 @@ class NotificationPreferenceService {
     return NotificationPreferenceDao.updateNotificationPreference(id, input);
   }
 }
-
-export default new NotificationPreferenceService();
