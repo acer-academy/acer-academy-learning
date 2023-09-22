@@ -296,12 +296,12 @@ export const PromotionUpdateModal: React.FC<PromotionUpdateModalProps> = ({
               </button>
               <button
                 disabled={isPromotionDataInvalid()}
-                className={`inline-flex justify-center px-4 py-2 text-sm font-medium text-white rounded-md focus:outline-none
-                    ${
-                      isPromotionDataInvalid()
-                        ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                        : 'bg-adminGreen-600 hover:bg-adminGreen-500 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-adminGreen-500'
-                    }`}
+                className={`inline-flex justify-center px-4 py-2 text-sm font-medium text-white rounded-md focus:outline-none bg-gray-300
+                  ${
+                    isPromotionDataInvalid()
+                      ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                      : 'bg-adminGreen-600 hover:bg-adminGreen-500 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-adminGreen-500'
+                  }`}
                 onClick={() => updatePromotion(updateId, promotionData)}
               >
                 Update

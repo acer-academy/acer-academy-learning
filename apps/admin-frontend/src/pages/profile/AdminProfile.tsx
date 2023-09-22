@@ -6,8 +6,6 @@ import { useToast } from '@acer-academy-learning/common-ui';
 
 const AdminProfile: React.FC = () => {
   const { user, updateUser } = useAuth<Admin>();
-  //to test without linking to auth - auth need link to accounts page or login page
-  // const user = {firstName: 'user1', lastName: 'Sample', email: 'user1@gmail.com', type: 'Standard'}
   const [firstName, setFirstName] = useState(user.firstName);
   const [isEditing, setIsEditing] = useState(false);
   const [lastName, setLastName] = useState(user.lastName);
@@ -30,7 +28,7 @@ const AdminProfile: React.FC = () => {
           lastName: lastName,
         });
         //
-        //@TODO: SET USER HERE FOR AUTH CONTEXT
+        //UPDATE AUTH CONTEXT
         updateUser(updatedAdmin);
         displayToast('Profile updated!', ToastType.SUCCESS);
         setIsEditing(false);
@@ -46,28 +44,28 @@ const AdminProfile: React.FC = () => {
 
   return (
     <div className="h-full bg-gray-50">
-      <div className="sm:flex sm:items-center">
-        <div className="sm:flex-auto">
-          <h1 className="mt-6 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-            Admin profile
+      <div className="mx-8 sm:mx-auto sm:w-full sm:max-w-[1000px]">
+        <div className="flex justify-between items-center">
+          <h1 className="mt-6 text-left text-2xl font-bold leading-9 tracking-tight text-gray-900">
+            Admin Profile
           </h1>
-        </div>
-        <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
-          {isEditing ? (
-            <button
-              onClick={onSaveProfile}
-              className="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            >
-              Save Profile
-            </button>
-          ) : (
-            <button
-              onClick={onEditProfile}
-              className="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            >
-              Edit Profile
-            </button>
-          )}
+          <div className="mt-4 sm:mt-0">
+            {isEditing ? (
+              <button
+                onClick={onSaveProfile}
+                className="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 mt-6"
+              >
+                Save Profile
+              </button>
+            ) : (
+              <button
+                onClick={onEditProfile}
+                className="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 mt-6"
+              >
+                Edit Profile
+              </button>
+            )}
+          </div>
         </div>
       </div>
 
@@ -101,7 +99,7 @@ const AdminProfile: React.FC = () => {
                   autoFocus
                 />
               ) : (
-                <span className="ext-gray-800">{lastName}</span>
+                <span className="text-gray-800">{lastName}</span>
               )}
             </div>
             <div className="flex justify-between items-center">
