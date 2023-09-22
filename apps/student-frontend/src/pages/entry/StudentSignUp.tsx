@@ -4,13 +4,13 @@ import {
   AcerAcademyLogo,
   PublicPageWrapper,
 } from '@acer-academy-learning/common-ui';
-import { retrieveCentres } from '../../api/centre';
-import { registerStudent } from '../../api/student';
+import { getAllCentres } from '@acer-academy-learning/data-access';
+import { createStudent } from '@acer-academy-learning/data-access';
 import { useToast } from '@acer-academy-learning/common-ui';
 import { LevelEnum, SubjectEnum } from '@acer-academy-learning/data-access';
-import { Centre } from 'libs/data-access/src/lib/types/student';
 import { LOGIN } from '../../libs/routes';
 import { useNavigate } from 'react-router-dom';
+import { CentreData } from 'libs/data-access/src/lib/types/centre';
 
 interface InputFieldProps {
   label: string;
@@ -131,7 +131,7 @@ export default function StudentSignUp() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [selectedSubjects, setSelectedSubjects] = useState<string[]>([]);
   const [selectedLevel, setSelectedLevel] = useState('');
-  const [centres, setCentres] = useState<Centre[]>([]);
+  const [centres, setCentres] = useState<CentreData[]>([]);
   const [selectedCentre, setSelectedCentre] = useState('');
 
   //parent particualrs
@@ -146,8 +146,9 @@ export default function StudentSignUp() {
   useEffect(() => {
     const fetchCentres = async () => {
       try {
-        const data = await retrieveCentres();
-        setCentres(data);
+        const response = await getAllCentres();
+        const allCentres: CentreData[] = response.data;
+        setCentres(allCentres);
       } catch (err) {
         // setError(err);
       } finally {
@@ -224,7 +225,7 @@ export default function StudentSignUp() {
 
     try {
       console.log(payload);
-      await registerStudent(payload);
+      await createStudent(payload);
       displayToast('Account created!', ToastType.SUCCESS);
       navigate(LOGIN);
     } catch (error: any) {

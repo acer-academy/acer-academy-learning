@@ -2,12 +2,13 @@ import {
   AcerAcademyLogo,
   PublicPageWrapper,
 } from '@acer-academy-learning/common-ui';
-import { retrieveCentres } from '../../api/centre';
+import { getAllCentres } from '@acer-academy-learning/data-access';
 import { useState, useEffect } from 'react';
-import { registerTeacher } from '../../api/teacher';
+import { registerTeacher } from '@acer-academy-learning/data-access';
 import { useToast } from '@acer-academy-learning/common-ui';
 import { useNavigate } from 'react-router-dom';
 import { LOGIN } from '../../libs/routes';
+import { CentreData } from 'libs/data-access/src/lib/types/centre';
 
 export default function TeacherSignUp() {
   const navigate = useNavigate();
@@ -62,14 +63,15 @@ export default function TeacherSignUp() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [selectedSubjects, setSelectedSubjects] = useState<string[]>([]);
   const [selectedLevels, setSelectedLevels] = useState<string[]>([]);
-  const [centres, setCentres] = useState<Centre[]>([]);
+  const [centres, setCentres] = useState<CentreData[]>([]);
   const [selectedCentre, setSelectedCentre] = useState('');
 
   useEffect(() => {
     const fetchCentres = async () => {
       try {
-        const data = await retrieveCentres();
-        setCentres(data);
+        const response = await getAllCentres();
+        const allCentres: CentreData[] = response.data;
+        setCentres(allCentres);
       } catch (err) {
         // setError(err);
       } finally {

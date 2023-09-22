@@ -1,3 +1,4 @@
+import { AxiosResponse } from 'axios';
 import {
   createContext,
   useContext,
@@ -22,7 +23,7 @@ interface AuthWrapperProps<UserType> {
     email: string;
     password: string;
   }) => Promise<UserType>;
-  logoutApi: () => Promise<void>;
+  logoutApi: () => Promise<AxiosResponse<any>>;
   fetchUserApi: () => Promise<UserType>;
 }
 

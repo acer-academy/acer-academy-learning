@@ -7,6 +7,7 @@ const BASE_URL = 'http://localhost:8000';
 const client = axios.create({
   baseURL: `${BASE_URL}/api/v1`,
   timeout: 30000,
+  withCredentials: true,
   headers: {
     Accept: 'application/json',
     'X-CSRF-Token': csrfToken,
