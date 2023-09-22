@@ -10,9 +10,9 @@ export * from './lib/api/faqTopic';
 export * from './lib/api/promotion';
 export * from './lib/api/notif';
 export * from './lib/api/whitelist';
+export * from './lib/api/student';
+export * from './lib/api/teacher';
 
 // Object.freeze(api);
 
 export { LevelEnum, SubjectEnum, AdminType } from './lib/types/CommonTypes';
-export * from './lib/api/student';
-export { loginTeacher, logoutTeacher, fetchTeacher } from './lib/api/teacher';

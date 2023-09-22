@@ -1,43 +1,52 @@
 /* eslint-disable no-useless-catch */
 import { LoginData } from '../types/CommonTypes';
-import axios from 'axios';
+import { RegisterTeacherData, UpdateTeacherData } from '../types/teacher';
+import client from './client';
+import { AxiosResponse } from 'axios';
 
-export const loginTeacher = async (data: LoginData): Promise<any> => {
-  // eslint-disable-next-line no-useless-catch
+const URL = '/teachers';
+
+export async function loginTeacher(
+  data: LoginData,
+): Promise<AxiosResponse<any>> {
+  return client.post(`${URL}/login`, data);
+}
+
+export async function logoutTeacher(): Promise<AxiosResponse<any>> {
+  return client.post(`${URL}/logout`);
+}
+
+export async function fetchTeacher(): Promise<AxiosResponse<any>> {
+  return client.get(`${URL}/check-auth`);
+}
+
+export async function registerTeacher(
+  data: RegisterTeacherData,
+): Promise<AxiosResponse<any>> {
   try {
-    const response = await axios.post(
-      `http://localhost:8000/api/v1/teachers/login`,
-      data,
-      { withCredentials: true },
-    );
-    return response.data;
+    return await client.post(`${URL}`, data);
   } catch (error) {
     throw error;
   }
-};
+}
 
-export const logoutTeacher = async (): Promise<any> => {
+export async function updateTeacher(
+  id: string,
+  data: UpdateTeacherData,
+): Promise<AxiosResponse<any>> {
   try {
-    const response = await axios.post(
-      `http://localhost:8000/api/v1/teachers/logout`,
-      {},
-      { withCredentials: true },
-    );
-    return response.data;
+    return await client.put(`${URL}/${id}`, data);
   } catch (error) {
     throw error;
   }
-};
+}
 
-export const fetchTeacher = async (): Promise<any> => {
+export async function deleteTeacher(
+  email: string,
+): Promise<AxiosResponse<any>> {
   try {
-    const response = await axios.get(
-      'http://localhost:8000/api/v1/teachers/check-auth',
-      { withCredentials: true },
-    );
-
-    return response.data;
+    return await client.delete(`${URL}/delete/${email}`);
   } catch (error) {
     throw error;
   }
-};
+}
