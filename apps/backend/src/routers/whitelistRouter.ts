@@ -43,7 +43,6 @@ whitelistRouter.get('/getWhitelistById/:id', async (req, res) => {
 whitelistRouter.get('/getWhitelistByRole/:role', async (req, res) => {
   try {
     const { role } = req.params;
-    console.log(role);
     const whitelist = await whitelistService.getWhitelistByRole(role as Role);
     return res.status(200).json(whitelist);
   } catch (err) {
