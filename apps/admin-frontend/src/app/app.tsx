@@ -6,6 +6,10 @@ import {
   EnforceLoginStatePageWrapper,
 } from '@acer-academy-learning/common-ui';
 import 'react-toastify/dist/ReactToastify.css'; // Import toastify CSS
+import Account from '../pages/entry/Account';
+import AdminProfile from '../pages/profile/AdminProfile';
+import ChangePassword from '../pages/profile/ChangePassword';
+
 import { CentreManagement } from '../pages/centre/CentreManagement';
 import { CentreDetails } from '../pages/centre/CentreDetails';
 import {
@@ -36,6 +40,14 @@ export default function App() {
         <ToastProvider>
           <ToastContainer />
           <Routes>
+            <Route path="/" element={<AdminLogin />} />
+            <Route path="/account" element={<Account />} />
+            <Route path="/profile" element={<AdminProfile />} />
+            <Route path="/changePassword" element={<ChangePassword />} />
+            <Route path="account" element={<Account />} />
+            <Route path="sign-up" element={<AdminSignUp />} />
+            <Route path="forgot-password" element={<AdminForgotPassword />} />
+            <Route path="reset-password" element={<AdminResetPassword />} />
             <Route
               element={
                 <EnforceLoginStatePageWrapper redirectTo={LOGIN}>

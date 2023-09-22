@@ -53,7 +53,9 @@ class AdminService {
       data.password = await bcrypt.hash(data.password, 10);
     }
 
+
     return AdminDao.updateAdmin(id, data);
+
   }
 
   async deleteAdmin(email: string) {
