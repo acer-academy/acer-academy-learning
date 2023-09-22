@@ -124,7 +124,7 @@ export default function StudentSignUp() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [selectedSubjects, setSelectedSubjects] = useState<string[]>([]);
-  const [selectedLevel, setSelectedLevel] = useState<string>();
+  const [selectedLevel, setSelectedLevel] = useState('');
   const [centres, setCentres] = useState<Centre[]>([]);
   const [selectedCentre, setSelectedCentre] = useState('');
 

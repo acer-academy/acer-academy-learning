@@ -1,31 +1,39 @@
-import { Promotion, Prisma } from "@prisma/client";
-import PromotionDao from "../dao/PromotionDao";
+import { Promotion, Prisma } from '@prisma/client';
+import PromotionDao from '../dao/PromotionDao';
 
 class PromotionService {
-    public async createPromotion(input: Prisma.PromotionCreateInput): Promise<Promotion> {
-        return PromotionDao.createPromotion(input) 
-    }
+  public async createPromotion(
+    input: Prisma.PromotionCreateInput,
+  ): Promise<Promotion> {
+    return PromotionDao.createPromotion(input);
+  }
 
-    public async getAllPromotions(): Promise<Promotion[]> {
-        return PromotionDao.getAllPromotion()
-    }
+  public async getAllPromotions(): Promise<Promotion[]> {
+    return PromotionDao.getAllPromotions();
+  }
 
-    public async getPromotionById(promotionId: string): Promise<Promotion> {
-        return PromotionDao.getPromotionById(promotionId)
-    }
+  public async getAllValidPromotions(): Promise<Promotion[]> {
+    return PromotionDao.getAllValidPromotions();
+  }
 
-    public async getPromotionByPromoCode(code: string): Promise<Promotion> {
-        return PromotionDao.getPromotionByPromoCode(code)
-    }
+  public async getPromotionById(promotionId: string): Promise<Promotion> {
+    return PromotionDao.getPromotionById(promotionId);
+  }
 
-    public async updatePromotion(promotionId: string, data: Prisma.PromotionUpdateInput): Promise<Promotion> {
-        return PromotionDao.updatePromotion(promotionId, data)
-    }
+  public async getPromotionByPromoCode(code: string): Promise<Promotion> {
+    return PromotionDao.getPromotionByPromoCode(code);
+  }
 
-    public async deletePromotion(promotionId: string){
-        return PromotionDao.deletePromotion(promotionId)
-    }
-   
+  public async updatePromotion(
+    promotionId: string,
+    data: Prisma.PromotionUpdateInput,
+  ): Promise<Promotion> {
+    return PromotionDao.updatePromotion(promotionId, data);
+  }
+
+  public async deletePromotion(promotionId: string) {
+    return PromotionDao.deletePromotion(promotionId);
+  }
 }
 
-export default new PromotionService()
+export default new PromotionService();

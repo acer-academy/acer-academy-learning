@@ -2,7 +2,8 @@ import React, { ReactNode } from 'react';
 import { AuthWrapper } from './AuthContext';
 import {
   loginTeacher,
-  defaultTeacher,
+  logoutTeacher,
+  fetchTeacher,
 } from '@acer-academy-learning/data-access';
 
 interface TeacherAuthWrapperProps {
@@ -12,7 +13,11 @@ interface TeacherAuthWrapperProps {
 export const TeacherAuthWrapper: React.FC<TeacherAuthWrapperProps> = ({
   children,
 }) => (
-  <AuthWrapper defaultUser={defaultTeacher} loginApi={loginTeacher}>
+  <AuthWrapper
+    loginApi={loginTeacher}
+    logoutApi={logoutTeacher}
+    fetchUserApi={fetchTeacher}
+  >
     {children}
   </AuthWrapper>
 );

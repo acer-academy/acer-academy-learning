@@ -1,6 +1,17 @@
 import { LevelEnum, SubjectEnum, Centre } from './CommonTypes';
+export interface TeacherData {
+  id: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  password: string;
+  levels: LevelEnum[];
+  subjects: SubjectEnum[];
+  centreId: string;
+}
 
 export interface Teacher {
+  id: string;
   email: string;
   firstName: string;
   lastName: string;
@@ -9,12 +20,3 @@ export interface Teacher {
   centre?: Centre;
   isAuthenticated: boolean;
 }
-
-export const defaultTeacher: Teacher = {
-  firstName: '',
-  lastName: '',
-  email: '',
-  levels: [],
-  subjects: [],
-  isAuthenticated: false,
-};

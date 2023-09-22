@@ -28,8 +28,11 @@ model Student {
   parents     Parent[]
   school      String
   phoneNumber String
-  centre      Centre            @relation(fields: [centreId], references: [id])
-  centreId    String            @db.Uuid
+
+  centre   Centre @relation(fields: [centreId], references: [id])
+  centreId String @db.Uuid
+
+  NotificationPreference NotificationPreference?
 }
 
 model Parent {
@@ -93,13 +96,59 @@ model Teacher {
   // quizzes Quiz[]
 }
 
+model NotificationPreference {
+  id             String        @id @default(uuid()) @db.Uuid
+  isUnsubscribed Boolean
+  subjectsPref   SubjectEnum[]
+  levelsPref     LevelEnum[]
+  teacherPref    String[]
+  centrePref     String[]
+
+  student   Student @relation(fields: [studentId], references: [id])
+  studentId String  @unique @db.Uuid
+}
+
 model Centre {
-  id       String    @id @default(uuid()) @db.Uuid
-  name     String    @unique
-  address  String    @unique
-  teachers Teacher[]
-  Student  Student[]
-  //classrooms Classroom[]
+  id         String      @id @default(uuid()) @db.Uuid
+  name       String      @unique
+  address    String      @unique
+  teachers   Teacher[]
+  student    Student[]
+  classrooms Classroom[]
+}
+
+model Classroom {
+  id        String  @id @default(uuid()) @db.Uuid
+  name      String
+  available Boolean @default(true)
+  capacity  Int
+  centre    Centre  @relation(fields: [centreId], references: [id])
+  centreId  String  @db.Uuid
+  // sessions Session[]
+}
+
+model Promotion {
+  id    String         @id @default(uuid()) @db.Uuid
+  startDate DateTime 
+  endDate  DateTime
+  promoCode String     @unique
+  percentageDiscount Float
+  description String
+}
+
+model FaqTopic {
+  id          String       @id @default(uuid()) @db.Uuid
+  title       String       @unique
+  faqArticles FaqArticle[]
+}
+
+model FaqArticle {
+  id         String   @id @default(uuid()) @db.Uuid
+  title      String
+  imageUrl   String
+  body       String
+  faqTopic   FaqTopic @relation(fields: [faqTopicId], references: [id])
+  faqTopicId String   @db.Uuid
 }
 
 model Promotion {

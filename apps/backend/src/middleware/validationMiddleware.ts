@@ -1,11 +1,17 @@
-import { Request, Response, NextFunction } from 'express';
-import { TeacherService } from '../services/TeacherService';
-import { CentreService } from '../services/CentreService';
 import { LevelEnum, SubjectEnum } from '@prisma/client';
+import { NextFunction, Request, Response } from 'express';
+import { CentreService } from '../services/CentreService';
+import { ClassroomService } from '../services/ClassroomService';
+import { FaqArticleService } from '../services/FaqArticleService';
+import { FaqTopicService } from '../services/FaqTopicService';
+import { TeacherService } from '../services/TeacherService';
 import promotionService from '../services/PromotionService';
 
 const teacherService = new TeacherService();
 const centreService = new CentreService();
+const classroomService = new ClassroomService();
+const faqArticleService = new FaqArticleService();
+const faqTopicService = new FaqTopicService();
 
 /*
  * Validators Naming Convention: (Expand on as we code)
@@ -89,26 +95,26 @@ export async function validateBodyTeacherEmailUnique(
 }
 
 /** Validates if a teacherId passed in params exists */
-export async function validateParamsTeacherExists(
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) {
-  try {
-    const { teacherId } = req.params;
-    const teacherExists = await teacherService.getTeacherById(teacherId);
-    if (!teacherExists || !teacherId) {
-      return res.status(400).json({
-        error: 'Teacher does not exist.',
-      });
-    }
-    next();
-  } catch (error) {
-    return res.status(500).json({
-      error: error.message,
-    });
-  }
-}
+// export async function validateParamsTeacherExists(
+//   req: Request,
+//   res: Response,
+//   next: NextFunction,
+// ) {
+//   try {
+//     const { teacherId } = req.params;
+//     const teacherExists = await teacherService.getTeacherById(teacherId);
+//     if (!teacherExists || !teacherId) {
+//       return res.status(400).json({
+//         error: 'Teacher does not exist.',
+//       });
+//     }
+//     next();
+//   } catch (error) {
+//     return res.status(500).json({
+//       error: error.message,
+//     });
+//   }
+// }
 
 /** Validates if a centreId passed in params exists */
 export async function validateParamsCentreExists(
@@ -188,10 +194,7 @@ export async function validateBodyFirstNameLastNameNotEmpty(
 ) {
   try {
     const { firstName, lastName } = req.body;
-    if (
-      (firstName && firstName.trim() === '') ||
-      (lastName && lastName.trim() === '')
-    ) {
+    if (firstName.trim() === '' || lastName.trim() === '') {
       return res.status(400).json({
         error:
           'First name and last name cannot be empty or contain only whitespace.',
@@ -289,7 +292,7 @@ export async function validateBodyCentreNameAddressNotEmpty(
 ) {
   try {
     const { name, address } = req.body;
-    if ((name && name.trim() === '') || (address && address.trim() === '')) {
+    if (name.trim().length == 0 || address.trim().length == 0) {
       return res.status(400).json({
         error: 'Name and address cannot be empty or contain only whitespace.',
       });
@@ -346,6 +349,330 @@ export async function validateParamsCentreDeletable(
       return res.status(400).json({
         error:
           'Centre cannot be deleted. Teachers associated with this centre still exist.',
+      });
+    }
+    const classroomsInCentre = await classroomService.getClassroomsByCentre(
+      centreId,
+    );
+    if (classroomsInCentre.length > 0) {
+      return res.status(400).json({
+        error:
+          'Centre cannot be deleted. Classrooms associated with this centre still exist.',
+      });
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+/** Validates if a classroomId passed in params exists */
+export async function validateParamsClassroomExists(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { classroomId } = req.params;
+    const classroomExists = await classroomService.getClassroomById(
+      classroomId,
+    );
+    if (!classroomExists || !classroomId) {
+      return res.status(400).json({
+        error: 'Classroom does not exist.',
+      });
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+/** Validates if name passed in body is not empty */
+export async function validateBodyClassroomNameNotEmpty(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { name } = req.body;
+    if (name.trim() === '') {
+      return res.status(400).json({
+        error: 'Classroom name cannot be empty or contain only whitespace.',
+      });
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+/** Validates if capacity passed in body is a positive integer */
+export async function validateBodyClassroomCapacity(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { capacity } = req.body;
+    const parsedCapacity = parseInt(capacity, 10);
+    if (isNaN(parsedCapacity) || parsedCapacity <= 0) {
+      return res.status(400).json({
+        error: 'Classroom capacity must be a positive integer.',
+      });
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+/** Validates if FAQ article's title and body passed in body is not empty */
+export async function validateBodyFaqArticleTitleBodyNotEmpty(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { title, body } = req.body;
+    if (title.trim() === '' || body.trim() === '') {
+      return res.status(400).json({
+        error: 'Title and body cannot be empty or contain only whitespace.',
+      });
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+/** Validates if a faqTopicId passed in body exists */
+export async function validateBodyFaqTopicExists(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { faqTopicId } = req.body;
+    if (faqTopicId) {
+      const faqTopicExists = await faqTopicService.getFaqTopicById(faqTopicId);
+      if (!faqTopicExists) {
+        return res.status(400).json({
+          error: 'FAQ Topic does not exist.',
+        });
+      }
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+/** Validates if a faqArticleId passed in params exists */
+export async function validateParamsFaqArticleExists(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { faqArticleId } = req.params;
+    const articleExists = await faqArticleService.getFaqArticleById(
+      faqArticleId,
+    );
+    if (!articleExists || !faqArticleId) {
+      return res.status(400).json({
+        error: 'FAQ article does not exist.',
+      });
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+/** Validates if FAQ topic's title passed in body is not empty */
+export async function validateBodyFaqTopicTitleNotEmpty(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { title } = req.body;
+    if (title.trim() === '') {
+      return res.status(400).json({
+        error: 'Title cannot be empty or contain only whitespace.',
+      });
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+/** Validates if a title passed in body is unique */
+export async function validateBodyFaqTopicTitleUnique(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { title } = req.body;
+    const existingTopicByTitle = await faqTopicService.getFaqTopicByTitle(
+      title,
+    );
+    if (existingTopicByTitle) {
+      return res.status(400).json({
+        error: 'FAQ Topic with this title already exists.',
+      });
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+/** Validates if a faqTopicId passed in params exists */
+export async function validateParamsFaqTopicExists(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { faqTopicId } = req.params;
+    const topicExists = await faqTopicService.getFaqTopicById(faqTopicId);
+    if (!topicExists || !faqTopicId) {
+      return res.status(400).json({
+        error: 'FAQ topic does not exist.',
+      });
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+/** Check if date in correct format */
+export async function validateDateFormat(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const postgresDatetimeRegex =
+      /^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[+-]\d{2}:\d{2}))$/;
+    let isValidStartDate, isValidEndDate;
+
+    isValidStartDate = req.body.startDate
+      ? postgresDatetimeRegex.test(req.body.startDate)
+      : true;
+    isValidEndDate = req.body.endDate
+      ? postgresDatetimeRegex.test(req.body.endDate)
+      : true;
+
+    if (!isValidStartDate || !isValidEndDate) {
+      return res.status(500).json({
+        error:
+          'Start Date and/or End Date does not comply with Postgres DateTime format',
+      });
+    }
+
+    if (req.body.startDate >= req.body.endDate) {
+      return res.status(500).json({
+        error: 'Start Date must be a date earlier than End Date',
+      });
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+/** Check if discount for promotion in 2dp */
+export async function validatePromotionDescription(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    if (!req.body.description) {
+      return res.status(500).json({
+        error:
+          'Percentage Discount should only consist of max 2 decimal points',
+      });
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+/** Check if promotion description not empty */
+export async function validatePromotionPercentageDiscount(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    if (req.body.percentageDiscount) {
+      let checkType = parseFloat(req.body.percentageDiscount);
+      if (!checkType) {
+        return res.status(500).json({
+          error: 'Percentage Discount needs to be numbers',
+        });
+      }
+      let check = req.body.percentageDiscount.toString().split('.');
+      if (check[1] && check[1].length > 2) {
+        return res.status(500).json({
+          error:
+            'Percentage Discount should only consist of max 2 decimal points',
+        });
+      }
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+export async function validatePromotionPromoCodeUnique(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { promoCode } = req.body;
+    const existingPromotion = await promotionService.getPromotionByPromoCode(
+      promoCode,
+    );
+    if (existingPromotion) {
+      return res.status(400).json({
+        error: 'Promotion Code already exists.',
       });
     }
     next();
