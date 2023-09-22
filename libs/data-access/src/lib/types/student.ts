@@ -63,6 +63,7 @@ export interface Student {
   firstName: string;
   lastName: string;
   phoneNumber: string;
+  status: StudentStatus;
   school: string;
   level: LevelEnum[];
   subjects: SubjectEnum[];

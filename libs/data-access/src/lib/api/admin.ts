@@ -1,6 +1,7 @@
 import { AxiosResponse } from 'axios';
 import client from './client';
 import { LoginData } from '../types/CommonTypes';
+import { Admin } from '../types/admin';
 
 const URL = '/admins';
 
@@ -34,12 +35,16 @@ export async function updateAdmin(
   return client.put(`${URL}/update/${id}`, data);
 }
 
-export async function deleteAdmin(email: string): Promise<AxiosResponse<any>> {
-  return client.delete(`${URL}/delete/${email}`);
+export async function deleteAdmin(id: string): Promise<AxiosResponse<any>> {
+  return client.delete(`${URL}/delete/${id}`);
 }
 
 export async function logoutAdmin(): Promise<AxiosResponse<any>> {
   return client.post(`${URL}/logout`);
+}
+
+export async function getAllAdmins(): Promise<AxiosResponse<Admin[]>> {
+  return client.get(`${URL}/getAllAdmins`);
 }
 
 export async function fetchAdmin(): Promise<AxiosResponse<any>> {
