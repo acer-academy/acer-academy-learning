@@ -1,43 +1,60 @@
-/* eslint-disable no-useless-catch */
-import axios from 'axios';
+import { AxiosResponse } from 'axios';
+import client from './client';
 import { LoginData } from '../types/CommonTypes';
 
-export const loginAdmin = async (data: LoginData): Promise<any> => {
-  try {
-    const response = await axios.post(
-      `http://localhost:8000/api/v1/admins/login`,
-      data,
-      { withCredentials: true }, // Add this line
-    );
-    console.log(response.data);
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
-};
+const URL = '/admins';
 
-export const logoutAdmin = async (): Promise<any> => {
-  try {
-    const response = await axios.post(
-      `http://localhost:8000/api/v1/admins/logout`,
-      {},
-      { withCredentials: true },
-    );
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
-};
+interface RegisterAdminData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+}
 
-export const fetchAdmin = async (): Promise<any> => {
-  try {
-    const response = await axios.get(
-      'http://localhost:8000/api/v1/admins/check-auth',
-      { withCredentials: true },
-    );
+interface UpdateAdminData {
+  firstName?: string;
+  lastName?: string;
+  password?: string;
+}
 
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
-};
+export async function registerAdmin(
+  data: RegisterAdminData,
+): Promise<AxiosResponse<any>> {
+  return client.post(`${URL}/register`, data);
+}
+
+export async function loginAdmin(data: LoginData): Promise<AxiosResponse<any>> {
+  return client.post(`${URL}/login`, data);
+}
+
+export async function updateAdmin(
+  id: string,
+  data: UpdateAdminData,
+): Promise<AxiosResponse<any>> {
+  return client.put(`${URL}/update/${id}`, data);
+}
+
+export async function deleteAdmin(email: string): Promise<AxiosResponse<any>> {
+  return client.delete(`${URL}/delete/${email}`);
+}
+
+export async function logoutAdmin(): Promise<AxiosResponse<any>> {
+  return client.post(`${URL}/logout`);
+}
+
+export async function fetchAdmin(): Promise<AxiosResponse<any>> {
+  return client.get(`${URL}/check-auth`);
+}
+
+export async function forgotAdminPassword(
+  email: string,
+): Promise<AxiosResponse<any>> {
+  return await client.post(`${URL}/forgot-password`, { email });
+}
+
+export async function resetAdminPassword(
+  token: string,
+  newPassword: string,
+): Promise<AxiosResponse<any>> {
+  return await client.post(`${URL}/reset-password`, { token, newPassword });
+}

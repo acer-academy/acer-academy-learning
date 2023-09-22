@@ -5,7 +5,8 @@ import {
   AcerAcademyLogo,
   PublicPageWrapper,
 } from '@acer-academy-learning/common-ui';
-import { registerAdmin } from '../../api/admin';
+// import { registerAdmin } from '../../api/admin';
+import { registerAdmin } from '@acer-academy-learning/data-access';
 import { useToast } from '@acer-academy-learning/common-ui';
 import { LOGIN } from '../../libs/routes';
 import { useNavigate } from 'react-router-dom';
