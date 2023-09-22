@@ -21,20 +21,29 @@ export class TeacherDao {
     return this.prismaClient.teacher.findMany();
   }
 
+  // public async getTeacherById(teacherId: string): Promise<Teacher | null> {
+  //   return this.prismaClient.teacher.findUnique({
+  //     where: { id: teacherId },
+  //   });
+  // }
+
+  //getTeacherByID implementation
   public async getTeacherById(teacherId: string): Promise<Teacher | null> {
     return this.prismaClient.teacher.findUnique({
       where: { id: teacherId },
+      include: {
+        centre: true,
+      },
     });
   }
 
-  public async getTeacherByEmail(
-    teacherEmail: string,
-  ): Promise<Teacher | null> {
+  //removed Promise<Teacher> so that I can obtain the centre object first
+  public async getTeacherByEmail(teacherEmail: string) {
     return this.prismaClient.teacher.findFirst({
       where: { email: teacherEmail },
       include: {
         centre: true,
-      }
+      },
     });
   }
 

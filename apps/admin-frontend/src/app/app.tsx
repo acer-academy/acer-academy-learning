@@ -1,6 +1,7 @@
 // app.jsx
 import AdminLogin from '../pages/entry/AdminLogin';
 import AdminSignUp from '../pages/entry/AdminSignUp';
+import AdminForgotPassword from '../pages/entry/AdminForgotPassword';
 import { AdminAuthWrapper } from '@acer-academy-learning/common-ui';
 import { ToastProvider } from '@acer-academy-learning/common-ui';
 import { Routes, Route } from 'react-router-dom';
@@ -9,6 +10,11 @@ import 'react-toastify/dist/ReactToastify.css'; // Import toastify CSS
 import Account from '../pages/entry/Account';
 import AdminProfile from '../pages/profile/AdminProfile';
 import ChangePassword from '../pages/profile/ChangePassword';
+import { CentreManagement } from '../pages/centre/CentreManagement';
+import { CentreDetails } from '../pages/centre/CentreDetails';
+import AdminResetPassword from '../pages/entry/AdminResetPassword';
+import { FaqTopicManagement } from '../pages/faq/FaqManagement';
+import { FaqTopicDetails } from '../pages/faq/FaqDetails';
 
 export default function App() {
   return (
@@ -21,7 +27,20 @@ export default function App() {
             <Route path="/account" element={<Account />} />
             <Route path="/profile" element={<AdminProfile />} />
             <Route path="/changePassword" element={<ChangePassword />} />
+            <Route path="account" element={<Account />} />
             <Route path="sign-up" element={<AdminSignUp />} />
+            <Route path="forgot-password" element={<AdminForgotPassword />} />
+            <Route path="reset-password" element={<AdminResetPassword />} />
+            <Route path="centre-management" element={<CentreManagement />} />
+            <Route
+              path="centre-management/:centreId"
+              element={<CentreDetails />}
+            />
+            <Route path="faq-management" element={<FaqTopicManagement />} />
+            <Route
+              path="faq-management/:faqTopicId"
+              element={<FaqTopicDetails />}
+            />
           </Routes>
         </ToastProvider>
       </AdminAuthWrapper>

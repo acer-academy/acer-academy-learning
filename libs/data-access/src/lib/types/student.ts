@@ -34,6 +34,7 @@ export interface Parent {
 }
 
 export interface Student {
+  id: string;
   email: string;
   firstName: string;
   lastName: string;
@@ -45,15 +46,3 @@ export interface Student {
   parents: Parent[];
   isAuthenticated: boolean;
 }
-
-export const defaultStudent: Student = {
-  email: '',
-  firstName: '',
-  lastName: '',
-  phoneNumber: '',
-  school: '',
-  level: [],
-  subjects: [],
-  parents: [],
-  isAuthenticated: false,
-};
