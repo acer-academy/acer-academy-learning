@@ -2,19 +2,16 @@ import { useToast } from '@acer-academy-learning/common-ui';
 import { getWhitelistByRole } from '@acer-academy-learning/data-access';
 import { WhitelistData } from 'libs/data-access/src/lib/types/whitelist';
 import { useEffect, useState } from 'react';
-import { AddWhitelistModal } from './AddWhitelistModal';
 
 export const StudentHRManagementPage: React.FC = () => {
   const [whitelistData, setWhiteListData] = useState<WhitelistData[]>([]);
-  const [isAddWhitelistModalOpen, setIsAddWhitelistModalOpen] =
-    useState<boolean>(false);
   const { displayToast, ToastType } = useToast();
 
   const getWhitelistedEmailsForStudents = async () => {
     try {
       const response = await getWhitelistByRole('STUDENT');
-      const allFaqTopics: WhitelistData[] = response.data;
-      setWhiteListData(allFaqTopics);
+      const whitelistRoles: WhitelistData[] = response.data;
+      setWhiteListData(whitelistRoles);
     } catch (error) {
       displayToast(
         'Whitelisted emails could not be retrieved from the server.',
@@ -42,7 +39,6 @@ export const StudentHRManagementPage: React.FC = () => {
         <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
           <button
             type="button"
-            onClick={() => setIsAddWhitelistModalOpen(true)}
             className="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
             Add whitelist
@@ -93,11 +89,6 @@ export const StudentHRManagementPage: React.FC = () => {
           </div>
         </div>
       </div>
-      <AddWhitelistModal
-        open={isAddWhitelistModalOpen}
-        setOpen={setIsAddWhitelistModalOpen}
-        userRole="STUDENT"
-      />
     </div>
   );
 };

@@ -13,8 +13,8 @@ export const AdminHRManagementPage: React.FC = () => {
   const getWhitelistedEmailsForAdmins = async () => {
     try {
       const response = await getWhitelistByRole('ADMIN');
-      const allFaqTopics: WhitelistData[] = response.data;
-      setWhiteListData(allFaqTopics);
+      const whitelistRoles: WhitelistData[] = response.data;
+      setWhiteListData(whitelistRoles);
     } catch (error) {
       displayToast(
         'Whitelisted emails could not be retrieved from the server.',
