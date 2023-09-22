@@ -57,6 +57,10 @@ class AdminService {
     });
   }
 
+  public async getAllAdmins(): Promise<Admin[]> {
+    return AdminDao.getAllAdmins();
+  }
+
   async login(data: AdminGetData) {
     const admin = await AdminDao.getAdminByEmail(data.email);
     if (!admin || !(await bcrypt.compare(data.password, admin.password))) {

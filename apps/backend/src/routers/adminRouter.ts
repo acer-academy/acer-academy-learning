@@ -21,6 +21,15 @@ router.post('/register', async (req, res) => {
   }
 });
 
+router.get('/getAllAdmins', async (_, res) => {
+  try {
+    const admins = await AdminService.getAllAdmins();
+    res.status(200).json(admins);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
 /**
  * POST /admins/login
  * Logs in a admin using their email and password, returns a cookie that lasts 4 hours, containing the JWT Token

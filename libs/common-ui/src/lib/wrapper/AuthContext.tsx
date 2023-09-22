@@ -64,7 +64,8 @@ export function AuthWrapper<UserType>({
     const fetchUser = async () => {
       try {
         const userInfo = await fetchUserApi();
-        setUser(userInfo);
+        const { data } = userInfo;
+        setUser(data);
       } catch (error) {
         console.error('Failed to fetch user info', error);
       }
