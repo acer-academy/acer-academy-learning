@@ -2,9 +2,9 @@ import { useToast } from '@acer-academy-learning/common-ui';
 import { getWhitelistByRole } from '@acer-academy-learning/data-access';
 import { WhitelistData } from 'libs/data-access/src/lib/types/whitelist';
 import { useEffect, useState } from 'react';
-import { AddWhitelistModal } from './AddWhitelistModal';
-import { DeleteWhitelistModal } from './DeleteWhitelistModal';
-import { StudentTable } from './StudentTable';
+import { AddWhitelistModal } from './common/AddWhitelistModal';
+import { DeleteWhitelistModal } from './common/DeleteWhitelistModal';
+import { StudentTable } from './student/StudentTable';
 
 export const StudentHRManagementPage: React.FC = () => {
   const [whitelistData, setWhiteListData] = useState<WhitelistData[]>([]);
@@ -48,6 +48,7 @@ export const StudentHRManagementPage: React.FC = () => {
           <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
             <button
               type="button"
+              onClick={() => setIsAddWhitelistModalOpen(true)}
               className="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
               Add whitelist

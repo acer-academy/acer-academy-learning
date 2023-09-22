@@ -2,11 +2,11 @@ import { useAuth, useToast } from '@acer-academy-learning/common-ui';
 import { getWhitelistByRole } from '@acer-academy-learning/data-access';
 import { WhitelistData } from 'libs/data-access/src/lib/types/whitelist';
 import { useEffect, useState } from 'react';
-import { AddWhitelistModal } from './AddWhitelistModal';
-import { DeleteWhitelistModal } from './DeleteWhitelistModal';
+import { AddWhitelistModal } from './common/AddWhitelistModal';
+import { DeleteWhitelistModal } from './common/DeleteWhitelistModal';
 import { Admin } from 'libs/data-access/src/lib/types/admin';
 import { ExclamationTriangleIcon } from '@heroicons/react/20/solid';
-import { AdminTable } from './AdminTable';
+import { AdminTable } from './admin/AdminTable';
 
 export const AdminHRManagementPage: React.FC = () => {
   const [whitelistData, setWhiteListData] = useState<WhitelistData[]>([]);

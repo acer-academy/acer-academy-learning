@@ -2,9 +2,9 @@ import { useToast } from '@acer-academy-learning/common-ui';
 import { getWhitelistByRole } from '@acer-academy-learning/data-access';
 import { WhitelistData } from 'libs/data-access/src/lib/types/whitelist';
 import { useEffect, useState } from 'react';
-import { AddWhitelistModal } from './AddWhitelistModal';
-import { DeleteWhitelistModal } from './DeleteWhitelistModal';
-import { TeacherTable } from './TeacherTable';
+import { AddWhitelistModal } from './common/AddWhitelistModal';
+import { DeleteWhitelistModal } from './common/DeleteWhitelistModal';
+import { TeacherTable } from './teacher/TeacherTable';
 
 export const TeacherHRManagementPage: React.FC = () => {
   const [whitelistData, setWhiteListData] = useState<WhitelistData[]>([]);
