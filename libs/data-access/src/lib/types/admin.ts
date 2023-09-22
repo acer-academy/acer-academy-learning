@@ -27,4 +27,5 @@ export interface Admin {
   email: string;
   type: AdminType;
   isAuthenticated: boolean;
+  whitelistItemId: string;
 }
