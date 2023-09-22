@@ -1,6 +1,8 @@
-import React, { Dispatch, SetStateAction, useState } from 'react';
+import React, { useState } from 'react';
 import { ProfileFieldType } from '../types';
 import { Student } from 'libs/data-access/src/lib/types/student';
+import { SubjectEnum } from '@acer-academy-learning/data-access';
+import { SubjectField } from './SubjectField';
 
 const renderValue = (value: ProfileFieldProps['value']): string =>
   Array.isArray(value) ? value.join(', ') : (value as string);
@@ -25,6 +27,7 @@ export const ProfileField = ({
 }: ProfileFieldProps) => {
   const [onEditMode, setOnEditMode] = useState<boolean>(false);
   const [currValue, setCurrValue] = useState(value);
+  const [selectedSubjects, setSelectedSubjects] = useState<SubjectEnum[]>();
 
   const handleUpdate = async () => {
     if (id) {
@@ -42,21 +45,24 @@ export const ProfileField = ({
       >
         {label}
       </label>
-      {(onEditMode && (
-        <div className="text-left flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-student-primary-600 sm:max-w-md">
-          {/* <span className="flex select-none items-center pl-3 text-gray-500 sm:text-sm">
-                    workcation.com/
-                  </span> */}
-          <input
-            type="text"
-            name={id}
-            id={id}
-            value={currValue as string}
-            onChange={(e) => setCurrValue(e.target.value)}
-            className="block flex-1 border-0 bg-transparent py-1.5 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+      {(onEditMode &&
+        ((Array.isArray(value) && (
+          <SubjectField
+            value={currValue as SubjectEnum[]}
+            setValue={setCurrValue}
           />
-        </div>
-      )) || (
+        )) || (
+          <div className="text-left flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-student-primary-600 sm:max-w-md">
+            <input
+              type="text"
+              name={id}
+              id={id}
+              value={currValue as string}
+              onChange={(e) => setCurrValue(e.target.value)}
+              className="block flex-1 border-0 bg-transparent py-1.5 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+            />
+          </div>
+        ))) || (
         <span className="leading-6 text-sm py-1.5">{renderValue(value)}</span>
       )}
       {(onEditMode && (
