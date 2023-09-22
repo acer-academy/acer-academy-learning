@@ -1,7 +1,8 @@
 import { useAuth } from '@acer-academy-learning/common-ui';
 import { useState } from 'react';
 import { useToast } from '@acer-academy-learning/common-ui';
-import { updateTeacher } from '../../api/teacher';
+import { updateTeacher } from '@acer-academy-learning/data-access';
+import { Teacher } from 'libs/data-access/src/lib/types/teacher';
 
 const ChangePassword: React.FC = () => {
   const { user } = useAuth<Teacher>();

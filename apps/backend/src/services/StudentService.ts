@@ -57,6 +57,9 @@ class StudentService {
     id: string,
     input: Prisma.StudentUpdateInput,
   ): Promise<Student> {
+    if (input.password) {
+      input.password = await bcrypt.hash(input.password, 10);
+    }
     return StudentDao.updateStudent(id, input);
   }
 
@@ -139,6 +142,10 @@ class StudentService {
     // Hash and update the new password
     const hashedPassword = await bcrypt.hash(newPassword, 10);
     await StudentDao.updateStudent(student.id, { password: hashedPassword });
+  }
+
+  public async updateParent(id: string, input: Prisma.ParentUpdateInput) {
+    return StudentDao.updateParent(id, input);
   }
 }
 

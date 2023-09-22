@@ -7,6 +7,8 @@ export type AvatarProps = {
   borderStyle?: string;
   logoTextStyle?: string;
   textStyle?: string;
+  size?: string;
+  textSize?: string;
 };
 
 const commonImageStyles = 'h-8 w-8 rounded-full';
@@ -18,6 +20,8 @@ export const Avatar = ({
   textStyle,
   logoTextStyle,
   borderStyle,
+  size,
+  textSize,
 }: AvatarProps) => {
   const initial = useMemo(
     () => firstName.charAt(0).toLocaleUpperCase(),
@@ -34,13 +38,14 @@ export const Avatar = ({
         />
       )) || (
         <span
-          className={`flex lg:h-10 lg:w-10 h-6 w-6 shrink-0 items-center justify-center rounded-lg border ${
+          // @TODO: Definitely nt the best way to do it, will refine if gt time
+          className={`flex  ${
+            size ?? 'lg:h-10 lg:w-10 h-6 w-6'
+          } shrink-0 items-center justify-center rounded-lg border ${
             borderStyle ?? 'border-indigo-400'
-          } ${
-            bgStyle ?? 'bg-admin-primary-500'
-          } text-[0.625rem] lg:text-[1rem] font-medium ${
-            logoTextStyle ?? 'text-text-primary'
-          }`}
+          } ${bgStyle ?? 'bg-admin-primary-500'}  ${
+            textSize ?? 'text-[0.625rem] lg:text-[1rem]'
+          } font-medium ${logoTextStyle ?? 'text-text-primary'}`}
         >
           {initial}
         </span>

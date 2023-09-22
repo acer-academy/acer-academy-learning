@@ -39,7 +39,9 @@ export function AuthWrapper<UserType>({
   const login = async (email: string, password: string) => {
     try {
       const response = await loginApi({ email, password });
-      setUser(response);
+      const { data } = response;
+      console.log(response);
+      setUser(data);
     } catch (error) {
       console.error('Login failed', error);
       throw error;

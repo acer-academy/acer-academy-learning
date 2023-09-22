@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { updateAdmin } from '../../api/admin';
 import { useToast } from '@acer-academy-learning/common-ui';
+import { CHANGE_PASSWORD } from '../../libs/routes';
 
 const AdminProfile: React.FC = () => {
   const { user, updateUser } = useAuth<Admin>();
@@ -108,7 +109,7 @@ const AdminProfile: React.FC = () => {
               </span>
               <button
                 className="rounded bg-indigo-600 px-2 py-1 text-xs font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                onClick={() => navigate('/changePassword')}
+                onClick={() => navigate(`${CHANGE_PASSWORD}`)}
               >
                 Change Password
               </button>
