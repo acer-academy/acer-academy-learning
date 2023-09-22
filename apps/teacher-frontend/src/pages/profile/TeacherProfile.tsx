@@ -2,11 +2,10 @@ import { useAuth } from '@acer-academy-learning/common-ui';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@acer-academy-learning/common-ui';
-import { updateTeacher } from '../../api/teacher';
+import { updateTeacher } from '@acer-academy-learning/data-access';
 
 const TeacherProfile: React.FC = () => {
-  const { user, updateUser } = useAuth<Teacher>();
-  // const user = {firstName: 'user1', lastName: 'user2', email: 'email@gmail.com', subjects: ['English', 'Math'], levels: ['P1', 'P2']}
+  const { user, updateUser } = useAuth();
 
   const [updUser, setUpdUser] = useState({
     firstName: user.firstName,
