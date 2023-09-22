@@ -8,6 +8,8 @@ import { Routes, Route } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; // Import toastify CSS
 import Account from '../pages/entry/Account';
+import AdminProfile from '../pages/profile/AdminProfile';
+import ChangePassword from '../pages/profile/ChangePassword';
 import { CentreManagement } from '../pages/centre/CentreManagement';
 import { CentreDetails } from '../pages/centre/CentreDetails';
 import AdminResetPassword from '../pages/entry/AdminResetPassword';
@@ -22,6 +24,9 @@ export default function App() {
           <ToastContainer />
           <Routes>
             <Route path="/" element={<AdminLogin />} />
+            <Route path="/account" element={<Account />} />
+            <Route path="/profile" element={<AdminProfile />} />
+            <Route path="/changePassword" element={<ChangePassword />} />
             <Route path="account" element={<Account />} />
             <Route path="sign-up" element={<AdminSignUp />} />
             <Route path="forgot-password" element={<AdminForgotPassword />} />
