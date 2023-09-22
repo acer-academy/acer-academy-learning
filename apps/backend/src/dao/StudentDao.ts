@@ -43,16 +43,18 @@ class StudentDao {
       include: {
         parents: true,
         centre: true,
+        notificationPreference: true,
       },
     });
   }
 
-  public async getStudentById(id: string): Promise<Student> {
+  public async getStudentById(id: string) {
     return this.prisma.student.findUnique({
       where: { id },
       include: {
         parents: true,
         centre: true,
+        notificationPreference: true,
       },
     });
   }
@@ -63,6 +65,7 @@ class StudentDao {
       include: {
         parents: true,
         centre: true,
+        notificationPreference: true,
       },
     });
   }

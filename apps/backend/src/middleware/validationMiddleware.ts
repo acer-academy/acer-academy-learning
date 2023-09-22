@@ -194,7 +194,10 @@ export async function validateBodyFirstNameLastNameNotEmpty(
 ) {
   try {
     const { firstName, lastName } = req.body;
-    if (firstName.trim() === '' || lastName.trim() === '') {
+    if (
+      (firstName && firstName.trim() === '') ||
+      (lastName && lastName.trim() === '')
+    ) {
       return res.status(400).json({
         error:
           'First name and last name cannot be empty or contain only whitespace.',

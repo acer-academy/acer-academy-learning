@@ -43,6 +43,8 @@ interface UpdateTeacherData {
   firstName?: string;
   lastName?: string;
   password?: string;
+  subjects?: SubjectEnum[];
+  levels?: LevelEnum[];
 }
 
 export const registerTeacher = async (
@@ -72,12 +74,12 @@ export const loginTeacher = async (data: LoginTeacherData): Promise<any> => {
 };
 
 export const updateTeacher = async (
-  email: string,
+  id: string,
   data: UpdateTeacherData,
 ): Promise<any> => {
   // eslint-disable-next-line no-useless-catch
   try {
-    const response = await axios.put(`${baseURL}/update/${email}`, data);
+    const response = await axios.put(`${baseURL}/${id}`, data);
     return response.data;
   } catch (error) {
     throw error;

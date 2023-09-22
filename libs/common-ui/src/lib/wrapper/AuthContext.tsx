@@ -10,6 +10,8 @@ interface AuthContextProps<UserType> {
   user: UserType | null;
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
+  updateUser: (user: UserType) => void;
+  isLoading: boolean;
 }
 
 const AuthContext = createContext<AuthContextProps<any> | undefined>(undefined);
@@ -31,6 +33,7 @@ export function AuthWrapper<UserType>({
   fetchUserApi,
 }: AuthWrapperProps<UserType>): JSX.Element {
   const [user, setUser] = useState<UserType | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const login = async (email: string, password: string) => {
     try {
@@ -52,22 +55,28 @@ export function AuthWrapper<UserType>({
     }
   };
 
+  const updateUser = (updatedUser: UserType) => {
+    setUser(updatedUser);
+  };
+
   useEffect(() => {
     const fetchUser = async () => {
       try {
         const userInfo = await fetchUserApi();
         setUser(userInfo);
-        console.log(userInfo);
       } catch (error) {
         console.error('Failed to fetch user info', error);
       }
+      setIsLoading(false);
     };
 
     fetchUser();
   }, [fetchUserApi]);
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider
+      value={{ isLoading, user, login, logout, updateUser }}
+    >
       {children}
     </AuthContext.Provider>
   );
