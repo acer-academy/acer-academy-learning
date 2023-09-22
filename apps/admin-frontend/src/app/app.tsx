@@ -48,13 +48,11 @@ export default function App() {
             >
               {/* Nest all routes that has a SecondaryLayout here */}
               <Route path="/" element={<h1>Main</h1>} />
-              <Route path={CENTRE} element={<h1>Main</h1>} />
-              <Route path={FAQ} element={<h1>Main</h1>} />
               <Route
                 path={HUMAN_RESOURCES}
                 element={
                   <div>
-                    Common HR stuff
+                    Common H stuff
                     <Outlet />
                   </div>
                 }
@@ -63,17 +61,13 @@ export default function App() {
                 <Route path={STUDENTS} element={<h2>Student</h2>} />
                 <Route path={ADMINS} element={<h2>Admin</h2>} />
               </Route>
-              <Route path={CENTRE} />
+              <Route path={CENTRE} element={<CentreManagement />} />
+              <Route path={`${CENTRE}/:centreId`} element={<CentreDetails />} />
               <Route path={FAQ} />
             </Route>
             <Route path={LOGIN} element={<AdminLogin />} />
             <Route path="/account" element={<Account />} />
             <Route path={SIGN_UP} element={<AdminSignUp />} />
-            <Route path="centre-management" element={<CentreManagement />} />
-            <Route
-              path="centre-management/:centreId"
-              element={<CentreDetails />}
-            />
           </Routes>
         </ToastProvider>
       </AdminAuthWrapper>
