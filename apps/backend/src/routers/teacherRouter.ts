@@ -32,7 +32,7 @@ teacherRouter.post(
   validateBodyCentreExists,
   async (req: Request, res: Response) => {
     try {
-      const teacherData: Prisma.TeacherCreateInput = req.body;
+      const teacherData: Prisma.TeacherUncheckedCreateInput = req.body;
       const teacher: Teacher = await teacherService.createTeacher(teacherData);
       res.status(201).json(teacher);
     } catch (error) {

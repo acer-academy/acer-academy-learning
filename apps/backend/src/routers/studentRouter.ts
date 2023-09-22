@@ -32,7 +32,7 @@ studentRouter.get('/getStudentById/:id', async (req, res) => {
 
 studentRouter.post('/create', async (req, res) => {
   try {
-    const studentData: Prisma.StudentCreateInput = req.body;
+    const studentData: Prisma.StudentUncheckedCreateInput = req.body;
     const student = await StudentService.createStudent(studentData);
 
     return res.status(200).json({ student: student });

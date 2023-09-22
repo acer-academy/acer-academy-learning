@@ -8,12 +8,10 @@ class StudentDao {
   }
 
   public async createStudent(
-    input: Prisma.StudentCreateInput,
+    input: Prisma.StudentUncheckedCreateInput,
   ): Promise<Student> {
     return this.prisma.student.create({
-      data: {
-        ...input,
-      },
+      data: { ...input },
     });
   }
 
