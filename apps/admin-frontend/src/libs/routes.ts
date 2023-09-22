@@ -2,6 +2,9 @@
 export const SIGN_UP = '/sign-up';
 export const LOGIN = '/login';
 
+// Settings
+export const SETTINGS = '/settings'
+
 // HR routes
 export const HUMAN_RESOURCES = '/human-resources';
 export const TEACHERS = `${HUMAN_RESOURCES}/teachers`;

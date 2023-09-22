@@ -30,6 +30,7 @@ import {
   HUMAN_RESOURCES,
   LOGIN,
   PROMOTION,
+  SETTINGS,
   SIGN_UP,
   STUDENTS,
   TEACHERS,
@@ -116,6 +117,7 @@ export default function App() {
                 element={<FaqTopicDetails />}
               />
               <Route path={PROMOTION} element={<PromotionManagement />} />
+              <Route path={SETTINGS} element={<AdminProfile />} />
             </Route>
             <Route path={LOGIN} element={<AdminLogin />} />
             <Route path="/account" element={<Account />} />
