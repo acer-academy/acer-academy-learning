@@ -83,7 +83,7 @@ export class TeacherService {
       !teacher ||
       !(await bcrypt.compare(teacherPassword, teacher.password))
     ) {
-      throw new Error('Invalid credentials');
+      throw new Error('Invalid credentials.');
     }
 
     // Generate a JWT token with necessary teacher details

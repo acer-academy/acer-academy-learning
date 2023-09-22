@@ -6,6 +6,7 @@ import {
 } from '@acer-academy-learning/common-ui';
 import { useAuth } from '@acer-academy-learning/common-ui';
 import { DASHBOARD } from '../../libs/routes';
+import { useToast } from '@acer-academy-learning/common-ui';
 
 const StudentLogin: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -13,6 +14,7 @@ const StudentLogin: React.FC = () => {
 
   const navigate = useNavigate();
   const { login } = useAuth();
+  const { displayToast, ToastType } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -21,7 +23,7 @@ const StudentLogin: React.FC = () => {
       await login(email, password);
       navigate(DASHBOARD);
     } catch (error) {
-      console.error('An error occurred', error);
+      displayToast(`${error}`, ToastType.ERROR);
     }
   };
 

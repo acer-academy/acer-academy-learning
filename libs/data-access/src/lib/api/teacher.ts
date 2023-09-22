@@ -14,8 +14,32 @@ const URL = '/teachers';
 export async function loginTeacher(
   data: LoginData,
 ): Promise<AxiosResponse<any>> {
-  return client.post(`${URL}/login`, data);
+  try {
+    const response: AxiosResponse<any> = await client.post(
+      `${URL}/login`,
+      data,
+    );
+    return response;
+  } catch (error) {
+    if (
+      axios.isAxiosError(error) &&
+      error.response &&
+      error.response.status === 500
+    ) {
+      throw error.response.data.error;
+    } else {
+      throw error;
+    }
+  }
+
+  // return client.post(`${URL}/login`, data);
 }
+
+// export async function loginTeacher(
+//   data: LoginData,
+// ): Promise<AxiosResponse<any>> {
+//   return client.post(`${URL}/login`, data);
+// }
 
 export async function logoutTeacher(): Promise<AxiosResponse<any>> {
   return client.post(`${URL}/logout`);
@@ -54,7 +78,13 @@ export async function registerTeacher(
       // console.error('Error registering admin:', error.response.data);
       throw error.response.data.error;
     } else {
-      throw error;
+      if (
+        axios.isAxiosError(error) &&
+        error.response &&
+        error.response.status === 400
+      ) {
+        throw error.response.data.error;
+      }
     }
   }
 }

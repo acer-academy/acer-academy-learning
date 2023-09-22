@@ -46,10 +46,34 @@ export async function getStudentById(
   return client.get(`${URL}/getStudentById/${studentId}`);
 }
 
+// export async function loginStudent(
+//   data: LoginData,
+// ): Promise<AxiosResponse<any>> {
+//   return client.post(`${URL}/login`, data);
+// }
+
 export async function loginStudent(
   data: LoginData,
 ): Promise<AxiosResponse<any>> {
-  return client.post(`${URL}/login`, data);
+  try {
+    const response: AxiosResponse<any> = await client.post(
+      `${URL}/login`,
+      data,
+    );
+    return response;
+  } catch (error) {
+    if (
+      axios.isAxiosError(error) &&
+      error.response &&
+      error.response.status === 400
+    ) {
+      throw error.response.data.error;
+    } else {
+      throw error;
+    }
+  }
+
+  // return client.post(`${URL}/login`, data);
 }
 
 export async function logoutStudent(): Promise<AxiosResponse<any>> {

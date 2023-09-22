@@ -25,6 +25,12 @@ class StudentService {
       throw new Error('Unable to create student as email is not whitelisted!');
     }
 
+    const checkForUser = await StudentDao.getStudentByEmail(input.email);
+
+    if (checkForUser) {
+      throw new Error('Email already exists.');
+    }
+
     const whitelistItem = await this.whitelistService.getWhitelistByEmail(
       input.email,
     );
@@ -73,7 +79,7 @@ class StudentService {
       !student ||
       !(await bcrypt.compare(studentPassword, student.password))
     ) {
-      throw new Error('Invalid credentials');
+      throw new Error('Invalid credentials.');
     }
 
     // Generate a JWT token with necessary student details
