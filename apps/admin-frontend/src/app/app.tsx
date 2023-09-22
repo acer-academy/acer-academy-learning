@@ -26,6 +26,7 @@ import { NAV_SECTIONS } from '../libs/layout';
 import {
   ADMINS,
   CENTRE,
+  CHANGE_PASSWORD,
   FAQ,
   HUMAN_RESOURCES,
   LOGIN,
@@ -75,8 +76,6 @@ export default function App() {
               </Route>
             </Route>
             <Route path={LOGIN} element={<AdminLogin />} />
-            <Route path="/account" element={<Account />} />
-            <Route path="/account/profile" element={<AdminProfile />} />
             <Route
               path="/account/changePassword"
               element={<ChangePassword />}
@@ -118,6 +117,7 @@ export default function App() {
               />
               <Route path={PROMOTION} element={<PromotionManagement />} />
               <Route path={SETTINGS} element={<AdminProfile />} />
+              <Route path={CHANGE_PASSWORD} element={<ChangePassword />} />
             </Route>
             <Route path={LOGIN} element={<AdminLogin />} />
             <Route path="/account" element={<Account />} />
