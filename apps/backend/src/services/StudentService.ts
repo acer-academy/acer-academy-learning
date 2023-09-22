@@ -143,6 +143,10 @@ class StudentService {
     const hashedPassword = await bcrypt.hash(newPassword, 10);
     await StudentDao.updateStudent(student.id, { password: hashedPassword });
   }
+
+  public async updateParent(id: string, input: Prisma.ParentUpdateInput) {
+    return StudentDao.updateParent(id, input);
+  }
 }
 
 export default new StudentService();

@@ -14,6 +14,7 @@
 */
 import {
   Avatar,
+  EditableFieldRow,
   FullscreenSpinner,
   camelCaseToTitleCase,
   useAuth,
@@ -28,7 +29,7 @@ import { z } from 'zod';
 import { includes } from 'lodash';
 import { ProfileFieldType } from './types';
 import { ProfileField } from './components/ProfileField';
-import { updateStudent } from '../../api/student';
+import { updateParent, updateStudent } from '../../api/student';
 import { cloneDeep } from 'lodash';
 import { StaticRowField } from './components/StaticRowField';
 import { ErrorText } from './components/ErrorText';
@@ -76,13 +77,24 @@ export const passwordChangeSchema = z
 export const parentProfileSchema = z.object({
   firstName: z.string().trim().min(1, 'First Name cannot be empty.'),
   lastName: z.string().trim().min(1, 'Last Name cannot be empty.'),
-  phoneNumber: z.string().trim().min(1, 'Phone Number cannot be empty.'),
+  phoneNumber: z
+    .string()
+    .trim()
+    .min(1, 'Phone Number cannot be empty.')
+    .regex(phoneRegex, 'Please enter a valid phone number.'),
 });
 
 // Let's handle everything on this level first
 export const StudentProfile = () => {
   const { displayToast, ToastType } = useToast();
   const { user: authUser, updateUser: setAuthUser } = useAuth<Student>();
+
+  useEffect(() => {
+    // Sort
+    authUser?.parents?.sort((p1, p2) =>
+      p1.id < p2.id ? -1 : p1.id === p2.id ? 0 : 1,
+    );
+  }, [authUser]);
 
   // States
   const [user, setUser] = useState(cloneDeep(authUser));
@@ -132,6 +144,38 @@ export const StudentProfile = () => {
   });
 
   const {
+    formState: { errors: modifyParentOneErrors },
+    handleSubmit: handleParentOneSubmit,
+    register: registerParentOne,
+  } = useZodForm({
+    schema: parentProfileSchema,
+    values: useMemo(
+      () => ({
+        firstName: user?.parents?.[0].firstName ?? '',
+        lastName: user?.parents?.[0].lastName ?? '',
+        phoneNumber: user?.parents?.[0].phoneNumber ?? '',
+      }),
+      [user?.parents],
+    ),
+  });
+
+  const {
+    formState: { errors: modifyParentTwoErrors },
+    handleSubmit: handleParentTwoSubmit,
+    register: registerParentTwo,
+  } = useZodForm({
+    schema: parentProfileSchema,
+    values: useMemo(
+      () => ({
+        firstName: user?.parents?.[1].firstName ?? '',
+        lastName: user?.parents?.[1].lastName ?? '',
+        phoneNumber: user?.parents?.[1].phoneNumber ?? '',
+      }),
+      [user?.parents],
+    ),
+  });
+
+  const {
     formState: { errors: passwordErrors },
     handleSubmit: handlePasswordSubmit,
     register: passwordRegister,
@@ -147,6 +191,7 @@ export const StudentProfile = () => {
   });
 
   useEffect(() => {
+    console.log(authUser);
     setUser(authUser);
   }, [authUser]);
 
@@ -165,14 +210,6 @@ export const StudentProfile = () => {
 
   // Handlers
   const handleAddParent = () => {
-    // const newParent = {
-    //   firstName: '',
-    //   lastName: '',
-    //   phoneNumber: '',
-    // } as Parent;
-    // const newUser = cloneDeep(user);
-    // newUser?.parents?.push(newParent);
-    // setUser(newUser);
     setParentModalIsOpen(true);
   };
   const handleRemoveParent = () => {
@@ -195,7 +232,6 @@ export const StudentProfile = () => {
     if (user.id) {
       try {
         const res = await updateStudent(user?.id, values);
-        console.log(res);
         setAuthUser(res.student);
         displayToast(fieldName + ' updated successfully!', ToastType.SUCCESS);
       } catch (error) {
@@ -205,7 +241,7 @@ export const StudentProfile = () => {
     setOnEdit(false);
   };
 
-  const handleParentSubmitForm = async (
+  const handleCreateParentSubmitForm = async (
     values: z.infer<typeof parentProfileSchema>,
     setOnEdit: (val: boolean) => void,
     message: string,
@@ -229,6 +265,25 @@ export const StudentProfile = () => {
       }
     }
     setOnEdit(false);
+  };
+
+  const handleParentEditSubmitForm = async (
+    values: z.infer<typeof parentProfileSchema>,
+    id: string,
+    message: string,
+  ) => {
+    if (user.id) {
+      try {
+        const res = await updateParent(id, values);
+        setAuthUser(res.student);
+        displayToast(message, ToastType.SUCCESS);
+      } catch (error) {
+        displayToast(
+          'Error occurred creating parent: ' + error,
+          ToastType.ERROR,
+        );
+      }
+    }
   };
 
   return (
@@ -365,23 +420,25 @@ export const StudentProfile = () => {
             </label>
             {(subjectsOnEdit && (
               <>
-                <div className="flex space-x-4">
-                  {subjects.map((subject) => (
-                    <label key={subject.id} className="flex items-center">
-                      <input
-                        type="checkbox"
-                        {...register('subjects')}
-                        // checked={selectedSubjects.includes(subject.value)}
-                        // onChange={() => handleSubjectChange(subject.value)}
-                        className="h-5 w-5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
-                        value={subject.value}
-                      />
-                      <span className="ml-2 text-gray-700 text-sm">
-                        {subject.label}
-                      </span>
-                      <ErrorText message={errors.subjects?.message} />
-                    </label>
-                  ))}
+                <div className="flex flex-col">
+                  <div className="flex space-x-4">
+                    {subjects.map((subject) => (
+                      <label key={subject.id} className="flex items-center">
+                        <input
+                          type="checkbox"
+                          {...register('subjects')}
+                          // checked={selectedSubjects.includes(subject.value)}
+                          // onChange={() => handleSubjectChange(subject.value)}
+                          className="h-5 w-5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                          value={subject.value}
+                        />
+                        <span className="ml-2 text-gray-700 text-sm">
+                          {subject.label}
+                        </span>
+                      </label>
+                    ))}
+                  </div>
+                  <ErrorText message={errors.subjects?.message} />
                 </div>
                 <button
                   type="button"
@@ -564,7 +621,7 @@ export const StudentProfile = () => {
             This information will be displayed publicly so be careful what you
             share.
           </p> */}
-          {user.parents?.map((parent, index) => (
+          {/* {user.parents?.map((parent, index) => (
             <>
               <h2 className="text-base font-semibold leading-7 text-gray-900 mt-4">
                 Parents Particulars
@@ -587,38 +644,111 @@ export const StudentProfile = () => {
                   </button>
                 )}
               </h2>
-              <p className="mt-1 text-sm leading-6 text-gray-600">
-                This information will be displayed publicly so be careful what
-                you share.
-              </p>
               <div className="mt-10 grid grid-cols-3 gap-2">
-                <ProfileField
-                  label={'First Name'}
+                <EditableFieldRow
+                  label="First Name"
                   value={parent.firstName}
-                  id={parent.firstName}
-                  userId={user.id}
-                  updateUser={updateStudent}
-                  setUser={setAuthUser}
+                  id={parent.firstName + index}
+                  type="text"
+                  register={registerParentOne}
+                  registerKey="firstName"
+                  handleSubmit={
+                      handleParentOneSubmit((values) =>
+                          handleParentEditSubmitForm(
+                            values,
+                            parent.id,
+                            'Parent First Name',
+                          ),
+                        )
+                  }
                 />
-                <ProfileField
-                  label={'Last Name'}
+                <EditableFieldRow
+                  label="Last Name"
                   value={parent.lastName}
-                  id={parent.lastName}
-                  userId={user.id}
-                  updateUser={updateStudent}
-                  setUser={setAuthUser}
+                  id={parent.lastName + index}
+                  type="text"
+                  register={registerParentOne}
+                  registerKey="lastName"
+                  handleSubmit={
+                      handleParentOneSubmit((values) =>
+                          handleParentEditSubmitForm(
+                            values,
+                            parent.id,
+                            'Parent Last Name',
+                          ),
+                        )
+                  }
                 />
-                <ProfileField
-                  label={'Phone Number'}
+                <EditableFieldRow
+                  label="Phone Number"
                   value={parent.phoneNumber}
-                  id={parent.phoneNumber}
-                  userId={user.id}
-                  updateUser={updateStudent}
-                  setUser={setAuthUser}
+                  id={parent.phoneNumber + index}
+                  type="text"
+                  register={registerParentOne}
+                  registerKey="phoneNumber"
+                  handleSubmit={
+                      handleParentOneSubmit((values) =>
+                          handleParentEditSubmitForm(
+                            values,
+                            parent.id,
+                            'Parent First Name',
+                          ),
+                        )
+                  }
+                /> */}
+          {/* <EditableFieldRow
+                  label="Last Name"
+                  value={parent.lastName}
+                  id={parent.lastName + index}
+                  type="text"
+                  register={index === 0 ? registerParentOne : registerParentTwo}
+                  registerKey="lastName"
+                  handleSubmit={
+                    index === 0
+                      ? handleParentOneSubmit((values) =>
+                          handleParentEditSubmitForm(
+                            values,
+                            parent.id,
+                            'Parent Last Name',
+                          ),
+                        )
+                      : handleParentTwoSubmit((values) =>
+                          handleParentEditSubmitForm(
+                            values,
+                            parent.id,
+                            'Second Parent Last Name',
+                          ),
+                        )
+                  }
                 />
-              </div>
+                <EditableFieldRow
+                  label="Phone Number"
+                  value={parent.phoneNumber}
+                  id={parent.phoneNumber + index}
+                  type="text"
+                  register={registerParentOne}
+                  registerKey="phoneNumber"
+                  handleSubmit={
+                    index === 0
+                      ? handleParentOneSubmit((values) =>
+                          handleParentEditSubmitForm(
+                            values,
+                            parent.id,
+                            'Parent Phone Number succesfully updated.',
+                          ),
+                        )
+                      : handleParentTwoSubmit((values) =>
+                          handleParentEditSubmitForm(
+                            values,
+                            parent.id,
+                            'Second Parent Phone Number succesfully updated.',
+                          ),
+                        )
+                  }
+                /> */}
+          {/* </div>
             </>
-          ))}
+          ))} */}
           {/* Change Password Modal */}
           <GenericModal
             isOpen={changePasswordModalIsOpen}
@@ -686,7 +816,7 @@ export const StudentProfile = () => {
               className="ml-2 rounded-full bg-indigo-600 p-1.5 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               type="button"
               onClick={handleParentSubmit((values) =>
-                handleParentSubmitForm(
+                handleCreateParentSubmitForm(
                   values,
                   setParentModalIsOpen,
                   'New parent entry created.',

@@ -47,6 +47,12 @@ interface UpdateStudentData {
   password?: string;
 }
 
+type UpdateParentData = {
+  firstName?: string;
+  lastName?: string;
+  password?: string;
+};
+
 export const registerStudent = async (
   data: RegisterStudentData,
 ): Promise<any> => {
@@ -90,6 +96,19 @@ export const deleteStudent = async (email: string): Promise<any> => {
   // eslint-disable-next-line no-useless-catch
   try {
     const response = await axios.delete(`${baseURL}/delete/${email}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const updateParent = async (
+  id: string,
+  data: UpdateParentData,
+): Promise<any> => {
+  // eslint-disable-next-line no-useless-catch
+  try {
+    const response = await axios.put(`${baseURL}/update-parent/${id}`, data);
     return response.data;
   } catch (error) {
     throw error;

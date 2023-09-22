@@ -70,6 +70,28 @@ class StudentDao {
       },
     });
   }
+
+  // Parents
+  public async updateParent(
+    id: string,
+    input: Prisma.ParentUpdateInput,
+  ): Promise<Student> {
+    const res = await this.prisma.parent.update({
+      where: { id },
+      data: {
+        ...input,
+      },
+    });
+    const stuId = res.studentId;
+    return this.prisma.student.findUnique({
+      where: { id: stuId },
+      include: {
+        parents: true,
+        centre: true,
+        notificationPreference: true,
+      },
+    });
+  }
 }
 
 export default new StudentDao();
