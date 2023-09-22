@@ -32,6 +32,9 @@ model Student {
   centre   Centre @relation(fields: [centreId], references: [id])
   centreId String @db.Uuid
 
+  whitelistItem   WhitelistItem @relation(fields: [whitelistItemId], references: [id])
+  whitelistItemId String        @unique @db.Uuid
+
   notificationPreference NotificationPreference?
 }
 
@@ -56,6 +59,9 @@ model Admin {
   email     String        @unique
   password  String
   type      AdminTypeEnum @default(STANDARD_ADMIN)
+
+  whitelistItem   WhitelistItem @relation(fields: [whitelistItemId], references: [id])
+  whitelistItemId String        @unique @db.Uuid
 }
 
 enum SubjectEnum {
@@ -94,6 +100,9 @@ model Teacher {
   // announcements Announcement[]
   // assignments Assignment[]
   // quizzes Quiz[]
+
+  whitelistItem   WhitelistItem @relation(fields: [whitelistItemId], references: [id])
+  whitelistItemId String        @unique @db.Uuid
 }
 
 model NotificationPreference {
@@ -149,4 +158,21 @@ model FaqArticle {
   body       String
   faqTopic   FaqTopic @relation(fields: [faqTopicId], references: [id])
   faqTopicId String   @db.Uuid
+}
+
+enum Role {
+  TEACHER
+  STUDENT
+  ADMIN
+  SUPER_ADMIN
+}
+
+model WhitelistItem {
+  id    String @id @default(uuid()) @db.Uuid
+  email String @unique
+  role  Role
+
+  student Student?
+  admin   Admin?
+  teacher Teacher?
 }
