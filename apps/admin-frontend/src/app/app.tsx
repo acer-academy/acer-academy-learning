@@ -8,6 +8,8 @@ import {
 import 'react-toastify/dist/ReactToastify.css'; // Import toastify CSS
 import AdminProfile from '../pages/profile/AdminProfile';
 import ChangePassword from '../pages/profile/ChangePassword';
+import AdminForgotPassword from '../pages/entry/AdminForgotPassword';
+import AdminResetPassword from '../pages/entry/AdminResetPassword';
 import { CentreManagement } from '../pages/centre/CentreManagement';
 import { CentreDetails } from '../pages/centre/CentreDetails';
 import { FaqTopicManagement } from '../pages/faq/FaqManagement';
@@ -73,9 +75,11 @@ export default function App() {
             </Route>
             <Route path={LOGIN} element={<AdminLogin />} />
             <Route path="/account" element={<Account />} />
-            <Route path="/profile" element={<AdminProfile />} />
-            <Route path="/changePassword" element={<ChangePassword />} />
-            <Route path="account" element={<Account />} />
+            <Route path="/account/profile" element={<AdminProfile />} />
+            <Route
+              path="/account/changePassword"
+              element={<ChangePassword />}
+            />
             <Route path="sign-up" element={<AdminSignUp />} />
             <Route path="forgot-password" element={<AdminForgotPassword />} />
             <Route path="reset-password" element={<AdminResetPassword />} />

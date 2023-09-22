@@ -37,7 +37,6 @@ export const registerAdmin = async (data: RegisterAdminData): Promise<any> => {
 export const loginAdmin = async (data: LoginAdminData): Promise<any> => {
   // eslint-disable-next-line no-useless-catch
   try {
-    
     const response = await axios.post(`${baseURL}/login`, data);
     return response.data;
   } catch (error) {
@@ -46,12 +45,12 @@ export const loginAdmin = async (data: LoginAdminData): Promise<any> => {
 };
 
 export const updateAdmin = async (
-  email: string,
+  id: string,
   data: UpdateAdminData,
 ): Promise<any> => {
   // eslint-disable-next-line no-useless-catch
   try {
-    const response = await axios.put(`${baseURL}/update/${email}`, data);
+    const response = await axios.put(`${baseURL}/update/${id}`, data);
     return response.data;
   } catch (error) {
     throw error;
