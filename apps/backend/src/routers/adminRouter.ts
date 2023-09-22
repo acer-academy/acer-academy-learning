@@ -67,14 +67,29 @@ router.get('/check-auth', (req, res) => {
   const token = req.cookies.jwtToken_Admin;
 
   if (token) {
-    jwt.verify(token, JWT_SECRET_KEY, (err, decoded) => {
+    jwt.verify(token, JWT_SECRET_KEY, async (err, decoded) => {
       if (err) {
         res.status(403).send({ message: 'Invalid token' });
       } else {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { iat, exp, ...user } = decoded;
+        const { id } = decoded;
 
-        res.status(200).send(user); //returns user information
+        try {
+          // Query the database to retrieve the admin by id
+          const admin = await AdminService.getAdminById(id);
+
+          if (!admin) {
+            res.status(404).send({ message: 'User not found' });
+          } else {
+            // Destructure admin object to omit password and possibly other sensitive fields
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            const { password, ...user } = admin;
+            res.status(200).send(user); //returns user information without password
+          }
+        } catch (error) {
+          // Handle database errors or any other errors that might occur
+          res.status(500).send({ message: 'Internal Server Error' });
+        }
       }
     });
   } else {
@@ -82,11 +97,11 @@ router.get('/check-auth', (req, res) => {
   }
 });
 
-router.put('/update/:email', async (req, res) => {
+router.put('/update/:id', async (req, res) => {
   try {
-    const { email } = req.params;
+    const { id } = req.params;
     const input = req.body as AdminPutData;
-    const updatedAdmin = await AdminService.updateAdmin(email, input);
+    const updatedAdmin = await AdminService.updateAdmin(id, input);
     res.status(200).json(updatedAdmin);
   } catch (error) {
     res.status(400).json({ error: error.message });
