@@ -60,7 +60,7 @@ export default function App() {
               }
             >
               {/* Nest all routes that has a SecondaryLayout here */}
-              <Route path="/" element={<h1>Main</h1>} />
+              <Route path="/" element={<h1>Welcome to AcerTech!</h1>} />
               <Route
                 path={HUMAN_RESOURCES}
                 element={

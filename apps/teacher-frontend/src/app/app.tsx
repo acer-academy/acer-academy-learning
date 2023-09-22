@@ -50,7 +50,10 @@ export function App() {
                 </EnforceLoginStatePageWrapper>
               }
             >
-              <Route path={DASHBOARD} />
+              <Route
+                path={DASHBOARD}
+                element={<div>Welcome to AcerTech!</div>}
+              />
               <Route path={SUBJECTS} />
               <Route path={ANALYTICS} />
               <Route path={SCHEDULING} />
