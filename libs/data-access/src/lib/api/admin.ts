@@ -1,4 +1,4 @@
-import { AxiosResponse } from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import client from './client';
 import { LoginData } from '../types/CommonTypes';
 import { Admin } from '../types/admin';
@@ -20,8 +20,28 @@ interface UpdateAdminData {
 
 export async function registerAdmin(
   data: RegisterAdminData,
-): Promise<AxiosResponse<any>> {
-  return client.post(`${URL}/register`, data);
+): Promise<AxiosResponse<Admin>> {
+  try {
+    const response: AxiosResponse<Admin> = await client.post(
+      `${URL}/register`,
+      data,
+    );
+    // console.log('in here');
+    return response;
+  } catch (error) {
+    // console.log('out here');
+    // console.log(error);
+    if (
+      axios.isAxiosError(error) &&
+      error.response &&
+      error.response.status === 400
+    ) {
+      // console.error('Error registering admin:', error.response.data);
+      throw error.response.data.error;
+    } else {
+      throw error;
+    }
+  }
 }
 
 export async function loginAdmin(data: LoginData): Promise<AxiosResponse<any>> {
