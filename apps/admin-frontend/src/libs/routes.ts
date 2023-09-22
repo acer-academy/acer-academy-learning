@@ -9,7 +9,7 @@ export const STUDENTS = `${HUMAN_RESOURCES}/students`;
 export const ADMINS = `${HUMAN_RESOURCES}/admins`;
 
 // Centre Routes
-export const CENTRE = '/centre-management';
+export const CENTRE = '/centre';
 
 // FAQ Routs
 export const FAQ = '/faq';

@@ -35,11 +35,13 @@ export default function App() {
             >
               {/* Nest all routes that has a SecondaryLayout here */}
               <Route path="/" element={<h1>Main</h1>} />
+              <Route path={CENTRE} element={<h1>Main</h1>} />
+              <Route path={FAQ} element={<h1>Main</h1>} />
               <Route
                 path={HUMAN_RESOURCES}
                 element={
                   <div>
-                    Common H stuff
+                    Common HR stuff
                     <Outlet />
                   </div>
                 }
@@ -48,8 +50,7 @@ export default function App() {
                 <Route path={STUDENTS} element={<h2>Student</h2>} />
                 <Route path={ADMINS} element={<h2>Admin</h2>} />
               </Route>
-              <Route path={CENTRE} element={<CentreManagement />} />
-              <Route path={`${CENTRE}/:centreId`} element={<CentreDetails />} />
+              <Route path={CENTRE} />
               <Route path={FAQ} />
             </Route>
             <Route path={LOGIN} element={<AdminLogin />} />
@@ -70,7 +71,6 @@ export default function App() {
               path="faq-management/:faqTopicId"
               element={<FaqTopicDetails />}
             />
-            <Route path={SIGN_UP} element={<AdminSignUp />} />
           </Routes>
         </ToastProvider>
       </AdminAuthWrapper>
