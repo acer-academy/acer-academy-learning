@@ -16,7 +16,11 @@ class AdminDao {
     return prisma.admin.findUnique({ where: { email } });
   }
 
-  getAdminById(id: string) {
+  async getAllAdmins(): Promise<Admin[]> {
+    return prisma.admin.findMany();
+  }
+
+  async getAdminById(id: string) {
     return prisma.admin.findUnique({ where: { id } });
   }
 
@@ -28,8 +32,8 @@ class AdminDao {
     });
   }
 
-  async deleteAdmin(email: string) {
-    return prisma.admin.delete({ where: { email } });
+  async deleteAdmin(id: string) {
+    return prisma.admin.delete({ where: { id } });
   }
 }
 

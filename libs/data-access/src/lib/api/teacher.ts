@@ -1,6 +1,10 @@
 /* eslint-disable no-useless-catch */
 import { LoginData } from '../types/CommonTypes';
-import { RegisterTeacherData, UpdateTeacherData } from '../types/teacher';
+import {
+  RegisterTeacherData,
+  TeacherData,
+  UpdateTeacherData,
+} from '../types/teacher';
 import client from './client';
 import { AxiosResponse } from 'axios';
 
@@ -46,6 +50,14 @@ export async function deleteTeacher(
 ): Promise<AxiosResponse<any>> {
   try {
     return await client.delete(`${URL}/delete/${email}`);
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function getAllTeachers(): Promise<AxiosResponse<TeacherData[]>> {
+  try {
+    return await client.get(`${URL}`);
   } catch (error) {
     throw error;
   }

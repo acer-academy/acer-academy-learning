@@ -57,6 +57,10 @@ class AdminService {
     });
   }
 
+  public async getAllAdmins(): Promise<Admin[]> {
+    return AdminDao.getAllAdmins();
+  }
+
   async login(data: AdminGetData) {
     const admin = await AdminDao.getAdminByEmail(data.email);
     if (!admin || !(await bcrypt.compare(data.password, admin.password))) {
@@ -95,12 +99,12 @@ class AdminService {
     return AdminDao.updateAdmin(id, data);
   }
 
-  async deleteAdmin(email: string) {
-    const admin = await AdminDao.getAdminByEmail(email);
+  async deleteAdmin(id: string) {
+    const admin = await AdminDao.getAdminById(id);
     if (!admin) {
-      throw new Error(`Admin not found for email: ${email}`);
+      throw new Error(`Admin not found for id: ${id}`);
     }
-    return AdminDao.deleteAdmin(email);
+    return AdminDao.deleteAdmin(id);
   }
 
   async requestPasswordReset(email: string) {
