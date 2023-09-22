@@ -6,7 +6,7 @@ import { updateTeacher } from '@acer-academy-learning/data-access';
 import { CHANGE_PASSWORD } from '../../libs/routes';
 
 const TeacherProfile: React.FC = () => {
-  const { user, updateUser } = useAuth();
+  const { user, updateUser } = useAuth<Teacher>();
 
   const [updUser, setUpdUser] = useState({
     firstName: user.firstName,
@@ -108,7 +108,7 @@ const TeacherProfile: React.FC = () => {
   };
 
   return (
-    <div className="h-full bg-gray-50">
+    <div className="h-full">
       <div className="mx-8 sm:mx-auto sm:w-full sm:max-w-[1000px]">
         <div className="flex justify-between items-center">
           <h1 className="mt-6 text-left text-2xl font-bold leading-9 tracking-tight text-gray-900">
