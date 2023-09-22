@@ -1,9 +1,11 @@
-import { useToast } from '@acer-academy-learning/common-ui';
+import { useAuth, useToast } from '@acer-academy-learning/common-ui';
 import { getWhitelistByRole } from '@acer-academy-learning/data-access';
 import { WhitelistData } from 'libs/data-access/src/lib/types/whitelist';
 import { useEffect, useState } from 'react';
 import { AddWhitelistModal } from './AddWhitelistModal';
 import { DeleteWhitelistModal } from './DeleteWhitelistModal';
+import { Admin } from 'libs/data-access/src/lib/types/admin';
+import { ExclamationTriangleIcon } from '@heroicons/react/20/solid';
 
 export const AdminHRManagementPage: React.FC = () => {
   const [whitelistData, setWhiteListData] = useState<WhitelistData[]>([]);
@@ -12,6 +14,8 @@ export const AdminHRManagementPage: React.FC = () => {
   const [selectedData, setSelectedData] = useState<WhitelistData>();
   const [isDeleteWhitelistModalOpen, setIsDeleteWhitelistModalOpen] =
     useState<boolean>(false);
+
+  const { user } = useAuth<Admin>();
   const { displayToast, ToastType } = useToast();
 
   const getWhitelistedEmailsForAdmins = async () => {
@@ -31,6 +35,29 @@ export const AdminHRManagementPage: React.FC = () => {
   useEffect(() => {
     getWhitelistedEmailsForAdmins();
   }, []);
+
+  if (user?.type !== 'SUPER_ADMIN') {
+    return (
+      <div className="rounded-md bg-yellow-50 p-4 my-8">
+        <div className="flex">
+          <div className="flex-shrink-0">
+            <ExclamationTriangleIcon
+              className="h-5 w-5 text-yellow-400"
+              aria-hidden="true"
+            />
+          </div>
+          <div className="ml-3">
+            <h3 className="text-sm font-medium text-yellow-800">
+              Invalid user permissions
+            </h3>
+            <div className="mt-2 text-sm text-yellow-700">
+              <p>Only super admins can access this page</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="px-4 sm:px-6 lg:px-8 lg:py-8">
