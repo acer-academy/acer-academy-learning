@@ -62,7 +62,7 @@ interface ParentFieldsProps {
 }
 
 //Parent fields component
-const ParentFields: React.FC<ParentFieldsProps> = ({
+export const ParentFields: React.FC<ParentFieldsProps> = ({
   label,
   firstName,
   setFirstName,

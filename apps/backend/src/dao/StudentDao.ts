@@ -24,6 +24,9 @@ class StudentDao {
       data: {
         ...input,
       },
+      include: {
+        parents: true,
+      },
     });
   }
 

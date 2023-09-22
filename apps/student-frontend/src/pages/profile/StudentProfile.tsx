@@ -32,6 +32,8 @@ import { updateStudent } from '../../api/student';
 import { cloneDeep } from 'lodash';
 import { StaticRowField } from './components/StaticRowField';
 import { ErrorText } from './components/ErrorText';
+import { GenericModal } from './components/GenericModal';
+import { ZodInputRow } from './components/ZodInputRow';
 
 const phoneRegex = /^(6|8|9)\d{7}$/;
 
@@ -57,6 +59,19 @@ export const studentProfileSchema = z.object({
     .min(1, 'Phone Number cannot be empty.')
     .regex(phoneRegex, 'Please enter a valid phone number.'),
 });
+export const passwordChangeSchema = z
+  .object({
+    password: z.string().min(1, 'Password cannot be empty.'),
+    confirmPassword: z.string().min(1, 'Confirm Password cannot be empty.'),
+  })
+  .superRefine(({ confirmPassword, password }, ctx) => {
+    if (confirmPassword !== password) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Passwords do not match.',
+      });
+    }
+  });
 
 export const parentProfileSchema = z.object({
   firstName: z.string().trim().min(1, 'First Name cannot be empty.'),
@@ -77,11 +92,15 @@ export const StudentProfile = () => {
   const [subjectsOnEdit, setSubjectsOnEdit] = useState(false);
   const [schoolOnEdit, setSchoolOnEdit] = useState(false);
   const [phoneNumberOnEdit, setPhoneNumberOnEdit] = useState(false);
+  const [parentModalIsOpen, setParentModalIsOpen] = useState(false);
+  const [changePasswordModalIsOpen, setChangePasswordModaIsOpen] =
+    useState(false);
+
+  // Form Registers
   const {
     formState: { errors },
     handleSubmit,
     register,
-    trigger,
   } = useZodForm({
     schema: studentProfileSchema,
     values: useMemo(
@@ -93,6 +112,37 @@ export const StudentProfile = () => {
         phoneNumber: user?.phoneNumber ?? '',
       }),
       [user],
+    ),
+  });
+
+  const {
+    formState: { errors: parentErrors },
+    handleSubmit: handleParentSubmit,
+    register: parentRegister,
+  } = useZodForm({
+    schema: parentProfileSchema,
+    values: useMemo(
+      () => ({
+        firstName: '',
+        lastName: '',
+        phoneNumber: '',
+      }),
+      [],
+    ),
+  });
+
+  const {
+    formState: { errors: passwordErrors },
+    handleSubmit: handlePasswordSubmit,
+    register: passwordRegister,
+  } = useZodForm({
+    schema: passwordChangeSchema,
+    values: useMemo(
+      () => ({
+        password: '',
+        confirmPassword: '',
+      }),
+      [],
     ),
   });
 
@@ -115,14 +165,15 @@ export const StudentProfile = () => {
 
   // Handlers
   const handleAddParent = () => {
-    const newParent = {
-      firstName: '',
-      lastName: '',
-      phoneNumber: '',
-    } as Parent;
-    const newUser = cloneDeep(user);
-    newUser?.parents?.push(newParent);
-    setUser(newUser);
+    // const newParent = {
+    //   firstName: '',
+    //   lastName: '',
+    //   phoneNumber: '',
+    // } as Parent;
+    // const newUser = cloneDeep(user);
+    // newUser?.parents?.push(newParent);
+    // setUser(newUser);
+    setParentModalIsOpen(true);
   };
   const handleRemoveParent = () => {
     const newUser = cloneDeep(user);
@@ -135,7 +186,9 @@ export const StudentProfile = () => {
   }
 
   const handleSubmitForm = async (
-    values: z.infer<typeof studentProfileSchema>,
+    values:
+      | z.infer<typeof studentProfileSchema>
+      | Partial<z.infer<typeof passwordChangeSchema>>,
     setOnEdit: (val: boolean) => void,
     fieldName: string,
   ) => {
@@ -147,6 +200,32 @@ export const StudentProfile = () => {
         displayToast(fieldName + ' updated successfully!', ToastType.SUCCESS);
       } catch (error) {
         displayToast('Error occurred: ' + error, ToastType.ERROR);
+      }
+    }
+    setOnEdit(false);
+  };
+
+  const handleParentSubmitForm = async (
+    values: z.infer<typeof parentProfileSchema>,
+    setOnEdit: (val: boolean) => void,
+    message: string,
+  ) => {
+    if (user.id) {
+      try {
+        const shape = {
+          firstName: user.firstName,
+          parents: {
+            create: [values],
+          },
+        };
+        const res = await updateStudent(user?.id, shape);
+        setAuthUser(res.student);
+        displayToast(message, ToastType.SUCCESS);
+      } catch (error) {
+        displayToast(
+          'Error occurred creating parent: ' + error,
+          ToastType.ERROR,
+        );
       }
     }
     setOnEdit(false);
@@ -438,6 +517,17 @@ export const StudentProfile = () => {
                 </button>
               </>
             )}
+            <span className="block text-sm font-medium leading-6 text-gray-900 text-left">
+              Password
+            </span>
+            <button
+              type="button"
+              onClick={() => setChangePasswordModaIsOpen(true)}
+              // className="text-student-primary-600 hover:underline"
+              className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            >
+              Change Password
+            </button>
 
             {/* {userFields.map((field) => (
               <ProfileField
@@ -449,7 +539,7 @@ export const StudentProfile = () => {
             />
           ))} */}
           </div>
-          <h2 className="text-base font-semibold leading-7 text-gray-900 mt-4">
+          {/* <h2 className="text-base font-semibold leading-7 text-gray-900 mt-4">
             Parents Particulars
             {user.parents?.length === 1 && (
               <button
@@ -473,35 +563,139 @@ export const StudentProfile = () => {
           <p className="mt-1 text-sm leading-6 text-gray-600">
             This information will be displayed publicly so be careful what you
             share.
-          </p>
-          {user.parents?.map((parent) => (
-            <div className="mt-10 grid grid-cols-3 gap-2">
-              <ProfileField
-                label={'First Name'}
-                value={parent.firstName}
-                id={parent.firstName}
-                userId={user.id}
-                updateUser={updateStudent}
-                setUser={setAuthUser}
-              />
-              <ProfileField
-                label={'Last Name'}
-                value={parent.lastName}
-                id={parent.lastName}
-                userId={user.id}
-                updateUser={updateStudent}
-                setUser={setAuthUser}
-              />
-              <ProfileField
-                label={'Phone Number'}
-                value={parent.phoneNumber}
-                id={parent.phoneNumber}
-                userId={user.id}
-                updateUser={updateStudent}
-                setUser={setAuthUser}
-              />
-            </div>
+          </p> */}
+          {user.parents?.map((parent, index) => (
+            <>
+              <h2 className="text-base font-semibold leading-7 text-gray-900 mt-4">
+                Parents Particulars
+                {user.parents?.length === 1 && (
+                  <button
+                    onClick={handleAddParent}
+                    type="button"
+                    className="ml-2 rounded-full bg-indigo-600 p-1.5 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                  >
+                    <PlusIcon className="h-3 w-3" aria-hidden="true" />
+                  </button>
+                )}
+                {user.parents?.length === 2 && (
+                  <button
+                    onClick={handleRemoveParent}
+                    type="button"
+                    className="ml-2 rounded-full bg-indigo-600 p-1.5 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                  >
+                    <MinusIcon className="h-3 w-3" aria-hidden="true" />
+                  </button>
+                )}
+              </h2>
+              <p className="mt-1 text-sm leading-6 text-gray-600">
+                This information will be displayed publicly so be careful what
+                you share.
+              </p>
+              <div className="mt-10 grid grid-cols-3 gap-2">
+                <ProfileField
+                  label={'First Name'}
+                  value={parent.firstName}
+                  id={parent.firstName}
+                  userId={user.id}
+                  updateUser={updateStudent}
+                  setUser={setAuthUser}
+                />
+                <ProfileField
+                  label={'Last Name'}
+                  value={parent.lastName}
+                  id={parent.lastName}
+                  userId={user.id}
+                  updateUser={updateStudent}
+                  setUser={setAuthUser}
+                />
+                <ProfileField
+                  label={'Phone Number'}
+                  value={parent.phoneNumber}
+                  id={parent.phoneNumber}
+                  userId={user.id}
+                  updateUser={updateStudent}
+                  setUser={setAuthUser}
+                />
+              </div>
+            </>
           ))}
+          {/* Change Password Modal */}
+          <GenericModal
+            isOpen={changePasswordModalIsOpen}
+            setIsOpen={setChangePasswordModaIsOpen}
+            title="Change Password"
+          >
+            <ZodInputRow
+              label="Password"
+              id="password"
+              type="password"
+              register={passwordRegister}
+              registerKey="password"
+              errorMessage={passwordErrors.password?.message}
+            />
+            <ZodInputRow
+              label="Confirm Password"
+              id="confirm-password"
+              type="password"
+              register={passwordRegister}
+              registerKey="confirmPassword"
+              errorMessage={passwordErrors.confirmPassword?.message}
+            />
+            <button
+              type="button"
+              onClick={handlePasswordSubmit((values) =>
+                handleSubmitForm(
+                  { password: values.password },
+                  setChangePasswordModaIsOpen,
+                  'Password',
+                ),
+              )}
+              // className="text-student-primary-600 hover:underline"
+              className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            >
+              Change Password
+            </button>
+          </GenericModal>
+          {/* Parent Creation MOdal */}
+          <GenericModal
+            isOpen={parentModalIsOpen}
+            setIsOpen={setParentModalIsOpen}
+          >
+            <ZodInputRow
+              label="First Name"
+              id="first-name"
+              type="text"
+              register={parentRegister}
+              registerKey={'firstName'}
+            />
+            <ZodInputRow
+              label="Last Name"
+              id="last-name"
+              type="text"
+              register={parentRegister}
+              registerKey={'lastName'}
+            />
+            <ZodInputRow
+              label="Phone Number"
+              id="phone-number"
+              type="text"
+              register={parentRegister}
+              registerKey={'phoneNumber'}
+            />
+            <button
+              className="ml-2 rounded-full bg-indigo-600 p-1.5 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              type="button"
+              onClick={handleParentSubmit((values) =>
+                handleParentSubmitForm(
+                  values,
+                  setParentModalIsOpen,
+                  'New parent entry created.',
+                ),
+              )}
+            >
+              Create
+            </button>
+          </GenericModal>
         </div>
       </div>
     </form>
