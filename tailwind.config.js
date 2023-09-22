@@ -48,8 +48,6 @@ module.exports = {
           900: '#183737',
           950: '#102424',
         },
-      },
-      colors: {
         'admin-primary': colors.indigo,
         'admin-secondary': colors.white,
         'teacher-primary': colors.gray,
