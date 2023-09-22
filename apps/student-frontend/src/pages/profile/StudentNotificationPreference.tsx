@@ -3,6 +3,7 @@ import {
   LevelEnum,
   SubjectEnum,
   getStudentById,
+  updateNotificationPreference,
 } from '@acer-academy-learning/data-access';
 import {
   Centre,
@@ -123,7 +124,7 @@ export const StudentNotificationPreference: React.FC = () => {
 
     console.log(input);
     try {
-      await StudentNotificationPreference(user.id, input);
+      await updateNotificationPreference(user.id, input);
       displayToast('Preferences updated!', ToastType.SUCCESS);
     } catch (err) {
       displayToast(`${error}`, ToastType.ERROR);
