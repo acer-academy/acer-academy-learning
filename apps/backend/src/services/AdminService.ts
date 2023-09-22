@@ -22,7 +22,8 @@ class AdminService {
     data: Prisma.AdminUncheckedCreateInput,
   ): Promise<Admin> {
     // skip whitelist check for super_admin
-    if (data.type === 'STANDARD_ADMIN') {
+    const adminType = data.type;
+    if (!adminType || adminType === 'STANDARD_ADMIN') {
       const isWhitelisted = await this.whitelistService.isEmailWhitelisted(
         data.email,
         'ADMIN',
@@ -48,6 +49,10 @@ class AdminService {
     data.password = await bcrypt.hash(data.password, 10);
     return AdminDao.createAdmin({
       ...data,
+      type:
+        !adminType || adminType === 'STANDARD_ADMIN'
+          ? 'STANDARD_ADMIN'
+          : 'SUPER_ADMIN',
       whitelistItemId: whitelistItem.id,
     });
   }
