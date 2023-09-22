@@ -79,7 +79,7 @@ class StudentService {
       !student ||
       !(await bcrypt.compare(studentPassword, student.password))
     ) {
-      throw new Error('Invalid credentials');
+      throw new Error('Invalid credentials.');
     }
 
     // Generate a JWT token with necessary student details
