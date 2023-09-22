@@ -6,6 +6,7 @@ export * from './lib/api/centre';
 export * from './lib/api/classroom';
 export * from './lib/api/faqArticle';
 export * from './lib/api/faqTopic';
+export * from './lib/api/promotion';
 export * from './lib/api/notif';
 
 // Object.freeze(api);
