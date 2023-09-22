@@ -146,37 +146,37 @@ export const StudentProfile = () => {
     ),
   });
 
-  const {
-    formState: { errors: modifyParentOneErrors },
-    handleSubmit: handleParentOneSubmit,
-    register: registerParentOne,
-  } = useZodForm({
-    schema: parentProfileSchema,
-    values: useMemo(
-      () => ({
-        firstName: user?.parents?.[0].firstName ?? '',
-        lastName: user?.parents?.[0].lastName ?? '',
-        phoneNumber: user?.parents?.[0].phoneNumber ?? '',
-      }),
-      [user?.parents],
-    ),
-  });
+  // const {
+  //   formState: { errors: modifyParentOneErrors },
+  //   handleSubmit: handleParentOneSubmit,
+  //   register: registerParentOne,
+  // } = useZodForm({
+  //   schema: parentProfileSchema,
+  //   values: useMemo(
+  //     () => ({
+  //       firstName: user?.parents?.[0].firstName ?? '',
+  //       lastName: user?.parents?.[0].lastName ?? '',
+  //       phoneNumber: user?.parents?.[0].phoneNumber ?? '',
+  //     }),
+  //     [user?.parents],
+  //   ),
+  // });
 
-  const {
-    formState: { errors: modifyParentTwoErrors },
-    handleSubmit: handleParentTwoSubmit,
-    register: registerParentTwo,
-  } = useZodForm({
-    schema: parentProfileSchema,
-    values: useMemo(
-      () => ({
-        firstName: user?.parents?.[1].firstName ?? '',
-        lastName: user?.parents?.[1].lastName ?? '',
-        phoneNumber: user?.parents?.[1].phoneNumber ?? '',
-      }),
-      [user?.parents],
-    ),
-  });
+  // const {
+  //   formState: { errors: modifyParentTwoErrors },
+  //   handleSubmit: handleParentTwoSubmit,
+  //   register: registerParentTwo,
+  // } = useZodForm({
+  //   schema: parentProfileSchema,
+  //   values: useMemo(
+  //     () => ({
+  //       firstName: user?.parents?.[1].firstName ?? '',
+  //       lastName: user?.parents?.[1].lastName ?? '',
+  //       phoneNumber: user?.parents?.[1].phoneNumber ?? '',
+  //     }),
+  //     [user?.parents],
+  //   ),
+  // });
 
   const {
     formState: { errors: passwordErrors },

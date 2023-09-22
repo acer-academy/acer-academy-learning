@@ -88,6 +88,13 @@ export const FaqPage: React.FC = () => {
                                 </Disclosure.Button>
                               </dt>
                               <Disclosure.Panel as="dd" className="mt-2 pr-12">
+                                {article.imageUrl && (
+                                  <img
+                                    src={article.imageUrl}
+                                    alt={`Image for ${article.title}`}
+                                    className="max-w-sm h-auto mb-4 mt-4"
+                                  />
+                                )}
                                 <p className="text-base leading-7 text-gray-600">
                                   {article.body}
                                 </p>

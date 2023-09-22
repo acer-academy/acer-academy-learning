@@ -5,6 +5,7 @@ import {
   PublicPageWrapper,
 } from '@acer-academy-learning/common-ui';
 import { useAuth } from '@acer-academy-learning/common-ui';
+import { useToast } from '@acer-academy-learning/common-ui';
 
 const AdminLogin: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -12,6 +13,7 @@ const AdminLogin: React.FC = () => {
 
   const navigate = useNavigate();
   const { login } = useAuth();
+  const { displayToast, ToastType } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,7 +22,7 @@ const AdminLogin: React.FC = () => {
       await login(email, password);
       navigate('/');
     } catch (error) {
-      console.error('An error occurred', error);
+      displayToast(`${error}`, ToastType.ERROR);
     }
   };
 

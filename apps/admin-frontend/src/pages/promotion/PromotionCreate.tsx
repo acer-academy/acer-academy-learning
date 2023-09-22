@@ -33,7 +33,10 @@ export const PromotionCreateModal: React.FC<PromotionCreateModalProps> = ({
 
   const isPercentageDiscountInvalid = (percentageDiscount: number) => {
     let checkDecimal = percentageDiscount.toString().split('.');
-    return checkDecimal[1] && checkDecimal[1].length > 2;
+    return (
+      percentageDiscount > 100 ||
+      (checkDecimal[1] && checkDecimal[1].length > 2)
+    );
   };
 
   const isDatesInvalid = (startDate: string, endDate: string) => {
@@ -146,7 +149,7 @@ export const PromotionCreateModal: React.FC<PromotionCreateModalProps> = ({
                     className="absolute b-0 text-sm text-red-600"
                     id="address-error"
                   >
-                    Maximum 2 decimal place.
+                    Cannot be more than 100, Maximum 2 decimal place.
                   </p>
                 )}
               </div>

@@ -7,14 +7,31 @@ import {
   UpdateStudentData,
 } from '../types/student';
 import client from './client';
-import { AxiosResponse } from 'axios';
+import axios, { AxiosResponse } from 'axios';
 
 const URL = '/students';
 
 export async function createStudent(
   data: StudentPostData,
 ): Promise<AxiosResponse<{ student: Student }>> {
-  return client.post(`${URL}/create`, data);
+  try {
+    const response: AxiosResponse<{ student: Student }> = await client.post(
+      `${URL}/create`,
+      data,
+    );
+    return response;
+  } catch (error) {
+    if (
+      axios.isAxiosError(error) &&
+      error.response &&
+      error.response.status === 400
+    ) {
+      // console.error('Error registering admin:', error.response.data);
+      throw error.response.data.error;
+    } else {
+      throw error;
+    }
+  }
 }
 
 export async function getAllStudents(): Promise<
@@ -29,10 +46,34 @@ export async function getStudentById(
   return client.get(`${URL}/getStudentById/${studentId}`);
 }
 
+// export async function loginStudent(
+//   data: LoginData,
+// ): Promise<AxiosResponse<any>> {
+//   return client.post(`${URL}/login`, data);
+// }
+
 export async function loginStudent(
   data: LoginData,
 ): Promise<AxiosResponse<any>> {
-  return client.post(`${URL}/login`, data);
+  try {
+    const response: AxiosResponse<any> = await client.post(
+      `${URL}/login`,
+      data,
+    );
+    return response;
+  } catch (error) {
+    if (
+      axios.isAxiosError(error) &&
+      error.response &&
+      error.response.status === 400
+    ) {
+      throw error.response.data.error;
+    } else {
+      throw error;
+    }
+  }
+
+  // return client.post(`${URL}/login`, data);
 }
 
 export async function logoutStudent(): Promise<AxiosResponse<any>> {

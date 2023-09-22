@@ -22,6 +22,13 @@ class AdminService {
     data: Prisma.AdminUncheckedCreateInput,
   ): Promise<Admin> {
     // skip whitelist check for super_admin
+
+    const checkForUser = await AdminDao.getAdminByEmail(data.email);
+
+    if (checkForUser) {
+      throw new Error('Email already exists.');
+    }
+
     const adminType = data.type;
     if (!adminType || adminType === 'STANDARD_ADMIN') {
       const isWhitelisted = await this.whitelistService.isEmailWhitelisted(
@@ -30,9 +37,7 @@ class AdminService {
       );
 
       if (!isWhitelisted) {
-        throw new Error(
-          'Unable to create student as email is not whitelisted!',
-        );
+        throw new Error('Unable to create admin as email is not whitelisted!');
       }
     } else {
       // create whitelist item for super_admin
@@ -63,8 +68,9 @@ class AdminService {
 
   async login(data: AdminGetData) {
     const admin = await AdminDao.getAdminByEmail(data.email);
+
     if (!admin || !(await bcrypt.compare(data.password, admin.password))) {
-      throw new Error('Invalid credentials');
+      throw new Error('Invalid credentials.');
     }
 
     // Generate a JWT token with necessary admin details

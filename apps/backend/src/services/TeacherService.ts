@@ -23,7 +23,7 @@ export class TeacherService {
     );
 
     if (!isWhitelisted) {
-      throw new Error('Unable to create student as email is not whitelisted!');
+      throw new Error('Unable to create teacher as email is not whitelisted!');
     }
 
     const teacherWhitelistItem =
@@ -83,7 +83,7 @@ export class TeacherService {
       !teacher ||
       !(await bcrypt.compare(teacherPassword, teacher.password))
     ) {
-      throw new Error('Invalid credentials');
+      throw new Error('Invalid credentials.');
     }
 
     // Generate a JWT token with necessary teacher details
