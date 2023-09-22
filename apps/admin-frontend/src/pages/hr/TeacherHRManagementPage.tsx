@@ -3,18 +3,22 @@ import { getWhitelistByRole } from '@acer-academy-learning/data-access';
 import { WhitelistData } from 'libs/data-access/src/lib/types/whitelist';
 import { useEffect, useState } from 'react';
 import { AddWhitelistModal } from './AddWhitelistModal';
+import { DeleteWhitelistModal } from './DeleteWhitelistModal';
 
 export const TeacherHRManagementPage: React.FC = () => {
   const [whitelistData, setWhiteListData] = useState<WhitelistData[]>([]);
   const [isAddWhitelistModalOpen, setIsAddWhitelistModalOpen] =
+    useState<boolean>(false);
+  const [selectedData, setSelectedData] = useState<WhitelistData>();
+  const [isDeleteWhitelistModalOpen, setIsDeleteWhitelistModalOpen] =
     useState<boolean>(false);
   const { displayToast, ToastType } = useToast();
 
   const getWhitelistedEmailsForTeachers = async () => {
     try {
       const response = await getWhitelistByRole('TEACHER');
-      const allFaqTopics: WhitelistData[] = response.data;
-      setWhiteListData(allFaqTopics);
+      const whitelistRoles: WhitelistData[] = response.data;
+      setWhiteListData(whitelistRoles);
     } catch (error) {
       displayToast(
         'Whitelisted emails could not be retrieved from the server.',
@@ -67,6 +71,12 @@ export const TeacherHRManagementPage: React.FC = () => {
                   >
                     Role
                   </th>
+                  <th
+                    scope="col"
+                    className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                  >
+                    Registered
+                  </th>
                   <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-0">
                     <span className="sr-only">Delete</span>
                   </th>
@@ -81,9 +91,23 @@ export const TeacherHRManagementPage: React.FC = () => {
                     <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                       {data.role}
                     </td>
+                    <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                      {data.teacher ? 'Yes' : 'No'}
+                    </td>
                     <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
-                      <div className="text-indigo-600 hover:text-indigo-900">
-                        Delete<span className="sr-only">, {data.email}</span>
+                      <div
+                        className={`${
+                          data.teacher
+                            ? `text-slate-300`
+                            : `text-indigo-600 hover:text-indigo-900 cursor-pointer`
+                        }`}
+                        onClick={() => {
+                          if (data.teacher) return;
+                          setSelectedData(data);
+                          setIsDeleteWhitelistModalOpen(true);
+                        }}
+                      >
+                        Delete
                       </div>
                     </td>
                   </tr>
@@ -97,6 +121,11 @@ export const TeacherHRManagementPage: React.FC = () => {
         open={isAddWhitelistModalOpen}
         setOpen={setIsAddWhitelistModalOpen}
         userRole="TEACHER"
+      />
+      <DeleteWhitelistModal
+        open={isDeleteWhitelistModalOpen}
+        setOpen={setIsDeleteWhitelistModalOpen}
+        data={selectedData}
       />
     </div>
   );

@@ -40,11 +40,11 @@ export class WhitelistDao {
     });
   }
 
-  public async getWhitelistByEmailWithUser(
-    email: string,
+  public async getWhitelistbyIdWithUser(
+    id: string,
   ): Promise<WhitelistWithUser> {
     return this.prismaClient.whitelistItem.findUniqueOrThrow({
-      where: { email: email },
+      where: { id },
       include: { student: true, teacher: true, admin: true },
     });
   }
