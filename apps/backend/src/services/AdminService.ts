@@ -52,10 +52,10 @@ class AdminService {
     const token = jwt.sign(
       {
         id: admin.id,
-        firstName: admin.firstName,
-        lastName: admin.lastName,
-        email: admin.email,
-        type: admin.type,
+        // firstName: admin.firstName,
+        // lastName: admin.lastName,
+        // email: admin.email,
+        // type: admin.type,
       },
       JWT_SECRET_KEY,
       { expiresIn: '4h' },
@@ -68,16 +68,18 @@ class AdminService {
     return { token, user };
   }
 
-  async updateAdmin(email: string, data: Prisma.AdminUpdateInput) {
-    const admin = await AdminDao.getAdminByEmail(email);
+  async updateAdmin(id: string, data: Prisma.AdminUpdateInput) {
+    const admin = await AdminDao.getAdminById(id);
     if (!admin) {
-      throw new Error(`Admin not found for email: ${email}`);
+      throw new Error(`Admin not found for id: ${id}`);
     }
     if (data.password) {
       data.password = await bcrypt.hash(data.password, 10);
     }
 
-    return AdminDao.updateAdmin(email, data);
+
+    return AdminDao.updateAdmin(id, data);
+
   }
 
   async deleteAdmin(email: string) {
@@ -127,7 +129,12 @@ class AdminService {
 
     // Hash and update the new password
     const hashedPassword = await bcrypt.hash(newPassword, 10);
-    await AdminDao.updateAdmin(admin.email, { password: hashedPassword });
+    await AdminDao.updateAdmin(admin.id, { password: hashedPassword });
+  }
+
+  //getAdminById
+  async getAdminById(id: string) {
+    return AdminDao.getAdminById(id);
   }
 }
 

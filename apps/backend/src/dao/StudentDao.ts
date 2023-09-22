@@ -46,7 +46,7 @@ class StudentDao {
     });
   }
 
-  public async getStudentById(id: string): Promise<Student> {
+  public async getStudentById(id: string) {
     return this.prisma.student.findUnique({
       where: { id },
       include: {

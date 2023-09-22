@@ -41,9 +41,9 @@ export class TeacherService {
     return this.teacherDao.getAllTeachers();
   }
 
-  // public async getTeacherById(teacherId: string): Promise<Teacher | null> {
-  //   return this.teacherDao.getTeacherById(teacherId);
-  // }
+  public async getTeacherById(teacherId: string) {
+    return this.teacherDao.getTeacherById(teacherId);
+  }
 
   public async getTeacherByEmail(
     teacherEmail: string,
@@ -90,12 +90,12 @@ export class TeacherService {
     const token = jwt.sign(
       {
         id: teacher.id,
-        email: teacher.email,
-        firstName: teacher.firstName,
-        lastName: teacher.lastName,
-        levels: teacher.levels,
-        subjects: teacher.subjects,
-        centre: teacher.centre,
+        // email: teacher.email,
+        // firstName: teacher.firstName,
+        // lastName: teacher.lastName,
+        // levels: teacher.levels,
+        // subjects: teacher.subjects,
+        // centre: teacher.centre,
       },
       JWT_SECRET_KEY,
       { expiresIn: '4h' },

@@ -28,7 +28,7 @@ export class TeacherDao {
   // }
 
   //getTeacherByID implementation
-  public async getTeacherById(teacherId: string): Promise<Teacher | null> {
+  public async getTeacherById(teacherId: string) {
     return this.prismaClient.teacher.findUnique({
       where: { id: teacherId },
       include: {
