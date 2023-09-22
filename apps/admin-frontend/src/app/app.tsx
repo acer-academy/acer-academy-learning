@@ -59,9 +59,6 @@ export default function App() {
             >
               {/* Nest all routes that has a SecondaryLayout here */}
               <Route path="/" element={<h1>Main</h1>} />
-              <Route path={CENTRE} element={<h1>Main</h1>} />
-              <Route path={FAQ} element={<h1>Main</h1>} />
-              <Route path={PROMOTION} element={<PromotionManagement />} />
               <Route
                 path={HUMAN_RESOURCES}
                 element={
@@ -75,8 +72,6 @@ export default function App() {
                 <Route path={STUDENTS} element={<StudentHRManagementPage />} />
                 <Route path={ADMINS} element={<AdminHRManagementPage />} />
               </Route>
-              <Route path={CENTRE} />
-              <Route path={FAQ} />
             </Route>
             <Route path={LOGIN} element={<AdminLogin />} />
             <Route path="/account" element={<Account />} />
@@ -99,9 +94,7 @@ export default function App() {
               }
             >
               {/* Nest all routes that has a SecondaryLayout here */}
-              <Route path="/" element={<h1>Main</h1>} />
-              <Route path={CENTRE} element={<h1>Main</h1>} />
-              <Route path={FAQ} element={<h1>Main</h1>} />
+              <Route path="/" />
               <Route
                 path={HUMAN_RESOURCES}
                 element={
@@ -115,26 +108,18 @@ export default function App() {
                 <Route path={STUDENTS} element={<h2>Student</h2>} />
                 <Route path={ADMINS} element={<h2>Admin</h2>} />
               </Route>
-              <Route path={CENTRE} />
-              <Route path={FAQ} />
+              <Route path={`${CENTRE}`} element={<CentreManagement />} />
+              <Route path={`${CENTRE}/:centreId`} element={<CentreDetails />} />
+              <Route path={`${FAQ}`} element={<FaqTopicManagement />} />
+              <Route
+                path={`${FAQ}/:faqTopicId`}
+                element={<FaqTopicDetails />}
+              />
+              <Route path={PROMOTION} element={<PromotionManagement />} />
             </Route>
             <Route path={LOGIN} element={<AdminLogin />} />
             <Route path="/account" element={<Account />} />
             <Route path={SIGN_UP} element={<AdminSignUp />} />
-            <Route path="centre-management" element={<CentreManagement />} />
-            <Route
-              path="centre-management/:centreId"
-              element={<CentreDetails />}
-            />
-            <Route path="faq-management" element={<FaqTopicManagement />} />
-            <Route
-              path="faq-management/:faqTopicId"
-              element={<FaqTopicDetails />}
-            />
-            <Route
-              path="promotion-management"
-              element={<PromotionManagement />}
-            />
           </Routes>
         </ToastProvider>
       </AdminAuthWrapper>
