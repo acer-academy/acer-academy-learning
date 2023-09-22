@@ -7,14 +7,31 @@ import {
   UpdateStudentData,
 } from '../types/student';
 import client from './client';
-import { AxiosResponse } from 'axios';
+import axios, { AxiosResponse } from 'axios';
 
 const URL = '/students';
 
 export async function createStudent(
   data: StudentPostData,
 ): Promise<AxiosResponse<{ student: Student }>> {
-  return client.post(`${URL}/create`, data);
+  try {
+    const response: AxiosResponse<{ student: Student }> = await client.post(
+      `${URL}/create`,
+      data,
+    );
+    return response;
+  } catch (error) {
+    if (
+      axios.isAxiosError(error) &&
+      error.response &&
+      error.response.status === 400
+    ) {
+      // console.error('Error registering admin:', error.response.data);
+      throw error.response.data.error;
+    } else {
+      throw error;
+    }
+  }
 }
 
 export async function getAllStudents(): Promise<

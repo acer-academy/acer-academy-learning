@@ -30,9 +30,7 @@ class AdminService {
       );
 
       if (!isWhitelisted) {
-        throw new Error(
-          'Unable to create student as email is not whitelisted!',
-        );
+        throw new Error('Unable to create admin as email is not whitelisted!');
       }
     } else {
       // create whitelist item for super_admin

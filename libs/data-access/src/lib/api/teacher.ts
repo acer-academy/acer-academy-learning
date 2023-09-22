@@ -2,11 +2,12 @@
 import { LoginData } from '../types/CommonTypes';
 import {
   RegisterTeacherData,
+  Teacher,
   TeacherData,
   UpdateTeacherData,
 } from '../types/teacher';
 import client from './client';
-import { AxiosResponse } from 'axios';
+import axios, { AxiosResponse } from 'axios';
 
 const URL = '/teachers';
 
@@ -24,13 +25,37 @@ export async function fetchTeacher(): Promise<AxiosResponse<any>> {
   return client.get(`${URL}/check-auth`);
 }
 
+// export async function registerTeacher(
+//   data: RegisterTeacherData,
+// ): Promise<AxiosResponse<any>> {
+//   try {
+//     return await client.post(`${URL}`, data);
+//   } catch (error) {
+//     throw error;
+//   }
+// }
+
 export async function registerTeacher(
   data: RegisterTeacherData,
-): Promise<AxiosResponse<any>> {
+): Promise<AxiosResponse<TeacherData>> {
   try {
-    return await client.post(`${URL}`, data);
+    const response: AxiosResponse<TeacherData> = await client.post(
+      `${URL}`,
+      data,
+    );
+
+    return response;
   } catch (error) {
-    throw error;
+    if (
+      axios.isAxiosError(error) &&
+      error.response &&
+      error.response.status === 500
+    ) {
+      // console.error('Error registering admin:', error.response.data);
+      throw error.response.data.error;
+    } else {
+      throw error;
+    }
   }
 }
 

@@ -23,7 +23,7 @@ export class TeacherService {
     );
 
     if (!isWhitelisted) {
-      throw new Error('Unable to create student as email is not whitelisted!');
+      throw new Error('Unable to create teacher as email is not whitelisted!');
     }
 
     const teacherWhitelistItem =
