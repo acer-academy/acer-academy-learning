@@ -23,12 +23,14 @@ import {
   BOOK_CLASSES,
   BUY_CREDITS,
   DASHBOARD,
+  FORGOT_PASSWORD,
   LOGIN,
   NOTIFICATIONS,
   PAST_TRANSACTIONS,
   PROFILE,
   QUIZZES,
   RECORDINGS,
+  RESET_PASSWORD,
   REWARDS,
   SETTINGS,
   SIGN_UP,
@@ -51,6 +53,11 @@ export function App() {
             <Routes>
               <Route path={LOGIN} element={<StudentLogin />} />
               <Route path={SIGN_UP} element={<StudentSignUp />} />
+              <Route
+                path={FORGOT_PASSWORD}
+                element={<StudentForgotPassword />}
+              />
+              <Route path={RESET_PASSWORD} element={<StudentResetPassword />} />
               <Route path="/account" element={<StudentAccount />} />
               <Route
                 element={
