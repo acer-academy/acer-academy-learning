@@ -1,5 +1,9 @@
+// Auth routes
+export const LOGIN = '/login';
+export const SIGN_UP = '/sign-up';
+
 // DASHBOARD
-export const DASHBOARD = '/dashboard';
+export const DASHBOARD = '/';
 
 export const SUBJECTS = '/subjects';
 export const ANALYTICS = '/analytics';

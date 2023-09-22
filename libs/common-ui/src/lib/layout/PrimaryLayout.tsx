@@ -1,10 +1,6 @@
 import { useState } from 'react';
 import { Dialog } from '@headlessui/react';
-import {
-  Bars3Icon,
-  XMarkIcon,
-  ArrowRightOnRectangleIcon,
-} from '@heroicons/react/24/outline';
+import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import { NavigationMenuItem } from './components/type';
 import { SidebarLayout } from './SidebarLayout';
 import { NavLink } from 'react-router-dom';
@@ -16,6 +12,9 @@ import { PrimaryDesktopSideBar } from './components/PrimaryDesktopSideBar';
 import { AccountPopover } from './components/AccountPopover';
 import { AcerAcademyLogo } from '../logo/logo';
 import logo from '../assets/acer-academy-logo-white.png';
+import { LogoutButton } from './components/LogoutButton';
+import { useAuth } from '../wrapper/AuthContext';
+import { Admin, Student, Teacher } from '@prisma/client';
 
 export type PrimaryLayoutProps = {
   accountNavigation: NavigationMenuItem;
@@ -33,12 +32,13 @@ export const PrimaryLayout = ({
     ...navigationMenu,
     accountNavigation,
   ]);
+  const { user } = useAuth<Admin | Student | Teacher>();
 
   return (
     <ThemeProvider role={role}>
-      <div className="h-full flex flex-col">
+      <div className="oh-full flex flex-col">
         <header
-          className={`${
+          className={`fixed z-[1] h-[10vh] w-full ${
             role === LayoutRole.Student
               ? 'bg-student-secondary-900'
               : 'bg-teacher-secondary-600'
@@ -97,18 +97,10 @@ export const PrimaryLayout = ({
             </div>
             <div className="hidden lg:flex">
               <AccountPopover
-                firstName={role}
+                firstName={user?.firstName ?? role}
                 menuItems={accountNavigation.children}
               />
-              <button>
-                <ArrowRightOnRectangleIcon
-                  className={`h-6 w-6 shrink-0 text-icon-primary  ${
-                    role === LayoutRole.Student
-                      ? 'hover:text-student-secondary-500'
-                      : 'hover:text-teacher-secondary-500'
-                  }`}
-                />
-              </button>
+              <LogoutButton />
             </div>
           </nav>
           <Dialog
@@ -164,6 +156,7 @@ export const PrimaryLayout = ({
           </Dialog>
         </header>
         <SidebarLayout
+          className="mt-[10vh]"
           desktopSidebar={
             <PrimaryDesktopSideBar navigationMenu={secondaryMenu} />
           }

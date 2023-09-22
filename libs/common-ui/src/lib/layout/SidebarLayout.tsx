@@ -3,11 +3,13 @@ import { Outlet } from 'react-router-dom';
 export type SecondaryLayoutProps = {
   desktopSidebar?: React.ReactNode;
   mobileSidebar?: React.ReactNode;
+  className?: string;
 };
 
 export const SidebarLayout = ({
   desktopSidebar,
   mobileSidebar,
+  className,
 }: SecondaryLayoutProps) => {
   return (
     <>
@@ -19,7 +21,7 @@ export const SidebarLayout = ({
         <body class="h-full">
         ```
       */}
-      <div className="relative h-full">
+      <div className={`relative h-full ${className ?? ''}`}>
         {mobileSidebar}
         {desktopSidebar}
 
