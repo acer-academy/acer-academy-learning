@@ -1,5 +1,7 @@
 // tailwind.config.js
 import forms from '@tailwindcss/forms';
+const defaultTheme = require('tailwindcss/defaultTheme');
+const colors = require('tailwindcss/colors');
 
 module.exports = {
   content: [
@@ -10,6 +12,13 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['Inter', ...defaultTheme.fontFamily.sans],
+      },
+      boxShadow: {
+        bottom:
+          '0 5px 6px -7px rgba(0, 0, 0, 0.6), 0 2px 4px -5px rgba(0, 0, 0, 0.06)',
+      },
       colors: {
         adminGreen: {
           DEFAULT: '#95C17B',
@@ -39,6 +48,16 @@ module.exports = {
           900: '#183737',
           950: '#102424',
         },
+      },
+      colors: {
+        'admin-primary': colors.indigo,
+        'admin-secondary': colors.white,
+        'teacher-primary': colors.gray,
+        'teacher-secondary': colors.indigo,
+        'student-primary': colors.indigo,
+        'student-secondary': colors.gray,
+        'text-primary': colors.white,
+        'icon-primary': colors.white,
       },
     },
   },
