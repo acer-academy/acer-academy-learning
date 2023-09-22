@@ -61,7 +61,6 @@ export function App() {
                 element={<StudentForgotPassword />}
               />
               <Route path={RESET_PASSWORD} element={<StudentResetPassword />} />
-              <Route path="/account" element={<StudentAccount />} />
               <Route
                 element={
                   <EnforceLoginStatePageWrapper redirectTo={LOGIN}>
