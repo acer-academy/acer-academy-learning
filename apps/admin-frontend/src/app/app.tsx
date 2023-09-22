@@ -8,8 +8,6 @@ import {
 import 'react-toastify/dist/ReactToastify.css'; // Import toastify CSS
 import AdminProfile from '../pages/profile/AdminProfile';
 import ChangePassword from '../pages/profile/ChangePassword';
-import AdminForgotPassword from '../pages/entry/AdminForgotPassword';
-import AdminResetPassword from '../pages/entry/AdminResetPassword';
 import { CentreManagement } from '../pages/centre/CentreManagement';
 import { CentreDetails } from '../pages/centre/CentreDetails';
 import { FaqTopicManagement } from '../pages/faq/FaqManagement';
@@ -35,6 +33,11 @@ import {
   STUDENTS,
   TEACHERS,
 } from '../libs/routes';
+import AdminForgotPassword from '../pages/entry/AdminForgotPassword';
+import AdminResetPassword from '../pages/entry/AdminResetPassword';
+import { TeacherHRManagementPage } from '../pages/hr/TeacherHRManagementPage';
+import { StudentHRManagementPage } from '../pages/hr/StudentHRManagementPage';
+import { AdminHRManagementPage } from '../pages/hr/AdminHRManagementPage';
 
 export default function App() {
   return (
@@ -61,14 +64,14 @@ export default function App() {
                 path={HUMAN_RESOURCES}
                 element={
                   <div>
-                    Common HR stuff
+                    <h1>Human Resource Management</h1>
                     <Outlet />
                   </div>
                 }
               >
-                <Route path={TEACHERS} element={<h2>Teacher</h2>} />
-                <Route path={STUDENTS} element={<h2>Student</h2>} />
-                <Route path={ADMINS} element={<h2>Admin</h2>} />
+                <Route path={TEACHERS} element={<TeacherHRManagementPage />} />
+                <Route path={STUDENTS} element={<StudentHRManagementPage />} />
+                <Route path={ADMINS} element={<AdminHRManagementPage />} />
               </Route>
               <Route path={CENTRE} />
               <Route path={FAQ} />

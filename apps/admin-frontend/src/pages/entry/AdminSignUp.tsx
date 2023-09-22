@@ -49,6 +49,9 @@ const AdminSignUp: React.FC = () => {
 
           <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-[480px]">
             <div className="bg-white px-6 py-12 shadow sm:rounded-lg sm:px-12">
+              <h2 className="text-2xl font-semibold leading-7 text-gray-900 mb-6">
+                Create your account
+              </h2>
               <form className="space-y-6" onSubmit={handleSubmit}>
                 <div>
                   <label
@@ -171,7 +174,7 @@ const AdminSignUp: React.FC = () => {
                 href={LOGIN}
                 className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
               >
-                Return to Login
+                Sign in
               </a>
             </p>
           </div>
