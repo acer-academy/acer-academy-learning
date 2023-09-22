@@ -11,5 +11,5 @@ export async function updateNotificationPreference(
   studentId: string,
   preferenceData: NotificationPreferenceUpdateData,
 ): Promise<AxiosResponse<NotificationPreference>> {
-  return client.patch(`${URL}/update/${studentId}`, preferenceData);
+  return client.put(`${URL}/update/${studentId}`, preferenceData);
 }
