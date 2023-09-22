@@ -52,6 +52,7 @@ class AdminService {
     if (data.password) {
       data.password = await bcrypt.hash(data.password, 10);
     }
+
     return AdminDao.updateAdmin(email, data);
   }
 

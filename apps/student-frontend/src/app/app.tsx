@@ -51,16 +51,6 @@ export function App() {
             <Routes>
               <Route path={LOGIN} element={<StudentLogin />} />
               <Route path={SIGN_UP} element={<StudentSignUp />} />
-              <Route path="/" element={<StudentLogin />} />
-              <Route path="/sign-up" element={<StudentSignUp />} />
-              <Route
-                path="/forgot-password"
-                element={<StudentForgotPassword />}
-              />
-              <Route
-                path="/reset-password"
-                element={<StudentResetPassword />}
-              />
               <Route path="/account" element={<StudentAccount />} />
               <Route
                 element={
@@ -89,17 +79,16 @@ export function App() {
                 <Route path={REWARDS} element={<div>Home</div>} />
                 <Route path={ACCOUNT} element={<div>Home</div>}>
                   <Route path={PROFILE} element={<div>Home</div>} />
+                  <Route path={NOTIFICATIONS} element={<div>Home</div>} />
                   <Route
-                    path={NOTIFICATIONS}
+                    path={SETTINGS}
                     element={<StudentNotificationPreference />}
                   />
-                  <Route path={SETTINGS} element={<div>Home</div>} />
                 </Route>
               </Route>
             </Routes>
           </ToastProvider>
         </StudentAuthWrapper>
-
         {/* <ToastProvider>
         <ToastContainer />
         <Routes>

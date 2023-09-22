@@ -61,8 +61,6 @@ export function App() {
             </Route>
             <Route path={LOGIN} element={<TeacherLogin />} />
             <Route path={SIGN_UP} element={<TeacherSignUp />} />
-            <Route path="/" element={<TeacherLogin />} />
-            <Route path="/sign-up" element={<TeacherSignUp />} />
             <Route
               path="/forgot-password"
               element={<TeacherForgotPassword />}

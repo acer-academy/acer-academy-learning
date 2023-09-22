@@ -25,7 +25,7 @@ const AdminLogin: React.FC = () => {
   };
 
   return (
-    <PublicPageWrapper>
+    <PublicPageWrapper strict>
       <div className="h-full bg-gray-50">
         <div className="flex min-h-full flex-1 flex-col justify-center py-12 sm:px-6 lg:px-8">
           <div className="sm:mx-auto sm:w-full sm:max-w-md">
@@ -37,9 +37,6 @@ const AdminLogin: React.FC = () => {
 
           <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-[480px]">
             <div className="bg-white px-6 py-12 shadow sm:rounded-lg sm:px-12">
-              <h2 className="text-2xl font-semibold leading-7 text-gray-900 mb-7">
-                Sign in to your account
-              </h2>
               <form className="space-y-6" onSubmit={handleSubmit}>
                 <div>
                   <label
@@ -101,7 +98,7 @@ const AdminLogin: React.FC = () => {
 
                   <div className="text-sm leading-6">
                     <a
-                      href="/forgot-password"
+                      href="#"
                       className="font-semibold text-indigo-600 hover:text-indigo-500"
                     >
                       Forgot password?
@@ -121,7 +118,7 @@ const AdminLogin: React.FC = () => {
             </div>
 
             <p className="mt-10 text-center text-sm text-gray-500">
-              Don't have an account?{' '}
+              Not a member?{' '}
               <a
                 href="/sign-up"
                 className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
