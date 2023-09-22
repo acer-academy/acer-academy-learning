@@ -21,7 +21,11 @@ import {
   useToast,
   useZodForm,
 } from '@acer-academy-learning/common-ui';
-import { SubjectEnum } from '@acer-academy-learning/data-access';
+import {
+  SubjectEnum,
+  updateParent,
+  updateStudent,
+} from '@acer-academy-learning/data-access';
 import { PlusIcon, MinusIcon } from '@heroicons/react/20/solid';
 import { Parent, Student } from 'libs/data-access/src/lib/types/student';
 import { useMemo, useEffect, useState } from 'react';
@@ -29,7 +33,6 @@ import { z } from 'zod';
 import { includes } from 'lodash';
 import { ProfileFieldType } from './types';
 import { ProfileField } from './components/ProfileField';
-import { updateParent, updateStudent } from '../../api/student';
 import { cloneDeep } from 'lodash';
 import { StaticRowField } from './components/StaticRowField';
 import { ErrorText } from './components/ErrorText';

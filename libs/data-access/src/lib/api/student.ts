@@ -47,7 +47,7 @@ export async function updateStudent(
   email: string,
   data: UpdateStudentData,
 ): Promise<AxiosResponse<any>> {
-  return await client.put(`${URL}/update/${email}`, data);
+  return (await client.put(`${URL}/update/${email}`, data)).data;
 }
 
 export async function deleteStudent(
