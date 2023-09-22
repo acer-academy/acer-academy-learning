@@ -29,7 +29,7 @@ class StudentService {
     return StudentDao.getAllStudents();
   }
 
-  public async getStudentById(id: string): Promise<Student> {
+  public async getStudentById(id: string) {
     return StudentDao.getStudentById(id);
   }
 
@@ -57,16 +57,16 @@ class StudentService {
     const token = jwt.sign(
       {
         id: student.id,
-        firstName: student.firstName,
-        lastName: student.lastName,
-        email: student.email,
-        level: student.level,
-        subjects: student.subjects,
-        status: student.status,
-        school: student.school,
-        phoneNumber: student.phoneNumber,
-        parents: student.parents,
-        centre: student.centre,
+        // firstName: student.firstName,
+        // lastName: student.lastName,
+        // email: student.email,
+        // level: student.level,
+        // subjects: student.subjects,
+        // status: student.status,
+        // school: student.school,
+        // phoneNumber: student.phoneNumber,
+        // parents: student.parents,
+        // centre: student.centre,
       },
       JWT_SECRET_KEY,
       { expiresIn: '4h' },

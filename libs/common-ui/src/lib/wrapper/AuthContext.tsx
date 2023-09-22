@@ -10,6 +10,7 @@ interface AuthContextProps<UserType> {
   user: UserType | null;
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
+  updateUser: (user: UserType) => void;
   isLoading: boolean;
 }
 
@@ -54,6 +55,10 @@ export function AuthWrapper<UserType>({
     }
   };
 
+  const updateUser = (updatedUser: UserType) => {
+    setUser(updatedUser);
+  };
+
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -69,7 +74,9 @@ export function AuthWrapper<UserType>({
   }, [fetchUserApi]);
 
   return (
-    <AuthContext.Provider value={{ isLoading, user, login, logout }}>
+    <AuthContext.Provider
+      value={{ isLoading, user, login, logout, updateUser }}
+    >
       {children}
     </AuthContext.Provider>
   );
