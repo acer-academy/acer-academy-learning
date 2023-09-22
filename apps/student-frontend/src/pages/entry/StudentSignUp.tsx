@@ -224,11 +224,11 @@ export default function StudentSignUp() {
     }
 
     try {
-      console.log(payload);
       await createStudent(payload);
       displayToast('Account created!', ToastType.SUCCESS);
       navigate(LOGIN);
     } catch (error: any) {
+      console.log(error);
       displayToast(`${error}`, ToastType.ERROR);
     }
 
