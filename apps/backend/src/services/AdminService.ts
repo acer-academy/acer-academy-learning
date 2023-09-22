@@ -68,8 +68,9 @@ class AdminService {
 
   async login(data: AdminGetData) {
     const admin = await AdminDao.getAdminByEmail(data.email);
+
     if (!admin || !(await bcrypt.compare(data.password, admin.password))) {
-      throw new Error('Invalid credentials');
+      throw new Error('Invalid credentials.');
     }
 
     // Generate a JWT token with necessary admin details
