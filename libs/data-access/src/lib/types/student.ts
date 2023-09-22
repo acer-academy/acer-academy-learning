@@ -16,8 +16,15 @@ export enum StudentStatus {
   BLOCKED = 'blocked',
 }
 export interface StudentPostData {
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
+  password: string;
+  level: LevelEnum;
+  subjects: SubjectEnum[];
+  school: string;
+  phoneNumber: string;
+  centreId: string;
 }
 
 export interface StudentData {
@@ -62,4 +69,10 @@ export interface Student {
   parents: Parent[];
   isAuthenticated: boolean;
   notificationPreference: NotificationPreference;
+}
+
+export interface UpdateStudentData {
+  firstName?: string;
+  lastName?: string;
+  password?: string;
 }

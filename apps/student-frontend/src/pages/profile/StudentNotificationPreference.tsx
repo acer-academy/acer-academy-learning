@@ -11,7 +11,8 @@ import {
   Student,
 } from 'libs/data-access/src/lib/types/student';
 import { useQuery } from 'react-query';
-import { retrieveCentres } from '../../api/centre';
+import { getAllCentres } from '@acer-academy-learning/data-access';
+import { CentreData } from 'libs/data-access/src/lib/types/centre';
 import { useEffect, useMemo, useState } from 'react';
 
 export const StudentNotificationPreference: React.FC = () => {
@@ -22,7 +23,7 @@ export const StudentNotificationPreference: React.FC = () => {
   const [selectedLevels, setSelectedLevels] = useState<string[]>([]);
   const [selectedCentres, setSelectedCentres] = useState<string[]>([]);
   const [hasUnsubscribed, setHasUnsubscribed] = useState(false);
-  const [centres, setCentres] = useState<Centre[]>([]);
+  const [centres, setCentres] = useState<CentreData[]>([]);
   const [notifId, setNotifId] = useState<string>('');
 
   const { isLoading, isError, data, error } = useQuery(['student', user], () =>
@@ -60,9 +61,9 @@ export const StudentNotificationPreference: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // retrieve teachers
-        const data = await retrieveCentres();
-        setCentres(data);
+        const response = await getAllCentres();
+        const allCentres: CentreData[] = response.data;
+        setCentres(allCentres);
       } catch (err) {
         // setError(err);
       } finally {
