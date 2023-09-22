@@ -6,7 +6,7 @@ import {
 } from '@acer-academy-learning/common-ui';
 import StudentLogin from '../pages/entry/StudentLogin';
 import StudentSignUp from '../pages/entry/StudentSignUp';
-import { Route, Routes, Link } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import 'react-toastify/dist/ReactToastify.css';
 // import { AuthWrapper } from '../auth/AuthContext';
 import StudentAccount from '../pages/entry/StudentAccount';
@@ -33,6 +33,7 @@ import {
   VIEW_CLASSES,
   ZOOM_LINK,
 } from '../libs/routes';
+import { ToastContainer } from 'react-toastify';
 
 export function App() {
   return (

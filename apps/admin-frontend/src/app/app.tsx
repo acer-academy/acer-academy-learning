@@ -1,27 +1,10 @@
 // app.jsx
 import AdminLogin from '../pages/entry/AdminLogin';
 import AdminSignUp from '../pages/entry/AdminSignUp';
-import AdminForgotPassword from '../pages/entry/AdminForgotPassword';
 import { AdminAuthWrapper } from '@acer-academy-learning/common-ui';
 import 'react-toastify/dist/ReactToastify.css'; // Import toastify CSS
 import { CentreManagement } from '../pages/centre/CentreManagement';
 import { CentreDetails } from '../pages/centre/CentreDetails';
-import AdminResetPassword from '../pages/entry/AdminResetPassword';
-import { FaqTopicManagement } from '../pages/faq/FaqManagement';
-import { FaqTopicDetails } from '../pages/faq/FaqDetails';
-import {
-  NavigationMenuItem,
-  NavigationSection,
-} from 'libs/common-ui/src/lib/layout/components/type';
-import {
-  BuildingStorefrontIcon,
-  // CalendarDaysIcon,
-  // CircleStackIcon,
-  Cog6ToothIcon,
-  QuestionMarkCircleIcon,
-  UsersIcon,
-} from '@heroicons/react/24/outline';
-import { AuthWrapper } from '../auth/AuthContext';
 import {
   LayoutRole,
   SecondaryLayout,
@@ -32,32 +15,14 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; // Import toastify CSS
 import Account from '../pages/entry/Account';
 import { NAV_SECTIONS } from '../libs/layout';
-import { ADMINS, HUMAN_RESOURCES, STUDENTS, TEACHERS } from '../libs/routes';
-const navigation: NavigationSection[] = [
-  {
-    name: 'MANAGEMENT',
-    menu: [
-      {
-        name: 'Human Resources',
-        href: '/human-resources',
-        icon: UsersIcon,
-        children: [
-          { name: 'Teachers', href: '/human-resources/teachers' },
-          { name: 'Students', href: '/human-resources/students' },
-          { name: 'Admins', href: '/human-resources/admins' },
-        ],
-      },
-      // { name: 'Scheduling', href: '/scheduling', icon: CalendarDaysIcon },
-      { name: 'Centre', href: '/centre', icon: BuildingStorefrontIcon },
-      // { name: 'Class Credits', href: '/class-credits', icon: CircleStackIcon },
-      { name: 'FAQ', href: '/faq', icon: QuestionMarkCircleIcon },
-    ],
-  },
-  {
-    name: 'OTHERS',
-    menu: [{ name: 'Settings', href: '/settings', icon: Cog6ToothIcon }],
-  },
-];
+import {
+  ADMINS,
+  CENTRE,
+  FAQ,
+  HUMAN_RESOURCES,
+  STUDENTS,
+  TEACHERS,
+} from '../libs/routes';
 
 export default function App() {
   return (
@@ -66,8 +31,6 @@ export default function App() {
         <ToastProvider>
           <ToastContainer />
           <Routes>
-            <Route path="/" element={<AdminLogin />} />
-            <Route path="account" element={<Account />} />
             <Route
               element={
                 <SecondaryLayout
@@ -99,17 +62,10 @@ export default function App() {
             <Route path="/login" element={<AdminLogin />} />
             <Route path="/account" element={<Account />} />
             <Route path="sign-up" element={<AdminSignUp />} />
-            <Route path="forgot-password" element={<AdminForgotPassword />} />
-            <Route path="reset-password" element={<AdminResetPassword />} />
             <Route path="centre-management" element={<CentreManagement />} />
             <Route
               path="centre-management/:centreId"
               element={<CentreDetails />}
-            />
-            <Route path="faq-management" element={<FaqTopicManagement />} />
-            <Route
-              path="faq-management/:faqTopicId"
-              element={<FaqTopicDetails />}
             />
           </Routes>
         </ToastProvider>

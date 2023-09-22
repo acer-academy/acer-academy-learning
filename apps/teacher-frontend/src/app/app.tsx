@@ -14,7 +14,6 @@ import { TeacherAuthWrapper } from '@acer-academy-learning/common-ui';
 import TeacherAccount from '../pages/entry/TeacherAccount';
 import TeacherForgotPassword from '../pages/entry/TeacherForgotPassword';
 import TeacherResetPassword from '../pages/entry/TeacherResetPassword';
-import { NAV_SECTIONS } from '../libs/layout';
 import { ACCOUNT_NAV, NAV_SECTIONS } from '../libs/layout';
 import {
   ACCOUNT,
