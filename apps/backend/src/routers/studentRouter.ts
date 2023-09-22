@@ -32,7 +32,7 @@ studentRouter.get('/getStudentById/:id', async (req, res) => {
 
 studentRouter.post('/create', async (req, res) => {
   try {
-    const studentData: Prisma.StudentCreateInput = req.body;
+    const studentData: Prisma.StudentUncheckedCreateInput = req.body;
     const student = await StudentService.createStudent(studentData);
 
     return res.status(200).json({ student: student });
@@ -112,18 +112,53 @@ studentRouter.get('/check-auth', (req, res) => {
   const token = req.cookies.jwtToken_Student;
 
   if (token) {
-    jwt.verify(token, JWT_SECRET_KEY, (err, decoded) => {
+    jwt.verify(token, JWT_SECRET_KEY, async (err, decoded) => {
       if (err) {
         res.status(403).send({ message: 'Invalid token' });
       } else {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { iat, exp, ...user } = decoded;
+        const { id } = decoded;
 
-        res.status(200).send(user);
+        try {
+          // Query the database to retrieve the admin by id
+          const student = await StudentService.getStudentById(id);
+
+          if (!student) {
+            res.status(404).send({ message: 'User not found' });
+          } else {
+            // Destructure admin object to omit password and possibly other sensitive fields
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            const { password, centreId, ...user } = student;
+            res.status(200).send(user); //returns user information without password
+          }
+        } catch (error) {
+          // Handle database errors or any other errors that might occur
+          res.status(500).send({ message: 'Internal Server Error' });
+        }
       }
     });
   } else {
     res.status(401).send({ message: 'No token provided' });
+  }
+});
+
+studentRouter.post('/forgot-password', async (req, res) => {
+  try {
+    const { email } = req.body;
+    await StudentService.requestPasswordReset(email);
+    res.status(200).json({ message: 'Password reset email sent successfully' });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+studentRouter.post('/reset-password', async (req, res) => {
+  try {
+    const { token, newPassword } = req.body;
+    await StudentService.resetPassword(token, newPassword);
+    res.status(200).json({ message: 'Password reset successfully' });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
   }
 });
 

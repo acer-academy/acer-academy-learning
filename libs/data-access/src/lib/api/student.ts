@@ -1,6 +1,6 @@
 /* eslint-disable no-useless-catch */
 import { LoginData } from '../types/CommonTypes';
-import { StudentData, StudentPostData } from '../types/student';
+import { Student, StudentPostData } from '../types/student';
 import client from './client';
 import axios, { AxiosResponse } from 'axios';
 
@@ -8,14 +8,20 @@ const URL = '/students';
 
 export async function createStudent(
   data: StudentPostData,
-): Promise<AxiosResponse<{ student: StudentData }>> {
+): Promise<AxiosResponse<{ student: Student }>> {
   return client.post(`${URL}/create`, data);
 }
 
 export async function getAllStudents(): Promise<
-  AxiosResponse<{ students: StudentData[] }>
+  AxiosResponse<{ students: Student[] }>
 > {
   return client.get(`${URL}/getAllStudents`);
+}
+
+export async function getStudentById(
+  studentId: string,
+): Promise<AxiosResponse<{ student: Student }>> {
+  return client.get(`${URL}/getStudentById/${studentId}`);
 }
 
 // export async function loginStudent(): Promise<

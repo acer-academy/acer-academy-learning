@@ -21,9 +21,11 @@ export interface AdminGetData {
 }
 
 export interface Admin {
+  id: string;
   firstName: string;
   lastName: string;
   email: string;
   type: AdminType;
   isAuthenticated: boolean;
+  whitelistItemId: string;
 }

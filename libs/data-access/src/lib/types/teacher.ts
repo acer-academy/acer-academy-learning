@@ -8,9 +8,11 @@ export interface TeacherData {
   levels: LevelEnum[];
   subjects: SubjectEnum[];
   centreId: string;
+  whitelistItemId: string;
 }
 
 export interface Teacher {
+  id: string;
   email: string;
   firstName: string;
   lastName: string;

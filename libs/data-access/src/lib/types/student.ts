@@ -27,6 +27,22 @@ export interface StudentData {
   status: StudentStatus;
 }
 
+export interface NotificationPreference {
+  id: string;
+  isUnsubscribed: boolean;
+  subjectsPref: SubjectEnum[];
+  levelsPref: LevelEnum[];
+  teacherPref: string[];
+  centrePref: string[];
+}
+
+export interface NotificationPreferenceUpdateData {
+  isUnsubscribed?: boolean;
+  subjectsPref?: SubjectEnum[];
+  levelsPref?: LevelEnum[];
+  teacherPref?: string[];
+  centrePref?: string[];
+}
 export interface Parent {
   firstName: string;
   lastName: string;
@@ -34,6 +50,7 @@ export interface Parent {
 }
 
 export interface Student {
+  id: string;
   email: string;
   firstName: string;
   lastName: string;
@@ -44,4 +61,5 @@ export interface Student {
   centre?: Centre;
   parents: Parent[];
   isAuthenticated: boolean;
+  notificationPreference: NotificationPreference;
 }

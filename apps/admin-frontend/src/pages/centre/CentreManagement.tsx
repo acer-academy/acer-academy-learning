@@ -3,7 +3,7 @@ import {
   CentreData,
 } from 'libs/data-access/src/lib/types/centre';
 import { useEffect, useState } from 'react';
-import { CentreDeleteModal } from './CentreDeleteModal';
+import { DeleteConfirmationModal } from './DeleteConfirmationModal';
 import { CentreCreateModal } from './CentreCreateModal';
 import { useToast } from '@acer-academy-learning/common-ui';
 import {
@@ -134,6 +134,9 @@ export const CentreManagement: React.FC = () => {
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-1">
           {centres?.length > 0 ? (
             centres
+              .sort((c1: CentreData, c2: CentreData) =>
+                c1.name.localeCompare(c2.name),
+              )
               .filter(
                 (centre) =>
                   centre.name
@@ -185,9 +188,12 @@ export const CentreManagement: React.FC = () => {
         </div>
       </div>
       {isDeleteModalOpen && (
-        <CentreDeleteModal
+        <DeleteConfirmationModal
+          modalTitle="Delete centre"
+          modalMessage="Are you sure you want to delete this centre? This action
+        cannot be undone."
           setIsModalOpen={setIsDeleteModalOpen}
-          deleteCentre={deleteCentre}
+          deleteCallback={deleteCentre}
         />
       )}
       {isCreateModalOpen && (

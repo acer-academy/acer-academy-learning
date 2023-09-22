@@ -10,7 +10,7 @@ export class TeacherDao {
   constructor(private prismaClient: PrismaClient = new PrismaClient()) {}
 
   public async createTeacher(
-    teacherData: Prisma.TeacherCreateInput,
+    teacherData: Prisma.TeacherUncheckedCreateInput,
   ): Promise<Teacher> {
     return this.prismaClient.teacher.create({
       data: teacherData,
@@ -26,6 +26,16 @@ export class TeacherDao {
   //     where: { id: teacherId },
   //   });
   // }
+
+  //getTeacherByID implementation
+  public async getTeacherById(teacherId: string) {
+    return this.prismaClient.teacher.findUnique({
+      where: { id: teacherId },
+      include: {
+        centre: true,
+      },
+    });
+  }
 
   //removed Promise<Teacher> so that I can obtain the centre object first
   public async getTeacherByEmail(teacherEmail: string) {

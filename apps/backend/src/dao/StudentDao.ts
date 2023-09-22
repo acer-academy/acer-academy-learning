@@ -8,12 +8,10 @@ class StudentDao {
   }
 
   public async createStudent(
-    input: Prisma.StudentCreateInput,
+    input: Prisma.StudentUncheckedCreateInput,
   ): Promise<Student> {
     return this.prisma.student.create({
-      data: {
-        ...input,
-      },
+      data: { ...input },
     });
   }
 
@@ -43,16 +41,18 @@ class StudentDao {
       include: {
         parents: true,
         centre: true,
+        notificationPreference: true,
       },
     });
   }
 
-  public async getStudentById(id: string): Promise<Student> {
+  public async getStudentById(id: string) {
     return this.prisma.student.findUnique({
       where: { id },
       include: {
         parents: true,
         centre: true,
+        notificationPreference: true,
       },
     });
   }
@@ -63,6 +63,7 @@ class StudentDao {
       include: {
         parents: true,
         centre: true,
+        notificationPreference: true,
       },
     });
   }

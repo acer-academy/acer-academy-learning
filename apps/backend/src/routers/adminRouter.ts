@@ -6,14 +6,14 @@ import {
   AdminPutData,
 } from 'libs/data-access/src/lib/types/admin';
 import jwt from 'jsonwebtoken';
-
 import { JWT_SECRET_KEY } from '../config/config';
+import { Prisma } from '@prisma/client';
 
 const router = express.Router();
 
 router.post('/register', async (req, res) => {
   try {
-    const input = req.body as AdminPostData;
+    const input: Prisma.AdminUncheckedCreateInput = req.body;
     const admin = await AdminService.register(input);
     res.status(201).json(admin);
   } catch (error) {
@@ -68,14 +68,29 @@ router.get('/check-auth', (req, res) => {
   const token = req.cookies.jwtToken_Admin;
 
   if (token) {
-    jwt.verify(token, JWT_SECRET_KEY, (err, decoded) => {
+    jwt.verify(token, JWT_SECRET_KEY, async (err, decoded) => {
       if (err) {
         res.status(403).send({ message: 'Invalid token' });
       } else {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { iat, exp, ...user } = decoded;
+        const { id } = decoded;
 
-        res.status(200).send(user); //returns user information
+        try {
+          // Query the database to retrieve the admin by id
+          const admin = await AdminService.getAdminById(id);
+
+          if (!admin) {
+            res.status(404).send({ message: 'User not found' });
+          } else {
+            // Destructure admin object to omit password and possibly other sensitive fields
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            const { password, ...user } = admin;
+            res.status(200).send(user); //returns user information without password
+          }
+        } catch (error) {
+          // Handle database errors or any other errors that might occur
+          res.status(500).send({ message: 'Internal Server Error' });
+        }
       }
     });
   } else {
@@ -83,11 +98,11 @@ router.get('/check-auth', (req, res) => {
   }
 });
 
-router.put('/update/:email', async (req, res) => {
+router.put('/update/:id', async (req, res) => {
   try {
-    const { email } = req.params;
+    const { id } = req.params;
     const input = req.body as AdminPutData;
-    const updatedAdmin = await AdminService.updateAdmin(email, input);
+    const updatedAdmin = await AdminService.updateAdmin(id, input);
     res.status(200).json(updatedAdmin);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -99,6 +114,26 @@ router.delete('/delete/:email', async (req, res) => {
     const { email } = req.params;
     await AdminService.deleteAdmin(email);
     res.status(200).json({ message: 'Admin deleted successfully' });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+router.post('/forgot-password', async (req, res) => {
+  try {
+    const { email } = req.body;
+    await AdminService.requestPasswordReset(email);
+    res.status(200).json({ message: 'Password reset email sent successfully' });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+router.post('/reset-password', async (req, res) => {
+  try {
+    const { token, newPassword } = req.body;
+    await AdminService.resetPassword(token, newPassword);
+    res.status(200).json({ message: 'Password reset successfully' });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
