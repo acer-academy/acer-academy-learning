@@ -46,10 +46,10 @@ export async function updateTeacher(
 }
 
 export async function deleteTeacher(
-  email: string,
+  teacherId: string,
 ): Promise<AxiosResponse<any>> {
   try {
-    return await client.delete(`${URL}/delete/${email}`);
+    return await client.delete(`${URL}/${teacherId}`);
   } catch (error) {
     throw error;
   }

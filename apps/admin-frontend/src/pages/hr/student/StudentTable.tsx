@@ -1,10 +1,19 @@
-import { getAllStudents } from '@acer-academy-learning/data-access';
+import {
+  deleteStudent,
+  getAllStudents,
+} from '@acer-academy-learning/data-access';
 import { useToast } from '@acer-academy-learning/common-ui';
 import { Student } from 'libs/data-access/src/lib/types/student';
 import { useEffect, useState } from 'react';
+import { DeletionConfirmationModal } from '../common/DeletionConfirmationModal';
 
 export const StudentTable: React.FC = () => {
   const [studentData, setStudentData] = useState<Student[]>([]);
+
+  const [toDeleteStudentId, setToDeleteStudentId] = useState<string>('');
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
+  const [toDeleteStudentName, setToDeleteStudentName] = useState<string>('');
+
   const { displayToast, ToastType } = useToast();
 
   const fetchAllStudents = async () => {
@@ -19,6 +28,22 @@ export const StudentTable: React.FC = () => {
       );
       console.log(error);
     }
+  };
+
+  const handleDeleteStudent = async () => {
+    try {
+      await deleteStudent(toDeleteStudentId);
+      displayToast('Successfully deleted student.', ToastType.SUCCESS);
+    } catch (error) {
+      displayToast('Deletion has failed!', ToastType.ERROR);
+      console.log(error);
+    }
+  };
+
+  const handleOnClick = async (id: string, name: string) => {
+    setToDeleteStudentId(id);
+    setToDeleteStudentName(name);
+    setIsDeleteModalOpen(true);
   };
 
   useEffect(() => {
@@ -81,6 +106,12 @@ export const StudentTable: React.FC = () => {
                     className="sticky top-0 z-10 border-b border-gray-300 bg-white bg-opacity-75 py-3.5 pl-3 pr-4 backdrop-blur backdrop-filter sm:pr-6 lg:pr-8"
                   >
                     <span className="sr-only">View more</span>
+                  </th>
+                  <th
+                    scope="col"
+                    className="sticky top-0 z-10 border-b border-gray-300 bg-white bg-opacity-75 py-3.5 pl-3 pr-4 backdrop-blur backdrop-filter sm:pr-6 lg:pr-8"
+                  >
+                    <span className="sr-only">Delete</span>
                   </th>
                 </tr>
               </thead>
@@ -154,6 +185,26 @@ export const StudentTable: React.FC = () => {
                         View more
                       </div>
                     </td>
+                    <td
+                      className={classNames(
+                        personIdx !== studentData.length - 1
+                          ? 'border-b border-gray-200'
+                          : '',
+                        'relative whitespace-nowrap py-4 pr-4 pl-3 text-right text-sm font-medium sm:pr-8 lg:pr-8',
+                      )}
+                    >
+                      <div
+                        className="text-indigo-600 hover:text-indigo-900 cursor-pointer"
+                        onClick={() =>
+                          handleOnClick(
+                            student.id,
+                            student.firstName + ' ' + student.lastName,
+                          )
+                        }
+                      >
+                        Delete
+                      </div>
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -161,6 +212,14 @@ export const StudentTable: React.FC = () => {
           </div>
         </div>
       </div>
+      <DeletionConfirmationModal
+        open={isDeleteModalOpen}
+        setOpen={setIsDeleteModalOpen}
+        onDeleted={handleDeleteStudent}
+        id={toDeleteStudentId}
+        name={toDeleteStudentName}
+        userRole="student"
+      />
     </div>
   );
 };
