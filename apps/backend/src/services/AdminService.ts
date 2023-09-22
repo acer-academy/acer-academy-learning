@@ -10,6 +10,7 @@ import {
 import { Prisma } from '@prisma/client';
 import jwt from 'jsonwebtoken';
 import { JWT_SECRET_KEY } from '../config/config';
+import EmailUtility from './EmailUtility';
 
 class AdminService {
   async register(data: AdminPostData) {
@@ -61,6 +62,48 @@ class AdminService {
       throw new Error(`Admin not found for email: ${email}`);
     }
     return AdminDao.deleteAdmin(email);
+  }
+
+  async requestPasswordReset(email: string) {
+    const admin = await AdminDao.getAdminByEmail(email);
+    if (!admin) {
+      throw new Error(`Admin not found for email: ${email}`);
+    }
+
+    // Create a short-lived JWT for password reset
+    const resetToken = jwt.sign(
+      { id: admin.id, action: 'password_reset' },
+      JWT_SECRET_KEY,
+      { expiresIn: '15m' }, // Token expires in 15 minutes
+    );
+
+    // Send email with the reset link containing the token
+    const resetLink = `http://localhost:3001/reset-password?token=${resetToken}`;
+    EmailUtility.sendPasswordResetEmail(email, resetLink); // Your email sending method
+  }
+
+  async resetPassword(token: string, newPassword: string) {
+    let decodedToken;
+
+    try {
+      decodedToken = jwt.verify(token, JWT_SECRET_KEY);
+    } catch (error) {
+      throw new Error('Invalid or expired reset token');
+    }
+
+    if (decodedToken.action !== 'password_reset') {
+      throw new Error('Invalid reset token');
+    }
+
+    const admin = await AdminDao.getAdminById(decodedToken.id);
+
+    if (!admin) {
+      throw new Error(`Admin not found`);
+    }
+
+    // Hash and update the new password
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    await AdminDao.updateAdmin(admin.email, { password: hashedPassword });
   }
 }
 

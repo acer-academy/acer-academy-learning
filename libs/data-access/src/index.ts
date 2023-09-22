@@ -3,6 +3,9 @@
 
 export * from './lib/data-access';
 export * from './lib/api/centre';
+export * from './lib/api/classroom';
+export * from './lib/api/faqArticle';
+export * from './lib/api/faqTopic';
 
 // Object.freeze(api);
 

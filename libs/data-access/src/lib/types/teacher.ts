@@ -11,6 +11,7 @@ export interface TeacherData {
 }
 
 export interface Teacher {
+  id: string;
   email: string;
   firstName: string;
   lastName: string;

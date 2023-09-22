@@ -1,10 +1,10 @@
 import { Student } from '@prisma/client';
 import StudentDao from '../dao/StudentDao';
-// import { StudentPostData } from 'libs/data-access/src/lib/types/student';
 import { Prisma } from '@prisma/client';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { JWT_SECRET_KEY } from '../config/config';
+import EmailUtility from './EmailUtility';
 
 class StudentService {
   public async createStudent(
@@ -16,6 +16,21 @@ class StudentService {
 
   public async getAllStudents(): Promise<Student[]> {
     return StudentDao.getAllStudents();
+  }
+
+  public async getStudentById(id: string): Promise<Student> {
+    return StudentDao.getStudentById(id);
+  }
+
+  public async updateStudent(
+    id: string,
+    input: Prisma.StudentUpdateInput,
+  ): Promise<Student> {
+    return StudentDao.updateStudent(id, input);
+  }
+
+  public async deleteStudent(id: string): Promise<Student> {
+    return StudentDao.deleteStudent(id);
   }
 
   async login(studentEmail: string, studentPassword: string) {
@@ -46,11 +61,53 @@ class StudentService {
       { expiresIn: '4h' },
     );
 
-    // Destructure admin object to omit id, password, and type
+    // Destructure student object to omit id, password, and type
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password, centreId, ...user } = student;
 
     return { token, user };
+  }
+
+  async requestPasswordReset(email: string) {
+    const student = await StudentDao.getStudentByEmail(email);
+    if (!student) {
+      throw new Error(`Student not found for email: ${email}`);
+    }
+
+    // Create a short-lived JWT for password reset
+    const resetToken = jwt.sign(
+      { id: student.id, action: 'password_reset' },
+      JWT_SECRET_KEY,
+      { expiresIn: '15m' }, // Token expires in 15 minutes
+    );
+
+    // Send email with the reset link containing the token
+    const resetLink = `http://localhost:3000/reset-password?token=${resetToken}`;
+    EmailUtility.sendPasswordResetEmail(email, resetLink); // Your email sending method
+  }
+
+  async resetPassword(token: string, newPassword: string) {
+    let decodedToken;
+
+    try {
+      decodedToken = jwt.verify(token, JWT_SECRET_KEY);
+    } catch (error) {
+      throw new Error('Invalid or expired reset token');
+    }
+
+    if (decodedToken.action !== 'password_reset') {
+      throw new Error('Invalid reset token');
+    }
+
+    const student = await StudentDao.getStudentById(decodedToken.id);
+
+    if (!student) {
+      throw new Error(`Student not found`);
+    }
+
+    // Hash and update the new password
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    await StudentDao.updateStudent(student.id, { password: hashedPassword });
   }
 }
 

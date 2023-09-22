@@ -259,4 +259,24 @@ teacherRouter.get('/check-auth', (req, res) => {
   }
 });
 
+teacherRouter.post('/forgot-password', async (req, res) => {
+  try {
+    const { email } = req.body;
+    await teacherService.requestPasswordReset(email);
+    res.status(200).json({ message: 'Password reset email sent successfully' });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+teacherRouter.post('/reset-password', async (req, res) => {
+  try {
+    const { token, newPassword } = req.body;
+    await teacherService.resetPassword(token, newPassword);
+    res.status(200).json({ message: 'Password reset successfully' });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
 export default teacherRouter;
