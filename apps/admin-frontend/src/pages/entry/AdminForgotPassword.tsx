@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { AcerAcademyLogo } from '@acer-academy-learning/common-ui';
 import { useToast } from '@acer-academy-learning/common-ui';
+import { forgotAdminPassword } from '@acer-academy-learning/data-access';
 
 const AdminForgotPassword: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -10,20 +11,11 @@ const AdminForgotPassword: React.FC = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch(
-        'http://localhost:8000/api/v1/admins/forgot-password/',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ email }),
-        },
-      );
+      const response = await forgotAdminPassword(email);
+      const responseData = response.data; // Use the `data` property
 
-      const responseData = await response.json();
-
-      if (response.ok) {
+      if (response.status >= 200 && response.status < 300) {
+        // Check the `status` property
         displayToast(responseData.message, ToastType.SUCCESS);
       } else {
         displayToast(responseData.error, ToastType.ERROR);

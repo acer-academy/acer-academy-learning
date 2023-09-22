@@ -1,8 +1,8 @@
 /* eslint-disable no-useless-catch */
 import { LoginData } from '../types/CommonTypes';
-import { Student, StudentPostData } from '../types/student';
+import { Student, StudentPostData, UpdateStudentData } from '../types/student';
 import client from './client';
-import axios, { AxiosResponse } from 'axios';
+import { AxiosResponse } from 'axios';
 
 const URL = '/students';
 
@@ -24,48 +24,29 @@ export async function getStudentById(
   return client.get(`${URL}/getStudentById/${studentId}`);
 }
 
-// export async function loginStudent(): Promise<
-//   AxiosResponse<{ students: StudentData[] }>
-// > {
-//   return client.get(`${URL}/getAllStudents`);
-// }
+export async function loginStudent(
+  data: LoginData,
+): Promise<AxiosResponse<any>> {
+  return client.post(`${URL}/login`, data);
+}
 
-export const loginStudent = async (data: LoginData): Promise<any> => {
-  try {
-    const response = await axios.post(
-      `http://localhost:8000/api/v1/students/login`,
-      data,
-      { withCredentials: true }, // Add this line
-    );
-    console.log(response.data);
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
-};
+export async function logoutStudent(): Promise<AxiosResponse<any>> {
+  return client.post(`${URL}/logout`);
+}
 
-export const logoutStudent = async (): Promise<any> => {
-  try {
-    const response = await axios.post(
-      `http://localhost:8000/api/v1/students/logout`,
-      {},
-      { withCredentials: true },
-    );
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
-};
+export async function fetchStudent(): Promise<AxiosResponse<any>> {
+  return client.get(`${URL}/check-auth`);
+}
 
-export const fetchStudent = async (): Promise<any> => {
-  try {
-    const response = await axios.get(
-      'http://localhost:8000/api/v1/students/check-auth',
-      { withCredentials: true },
-    );
+export async function updateStudent(
+  email: string,
+  data: UpdateStudentData,
+): Promise<AxiosResponse<any>> {
+  return await client.put(`${URL}/update/${email}`, data);
+}
 
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
-};
+export async function deleteStudent(
+  email: string,
+): Promise<AxiosResponse<any>> {
+  return await client.delete(`${URL}/delete/${email}`);
+}
