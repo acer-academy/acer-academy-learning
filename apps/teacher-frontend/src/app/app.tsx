@@ -21,6 +21,7 @@ import { ACCOUNT_NAV, NAV_SECTIONS } from '../libs/layout';
 import {
   ACCOUNT,
   ANALYTICS,
+  CHANGE_PASSWORD,
   DASHBOARD,
   LOGIN,
   PROFILE,
@@ -56,8 +57,11 @@ export function App() {
               <Route path={REWARDS} />
               <Route path={ACCOUNT}>
                 <Route path={PROFILE} element={<TeacherProfile />} />
+                <Route path={CHANGE_PASSWORD} element={<ChangePassword />} />
                 <Route path={SETTINGS} />
               </Route>
+              <Route path={ACCOUNT} element={<TeacherAccount />} />
+              <Route path={CHANGE_PASSWORD} element={<ChangePassword />} />
             </Route>
             <Route path={LOGIN} element={<TeacherLogin />} />
             <Route path={SIGN_UP} element={<TeacherSignUp />} />
@@ -66,11 +70,6 @@ export function App() {
               element={<TeacherForgotPassword />}
             />
             <Route path="/reset-password" element={<TeacherResetPassword />} />
-            <Route path="/account" element={<TeacherAccount />} />
-            <Route
-              path="/account/changePassword"
-              element={<ChangePassword />}
-            />
           </Routes>
         </ToastProvider>
       </TeacherAuthWrapper>
