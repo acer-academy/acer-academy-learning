@@ -127,6 +127,21 @@ model Classroom {
   // sessions Session[]
 }
 
+model FaqTopic {
+  id          String       @id @default(uuid()) @db.Uuid
+  title       String       @unique
+  faqArticles FaqArticle[]
+}
+
+model FaqArticle {
+  id         String   @id @default(uuid()) @db.Uuid
+  title      String
+  imageUrl   String
+  body       String
+  faqTopic   FaqTopic @relation(fields: [faqTopicId], references: [id])
+  faqTopicId String   @db.Uuid
+}
+
 model Promotion {
   id    String         @id @default(uuid()) @db.Uuid
   startDate DateTime 

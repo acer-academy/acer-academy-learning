@@ -78,13 +78,13 @@ const StudentLogin: React.FC = () => {
                     </div>
                   </div>
 
-                  <div>
-                    <label
-                      htmlFor="password"
-                      className="block text-sm font-medium leading-6 text-gray-900"
+                  <div className="text-sm leading-6">
+                    <a
+                      href="/forgot-password"
+                      className="font-semibold text-indigo-600 hover:text-indigo-500"
                     >
                       Password
-                    </label>
+                    </a>
                     <div className="mt-2">
                       <input
                         id="password"
