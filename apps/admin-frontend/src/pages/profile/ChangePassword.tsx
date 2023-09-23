@@ -25,6 +25,8 @@ const ChangePassword: React.FC = () => {
       const updatedAdmin = await updateAdmin(user.id, {
         password: password,
       });
+      setPassword('');
+      setConfirmPassword('');
       //@TODO: SET USER HERE FOR AUTH CONTEXT
       updateUser(updatedAdmin);
       displayToast('Password succesfully changed!', ToastType.SUCCESS);

@@ -6,7 +6,7 @@ import { updateTeacher } from '@acer-academy-learning/data-access';
 import { CHANGE_PASSWORD } from '../../libs/routes';
 
 const TeacherProfile: React.FC = () => {
-  const { user, updateUser } = useAuth<Teacher>();
+  const { user } = useAuth<Teacher>();
 
   const [updUser, setUpdUser] = useState({
     firstName: user.firstName,
@@ -14,8 +14,6 @@ const TeacherProfile: React.FC = () => {
     subjects: user.subjects,
     levels: user.levels,
   });
-
-  console.log(updUser.levels)
 
   const [isEditing, setIsEditing] = useState(false);
   const navigate = useNavigate();
@@ -97,9 +95,9 @@ const TeacherProfile: React.FC = () => {
           subjects: subjectEnumArray,
         });
         console.log(updated);
+        location.reload(); //to show change in name instead of setting user
         //Refresh Auth
         // updateUser(updated);
-        console.log('is here instead');
         setIsEditing(false);
         displayToast(`Profile updated!`, ToastType.SUCCESS);
       }
