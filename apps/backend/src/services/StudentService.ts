@@ -153,6 +153,10 @@ class StudentService {
   public async updateParent(id: string, input: Prisma.ParentUpdateInput) {
     return StudentDao.updateParent(id, input);
   }
+
+  public async deleteParent(id: string): Promise<Student> {
+    return StudentDao.deleteParent(id);
+  }
 }
 
 export default new StudentService();

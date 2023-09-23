@@ -92,6 +92,21 @@ class StudentDao {
       },
     });
   }
+
+  public async deleteParent(parentId: string): Promise<Student | null> {
+    const res = await this.prisma.parent.delete({
+      where: { id: parentId },
+    });
+    const stuId = res.studentId;
+    return this.prisma.student.findUnique({
+      where: { id: stuId },
+      include: {
+        parents: true,
+        centre: true,
+        notificationPreference: true,
+      },
+    });
+  }
 }
 
 export default new StudentDao();

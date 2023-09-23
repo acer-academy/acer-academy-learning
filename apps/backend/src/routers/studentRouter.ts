@@ -173,4 +173,16 @@ studentRouter.put('/update-parent/:id', async (req, res) => {
   }
 });
 
+studentRouter.delete('/delete-parent/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const student = await StudentService.deleteParent(id);
+
+    return res.status(200).json({ student: student });
+  } catch (err) {
+    console.log(err);
+    return res.status(400).json({ error: err });
+  }
+});
+
 export default studentRouter;
