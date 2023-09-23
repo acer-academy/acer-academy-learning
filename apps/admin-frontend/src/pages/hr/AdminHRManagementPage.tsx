@@ -160,6 +160,11 @@ export const AdminHRManagementPage: React.FC = () => {
           data={selectedData}
         />
       </div>
+      <div className="relative mb-12">
+        <div className="absolute inset-0 flex items-center" aria-hidden="true">
+          <div className="w-full border-t border-gray-300" />
+        </div>
+      </div>
       <AdminTable />
     </div>
   );

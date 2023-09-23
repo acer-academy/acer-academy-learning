@@ -1,10 +1,24 @@
-import { getAllTeachers } from '@acer-academy-learning/data-access';
+import {
+  deleteTeacher,
+  getAllTeachers,
+} from '@acer-academy-learning/data-access';
 import { useToast } from '@acer-academy-learning/common-ui';
 import { TeacherData } from 'libs/data-access/src/lib/types/teacher';
 import { useEffect, useState } from 'react';
+import { DeletionConfirmationModal } from '../common/DeletionConfirmationModal';
+import { TeacherUpdateModal } from './TeacherUpdateModal';
 
 export const TeacherTable: React.FC = () => {
   const [teacherData, setTeacherData] = useState<TeacherData[]>([]);
+
+  const [toDeleteTeacherId, setToDeleteTeacherId] = useState<string>('');
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
+  const [toDeleteTeacherName, setToDeleteTeacherName] = useState<string>('');
+
+  const [isViewMoreModalOpen, setIsViewMoreModalOpen] =
+    useState<boolean>(false);
+  const [teacaherToView, setTeacherToView] = useState<TeacherData>();
+
   const { displayToast, ToastType } = useToast();
 
   const fetchAllTeachers = async () => {
@@ -19,6 +33,28 @@ export const TeacherTable: React.FC = () => {
       );
       console.log(error);
     }
+  };
+
+  const handleDeleteTeacher = async () => {
+    try {
+      await deleteTeacher(toDeleteTeacherId);
+      displayToast('Successfully deleted teacher.', ToastType.SUCCESS);
+    } catch (error) {
+      displayToast('Deletion has failed!', ToastType.ERROR);
+      console.log(error);
+    }
+  };
+
+  const handleOnClick = async (id: string, name: string) => {
+    setToDeleteTeacherId(id);
+    setToDeleteTeacherName(name);
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleViewMore = async (id: string) => {
+    const selectedTeacher = teacherData.find((teacher) => teacher.id === id);
+    setTeacherToView(selectedTeacher);
+    setIsViewMoreModalOpen(true);
   };
 
   useEffect(() => {
@@ -81,6 +117,12 @@ export const TeacherTable: React.FC = () => {
                     className="sticky top-0 z-10 border-b border-gray-300 bg-white bg-opacity-75 py-3.5 pl-3 pr-4 backdrop-blur backdrop-filter sm:pr-6 lg:pr-8"
                   >
                     <span className="sr-only">View more</span>
+                  </th>
+                  <th
+                    scope="col"
+                    className="sticky top-0 z-10 border-b border-gray-300 bg-white bg-opacity-75 py-3.5 pl-3 pr-4 backdrop-blur backdrop-filter sm:pr-6 lg:pr-8"
+                  >
+                    <span className="sr-only">Delete</span>
                   </th>
                 </tr>
               </thead>
@@ -145,8 +187,31 @@ export const TeacherTable: React.FC = () => {
                         'relative whitespace-nowrap py-4 pr-4 pl-3 text-right text-sm font-medium sm:pr-8 lg:pr-8',
                       )}
                     >
-                      <div className="text-indigo-600 hover:text-indigo-900 cursor-pointer">
+                      <div
+                        className="text-indigo-600 hover:text-indigo-900 cursor-pointer"
+                        onClick={() => handleViewMore(teacher.id)}
+                      >
                         View more
+                      </div>
+                    </td>
+                    <td
+                      className={classNames(
+                        personIdx !== teacherData.length - 1
+                          ? 'border-b border-gray-200'
+                          : '',
+                        'relative whitespace-nowrap py-4 pr-4 pl-3 text-right text-sm font-medium sm:pr-8 lg:pr-8',
+                      )}
+                    >
+                      <div
+                        className="text-indigo-600 hover:text-indigo-900 cursor-pointer"
+                        onClick={() =>
+                          handleOnClick(
+                            teacher.id,
+                            teacher.firstName + ' ' + teacher.lastName,
+                          )
+                        }
+                      >
+                        Delete
                       </div>
                     </td>
                   </tr>
@@ -156,6 +221,19 @@ export const TeacherTable: React.FC = () => {
           </div>
         </div>
       </div>
+      <DeletionConfirmationModal
+        open={isDeleteModalOpen}
+        setOpen={setIsDeleteModalOpen}
+        onDeleted={handleDeleteTeacher}
+        id={toDeleteTeacherId}
+        name={toDeleteTeacherName}
+        userRole="teacher"
+      />
+      <TeacherUpdateModal
+        isOpen={isViewMoreModalOpen}
+        setIsModalOpen={setIsViewMoreModalOpen}
+        teacherData={teacaherToView}
+      />
     </div>
   );
 };

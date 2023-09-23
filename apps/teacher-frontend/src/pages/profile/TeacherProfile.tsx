@@ -15,6 +15,8 @@ const TeacherProfile: React.FC = () => {
     levels: user.levels,
   });
 
+  console.log(updUser.levels)
+
   const [isEditing, setIsEditing] = useState(false);
   const navigate = useNavigate();
 
@@ -65,7 +67,6 @@ const TeacherProfile: React.FC = () => {
   const { displayToast, ToastType } = useToast();
 
   const editProfile = () => {
-    console.log(updUser);
     setIsEditing(true);
   };
 

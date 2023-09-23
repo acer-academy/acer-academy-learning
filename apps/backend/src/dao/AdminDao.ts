@@ -1,9 +1,4 @@
-// admin.dao.ts
 import { PrismaClient, Prisma, Admin } from '@prisma/client';
-import {
-  AdminPostData,
-  AdminPutData,
-} from 'libs/data-access/src/lib/types/admin';
 
 const prisma = new PrismaClient();
 
