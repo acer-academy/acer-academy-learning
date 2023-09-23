@@ -6,6 +6,7 @@ import { useToast } from '@acer-academy-learning/common-ui';
 import { Student } from 'libs/data-access/src/lib/types/student';
 import { useEffect, useState } from 'react';
 import { DeletionConfirmationModal } from '../common/DeletionConfirmationModal';
+import { StudentUpdateModal } from './StudentUpdateModal';
 
 export const StudentTable: React.FC = () => {
   const [studentData, setStudentData] = useState<Student[]>([]);
@@ -13,6 +14,10 @@ export const StudentTable: React.FC = () => {
   const [toDeleteStudentId, setToDeleteStudentId] = useState<string>('');
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
   const [toDeleteStudentName, setToDeleteStudentName] = useState<string>('');
+
+  const [isViewMoreModalOpen, setIsViewMoreModalOpen] =
+    useState<boolean>(false);
+  const [studentToView, setStudentToView] = useState<Student>();
 
   const { displayToast, ToastType } = useToast();
 
@@ -44,6 +49,12 @@ export const StudentTable: React.FC = () => {
     setToDeleteStudentId(id);
     setToDeleteStudentName(name);
     setIsDeleteModalOpen(true);
+  };
+
+  const handleViewMore = async (id: string) => {
+    const selectedStudent = studentData.find((student) => student.id === id);
+    setStudentToView(selectedStudent);
+    setIsViewMoreModalOpen(true);
   };
 
   useEffect(() => {
@@ -181,7 +192,10 @@ export const StudentTable: React.FC = () => {
                         'relative whitespace-nowrap py-4 pr-4 pl-3 text-right text-sm font-medium sm:pr-8 lg:pr-8',
                       )}
                     >
-                      <div className="text-indigo-600 hover:text-indigo-900 cursor-pointer">
+                      <div
+                        className="text-indigo-600 hover:text-indigo-900 cursor-pointer"
+                        onClick={() => handleViewMore(student.id)}
+                      >
                         View more
                       </div>
                     </td>
@@ -219,6 +233,11 @@ export const StudentTable: React.FC = () => {
         id={toDeleteStudentId}
         name={toDeleteStudentName}
         userRole="student"
+      />
+      <StudentUpdateModal
+        isOpen={isViewMoreModalOpen}
+        setIsOpen={setIsViewMoreModalOpen}
+        student={studentToView}
       />
     </div>
   );

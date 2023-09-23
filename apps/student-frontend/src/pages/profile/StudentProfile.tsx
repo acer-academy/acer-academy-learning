@@ -194,7 +194,6 @@ export const StudentProfile = () => {
   });
 
   useEffect(() => {
-    console.log(authUser);
     setUser(authUser);
   }, [authUser]);
 
