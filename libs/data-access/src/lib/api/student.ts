@@ -109,3 +109,13 @@ export const updateParent = async (
     throw error;
   }
 };
+
+export const deleteParent = async (id: string): Promise<any> => {
+  // eslint-disable-next-line no-useless-catch
+  try {
+    const response = await client.delete(`${URL}/delete-parent/${id}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};

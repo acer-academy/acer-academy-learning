@@ -38,6 +38,17 @@ import { StaticRowField } from './components/StaticRowField';
 import { ErrorText } from './components/ErrorText';
 import { GenericModal } from './components/GenericModal';
 import { ZodInputRow } from './components/ZodInputRow';
+import {
+  firstNameSchema,
+  lastNameSchema,
+  parentProfileSchema,
+  passwordChangeSchema,
+  phoneNumberSchema,
+  schoolSchema,
+  studentProfileSchema,
+  subjectsSchema,
+} from './schemas';
+import { ParentForm } from './components/ParentForm';
 
 const phoneRegex = /^(6|8|9)\d{7}$/;
 
@@ -49,43 +60,6 @@ const subjects = Object.entries(SubjectEnum).map(([key, value]) => ({
   label: key.charAt(0).toUpperCase() + key.toLowerCase().slice(1),
   value: value,
 }));
-
-export const studentProfileSchema = z.object({
-  firstName: z.string().trim().min(1, 'First Name cannot be empty.'),
-  lastName: z.string().trim().min(1, 'Last Name cannot be empty.'),
-  subjects: z
-    .array(z.nativeEnum(SubjectEnum))
-    .min(1, 'You must select at least one subject.'),
-  school: z.string().trim().min(1, 'School cannot be empty.'),
-  phoneNumber: z
-    .string()
-    .trim()
-    .min(1, 'Phone Number cannot be empty.')
-    .regex(phoneRegex, 'Please enter a valid phone number.'),
-});
-export const passwordChangeSchema = z
-  .object({
-    password: z.string().min(1, 'Password cannot be empty.'),
-    confirmPassword: z.string().min(1, 'Confirm Password cannot be empty.'),
-  })
-  .superRefine(({ confirmPassword, password }, ctx) => {
-    if (confirmPassword !== password) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: 'Passwords do not match.',
-      });
-    }
-  });
-
-export const parentProfileSchema = z.object({
-  firstName: z.string().trim().min(1, 'First Name cannot be empty.'),
-  lastName: z.string().trim().min(1, 'Last Name cannot be empty.'),
-  phoneNumber: z
-    .string()
-    .trim()
-    .min(1, 'Phone Number cannot be empty.')
-    .regex(phoneRegex, 'Please enter a valid phone number.'),
-});
 
 // Let's handle everything on this level first
 export const StudentProfile = () => {
@@ -112,22 +86,95 @@ export const StudentProfile = () => {
     useState(false);
 
   // Form Registers
+  // const {
+  //   formState: { errors },
+  //   handleSubmit,
+  //   register,
+  // } = useZodForm({
+  //   schema: studentProfileSchema,
+  //   values: useMemo(
+  //     () => ({
+  //       firstName: user?.firstName ?? '',
+  //       lastName: user?.lastName ?? '',
+  //       subjects: user?.subjects ?? [],
+  //       school: user?.school ?? '',
+  //       phoneNumber: user?.phoneNumber ?? '',
+  //     }),
+  //     [user],
+  //   ),
+  // });
+
   const {
-    formState: { errors },
-    handleSubmit,
-    register,
+    formState: { errors: studentFirstNameErrors },
+    handleSubmit: handleStudentFirstNameSubmit,
+    register: studentFirstNameRegister,
   } = useZodForm({
-    schema: studentProfileSchema,
+    schema: firstNameSchema,
     values: useMemo(
       () => ({
         firstName: user?.firstName ?? '',
+      }),
+      [user],
+    ),
+    mode: 'onBlur',
+  });
+
+  const {
+    formState: { errors: studentWithLastNameErrors },
+    handleSubmit: handleStuLastNameSubmit,
+    register: studentLastNameRegister,
+  } = useZodForm({
+    schema: lastNameSchema,
+    values: useMemo(
+      () => ({
         lastName: user?.lastName ?? '',
+      }),
+      [user],
+    ),
+    mode: 'onBlur',
+  });
+
+  const {
+    formState: { errors: studentSubjectErrors },
+    handleSubmit: handleStudentSubjectSubmit,
+    register: studentSubjectRegister,
+  } = useZodForm({
+    schema: subjectsSchema,
+    values: useMemo(
+      () => ({
         subjects: user?.subjects ?? [],
+      }),
+      [user],
+    ),
+    mode: 'onBlur',
+  });
+  const {
+    formState: { errors: studentSchoolErrors },
+    handleSubmit: handleStudentSchoolSubmit,
+    register: studentSchoolRegister,
+  } = useZodForm({
+    schema: schoolSchema,
+    values: useMemo(
+      () => ({
         school: user?.school ?? '',
+      }),
+      [user],
+    ),
+    mode: 'onBlur',
+  });
+  const {
+    formState: { errors: studentPhoneNumberErrors },
+    handleSubmit: handleStudentPhoneNumberSubmit,
+    register: phoneNumberRegister,
+  } = useZodForm({
+    schema: phoneNumberSchema,
+    values: useMemo(
+      () => ({
         phoneNumber: user?.phoneNumber ?? '',
       }),
       [user],
     ),
+    mode: 'onBlur',
   });
 
   const {
@@ -144,6 +191,7 @@ export const StudentProfile = () => {
       }),
       [],
     ),
+    mode: 'onTouched',
   });
 
   // const {
@@ -154,7 +202,7 @@ export const StudentProfile = () => {
   //   schema: parentProfileSchema,
   //   values: useMemo(
   //     () => ({
-  //       firstName: user?.parents?.[0].firstName ?? '',
+  //       firstName: user?.parents?.length > 0 && user?.parents?.[0].firstName ?? '',
   //       lastName: user?.parents?.[0].lastName ?? '',
   //       phoneNumber: user?.parents?.[0].phoneNumber ?? '',
   //     }),
@@ -182,6 +230,7 @@ export const StudentProfile = () => {
     formState: { errors: passwordErrors },
     handleSubmit: handlePasswordSubmit,
     register: passwordRegister,
+    reset: resetPassword,
   } = useZodForm({
     schema: passwordChangeSchema,
     values: useMemo(
@@ -191,6 +240,7 @@ export const StudentProfile = () => {
       }),
       [],
     ),
+    mode: 'onChange',
   });
 
   useEffect(() => {
@@ -226,16 +276,20 @@ export const StudentProfile = () => {
 
   const handleSubmitForm = async (
     values:
-      | z.infer<typeof studentProfileSchema>
+      | Partial<z.infer<typeof studentProfileSchema>>
       | Partial<z.infer<typeof passwordChangeSchema>>,
     setOnEdit: (val: boolean) => void,
     fieldName: string,
+    callback?: () => void,
   ) => {
     if (user.id) {
       try {
         const res = await updateStudent(user?.id, values);
         setAuthUser(res.student);
         displayToast(fieldName + ' updated successfully!', ToastType.SUCCESS);
+        if (callback) {
+          callback();
+        }
       } catch (error) {
         displayToast('Error occurred: ' + error, ToastType.ERROR);
       }
@@ -267,25 +321,6 @@ export const StudentProfile = () => {
       }
     }
     setOnEdit(false);
-  };
-
-  const handleParentEditSubmitForm = async (
-    values: z.infer<typeof parentProfileSchema>,
-    id: string,
-    message: string,
-  ) => {
-    if (user.id) {
-      try {
-        const res = await updateParent(id, values);
-        setAuthUser(res.student);
-        displayToast(message, ToastType.SUCCESS);
-      } catch (error) {
-        displayToast(
-          'Error occurred creating parent: ' + error,
-          ToastType.ERROR,
-        );
-      }
-    }
   };
 
   return (
@@ -320,24 +355,24 @@ export const StudentProfile = () => {
                 <div className="flex flex-col">
                   <div
                     className={`${
-                      errors?.firstName
+                      studentFirstNameErrors?.firstName
                         ? 'focus-within:ring-red-600 ring-red-600'
                         : 'focus-within:ring-student-primary-600'
                     } text-left flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset  sm:max-w-md`}
                   >
                     <input
                       type="text"
-                      {...register('firstName')}
+                      {...studentFirstNameRegister('firstName')}
                       className="block flex-1 border-0 bg-transparent py-1.5 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                     />
                   </div>
-                  <span className={`text-red-600 text-xs`}>
-                    {errors.firstName?.message}
-                  </span>
+                  <ErrorText
+                    message={studentFirstNameErrors.firstName?.message}
+                  />
                 </div>
                 <button
                   type="button"
-                  onClick={handleSubmit((values) =>
+                  onClick={handleStudentFirstNameSubmit((values) =>
                     handleSubmitForm(values, setFirstNameOnEdit, 'First Name'),
                   )}
                   className="max-w-sm rounded self-center justify-self-center bg-indigo-600 px-2 py-1 font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
@@ -372,24 +407,27 @@ export const StudentProfile = () => {
                 <div className="flex flex-col">
                   <div
                     className={`${
-                      errors?.lastName
+                      studentWithLastNameErrors?.lastName
                         ? 'focus-within:ring-red-600 ring-red-600'
                         : 'focus-within:ring-student-primary-600'
                     } text-left flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset  sm:max-w-md`}
                   >
                     <input
                       type="text"
-                      {...register('lastName')}
+                      {...studentLastNameRegister('lastName')}
                       className="block flex-1 border-0 bg-transparent py-1.5 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                     />
                   </div>
-                  <span className={`text-red-600 text-xs`}>
-                    {errors.lastName?.message}
-                  </span>
+                  {/* <span className={`text-red-600 text-xs`}>
+                    {}
+                  </span> */}
+                  <ErrorText
+                    message={studentWithLastNameErrors.lastName?.message}
+                  />
                 </div>
                 <button
                   type="button"
-                  onClick={handleSubmit((values) =>
+                  onClick={handleStuLastNameSubmit((values) =>
                     handleSubmitForm(values, setLastNameOnEdit, 'Last Name'),
                   )}
                   className="max-w-sm rounded self-center justify-self-center bg-indigo-600 px-2 py-1 font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
@@ -428,7 +466,7 @@ export const StudentProfile = () => {
                       <label key={subject.id} className="flex items-center">
                         <input
                           type="checkbox"
-                          {...register('subjects')}
+                          {...studentSubjectRegister('subjects')}
                           // checked={selectedSubjects.includes(subject.value)}
                           // onChange={() => handleSubjectChange(subject.value)}
                           className="h-5 w-5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
@@ -440,11 +478,11 @@ export const StudentProfile = () => {
                       </label>
                     ))}
                   </div>
-                  <ErrorText message={errors.subjects?.message} />
+                  <ErrorText message={studentSubjectErrors.subjects?.message} />
                 </div>
                 <button
                   type="button"
-                  onClick={handleSubmit((values) =>
+                  onClick={handleStudentSubjectSubmit((values) =>
                     handleSubmitForm(values, setSubjectsOnEdit, 'Subjects'),
                   )}
                   className="max-w-sm rounded self-center justify-self-center bg-indigo-600 px-2 py-1 font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
@@ -484,24 +522,24 @@ export const StudentProfile = () => {
                 <div className="flex flex-col">
                   <div
                     className={`${
-                      errors?.school
+                      studentSchoolErrors?.school
                         ? 'focus-within:ring-red-600 ring-red-600'
                         : 'focus-within:ring-student-primary-600'
                     } text-left flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset  sm:max-w-md`}
                   >
                     <input
                       type="text"
-                      {...register('school')}
+                      {...studentSchoolRegister('school')}
                       className="block flex-1 border-0 bg-transparent py-1.5 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                     />
                   </div>
                   <span className={`text-red-600 text-xs`}>
-                    {errors.school?.message}
+                    {studentSchoolErrors.school?.message}
                   </span>
                 </div>
                 <button
                   type="button"
-                  onClick={handleSubmit((values) =>
+                  onClick={handleStudentSchoolSubmit((values) =>
                     handleSubmitForm(values, setSchoolOnEdit, 'School'),
                   )}
                   className="max-w-sm rounded self-center justify-self-center bg-indigo-600 px-2 py-1 font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
@@ -533,24 +571,24 @@ export const StudentProfile = () => {
                 <div className="flex flex-col">
                   <div
                     className={`${
-                      errors?.phoneNumber
+                      studentPhoneNumberErrors?.phoneNumber
                         ? 'focus-within:ring-red-600 ring-red-600'
                         : 'focus-within:ring-student-primary-600'
                     } text-left flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset  sm:max-w-md`}
                   >
                     <input
                       type="text"
-                      {...register('phoneNumber')}
+                      {...phoneNumberRegister('phoneNumber')}
                       className="block flex-1 border-0 bg-transparent py-1.5 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                     />
                   </div>
                   <span className={`text-red-600 text-xs`}>
-                    {errors.phoneNumber?.message}
+                    {studentPhoneNumberErrors.phoneNumber?.message}
                   </span>
                 </div>
                 <button
                   type="button"
-                  onClick={handleSubmit((values) =>
+                  onClick={handleStudentPhoneNumberSubmit((values) =>
                     handleSubmitForm(
                       values,
                       setPhoneNumberOnEdit,
@@ -587,170 +625,15 @@ export const StudentProfile = () => {
             >
               Change Password
             </button>
-
-            {/* {userFields.map((field) => (
-              <ProfileField
-                key={field.id}
-                userId={user.id}
-                updateUser={updateStudent}
-                setUser={setAuthUser}
-                {...field}
-            />
-          ))} */}
           </div>
-          {/* <h2 className="text-base font-semibold leading-7 text-gray-900 mt-4">
-            Parents Particulars
-            {user.parents?.length === 1 && (
-              <button
-                onClick={handleAddParent}
-                type="button"
-                className="ml-2 rounded-full bg-indigo-600 p-1.5 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              >
-                <PlusIcon className="h-3 w-3" aria-hidden="true" />
-              </button>
-            )}
-            {user.parents?.length === 2 && (
-              <button
-                onClick={handleRemoveParent}
-                type="button"
-                className="ml-2 rounded-full bg-indigo-600 p-1.5 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              >
-                <MinusIcon className="h-3 w-3" aria-hidden="true" />
-              </button>
-            )}
-          </h2>
-          <p className="mt-1 text-sm leading-6 text-gray-600">
-            This information will be displayed publicly so be careful what you
-            share.
-          </p> */}
-          {/* {user.parents?.map((parent, index) => (
-            <>
-              <h2 className="text-base font-semibold leading-7 text-gray-900 mt-4">
-                Parents Particulars
-                {user.parents?.length === 1 && (
-                  <button
-                    onClick={handleAddParent}
-                    type="button"
-                    className="ml-2 rounded-full bg-indigo-600 p-1.5 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                  >
-                    <PlusIcon className="h-3 w-3" aria-hidden="true" />
-                  </button>
-                )}
-                {user.parents?.length === 2 && (
-                  <button
-                    onClick={handleRemoveParent}
-                    type="button"
-                    className="ml-2 rounded-full bg-indigo-600 p-1.5 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                  >
-                    <MinusIcon className="h-3 w-3" aria-hidden="true" />
-                  </button>
-                )}
-              </h2>
-              <div className="mt-10 grid grid-cols-3 gap-2">
-                <EditableFieldRow
-                  label="First Name"
-                  value={parent.firstName}
-                  id={parent.firstName + index}
-                  type="text"
-                  register={registerParentOne}
-                  registerKey="firstName"
-                  handleSubmit={
-                      handleParentOneSubmit((values) =>
-                          handleParentEditSubmitForm(
-                            values,
-                            parent.id,
-                            'Parent First Name',
-                          ),
-                        )
-                  }
-                />
-                <EditableFieldRow
-                  label="Last Name"
-                  value={parent.lastName}
-                  id={parent.lastName + index}
-                  type="text"
-                  register={registerParentOne}
-                  registerKey="lastName"
-                  handleSubmit={
-                      handleParentOneSubmit((values) =>
-                          handleParentEditSubmitForm(
-                            values,
-                            parent.id,
-                            'Parent Last Name',
-                          ),
-                        )
-                  }
-                />
-                <EditableFieldRow
-                  label="Phone Number"
-                  value={parent.phoneNumber}
-                  id={parent.phoneNumber + index}
-                  type="text"
-                  register={registerParentOne}
-                  registerKey="phoneNumber"
-                  handleSubmit={
-                      handleParentOneSubmit((values) =>
-                          handleParentEditSubmitForm(
-                            values,
-                            parent.id,
-                            'Parent First Name',
-                          ),
-                        )
-                  }
-                /> */}
-          {/* <EditableFieldRow
-                  label="Last Name"
-                  value={parent.lastName}
-                  id={parent.lastName + index}
-                  type="text"
-                  register={index === 0 ? registerParentOne : registerParentTwo}
-                  registerKey="lastName"
-                  handleSubmit={
-                    index === 0
-                      ? handleParentOneSubmit((values) =>
-                          handleParentEditSubmitForm(
-                            values,
-                            parent.id,
-                            'Parent Last Name',
-                          ),
-                        )
-                      : handleParentTwoSubmit((values) =>
-                          handleParentEditSubmitForm(
-                            values,
-                            parent.id,
-                            'Second Parent Last Name',
-                          ),
-                        )
-                  }
-                />
-                <EditableFieldRow
-                  label="Phone Number"
-                  value={parent.phoneNumber}
-                  id={parent.phoneNumber + index}
-                  type="text"
-                  register={registerParentOne}
-                  registerKey="phoneNumber"
-                  handleSubmit={
-                    index === 0
-                      ? handleParentOneSubmit((values) =>
-                          handleParentEditSubmitForm(
-                            values,
-                            parent.id,
-                            'Parent Phone Number succesfully updated.',
-                          ),
-                        )
-                      : handleParentTwoSubmit((values) =>
-                          handleParentEditSubmitForm(
-                            values,
-                            parent.id,
-                            'Second Parent Phone Number succesfully updated.',
-                          ),
-                        )
-                  }
-                /> */}
-          {/* </div>
-            </>
-          ))} */}
+          {user.parents?.map((parent) => (
+            <ParentForm
+              key={parent.id}
+              parent={parent}
+              student={user}
+              openAddParentModal={handleAddParent}
+            />
+          ))}
           {/* Change Password Modal */}
           <GenericModal
             isOpen={changePasswordModalIsOpen}
@@ -763,6 +646,7 @@ export const StudentProfile = () => {
               type="password"
               register={passwordRegister}
               registerKey="password"
+              fieldError={passwordErrors.password}
               errorMessage={passwordErrors.password?.message}
             />
             <ZodInputRow
@@ -771,6 +655,7 @@ export const StudentProfile = () => {
               type="password"
               register={passwordRegister}
               registerKey="confirmPassword"
+              fieldError={passwordErrors.confirmPassword}
               errorMessage={passwordErrors.confirmPassword?.message}
             />
             <button
@@ -780,6 +665,7 @@ export const StudentProfile = () => {
                   { password: values.password },
                   setChangePasswordModaIsOpen,
                   'Password',
+                  resetPassword,
                 ),
               )}
               // className="text-student-primary-600 hover:underline"
@@ -799,6 +685,7 @@ export const StudentProfile = () => {
               type="text"
               register={parentRegister}
               registerKey={'firstName'}
+              errorMessage={parentErrors.firstName?.message}
             />
             <ZodInputRow
               label="Last Name"
@@ -806,6 +693,7 @@ export const StudentProfile = () => {
               type="text"
               register={parentRegister}
               registerKey={'lastName'}
+              errorMessage={parentErrors.lastName?.message}
             />
             <ZodInputRow
               label="Phone Number"
@@ -813,6 +701,7 @@ export const StudentProfile = () => {
               type="text"
               register={parentRegister}
               registerKey={'phoneNumber'}
+              errorMessage={parentErrors.phoneNumber?.message}
             />
             <button
               className="ml-2 rounded-full bg-indigo-600 p-1.5 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"

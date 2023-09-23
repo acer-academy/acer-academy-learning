@@ -1,5 +1,10 @@
-import React, { useState } from 'react';
-import { FieldValues, Path, UseFormRegister } from 'react-hook-form';
+import React, { useEffect, useState } from 'react';
+import {
+  FieldValues,
+  Path,
+  UseFormHandleSubmit,
+  UseFormRegister,
+} from 'react-hook-form';
 
 export type EditableFieldRowProps<T extends FieldValues> = {
   id: string;
@@ -9,8 +14,14 @@ export type EditableFieldRowProps<T extends FieldValues> = {
   register: UseFormRegister<T>;
   registerKey: Path<T>;
   errorMessage?: string;
-  handleSubmit: (
-    e?: React.BaseSyntheticEvent<object, any, any> | undefined,
+  // handleSubmit: (
+  //   e?: React.BaseSyntheticEvent<object, any, any> | undefined,
+  // ) => Promise<void>;
+  handleSubmit: UseFormHandleSubmit<T>;
+  handleSubmitForm: (
+    values: T,
+    message: string,
+    callback?: () => void,
   ) => Promise<void>;
 };
 
@@ -26,12 +37,10 @@ export const EditableFieldRow = <T extends FieldValues>({
   registerKey,
   errorMessage,
   handleSubmit,
+  handleSubmitForm,
 }: EditableFieldRowProps<T>) => {
   const [isEditMode, setIsEditMode] = useState(false);
-  // const onSave = async () => {
-  //   await handleSubmit();
-  //   setIsEditMode(false);
-  // };
+  const [isSubmitted, setIsSubmitted] = useState(false);
   return (
     <>
       <label
@@ -60,7 +69,11 @@ export const EditableFieldRow = <T extends FieldValues>({
           </div>
           <button
             type="button"
-            onClick={handleSubmit}
+            onClick={handleSubmit((values) =>
+              handleSubmitForm(values, `${label} successfully updated.`, () => {
+                setIsEditMode(false);
+              }),
+            )}
             className="max-w-sm rounded self-center justify-self-center bg-indigo-600 px-2 py-1 font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
             Save

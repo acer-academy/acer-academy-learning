@@ -5,5 +5,5 @@ export type ErrorTextProps = {
 };
 
 export const ErrorText = ({ message }: ErrorTextProps) => {
-  return <span className={`text-red-600 text-xs`}>{message}</span>;
+  return <span className={`text-red-600 text-xs mt-2`}>{message}</span>;
 };
