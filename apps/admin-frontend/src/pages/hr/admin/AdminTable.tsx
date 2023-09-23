@@ -3,6 +3,7 @@ import { useToast } from '@acer-academy-learning/common-ui';
 import { useEffect, useState } from 'react';
 import { Admin } from 'libs/data-access/src/lib/types/admin';
 import { DeletionConfirmationModal } from '../common/DeletionConfirmationModal';
+import { AdminUpdateModal } from './AdminUpdateModal';
 
 export const AdminTable: React.FC = () => {
   const [adminData, setAdminData] = useState<Admin[]>([]);
@@ -10,6 +11,10 @@ export const AdminTable: React.FC = () => {
   const [toDeleteAdminId, setToDeleteAdminId] = useState<string>('');
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
   const [toDeleteAdminName, setToDeleteAdminName] = useState<string>('');
+
+  const [isViewMoreModalOpen, setIsViewMoreModalOpen] =
+    useState<boolean>(false);
+  const [adminToView, setAdminToView] = useState<Admin>();
 
   const { displayToast, ToastType } = useToast();
 
@@ -41,6 +46,12 @@ export const AdminTable: React.FC = () => {
     setToDeleteAdminId(id);
     setToDeleteAdminName(name);
     setIsDeleteModalOpen(true);
+  };
+
+  const handleViewMore = async (id: string) => {
+    const selectedAdmin = adminData.find((admin) => admin.id === id);
+    setAdminToView(selectedAdmin);
+    setIsViewMoreModalOpen(true);
   };
 
   useEffect(() => {
@@ -158,7 +169,10 @@ export const AdminTable: React.FC = () => {
                         'relative whitespace-nowrap py-4 pr-4 pl-3 text-right text-sm font-medium sm:pr-8 lg:pr-8',
                       )}
                     >
-                      <div className="text-indigo-600 hover:text-indigo-900 cursor-pointer">
+                      <div
+                        className="text-indigo-600 hover:text-indigo-900 cursor-pointer"
+                        onClick={() => handleViewMore(admin.id)}
+                      >
                         View more
                       </div>
                     </td>
@@ -196,6 +210,11 @@ export const AdminTable: React.FC = () => {
         id={toDeleteAdminId}
         name={toDeleteAdminName}
         userRole="admin"
+      />
+      <AdminUpdateModal
+        isOpen={isViewMoreModalOpen}
+        setIsModalOpen={setIsViewMoreModalOpen}
+        admin={adminToView}
       />
     </div>
   );
