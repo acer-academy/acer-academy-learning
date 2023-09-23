@@ -6,6 +6,7 @@ import { useToast } from '@acer-academy-learning/common-ui';
 import { TeacherData } from 'libs/data-access/src/lib/types/teacher';
 import { useEffect, useState } from 'react';
 import { DeletionConfirmationModal } from '../common/DeletionConfirmationModal';
+import { TeacherUpdateModal } from './TeacherUpdateModal';
 
 export const TeacherTable: React.FC = () => {
   const [teacherData, setTeacherData] = useState<TeacherData[]>([]);
@@ -13,6 +14,10 @@ export const TeacherTable: React.FC = () => {
   const [toDeleteTeacherId, setToDeleteTeacherId] = useState<string>('');
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
   const [toDeleteTeacherName, setToDeleteTeacherName] = useState<string>('');
+
+  const [isViewMoreModalOpen, setIsViewMoreModalOpen] =
+    useState<boolean>(false);
+  const [teacaherToView, setTeacherToView] = useState<TeacherData>();
 
   const { displayToast, ToastType } = useToast();
 
@@ -44,6 +49,12 @@ export const TeacherTable: React.FC = () => {
     setToDeleteTeacherId(id);
     setToDeleteTeacherName(name);
     setIsDeleteModalOpen(true);
+  };
+
+  const handleViewMore = async (id: string) => {
+    const selectedTeacher = teacherData.find((teacher) => teacher.id === id);
+    setTeacherToView(selectedTeacher);
+    setIsViewMoreModalOpen(true);
   };
 
   useEffect(() => {
@@ -176,7 +187,10 @@ export const TeacherTable: React.FC = () => {
                         'relative whitespace-nowrap py-4 pr-4 pl-3 text-right text-sm font-medium sm:pr-8 lg:pr-8',
                       )}
                     >
-                      <div className="text-indigo-600 hover:text-indigo-900 cursor-pointer">
+                      <div
+                        className="text-indigo-600 hover:text-indigo-900 cursor-pointer"
+                        onClick={() => handleViewMore(teacher.id)}
+                      >
                         View more
                       </div>
                     </td>
@@ -214,6 +228,11 @@ export const TeacherTable: React.FC = () => {
         id={toDeleteTeacherId}
         name={toDeleteTeacherName}
         userRole="teacher"
+      />
+      <TeacherUpdateModal
+        isOpen={isViewMoreModalOpen}
+        setIsModalOpen={setIsViewMoreModalOpen}
+        teacherData={teacaherToView}
       />
     </div>
   );
