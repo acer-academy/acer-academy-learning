@@ -464,7 +464,7 @@ export default function StudentSignUp() {
           </form>
 
           <p className="mt-10 text-center text-sm text-gray-500">
-            Have an account?
+            Have an account?{' '}
             <a
               href="#"
               className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
