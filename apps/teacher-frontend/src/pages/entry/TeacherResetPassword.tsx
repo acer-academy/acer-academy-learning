@@ -18,9 +18,12 @@ const TeacherResetPassword: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (password !== confirmPassword) {
+      displayToast('Password do not match', ToastType.ERROR);
+      return;
+    }
+
     if (token) {
-      //   console.log(token);
-      //   console.log(password);
       // Make an API request to your backend to reset the password
       const response = await fetch(
         'http://localhost:8000/api/v1/teachers/reset-password/',

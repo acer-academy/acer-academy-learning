@@ -46,12 +46,6 @@ export async function getStudentById(
   return client.get(`${URL}/getStudentById/${studentId}`);
 }
 
-// export async function loginStudent(
-//   data: LoginData,
-// ): Promise<AxiosResponse<any>> {
-//   return client.post(`${URL}/login`, data);
-// }
-
 export async function loginStudent(
   data: LoginData,
 ): Promise<AxiosResponse<any>> {

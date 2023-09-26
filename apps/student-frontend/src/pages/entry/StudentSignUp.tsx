@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React, { useState, useEffect, useMemo } from 'react';
 import {
@@ -232,7 +233,7 @@ export default function StudentSignUp() {
       await createStudent(payload);
       displayToast('Account created!', ToastType.SUCCESS);
       navigate(LOGIN);
-    } catch (error: any) {
+    } catch (error) {
       console.log(error);
       displayToast(`${error}`, ToastType.ERROR);
     }
@@ -463,7 +464,7 @@ export default function StudentSignUp() {
           </form>
 
           <p className="mt-10 text-center text-sm text-gray-500">
-            Have an account?{' '}
+            Have an account?
             <a
               href="#"
               className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
