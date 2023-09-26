@@ -24,7 +24,7 @@ const AdminProfile: React.FC = () => {
         );
         return;
       } else {
-        let updatedAdmin = await updateAdmin(user.id, {
+        const updatedAdmin = await updateAdmin(user.id, {
           firstName: firstName,
           lastName: lastName,
         });
