@@ -2,10 +2,10 @@ import { useAuth } from '@acer-academy-learning/common-ui';
 import { useState } from 'react';
 import { useToast } from '@acer-academy-learning/common-ui';
 import { updateTeacher } from '@acer-academy-learning/data-access';
-import { Teacher } from 'libs/data-access/src/lib/types/teacher';
+import { Teacher, TeacherData } from 'libs/data-access/src/lib/types/teacher';
 
 const ChangePassword: React.FC = () => {
-  const { user, updateUser } = useAuth<Teacher>();
+  const { user } = useAuth<Teacher>();
 
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -22,11 +22,10 @@ const ChangePassword: React.FC = () => {
       return;
     }
     try {
-      const updated = await updateTeacher(user.id, { password });
+      const id = user?.id ?? '';
+      await updateTeacher(id, { password });
       setPassword('');
       setConfirmPassword('');
-      //@TODO: SET USER HERE FOR AUTH CONTEXT
-      updateUser(updated);
       displayToast('Password succesfully changed!', ToastType.SUCCESS);
     } catch (error: any) {
       displayToast(`${error}`, ToastType.ERROR);
