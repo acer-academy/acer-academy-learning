@@ -22,7 +22,8 @@ const ChangePassword: React.FC = () => {
       return;
     }
     try {
-      const updatedAdmin = await updateAdmin(user.id, {
+      const id = user?.id ?? '';
+      const updatedAdmin = await updateAdmin(id, {
         password: password,
       });
       setPassword('');
