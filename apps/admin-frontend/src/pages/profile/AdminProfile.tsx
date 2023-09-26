@@ -4,12 +4,13 @@ import { useNavigate } from 'react-router-dom';
 import { updateAdmin } from '../../api/admin';
 import { useToast } from '@acer-academy-learning/common-ui';
 import { CHANGE_PASSWORD } from '../../libs/routes';
+import { Admin } from 'libs/data-access/src/lib/types/admin';
 
 const AdminProfile: React.FC = () => {
   const { user, updateUser } = useAuth<Admin>();
-  const [firstName, setFirstName] = useState(user.firstName);
+  const [firstName, setFirstName] = useState(user?.firstName);
   const [isEditing, setIsEditing] = useState(false);
-  const [lastName, setLastName] = useState(user.lastName);
+  const [lastName, setLastName] = useState(user?.lastName);
 
   const navigate = useNavigate();
 
@@ -17,14 +18,15 @@ const AdminProfile: React.FC = () => {
 
   const onSaveProfile = async () => {
     try {
-      if (firstName.length === 0 || lastName.length === 0) {
+      if (firstName?.length === 0 || lastName?.length === 0) {
         displayToast(
           `Please fill in your First and Last name`,
           ToastType.ERROR,
         );
         return;
       } else {
-        let updatedAdmin = await updateAdmin(user.id, {
+        let id = user?.id ?? '';
+        let updatedAdmin = await updateAdmin(id, {
           firstName: firstName,
           lastName: lastName,
         });
@@ -82,6 +84,7 @@ const AdminProfile: React.FC = () => {
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                     setFirstName(e.target.value);
                   }}
+                  className="block flex-1 border-0 bg-transparent py-1.5 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                   autoFocus
                 />
               ) : (
@@ -97,6 +100,7 @@ const AdminProfile: React.FC = () => {
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                     setLastName(e.target.value);
                   }}
+                  className="block flex-1 border-0 bg-transparent py-1.5 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                   autoFocus
                 />
               ) : (
@@ -108,7 +112,7 @@ const AdminProfile: React.FC = () => {
                 Change Password:
               </span>
               <button
-                className="rounded bg-indigo-600 px-2 py-1 text-xs font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                 onClick={() => navigate(`${CHANGE_PASSWORD}`)}
               >
                 Change Password
@@ -116,11 +120,11 @@ const AdminProfile: React.FC = () => {
             </div>
             <div className="flex justify-between items-center">
               <span className="font-semibold text-gray-600">Email:</span>
-              <span className="text-gray-800">{user.email}</span>
+              <span className="text-gray-800">{user?.email}</span>
             </div>
             <div className="flex justify-between items-center">
               <span className="font-semibold text-gray-600">Admin Type:</span>
-              <span className="text-gray-800 capitalize">{user.type}</span>
+              <span className="text-gray-800 capitalize">{user?.type}</span>
             </div>
           </div>
         </div>
