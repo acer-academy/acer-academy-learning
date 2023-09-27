@@ -50,11 +50,26 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
                     </Dialog.Title>
                     <div className="mt-2">
                       <p className="text-sm text-gray-500">
-                        Transaction ID: {transaction.id}
-                        {/* Display other transaction details here */}
-                      </p>
-                      <p className="text-sm text-gray-500">
+                        ID: {transaction.id}
+                        <br />
+                        Amount: {transaction.amount}
+                        <br />
+                        Currency: {transaction.currency}
+                        <br />
+                        Date Time:{' '}
+                        {new Date(transaction.dateTime).toLocaleString()}
+                        <br />
+                        Credits Transacted: {transaction.creditsTransacted}
+                        <br />
+                        Transaction Type: {transaction.transactionType}
+                        <br />
+                        Reason: {transaction.reason}
+                        <br />
+                        Term ID: {transaction.termId}
+                        <br />
                         Student ID: {transaction.studentId}
+                        <br />
+                        Promotion ID: {transaction.promotionId}
                       </p>
                     </div>
                   </div>

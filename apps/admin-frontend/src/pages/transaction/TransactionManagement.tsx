@@ -6,6 +6,7 @@ import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import './TransactionManagement.css'; // Import your CSS file
 import TransactionModal from './TransactionModal';
+import TransactionTypeBadge from './TransactionTypeBadge';
 
 const TransactionsComponent = () => {
   // Initialize State
@@ -46,7 +47,11 @@ const TransactionsComponent = () => {
       },
     },
     { headerName: 'Credits Transacted', field: 'creditsTransacted' },
-    { headerName: 'Transaction Type', field: 'transactionType' },
+    {
+      headerName: 'Transaction Type',
+      field: 'transactionType',
+      cellRenderer: TransactionTypeBadge,
+    },
     { headerName: 'Reason', field: 'reason' },
     { headerName: 'Term ID', field: 'termId' },
     { headerName: 'Student ID', field: 'studentId' },

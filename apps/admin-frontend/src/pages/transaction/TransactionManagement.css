@@ -9,12 +9,12 @@
 .ag-theme-alpine {
   --ag-header-height: 30px;
   --ag-header-foreground-color: white;
-  --ag-header-background-color: #4caf50;
+  --ag-header-background-color: #a4cb9d;
   --ag-header-cell-hover-background-color: #388e3c;
   --ag-header-cell-moving-background-color: #388e3c;
 }
 
 /* Change the font color of the header */
 .ag-header-cell-label {
-  color: #ffffff; /* Replace with your preferred color */
+  color: black; /* Replace with your preferred color */
 }
