@@ -1,3 +1,5 @@
+import { StudentData } from './student';
+
 export interface TransactionData {
   id: string;
   amount: number;
@@ -9,4 +11,14 @@ export interface TransactionData {
   termId: string;
   studentId: string;
   promotionId: string | null;
+  student: StudentData;
+  referenceId: string | null;
+  term: TermData;
+}
+
+export interface TermData {
+  id: string;
+  name: string;
+  startDate: string;
+  endDate: string;
 }

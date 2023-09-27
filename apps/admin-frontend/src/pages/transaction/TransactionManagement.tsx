@@ -97,6 +97,7 @@ const TransactionsComponent = () => {
       },
     },
     { headerName: 'Promotion ID', field: 'promotionId' },
+    { headerName: 'Reference ID', field: 'referenceId' },
   ];
 
   const defaultColDef = {

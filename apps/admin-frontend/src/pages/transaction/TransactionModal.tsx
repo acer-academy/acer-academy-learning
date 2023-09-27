@@ -65,11 +65,14 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
                         <br />
                         Reason: {transaction.reason}
                         <br />
-                        Term ID: {transaction.termId}
+                        Term name: {transaction.term.name}
                         <br />
-                        Student ID: {transaction.studentId}
+                        Student Name: {transaction.student.firstName}{' '}
+                        {transaction.student.lastName}
                         <br />
                         Promotion ID: {transaction.promotionId}
+                        <br />
+                        Reference ID: {transaction.referenceId}
                       </p>
                     </div>
                   </div>
