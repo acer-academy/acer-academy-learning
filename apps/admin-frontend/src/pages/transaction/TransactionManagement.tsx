@@ -78,8 +78,24 @@ const TransactionsComponent = () => {
       cellRenderer: TransactionTypeBadge,
     },
     { headerName: 'Reason', field: 'reason' },
-    { headerName: 'Term ID', field: 'termId' },
-    { headerName: 'Student ID', field: 'studentId' },
+    {
+      headerName: 'Term',
+      field: 'term',
+      valueGetter: (params: ValueGetterParams) => {
+        // Assuming the student object is in params.data.student
+        const term = params.data.term;
+        return term.name;
+      },
+    },
+    {
+      headerName: 'Student Name',
+      field: 'student',
+      valueGetter: (params: ValueGetterParams) => {
+        // Assuming the student object is in params.data.student
+        const student = params.data.student;
+        return student ? `${student.firstName} ${student.lastName}` : '';
+      },
+    },
     { headerName: 'Promotion ID', field: 'promotionId' },
   ];
 
