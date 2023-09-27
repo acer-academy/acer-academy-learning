@@ -22,7 +22,19 @@ transactionRouter.get('/', async (req, res) => {
 transactionRouter.get('/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const transaction = await TransactionService.getTransactionsById(id);
+    const transaction = await TransactionService.getTransactionById(id);
+    return res.status(200).json(transaction);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: error.message });
+  }
+});
+
+transactionRouter.get('/refund/:id', async (req, res) => {
+  try {
+    console.log('inside');
+    const { id } = req.params;
+    const transaction = await TransactionService.refundTransaction(id);
     return res.status(200).json(transaction);
   } catch (error) {
     console.log(error);
@@ -78,8 +90,7 @@ transactionRouter.post(
   validateTransactionComplusoryFields,
   async (req, res) => {
     try {
-      //check if need calculate amt here
-      const input: Prisma.TransactionCreateInput = req.body;
+      const input: Prisma.TransactionUncheckedCreateInput = req.body;
       const transaction = await TransactionService.createTransaction(input);
       return res.status(200).json(transaction);
     } catch (error) {
