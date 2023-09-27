@@ -36,6 +36,8 @@ model Student {
   whitelistItemId String        @unique @db.Uuid
 
   notificationPreference NotificationPreference?
+
+  transaction Transaction[]
 }
 
 model Parent {
@@ -136,6 +138,11 @@ model Classroom {
   // sessions Session[]
 }
 
+enum PromotionStatus {
+  ACTIVE
+  INACTIVE
+}
+
 model Promotion {
   id                 String   @id @default(uuid()) @db.Uuid
   startDate          DateTime
@@ -143,6 +150,9 @@ model Promotion {
   promoCode          String   @unique
   percentageDiscount Float
   description        String
+  status PromotionStatus @default(ACTIVE)
+
+  transactions Transaction[]
 }
 
 model FaqTopic {
@@ -175,4 +185,43 @@ model WhitelistItem {
   student Student?
   admin   Admin?
   teacher Teacher?
+}
+
+model Term {
+  id String @id @default(uuid()) @db.Uuid
+  name String 
+  startDate DateTime
+  endDate DateTime
+
+  transactions Transaction[]
+}
+
+enum TransactionType {
+  PURCHASED
+  DEDUCTED
+  REFUNDED
+}
+
+model Transaction {
+  id String @id @default(uuid()) @db.Uuid
+  amount Float?
+  currency String? 
+  dateTime DateTime
+  creditsTransacted Int 
+  transactionType TransactionType
+  reason String? 
+
+  term   Term @relation(fields: [termId], references: [id])
+  termId String   @db.Uuid
+
+  student Student @relation(fields: [studentId], references: [id])
+  studentId String @db.Uuid
+
+  promotion Promotion? @relation(fields: [promotionId], references: [id])
+  promotionId String? @db.Uuid
+
+  //stripeTransaction StripeTransaction? 
+
+  //creditBundle CreditBundle @relation(fields: [creditBundleId], references: [id])
+  //creditBundleId @db.Uuid
 }

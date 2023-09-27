@@ -31,7 +31,7 @@ class PromotionService {
     return PromotionDao.updatePromotion(promotionId, data);
   }
 
-  public async deletePromotion(promotionId: string) {
+  public async deletePromotion(promotionId: string): Promise<Promotion> {
     return PromotionDao.deletePromotion(promotionId);
   }
 }

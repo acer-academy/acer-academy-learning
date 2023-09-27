@@ -26,6 +26,7 @@ class PromotionDao {
       where: {
         startDate: { lte: new Date().toISOString() },
         endDate: { gte: new Date().toISOString() },
+        status: 'ACTIVE',
       },
     });
   }
@@ -48,8 +49,13 @@ class PromotionDao {
     return this.prisma.promotion.findUnique({ where: { promoCode: code } });
   }
 
-  public async deletePromotion(promotionId: string) {
-    return this.prisma.promotion.delete({ where: { id: promotionId } });
+  public async deletePromotion(promotionId: string): Promise<Promotion> {
+    return this.prisma.promotion.update({
+      where: { id: promotionId },
+      data: {
+        status: 'INACTIVE',
+      },
+    });
   }
 }
 
