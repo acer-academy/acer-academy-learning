@@ -8,6 +8,9 @@ export class QuizQuestionDao {
   ): Promise<QuizQuestion> {
     return this.prismaClient.quizQuestion.create({
       data: questionData,
+      include: {
+        answers: true,
+      },
     });
   }
 

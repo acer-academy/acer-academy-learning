@@ -2,7 +2,9 @@ import {
   LevelEnum,
   QuizQuestion,
   QuizQuestionDifficultyEnum,
+  QuizQuestionStatusEnum,
   QuizQuestionTopicEnum,
+  QuizQuestionTypeEnum,
   SubjectEnum,
   TransactionType,
 } from '@prisma/client';
@@ -261,9 +263,8 @@ export async function validateBodyQuizQuestionFormatValid(
       levels,
       difficulty,
       questionText,
-      isMcq,
-      isMrq,
-      isTfq,
+      status,
+      questionType,
       answers,
     } = req.body;
     if (!topics) {
@@ -286,8 +287,14 @@ export async function validateBodyQuizQuestionFormatValid(
       throw Error(
         'Malformed request; question text was required but none was specified.',
       );
-    } else if (isMcq == undefined || isMrq == undefined || isTfq == undefined) {
-      throw Error('Malformed request; question type is required.');
+    } else if (!status) {
+      throw Error(
+        'Malformed request; question status was required but none was specified.',
+      );
+    } else if (!questionType) {
+      throw Error(
+        'Malformed request; question type was required but none was specified.',
+      );
     }
     next();
   } catch (error) {
@@ -363,6 +370,57 @@ export async function validateBodyDifficultyExists(
       if (!validDifficulty) {
         return res.status(400).json({
           error: 'Invalid difficulty provided.',
+        });
+      }
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+/** Validates if a single quiz question status passed in body exists */
+export async function validateBodyQuizQuestionStatusExists(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { status } = req.body;
+    if (status) {
+      const validStatus = Object.values(QuizQuestionStatusEnum).includes(
+        status,
+      );
+      if (!validStatus) {
+        return res.status(400).json({
+          error: 'Invalid status provided.',
+        });
+      }
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+/** Validates if a single quiz question type passed in body exists */
+export async function validateBodyQuizQuestionTypeExists(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { questionType } = req.body;
+    if (questionType) {
+      const validQuestionTypes =
+        Object.values(QuizQuestionTypeEnum).includes(questionType);
+      if (!validQuestionTypes) {
+        return res.status(400).json({
+          error: 'Invalid question type provided.',
         });
       }
     }
@@ -499,54 +557,6 @@ export async function validateParamsQuizQuestionExists(
           error: 'Question does not exist.',
         });
       }
-    }
-    next();
-  } catch (error) {
-    return res.status(500).json({
-      error: error.message,
-    });
-  }
-}
-
-/** Validates that a quiz question belongs to at least one type of question (TFQ, MCQ, MRQ, OE) */
-export async function validateBodyQuizQuestionIsValidQuestionType(
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) {
-  try {
-    const { isMcq, isMrq, isTfq, options } = req.body;
-    if (isMcq == undefined || isMrq == undefined || isTfq == undefined) {
-      throw Error(
-        'Malformed request; expected isMcq, isMrq, isTfq to specify question type.',
-      );
-    }
-    if ((isMcq && isMrq) || (isMcq && isTfq) || (isMrq && isTfq)) {
-      return res.status(400).json({
-        error:
-          'Quiz questions cannot a combination of question types (TFQ, MCQ, MRQ).',
-      });
-    }
-    if (
-      req.method == 'POST' &&
-      (options == undefined || options.length == 0) &&
-      (isMcq || isMrq || isTfq)
-    ) {
-      return res.status(400).json({
-        error:
-          'Quiz questions of type TFQ, MCQ, MRQ, are required to have options.',
-      });
-    }
-    if (!isMcq && !isMrq && !isTfq && options) {
-      return res.status(400).json({
-        error: 'Open ended questions should not have options.',
-      });
-    }
-    if (isMcq == undefined || isMrq == undefined || isTfq == undefined) {
-      return res.status(400).json({
-        error:
-          'Malformed request: Quiz questions need to specify question type (TFQ, MCQ, MRQ, OE).',
-      });
     }
     next();
   } catch (error) {

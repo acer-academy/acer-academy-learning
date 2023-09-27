@@ -11,8 +11,9 @@ import {
   validateBodyLevelsExist,
   validateBodyQuestionTextNotEmpty,
   validateBodyQuizQuestionFormatValid,
-  validateBodyQuizQuestionIsValidQuestionType,
+  validateBodyQuizQuestionStatusExists,
   validateBodyQuizQuestionTopicsExist,
+  validateBodyQuizQuestionTypeExists,
   validateParamsQuizQuestionExists,
 } from '../middleware/validationMiddleware';
 import { QuizAnswerService } from '../services/QuizAnswerService';
@@ -30,7 +31,8 @@ quizQuestionRouter.post(
   validateBodyQuizQuestionTopicsExist,
   validateBodyLevelsExist,
   validateBodyDifficultyExists,
-  validateBodyQuizQuestionIsValidQuestionType,
+  validateBodyQuizQuestionStatusExists,
+  validateBodyQuizQuestionTypeExists,
   validateBodyQuestionTextNotEmpty,
   validateBodyAnswersNotEmpty,
   async (req: Request, res: Response) => {
@@ -96,6 +98,8 @@ quizQuestionRouter.post(
   validateBodyQuizQuestionTopicsExist,
   validateBodyLevelsExist,
   validateBodyDifficultyExists,
+  validateBodyQuizQuestionTypeExists,
+  validateBodyQuizQuestionStatusExists,
   async (req: Request, res: Response) => {
     try {
       const filterOptions: QuizQuestionFilterOptions = req.body;
@@ -120,7 +124,8 @@ quizQuestionRouter.put(
   validateBodyLevelsExist,
   validateBodyDifficultyExists,
   validateBodyQuestionTextNotEmpty,
-  validateBodyQuizQuestionIsValidQuestionType,
+  validateBodyQuizQuestionStatusExists,
+  validateBodyQuizQuestionTypeExists,
   validateBodyAnswersNotEmpty,
   async (req: Request, res: Response, next: NextFunction) => {
     try {

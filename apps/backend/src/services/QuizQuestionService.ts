@@ -5,7 +5,9 @@ import {
   QuizAnswer,
   QuizQuestion,
   QuizQuestionDifficultyEnum,
+  QuizQuestionStatusEnum,
   QuizQuestionTopicEnum,
+  QuizQuestionTypeEnum,
 } from '@prisma/client';
 import { QuizQuestionDao } from '../dao/QuizQuestionDao';
 import { Request } from 'express';
@@ -15,10 +17,8 @@ export interface QuizQuestionFilterOptions {
   topics?: QuizQuestionTopicEnum[];
   levels?: LevelEnum[];
   difficulty?: QuizQuestionDifficultyEnum;
-  isMcq?: boolean;
-  isMrq?: boolean;
-  isTfq?: boolean;
-  isOpenEnded?: boolean;
+  questionType?: QuizQuestionTypeEnum;
+  status?: QuizQuestionStatusEnum;
 }
 
 export class QuizQuestionService {
@@ -63,22 +63,12 @@ export class QuizQuestionService {
       where.difficulty = filterOptions.difficulty;
     }
 
-    if (filterOptions.isMcq !== undefined) {
-      where.isMcq = filterOptions.isMcq;
+    if (filterOptions.questionType) {
+      where.questionType = filterOptions.questionType;
     }
 
-    if (filterOptions.isMrq !== undefined) {
-      where.isMrq = filterOptions.isMrq;
-    }
-
-    if (filterOptions.isTfq !== undefined) {
-      where.isTfq = filterOptions.isTfq;
-    }
-
-    if (filterOptions.isOpenEnded !== undefined) {
-      where.isMcq = false;
-      where.isMrq = false;
-      where.isTfq = false;
+    if (filterOptions.status) {
+      where.status = filterOptions.status;
     }
 
     return this.quizQuestionDao.getFilteredQuizQuestions(where);
@@ -102,7 +92,6 @@ export class QuizQuestionService {
       for (const oldAnswer of oldAnswers) {
         await quizAnswerService.deleteQuizAnswer(oldAnswer.id);
       }
-
       return this.quizQuestionDao.updateQuizQuestion(questionId, req.body);
     } else {
       return this.quizQuestionDao.updateQuizQuestion(questionId, req.body);

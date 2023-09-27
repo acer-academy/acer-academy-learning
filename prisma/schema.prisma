@@ -269,15 +269,27 @@ enum QuizQuestionTopicEnum {
   PROBABILITY_AND_STATISTICS
 }
 
+enum QuizQuestionStatusEnum {
+  READY
+  DRAFT
+  DISABLED
+}
+
+enum QuizQuestionTypeEnum {
+  MCQ
+  MRQ
+  TFQ
+  OPEN_ENDED
+}
+
 model QuizQuestion {
   id           String                     @id @default(uuid()) @db.Uuid
   topics       QuizQuestionTopicEnum[]
   levels       LevelEnum[]
   difficulty   QuizQuestionDifficultyEnum
   questionText String                     @db.Text
-  isMcq        Boolean
-  isMrq        Boolean
-  isTfq        Boolean
+  status       QuizQuestionStatusEnum
+  questionType QuizQuestionTypeEnum
   options      String[]
   answers      QuizAnswer[]
 }
