@@ -44,6 +44,7 @@ import AdminResetPassword from '../pages/entry/AdminResetPassword';
 import { TeacherHRManagementPage } from '../pages/hr/TeacherHRManagementPage';
 import { StudentHRManagementPage } from '../pages/hr/StudentHRManagementPage';
 import { AdminHRManagementPage } from '../pages/hr/AdminHRManagementPage';
+import TransactionsComponent from '../pages/transaction/TransactionManagement';
 
 export default function App() {
   return (
@@ -122,7 +123,7 @@ export default function App() {
                 }
               >
                 <Route path={CREDIT_BUNDLE} element={<h2>Credit Bundle</h2>} />
-                <Route path={TRANSACTION} element={<h2>Transaction</h2>} />
+                <Route path={TRANSACTION} element={<TransactionsComponent />} />
                 <Route path={PROMOTION} element={<PromotionManagement />} />
               </Route>
 
