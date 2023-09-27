@@ -4,6 +4,7 @@ import {
   QuizQuestionDifficultyEnum,
   QuizQuestionTopicEnum,
   SubjectEnum,
+  TransactionType,
 } from '@prisma/client';
 import { NextFunction, Request, Response } from 'express';
 import { CentreService } from '../services/CentreService';
@@ -12,6 +13,7 @@ import { FaqArticleService } from '../services/FaqArticleService';
 import { FaqTopicService } from '../services/FaqTopicService';
 import { TeacherService } from '../services/TeacherService';
 import promotionService from '../services/PromotionService';
+import transactionService from '../services/TransactionService';
 import { QuizQuestionService } from '../services/QuizQuestionService';
 import { QuizAnswerService } from '../services/QuizAnswerService';
 
@@ -929,7 +931,7 @@ export async function validateDateFormat(
   try {
     const postgresDatetimeRegex =
       /^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[+-]\d{2}:\d{2}))$/;
-    let isValidStartDate, isValidEndDate;
+    let isValidStartDate, isValidEndDate, isValidDateTime;
 
     isValidStartDate = req.body.startDate
       ? postgresDatetimeRegex.test(req.body.startDate)
@@ -938,10 +940,13 @@ export async function validateDateFormat(
       ? postgresDatetimeRegex.test(req.body.endDate)
       : true;
 
-    if (!isValidStartDate || !isValidEndDate) {
+    isValidDateTime = req.body.dateTime
+      ? postgresDatetimeRegex.test(req.body.dateTime)
+      : true;
+
+    if (!isValidStartDate || !isValidEndDate || !isValidDateTime) {
       return res.status(500).json({
-        error:
-          'Start Date and/or End Date does not comply with Postgres DateTime format',
+        error: 'Inputed date(s) does not comply with Postgres DateTime format',
       });
     }
 
@@ -1029,5 +1034,91 @@ export async function validatePromotionPromoCodeUnique(
     return res.status(500).json({
       error: error.message,
     });
+  }
+}
+
+export async function validateDeleteTermNoTransactions(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { termId } = req.params;
+    const transactions = await transactionService.getTransactionsByTerm(termId);
+    if (transactions.length > 0) {
+      return res.status(400).json({
+        error: 'Unable to delete term due to prior transactions',
+      });
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+export async function validateTransactionType(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { transactionType } = req.body;
+    const validTransaction = Object.values(TransactionType).includes(
+      transactionType as TransactionType,
+    );
+    if (transactionType && !validTransaction) {
+      return res.status(400).json({ error: 'Invalid Transaction Type' });
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+}
+
+export async function validatePurchaseTransaction(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { transactionType, amount, currency } = req.body;
+    if (transactionType && transactionType === TransactionType.PURCHASED) {
+      console.log('inside');
+      if (!amount || !currency) {
+        return res
+          .status(400)
+          .json({ error: 'Please input amount and currency' });
+      }
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+}
+
+export async function validateTransactionComplusoryFields(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { transactionType, termId, studentId, dateTime, creditsTransacted } =
+      req.body;
+    if (
+      !transactionType ||
+      !termId ||
+      !studentId ||
+      !dateTime ||
+      !creditsTransacted
+    ) {
+      return res
+        .status(400)
+        .json({ error: 'Please input all fields before proceeding' });
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
   }
 }
