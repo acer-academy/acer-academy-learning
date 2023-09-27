@@ -95,8 +95,8 @@ promotionRouter.put(
 promotionRouter.delete('/deletePromotion/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    await PromotionService.deletePromotion(id);
-    return res.status(200).json({ message: 'Promotion Deleted Successfully' });
+    const promo = await PromotionService.deletePromotion(id);
+    return res.status(200).json(promo);
   } catch (err) {
     console.log(err);
     return res.status(400).json({ error: err });
