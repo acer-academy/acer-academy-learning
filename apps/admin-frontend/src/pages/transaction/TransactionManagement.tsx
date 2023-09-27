@@ -7,6 +7,11 @@ import 'ag-grid-community/styles/ag-theme-alpine.css';
 import './TransactionManagement.css'; // Import your CSS file
 import TransactionModal from './TransactionModal';
 import TransactionTypeBadge from './TransactionTypeBadge';
+import {
+  RowClickedEvent,
+  ValueFormatterParams,
+  ValueGetterParams,
+} from 'ag-grid-community';
 
 const TransactionsComponent = () => {
   // Initialize State
@@ -20,6 +25,7 @@ const TransactionsComponent = () => {
       try {
         const response = await getAllTransactions();
         const allTransactions: TransactionData[] = response.data;
+        console.log(allTransactions);
         setTransactions(allTransactions);
       } catch (error) {
         console.error('Error retrieving transactions:', error);
@@ -29,24 +35,43 @@ const TransactionsComponent = () => {
     fetchTransactions();
   }, []);
 
-  const onRowClicked = (params: any) => {
+  const onRowClicked = (params: RowClickedEvent) => {
     setSelectedTransaction(params.data);
   };
 
   // Set up ag-Grid
   const columnDefs = [
     { headerName: 'ID', field: 'id' },
-    { headerName: 'Amount', field: 'amount' },
-    { headerName: 'Currency', field: 'currency' },
+    {
+      headerName: 'Amount',
+      field: 'amount',
+      valueGetter: (params: ValueGetterParams) => {
+        // If transactionType is 'DEDUCTED', prepend a '-'
+        return `$ ${params.data.amount}`;
+      },
+    },
+    // {
+    //   headerName: 'Currency',
+    //   field: 'currency',
+    // },
     {
       headerName: 'Date Time',
       field: 'dateTime',
-      valueFormatter: (params) => {
+      valueFormatter: (params: ValueFormatterParams) => {
         const date = new Date(params.value); // Assuming the dateTime is in ISO format
         return date.toLocaleString(); // Convert date to a localized string
       },
     },
-    { headerName: 'Credits Transacted', field: 'creditsTransacted' },
+    {
+      headerName: 'Credits Transacted',
+      field: 'creditsTransacted',
+      valueGetter: (params: ValueGetterParams) => {
+        // If transactionType is 'DEDUCTED', prepend a '-'
+        return params.data.transactionType === 'DEDUCTED'
+          ? `- ${params.data.creditsTransacted}`
+          : `+ ${params.data.creditsTransacted}`;
+      },
+    },
     {
       headerName: 'Transaction Type',
       field: 'transactionType',
