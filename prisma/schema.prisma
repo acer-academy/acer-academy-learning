@@ -176,3 +176,67 @@ model WhitelistItem {
   admin   Admin?
   teacher Teacher?
 }
+
+enum QuizQuestionDifficultyEnum {
+  BASIC
+  INTERMEDIATE
+  ADVANCED
+}
+
+enum QuizQuestionTopicEnum {
+  WHOLE_NUMBERS
+  MONEY
+  MEASUREMENT
+  GEOMETRY
+  DATA_REPRESENTATION_AND_INTERPRETATION
+  FRACTIONS
+  AREA_AND_VOLUME
+  DECIMALS
+  PERCENTAGE
+  RATIO
+  RATE_AND_SPEED
+  DATA_ANALYSIS
+  ALGEBRA
+  NUMBERS_AND_OPERATIONS
+  RATIO_AND_PROPORTION
+  ALGEBRAIC_EXPRESSIONS_AND_FORMULAE
+  FUNCTIONS_AND_GRAPHS
+  EQUATIONS_AND_INEQUALITIES
+  SET_LANGUAGE_AND_NOTATION
+  MATRICES
+  ANGLES_TRIANGLES_AND_POLYGONS
+  CONGRUENCE_AND_SIMILARITY
+  PROPERTIES_OF_CIRCLES
+  PYTHAGORAS_THEOREM_AND_TRIGONOMETRY
+  MENSURATION
+  COORDINATE_GEOMETRY
+  VECTORS_IN_2D
+  DATA_HANDLING_AND_ANALYSIS
+  PROBABILITY
+  SEQUENCE_AND_SERIES
+  VECTORS
+  INTRODUCTION_TO_COMPLEX_NUMBERS
+  CALCULUS
+  PROBABILITY_AND_STATISTICS
+}
+
+model QuizQuestion {
+  id           String                     @id @default(uuid()) @db.Uuid
+  topics       QuizQuestionTopicEnum[]
+  levels       LevelEnum[]
+  difficulty   QuizQuestionDifficultyEnum
+  questionText String                     @db.Text
+  isMcq        Boolean
+  isMrq        Boolean
+  isTfq        Boolean
+  options      String[]
+  answers      QuizAnswer[]
+}
+
+model QuizAnswer {
+  id          String        @id @default(uuid()) @db.Uuid
+  answer      String        @db.Text
+  explanation String?
+  question    QuizQuestion? @relation(fields: [questionId], references: [id])
+  questionId  String?       @db.Uuid
+}

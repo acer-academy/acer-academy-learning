@@ -18,6 +18,8 @@ import faqArticleRouter from './routers/faqArticleRouter';
 import faqTopicRouter from './routers/faqTopicRouter';
 import notificationPreferenceRouter from './routers/notificationPreferenceRouter';
 import whitelistRouter from './routers/whitelistRouter';
+import quizQuestionRouter from './routers/quizQuestionRouter';
+import quizAnswerRouter from './routers/quizAnswerRouter';
 
 dotenv.config();
 
@@ -83,6 +85,8 @@ app.use('/api/v1/faq-articles', faqArticleRouter);
 app.use('/api/v1/faq-topics', faqTopicRouter);
 app.use('/api/v1/preferences', notificationPreferenceRouter);
 app.use('/api/v1/whitelist', whitelistRouter);
+app.use('/api/v1/quiz-questions', quizQuestionRouter);
+app.use('/api/v1/quiz-answers', quizAnswerRouter);
 
 // Start the server
 const server = app.listen(port, () => {
