@@ -11,7 +11,7 @@ class TransactionDao {
     return this.prisma.transaction.findMany();
   }
 
-  public async getTransactionsById(id: string): Promise<Transaction> {
+  public async getTransactionById(id: string): Promise<Transaction> {
     return this.prisma.transaction.findUnique({
       where: { id },
     });
@@ -41,7 +41,7 @@ class TransactionDao {
   }
 
   public async createTransaction(
-    input: Prisma.TransactionCreateInput,
+    input: Prisma.TransactionUncheckedCreateInput,
   ): Promise<Transaction> {
     return this.prisma.transaction.create({ data: input });
   }

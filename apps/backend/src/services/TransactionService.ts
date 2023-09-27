@@ -33,8 +33,8 @@ class TransactionService {
     return credits;
   }
 
-  public async getTransactionsById(id: string): Promise<Transaction> {
-    return TransactionDao.getTransactionsById(id);
+  public async getTransactionById(id: string): Promise<Transaction> {
+    return TransactionDao.getTransactionById(id);
   }
 
   public async getTransactionsByTerm(id: string): Promise<Transaction[]> {
@@ -42,7 +42,7 @@ class TransactionService {
   }
 
   public async createTransaction(
-    input: Prisma.TransactionCreateInput,
+    input: Prisma.TransactionUncheckedCreateInput,
   ): Promise<Transaction> {
     return TransactionDao.createTransaction(input);
   }
@@ -52,6 +52,39 @@ class TransactionService {
     input: Prisma.TransactionUpdateInput,
   ): Promise<Transaction> {
     return TransactionDao.updateTransaction(id, input);
+  }
+
+  public async refundTransaction(id: string): Promise<Transaction> {
+    const transaction = await TransactionDao.getTransactionById(id);
+    if (transaction.transactionType !== TransactionType.PURCHASED) {
+      throw new Error(
+        'Transaction is a deduction/refund and cannot be refunded',
+      );
+    }
+    const {
+      amount,
+      currency,
+      creditsTransacted,
+      termId,
+      studentId,
+      promotionId,
+    } = transaction;
+    const refundTransaction = {
+      amount: amount,
+      currency: currency,
+      creditsTransacted: creditsTransacted,
+      termId: termId,
+      studentId: studentId,
+      promotionId: promotionId,
+      transactionType: TransactionType.DEDUCTED,
+      reason: 'Manual refund of Stripe Transaction',
+    };
+
+    const created = await TransactionDao.createTransaction(refundTransaction);
+    TransactionDao.updateTransaction(transaction.id, {
+      referenceId: created.id,
+    });
+    return created;
   }
 }
 

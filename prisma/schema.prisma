@@ -200,16 +200,19 @@ enum TransactionType {
   PURCHASED
   DEDUCTED
   REFUNDED
+  VOID
 }
 
 model Transaction {
   id String @id @default(uuid()) @db.Uuid
   amount Float?
   currency String? 
-  dateTime DateTime
+  dateTime DateTime @default(now()) @db.Timestamptz
   creditsTransacted Int 
   transactionType TransactionType
   reason String? 
+
+  referenceId String?
 
   term   Term @relation(fields: [termId], references: [id])
   termId String   @db.Uuid
