@@ -20,6 +20,7 @@ import notificationPreferenceRouter from './routers/notificationPreferenceRouter
 import whitelistRouter from './routers/whitelistRouter';
 import transactionRouter from './routers/transactionRouter';
 import termRouter from './routers/termRouter';
+import creditBundleRouter from './routers/creditBundleRouter';
 
 dotenv.config();
 
@@ -87,6 +88,7 @@ app.use('/api/v1/preferences', notificationPreferenceRouter);
 app.use('/api/v1/whitelist', whitelistRouter);
 app.use('/api/v1/terms', termRouter);
 app.use('/api/v1/transactions', transactionRouter);
+app.use('/api/v1/credit-bundles', creditBundleRouter);
 
 // Start the server
 const server = app.listen(port, () => {

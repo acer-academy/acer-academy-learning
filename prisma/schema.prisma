@@ -144,13 +144,13 @@ enum PromotionStatus {
 }
 
 model Promotion {
-  id                 String   @id @default(uuid()) @db.Uuid
+  id                 String          @id @default(uuid()) @db.Uuid
   startDate          DateTime
   endDate            DateTime
-  promoCode          String   @unique
+  promoCode          String          @unique
   percentageDiscount Float
   description        String
-  status PromotionStatus @default(ACTIVE)
+  status             PromotionStatus @default(ACTIVE)
 
   transactions Transaction[]
 }
@@ -188,10 +188,10 @@ model WhitelistItem {
 }
 
 model Term {
-  id String @id @default(uuid()) @db.Uuid
-  name String 
+  id        String   @id @default(uuid()) @db.Uuid
+  name      String
   startDate DateTime
-  endDate DateTime
+  endDate   DateTime
 
   transactions Transaction[]
 }
@@ -203,25 +203,35 @@ enum TransactionType {
 }
 
 model Transaction {
-  id String @id @default(uuid()) @db.Uuid
-  amount Float?
-  currency String? 
-  dateTime DateTime
-  creditsTransacted Int 
-  transactionType TransactionType
-  reason String? 
+  id                String          @id @default(uuid()) @db.Uuid
+  amount            Float?
+  currency          String?
+  dateTime          DateTime
+  creditsTransacted Int
+  transactionType   TransactionType
+  reason            String?
 
-  term   Term @relation(fields: [termId], references: [id])
-  termId String   @db.Uuid
+  term   Term   @relation(fields: [termId], references: [id])
+  termId String @db.Uuid
 
-  student Student @relation(fields: [studentId], references: [id])
-  studentId String @db.Uuid
+  student   Student @relation(fields: [studentId], references: [id])
+  studentId String  @db.Uuid
 
-  promotion Promotion? @relation(fields: [promotionId], references: [id])
-  promotionId String? @db.Uuid
+  promotion   Promotion? @relation(fields: [promotionId], references: [id])
+  promotionId String?    @db.Uuid
 
   //stripeTransaction StripeTransaction? 
 
-  //creditBundle CreditBundle @relation(fields: [creditBundleId], references: [id])
-  //creditBundleId @db.Uuid
+  creditBundle   CreditBundle @relation(fields: [creditBundleId], references: [id])
+  creditBundleId String       @db.Uuid
+}
+
+model CreditBundle {
+  id          String        @id @default(uuid()) @db.Uuid
+  name        String        @unique
+  description String?
+  numCredits  Int
+  basePrice   Float
+  isActive    Boolean       @default(true)
+  Transaction Transaction[]
 }
