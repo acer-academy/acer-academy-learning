@@ -35,6 +35,9 @@ import {
   SIGN_UP,
   STUDENTS,
   TEACHERS,
+  CREDIT_RESOURCES,
+  CREDIT_BUNDLE,
+  TRANSACTION,
 } from '../libs/routes';
 import AdminForgotPassword from '../pages/entry/AdminForgotPassword';
 import AdminResetPassword from '../pages/entry/AdminResetPassword';
@@ -108,6 +111,21 @@ export default function App() {
                 <Route path={STUDENTS} element={<h2>Student</h2>} />
                 <Route path={ADMINS} element={<h2>Admin</h2>} />
               </Route>
+
+              <Route
+                path={CREDIT_RESOURCES}
+                element={
+                  <div>
+                    Common Credit stuff
+                    <Outlet />
+                  </div>
+                }
+              >
+                <Route path={CREDIT_BUNDLE} element={<h2>Credit Bundle</h2>} />
+                <Route path={TRANSACTION} element={<h2>Transaction</h2>} />
+                <Route path={PROMOTION} element={<PromotionManagement />} />
+              </Route>
+
               <Route path={`${CENTRE}`} element={<CentreManagement />} />
               <Route path={`${CENTRE}/:centreId`} element={<CentreDetails />} />
               <Route path={`${FAQ}`} element={<FaqTopicManagement />} />
@@ -115,7 +133,6 @@ export default function App() {
                 path={`${FAQ}/:faqTopicId`}
                 element={<FaqTopicDetails />}
               />
-              <Route path={PROMOTION} element={<PromotionManagement />} />
               <Route path={SETTINGS} element={<AdminProfile />} />
               <Route path={CHANGE_PASSWORD} element={<ChangePassword />} />
             </Route>
