@@ -23,3 +23,4 @@ export * from './lib/enum-ui-mappers/quizStatusEnumUIMapper';
 export * from './lib/enum-ui-mappers/difficultyEnumUIMapper';
 export * from './lib/enum-ui-mappers/quizQuestionTypeEnumUIMapper';
 export * from './lib/rich-text-editor/lexical/LexEditor';
+export * from './lib/rich-text-editor/lexical/LexOutput';

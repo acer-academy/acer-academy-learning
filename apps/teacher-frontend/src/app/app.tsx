@@ -1,11 +1,10 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import {
-  DemoTextEditor,
   EnforceLoginStatePageWrapper,
   LayoutRole,
   LexEditor,
+  LexOutput,
   PrimaryLayout,
-  TipTap,
   ToastProvider,
 } from '@acer-academy-learning/common-ui';
 import styles from './app.module.css';
@@ -80,7 +79,14 @@ export function App() {
               element={<TeacherForgotPassword />}
             />
             <Route path="/reset-password" element={<TeacherResetPassword />} />
-            <Route path="/test" element={<LexEditor />} />
+            <Route
+              path="/test"
+              element={
+                <>
+                  <LexEditor />
+                </>
+              }
+            />
           </Routes>
         </ToastProvider>
       </TeacherAuthWrapper>

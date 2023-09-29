@@ -34,7 +34,6 @@ import AutoLinkPlugin from './plugins/AutoLinkPlugin';
 import CodeActionMenuPlugin from './plugins/CodeActionMenuPlugin';
 import CodeHighlightPlugin from './plugins/CodeHighlightPlugin';
 import CollapsiblePlugin from './plugins/CollapsiblePlugin';
-import CommentPlugin from './plugins/CommentPlugin';
 import ComponentPickerPlugin from './plugins/ComponentPickerPlugin';
 import ContextMenuPlugin from './plugins/ContextMenuPlugin';
 import DragDropPaste from './plugins/DragDropPastePlugin';
@@ -64,25 +63,17 @@ import TableCellResizer from './plugins/TableCellResizer';
 import TableOfContentsPlugin from './plugins/TableOfContentsPlugin';
 import { TablePlugin as NewTablePlugin } from './plugins/TablePlugin';
 import ToolbarPlugin from './plugins/ToolbarPlugin';
-import TreeViewPlugin from './plugins/TreeViewPlugin';
 import TwitterPlugin from './plugins/TwitterPlugin';
 import YouTubePlugin from './plugins/YouTubePlugin';
 import PlaygroundEditorTheme from './themes/PlaygroundEditorTheme';
 import ContentEditable from './ui/ContentEditable';
 import Placeholder from './ui/Placeholder';
 import { CAN_USE_DOM } from '../../utils/canUseDOM';
-import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin';
-import { EditorState, LexicalEditor } from 'lexical';
-
-const skipCollaborationInit =
-  // @ts-ignore
-  window.parent != null && window.parent.frames.right === window;
 
 export default function Editor(): JSX.Element {
   const { historyState } = useSharedHistoryContext();
   const {
     settings: {
-      isCollab,
       isAutocomplete,
       isMaxLength,
       isCharLimit,
@@ -96,9 +87,7 @@ export default function Editor(): JSX.Element {
     },
   } = useSettings();
   const isEditable = useLexicalEditable();
-  const text = isCollab
-    ? 'Enter some collaborative rich text...'
-    : isRichText
+  const text = isRichText
     ? 'Enter some rich text...'
     : 'Enter some plain text...';
   const placeholder = <Placeholder>{text}</Placeholder>;
@@ -163,20 +152,8 @@ export default function Editor(): JSX.Element {
         <KeywordsPlugin />
         <SpeechToTextPlugin />
         <AutoLinkPlugin />
-        {/* <CommentPlugin
-          providerFactory={isCollab ? createWebsocketProvider : undefined}
-        /> */}
         {isRichText ? (
           <>
-            {/* {isCollab ? (
-              <CollaborationPlugin
-                id="main"
-                providerFactory={createWebsocketProvider}
-                shouldBootstrap={!skipCollaborationInit}
-              />
-            ) : (
-              <HistoryPlugin externalHistoryState={historyState} />
-            )} */}
             <HistoryPlugin externalHistoryState={historyState} />
             <RichTextPlugin
               contentEditable={
@@ -271,7 +248,6 @@ export default function Editor(): JSX.Element {
         {shouldUseLexicalContextMenu && <ContextMenuPlugin />}
         <ActionsPlugin isRichText={isRichText} />
       </div>
-      {showTreeView && <TreeViewPlugin />}
       <div></div>
     </>
   );

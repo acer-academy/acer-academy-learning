@@ -7466,7 +7466,7 @@ lexical@0.12.2:
   resolved "https://registry.yarnpkg.com/lexical/-/lexical-0.12.2.tgz#68535e145715d5788374495c9ee0420e417d792b"
   integrity sha512-Kxavd+ETjxtVwG/hvPd6WZfXD44sLOKe9Vlkwxy7lBQ1qZArS+rZfs+u5iXwXe6tX9f2PIM0u3RHsrCEDDE0fw==
 
-lib0@^0.2.31, lib0@^0.2.52, lib0@^0.2.74, lib0@^0.2.85:
+lib0@^0.2.31, lib0@^0.2.52, lib0@^0.2.85:
   version "0.2.86"
   resolved "https://registry.yarnpkg.com/lib0/-/lib0-0.2.86.tgz#86ccc3366ca3b6f8b5d8713c03f2a67ed7bc5f3e"
   integrity sha512-kxigQTM4Q7NwJkEgdqQvU21qiR37twcqqLmh+/SbiGbRLfPlLVbHyY9sWp7PwXh0Xus9ELDSjsUOwcrdt5yZ4w==
@@ -10982,13 +10982,6 @@ yargs@^17.3.1, yargs@^17.6.2:
     string-width "^4.2.3"
     y18n "^5.0.5"
     yargs-parser "^21.1.1"
-
-yjs@^13.6.8:
-  version "13.6.8"
-  resolved "https://registry.yarnpkg.com/yjs/-/yjs-13.6.8.tgz#0d6cebf4d7e69b08ede5ecf6368ddbd9c7603c2e"
-  integrity sha512-ZPq0hpJQb6f59B++Ngg4cKexDJTvfOgeiv0sBc4sUm8CaBWH7OQC4kcCgrqbjJ/B2+6vO49exvTmYfdlPtcjbg==
-  dependencies:
-    lib0 "^0.2.74"
 
 yn@3.1.1:
   version "3.1.1"
