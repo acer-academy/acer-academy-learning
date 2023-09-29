@@ -227,11 +227,12 @@ model Transaction {
 }
 
 model CreditBundle {
-  id          String        @id @default(uuid()) @db.Uuid
-  name        String        @unique
+  id          String  @id @default(uuid()) @db.Uuid
+  name        String  @unique
   description String?
   numCredits  Int
   basePrice   Float
-  isActive    Boolean       @default(true)
-  Transaction Transaction[]
+  isActive    Boolean @default(true)
+
+  transactions Transaction[]
 }

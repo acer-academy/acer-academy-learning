@@ -35,12 +35,14 @@ import {
   SIGN_UP,
   STUDENTS,
   TEACHERS,
+  CREDIT_BUNDLE,
 } from '../libs/routes';
 import AdminForgotPassword from '../pages/entry/AdminForgotPassword';
 import AdminResetPassword from '../pages/entry/AdminResetPassword';
 import { TeacherHRManagementPage } from '../pages/hr/TeacherHRManagementPage';
 import { StudentHRManagementPage } from '../pages/hr/StudentHRManagementPage';
 import { AdminHRManagementPage } from '../pages/hr/AdminHRManagementPage';
+import CreditBundleManagement from '../pages/creditBundle/CreditBundleManagement';
 
 export default function App() {
   return (
@@ -116,6 +118,10 @@ export default function App() {
                 element={<FaqTopicDetails />}
               />
               <Route path={PROMOTION} element={<PromotionManagement />} />
+              <Route
+                path={CREDIT_BUNDLE}
+                element={<CreditBundleManagement />}
+              />
               <Route path={SETTINGS} element={<AdminProfile />} />
               <Route path={CHANGE_PASSWORD} element={<ChangePassword />} />
             </Route>

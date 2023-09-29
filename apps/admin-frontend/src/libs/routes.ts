@@ -20,3 +20,4 @@ export const FAQ = '/faq-management';
 
 // Promotion
 export const PROMOTION = '/promotion';
+export const CREDIT_BUNDLE = '/credit-bundle';
