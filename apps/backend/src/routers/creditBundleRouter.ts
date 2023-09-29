@@ -76,7 +76,6 @@ creditBundleRouter.get('/:creditBundleId', async (req, res) => {
 creditBundleRouter.put(
   '/:creditBundleId',
   restrictBodyId,
-  validateBodyCreditBundleNameUnique,
   validateBodyCreditBundleNameNotEmpty,
   validateBodyCreditBundleNumCreditsPositive,
   validateBodyCreditBundleBasePricePositive,
