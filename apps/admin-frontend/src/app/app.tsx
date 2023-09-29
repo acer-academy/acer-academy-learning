@@ -42,7 +42,7 @@ import AdminResetPassword from '../pages/entry/AdminResetPassword';
 import { TeacherHRManagementPage } from '../pages/hr/TeacherHRManagementPage';
 import { StudentHRManagementPage } from '../pages/hr/StudentHRManagementPage';
 import { AdminHRManagementPage } from '../pages/hr/AdminHRManagementPage';
-import CreditBundleManagement from '../pages/creditBundle/CreditBundleManagement';
+import { CreditBundleManagement } from '../pages/creditBundle/CreditBundleManagement';
 
 export default function App() {
   return (
