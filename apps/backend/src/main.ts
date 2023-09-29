@@ -21,6 +21,8 @@ import whitelistRouter from './routers/whitelistRouter';
 import transactionRouter from './routers/transactionRouter';
 import termRouter from './routers/termRouter';
 import creditBundleRouter from './routers/creditBundleRouter';
+import quizQuestionRouter from './routers/quizQuestionRouter';
+import quizAnswerRouter from './routers/quizAnswerRouter';
 
 dotenv.config();
 
@@ -89,6 +91,8 @@ app.use('/api/v1/whitelist', whitelistRouter);
 app.use('/api/v1/terms', termRouter);
 app.use('/api/v1/transactions', transactionRouter);
 app.use('/api/v1/credit-bundles', creditBundleRouter);
+app.use('/api/v1/quiz-questions', quizQuestionRouter);
+app.use('/api/v1/quiz-answers', quizAnswerRouter);
 
 // Start the server
 const server = app.listen(port, () => {

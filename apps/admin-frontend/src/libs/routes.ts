@@ -18,6 +18,8 @@ export const CENTRE = '/centre-management';
 // FAQ Routs
 export const FAQ = '/faq-management';
 
-// Promotion
-export const PROMOTION = '/promotion';
-export const CREDIT_BUNDLE = '/credit-bundle';
+// Credit Resources Routes
+export const CREDIT_RESOURCES = '/credit-resources';
+export const PROMOTION = `${CREDIT_RESOURCES}/promotion`;
+export const TRANSACTION = `${CREDIT_RESOURCES}/transaction`;
+export const CREDIT_BUNDLE = `${CREDIT_RESOURCES}/credit-bundle`;
