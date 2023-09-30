@@ -68,7 +68,6 @@ const TeacherProfile: React.FC = () => {
   };
 
   const convertTeacherDatatoTeacher = (teacherData: TeacherData): Teacher => {
-    // console.log('user', user);
     return {
       id: teacherData.id,
       email: teacherData.email,
@@ -118,8 +117,6 @@ const TeacherProfile: React.FC = () => {
           ...updUser,
           subjects: subjectEnumArray,
         });
-        // console.log('updated data', updated);
-        // console.log('converted', convertTeacherDatatoTeacher(updated.data));
         //Refresh Auth
         updateUser(convertTeacherDatatoTeacher(updated.data));
         setIsEditing(false);
