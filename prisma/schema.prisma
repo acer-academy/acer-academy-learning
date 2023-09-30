@@ -225,8 +225,19 @@ model Transaction {
 
   //stripeTransaction StripeTransaction? 
 
-  //creditBundle CreditBundle @relation(fields: [creditBundleId], references: [id])
-  //creditBundleId @db.Uuid
+  creditBundle   CreditBundle? @relation(fields: [creditBundleId], references: [id])
+  creditBundleId String?       @db.Uuid
+}
+
+model CreditBundle {
+  id          String  @id @default(uuid()) @db.Uuid
+  name        String  @unique
+  description String?
+  numCredits  Int
+  basePrice   Float
+  isActive    Boolean @default(true)
+
+  transactions Transaction[]
 }
 
 enum QuizQuestionDifficultyEnum {
