@@ -33,14 +33,26 @@ export class QuizQuestionDao {
     });
   }
 
+  public async getTotalCountOfFilteredQuestions(
+    filterOptions: Prisma.QuizQuestionWhereInput,
+  ): Promise<number> {
+    return this.prismaClient.quizQuestion.count({
+      where: filterOptions,
+    });
+  }
+
   public async getFilteredQuizQuestions(
     filterOptions: Prisma.QuizQuestionWhereInput,
+    offset: number,
+    pageSize: number,
   ): Promise<QuizQuestion[]> {
     return this.prismaClient.quizQuestion.findMany({
       where: filterOptions,
       include: {
         answers: true,
       },
+      skip: offset,
+      take: pageSize,
     });
   }
 
