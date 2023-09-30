@@ -31,6 +31,12 @@ class TransactionDao {
     });
   }
 
+  public async getTransactionsByPromotionId(
+    promotionId: string,
+  ): Promise<Transaction[]> {
+    return this.prisma.transaction.findMany({ where: { promotionId } });
+  }
+
   public async getTransactionsByStudentAndTerm(
     termId: string,
     studentId: string,
