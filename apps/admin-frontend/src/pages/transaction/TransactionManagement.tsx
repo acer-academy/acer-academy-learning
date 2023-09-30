@@ -13,6 +13,36 @@ import {
   ValueGetterParams,
 } from 'ag-grid-community';
 
+const dateFilterParams = {
+  comparator: (filterLocalDateAtMidnight: Date, cellValue: string) => {
+    // Convert filter date to the start of the day in ISO format
+    const startOfDay = new Date(filterLocalDateAtMidnight).toISOString();
+
+    // Convert filter date to the end of the day in ISO format
+    const endOfDay = new Date(
+      filterLocalDateAtMidnight.getFullYear(),
+      filterLocalDateAtMidnight.getMonth(),
+      filterLocalDateAtMidnight.getDate(),
+      23,
+      59,
+      59,
+      999,
+    ).toISOString();
+
+    // Compare the cell value with the start and end dates
+    if (cellValue >= startOfDay && cellValue <= endOfDay) {
+      return 0;
+    }
+    if (cellValue < startOfDay) {
+      return -1;
+    }
+    if (cellValue > endOfDay) {
+      return 1;
+    }
+    return 0;
+  },
+};
+
 const TransactionsComponent = () => {
   // Initialize State
   const [transactions, setTransactions] = useState<TransactionData[]>([]);
@@ -41,7 +71,27 @@ const TransactionsComponent = () => {
 
   // Set up ag-Grid
   const columnDefs = [
-    { headerName: 'ID', field: 'id' },
+    {
+      headerName: 'Transaction ID',
+      field: 'id',
+      suppressMenu: true,
+      filter: 'agTextColumnFilter',
+    },
+    {
+      headerName: 'Student Name',
+      field: 'student',
+      valueGetter: (params: ValueGetterParams) => {
+        // Assuming the student object is in params.data.student
+        const student = params.data.student;
+        return student ? `${student.firstName} ${student.lastName}` : '';
+      },
+      filterValueGetter: (params: ValueGetterParams) => {
+        // Provide the combined student name for filtering
+        const student = params.data.student;
+        return student ? `${student.firstName} ${student.lastName}` : '';
+      },
+      filter: 'agTextColumnFilter',
+    },
     {
       headerName: 'Amount',
       field: 'amount',
@@ -59,8 +109,12 @@ const TransactionsComponent = () => {
       field: 'dateTime',
       valueFormatter: (params: ValueFormatterParams) => {
         const date = new Date(params.value); // Assuming the dateTime is in ISO format
-        return date.toLocaleString(); // Convert date to a localized string
+        // return date.toLocaleString(); // Convert date to a localized string
+        return date.toLocaleDateString();
       },
+      filter: 'agDateColumnFilter',
+      filterParams: dateFilterParams,
+      suppressMenu: true,
     },
     {
       headerName: 'Credits Transacted',
@@ -87,15 +141,7 @@ const TransactionsComponent = () => {
         return term.name;
       },
     },
-    {
-      headerName: 'Student Name',
-      field: 'student',
-      valueGetter: (params: ValueGetterParams) => {
-        // Assuming the student object is in params.data.student
-        const student = params.data.student;
-        return student ? `${student.firstName} ${student.lastName}` : '';
-      },
-    },
+
     { headerName: 'Promotion ID', field: 'promotionId' },
     { headerName: 'Reference ID', field: 'referenceId' },
   ];
@@ -104,6 +150,7 @@ const TransactionsComponent = () => {
     sortable: true,
     filter: true,
     resizable: true,
+    floatingFilter: true,
     cellStyle: { borderRight: '1px solid #e0e0e0' }, // Add right border to each cell
   };
 
