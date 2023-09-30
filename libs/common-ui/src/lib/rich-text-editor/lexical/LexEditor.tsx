@@ -27,10 +27,11 @@ import { $generateHtmlFromNodes } from '@lexical/html';
 // );
 
 export type LexEditorProps = {
-  onChange: () => void;
+  value: string;
+  onChange: (val: string) => void;
 };
 
-export const LexEditor = (): JSX.Element => {
+export const LexEditor = ({ value, onChange }: LexEditorProps): JSX.Element => {
   const initialConfig = {
     editorState: undefined,
     namespace: 'LexEditor',
@@ -41,7 +42,7 @@ export const LexEditor = (): JSX.Element => {
     theme: PlaygroundEditorTheme,
   };
 
-  const onChange = (
+  const onEditorChange = (
     editorState: EditorState,
     editor: LexicalEditor,
     tags: Set<string>,
@@ -49,23 +50,22 @@ export const LexEditor = (): JSX.Element => {
     // .update is the ONLY place that the editor state can be safely mutated
     editor.update(() => {
       const rawHtmlString = $generateHtmlFromNodes(editor);
+      console.log(onChange);
+      onChange(rawHtmlString);
       // @TODO: Update state here
       console.log(rawHtmlString);
     });
-    // const htmlString = $generateHtmlFromNodes(editor);
-    // console.log(htmlString);
-    // console.log(JSON.stringify(editor.getEditorState()));
   };
 
   return (
     <SettingsContext>
       <LexicalComposer initialConfig={initialConfig}>
         {/* To update changes */}
-        <OnChangePlugin onChange={onChange} ignoreSelectionChange />
+        <OnChangePlugin onChange={onEditorChange} ignoreSelectionChange />
         <SharedHistoryContext>
           <TableContext>
             <SharedAutocompleteContext>
-              <div className="editor-shell">
+              <div className="editor-shell border-solid border-2 rounded-t-[10px] border-[#eee]">
                 <Editor />
               </div>
               <Settings />
