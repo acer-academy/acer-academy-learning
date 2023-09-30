@@ -16,6 +16,7 @@ import { FaqTopicService } from '../services/FaqTopicService';
 import { TeacherService } from '../services/TeacherService';
 import promotionService from '../services/PromotionService';
 import transactionService from '../services/TransactionService';
+import { CreditBundleService } from '../services/CreditBundleService';
 import { QuizQuestionService } from '../services/QuizQuestionService';
 import { QuizAnswerService } from '../services/QuizAnswerService';
 
@@ -24,6 +25,7 @@ const centreService = new CentreService();
 const classroomService = new ClassroomService();
 const faqArticleService = new FaqArticleService();
 const faqTopicService = new FaqTopicService();
+const creditBundleService = new CreditBundleService();
 const quizQuestionService = new QuizQuestionService();
 const quizAnswerService = new QuizAnswerService();
 
@@ -1216,5 +1218,138 @@ export async function validateTransactionComplusoryFields(
     next();
   } catch (error) {
     return res.status(500).json({ error: error.message });
+  }
+}
+
+/** Validates if a creditBundleId passed in params exists */
+export async function validateParamsCreditBundleExists(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { creditBundleId } = req.params;
+    if (creditBundleId) {
+      const creditBundleExists = await creditBundleService.getCreditBundleById(
+        creditBundleId,
+      );
+      if (!creditBundleExists) {
+        return res.status(400).json({
+          error: 'Credit bundle does not exist.',
+        });
+      }
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+/** Validates if a name passed in body is unique */
+export async function validateBodyCreditBundleNameUnique(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { name } = req.body;
+    const existingCreditBundleByName =
+      await creditBundleService.getCreditBundleByName(name);
+    if (existingCreditBundleByName) {
+      return res.status(400).json({
+        error: 'Credit bundle with this name already exists.',
+      });
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+/** Validates if name passed in body is not empty */
+export async function validateBodyCreditBundleNameNotEmpty(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { name } = req.body;
+    if (name && name.trim() === '') {
+      return res.status(400).json({
+        error: 'Name cannot be empty or contain only whitespace.',
+      });
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+/** Validates if number of credits in credit bundle is positive */
+export async function validateBodyCreditBundleNumCreditsPositive(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { numCredits } = req.body;
+    if (numCredits <= 0) {
+      return res.status(400).json({
+        error: 'Number of credits must be at least 1.',
+      });
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+/** Validates if base price of credit bundle is positive */
+export async function validateBodyCreditBundleBasePricePositive(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { basePrice } = req.body;
+    if (basePrice <= 0) {
+      return res.status(400).json({
+        error: 'Base price must be positive.',
+      });
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+/** Validates if credit bundle is active */
+export async function validateCreditBundleIsActive(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { isActive } = req.body;
+    if (!isActive) {
+      return res.status(400).json({
+        error: 'Credit bundle is inactive.',
+      });
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
   }
 }
