@@ -1,4 +1,13 @@
-import { LevelEnum, SubjectEnum, TransactionType } from '@prisma/client';
+import {
+  LevelEnum,
+  QuizQuestion,
+  QuizQuestionDifficultyEnum,
+  QuizQuestionStatusEnum,
+  QuizQuestionTopicEnum,
+  QuizQuestionTypeEnum,
+  SubjectEnum,
+  TransactionType,
+} from '@prisma/client';
 import { NextFunction, Request, Response } from 'express';
 import { CentreService } from '../services/CentreService';
 import { ClassroomService } from '../services/ClassroomService';
@@ -7,12 +16,18 @@ import { FaqTopicService } from '../services/FaqTopicService';
 import { TeacherService } from '../services/TeacherService';
 import promotionService from '../services/PromotionService';
 import transactionService from '../services/TransactionService';
+import { CreditBundleService } from '../services/CreditBundleService';
+import { QuizQuestionService } from '../services/QuizQuestionService';
+import { QuizAnswerService } from '../services/QuizAnswerService';
 
 const teacherService = new TeacherService();
 const centreService = new CentreService();
 const classroomService = new ClassroomService();
 const faqArticleService = new FaqArticleService();
 const faqTopicService = new FaqTopicService();
+const creditBundleService = new CreditBundleService();
+const quizQuestionService = new QuizQuestionService();
+const quizAnswerService = new QuizAnswerService();
 
 /*
  * Validators Naming Convention: (Expand on as we code)
@@ -238,6 +253,321 @@ export async function validateBodyLevelsExist(
   }
 }
 
+/** Validates if the format of a create quiz question request is valid */
+export async function validateBodyQuizQuestionFormatValid(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const {
+      topics,
+      levels,
+      difficulty,
+      questionText,
+      status,
+      questionType,
+      answers,
+    } = req.body;
+    if (!topics) {
+      throw Error(
+        'Malformed request; topics were required but none were specified.',
+      );
+    } else if (!answers) {
+      throw Error(
+        'Malformed request; answers were required but none were specified.',
+      );
+    } else if (!levels) {
+      throw Error(
+        'Malformed request; levels were required but none were specified.',
+      );
+    } else if (!difficulty) {
+      throw Error(
+        'Malformed request; difficulty was required but none was specified.',
+      );
+    } else if (!questionText) {
+      throw Error(
+        'Malformed request; question text was required but none was specified.',
+      );
+    } else if (!status) {
+      throw Error(
+        'Malformed request; question status was required but none was specified.',
+      );
+    } else if (!questionType) {
+      throw Error(
+        'Malformed request; question type was required but none was specified.',
+      );
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+export async function validateBodyQuizAnswerFormatValid(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { answer, questionId } = req.body;
+    if (!answer) {
+      throw Error(
+        'Malformed request; answer is required but none were specified.',
+      );
+    }
+    if (!questionId) {
+      throw Error(
+        'Malformed request; questionId is required but none were specified.',
+      );
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+/** Validates if an array of topic enums passed in body all exist */
+export async function validateBodyQuizQuestionTopicsExist(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { topics } = req.body;
+    if (topics) {
+      const validTopics = topics.every((topic) =>
+        Object.values(QuizQuestionTopicEnum).includes(topic),
+      );
+      if (!validTopics || topics.length == 0) {
+        return res.status(400).json({
+          error: 'Invalid topics provided.',
+        });
+      }
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+/** Validates if a single difficulty passed in body exists */
+export async function validateBodyDifficultyExists(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { difficulty } = req.body;
+    if (difficulty) {
+      const validDifficulty = Object.values(
+        QuizQuestionDifficultyEnum,
+      ).includes(difficulty);
+      if (!validDifficulty) {
+        return res.status(400).json({
+          error: 'Invalid difficulty provided.',
+        });
+      }
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+/** Validates if a single quiz question status passed in body exists */
+export async function validateBodyQuizQuestionStatusExists(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { status } = req.body;
+    if (status) {
+      const validStatus = Object.values(QuizQuestionStatusEnum).includes(
+        status,
+      );
+      if (!validStatus) {
+        return res.status(400).json({
+          error: 'Invalid status provided.',
+        });
+      }
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+/** Validates if a single quiz question type passed in body exists */
+export async function validateBodyQuizQuestionTypeExists(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { questionType } = req.body;
+    if (questionType) {
+      const validQuestionTypes =
+        Object.values(QuizQuestionTypeEnum).includes(questionType);
+      if (!validQuestionTypes) {
+        return res.status(400).json({
+          error: 'Invalid question type provided.',
+        });
+      }
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+/** Validates that a questionText passed in body is not empty */
+export async function validateBodyQuestionTextNotEmpty(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { questionText } = req.body;
+    if (questionText && questionText.trim().length == 0) {
+      return res.status(400).json({
+        error: 'Question text cannot be empty or contain only whitespace.',
+      });
+    }
+    next();
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+/** Validates that a answer passed in body is not empty */
+export async function validateBodyQuizAnswerAnswerNotEmpty(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { answer } = req.body;
+    if (!answer || answer.trim().length == 0) {
+      return res.status(400).json({
+        error: 'Answer text cannot be empty or contain only whitespace.',
+      });
+    }
+    next();
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+/** Validates that a quiz question id passed in body exists */
+export async function validateBodyQuizQuestionExists(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { questionId } = req.body;
+    if (questionId) {
+      if (questionId.length !== 36) {
+        return res.status(400).json({
+          error: 'Malformed request; questionId is not of valid length.',
+        });
+      }
+      const questionExists = await quizQuestionService.getQuizQuestionById(
+        questionId,
+      );
+      if (!questionExists) {
+        return res.status(400).json({
+          error: 'Question does not exist.',
+        });
+      }
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+}
+
+/** Validates that a quiz answer id passed in params exists */
+export async function validateParamsQuizAnswerExists(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { answerId } = req.params;
+    if (answerId) {
+      if (answerId.length !== 36) {
+        return res.status(400).json({
+          error: 'Malformed request; answerId is not of valid length.',
+        });
+      }
+      const answerExists = await quizAnswerService.getQuizAnswerById(answerId);
+
+      if (!answerExists) {
+        return res.status(400).json({
+          error: 'Answer does not exist.',
+        });
+      }
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+/** Validates that a quiz question id passed in params exists */
+export async function validateParamsQuizQuestionExists(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { questionId } = req.params;
+    if (questionId) {
+      if (questionId.length !== 36) {
+        return res.status(400).json({
+          error: 'Malformed request; questionId is not of valid length.',
+        });
+      }
+      const questionExists = await quizQuestionService.getQuizQuestionById(
+        questionId,
+      );
+      if (!questionExists) {
+        return res.status(400).json({
+          error: 'Question does not exist.',
+        });
+      }
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
 /** Validates if an array of subject enums passed in body all exist */
 export async function validateBodySubjectsExist(
   req: Request,
@@ -299,6 +629,35 @@ export async function validateBodyCentreNameAddressNotEmpty(
     if (name.trim().length == 0 || address.trim().length == 0) {
       return res.status(400).json({
         error: 'Name and address cannot be empty or contain only whitespace.',
+      });
+    }
+    next();
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+export async function validateBodyAnswersNotEmpty(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { answers } = req.body;
+    if (answers) {
+      if (!Array.isArray(answers)) {
+        return res.status(400).json({
+          error: 'Malformed request; answers not in array format.',
+        });
+      }
+      if (answers.length == 0) throw Error('Answers cannot be empty.');
+      answers.forEach((answer) => {
+        if (!answer.answer || answer.answer.trim().length == 0) {
+          throw Error('Answer cannot be empty or contain only whitespace');
+        }
       });
     }
     next();
@@ -773,5 +1132,138 @@ export async function validateTransactionComplusoryFields(
     next();
   } catch (error) {
     return res.status(500).json({ error: error.message });
+  }
+}
+
+/** Validates if a creditBundleId passed in params exists */
+export async function validateParamsCreditBundleExists(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { creditBundleId } = req.params;
+    if (creditBundleId) {
+      const creditBundleExists = await creditBundleService.getCreditBundleById(
+        creditBundleId,
+      );
+      if (!creditBundleExists) {
+        return res.status(400).json({
+          error: 'Credit bundle does not exist.',
+        });
+      }
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+/** Validates if a name passed in body is unique */
+export async function validateBodyCreditBundleNameUnique(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { name } = req.body;
+    const existingCreditBundleByName =
+      await creditBundleService.getCreditBundleByName(name);
+    if (existingCreditBundleByName) {
+      return res.status(400).json({
+        error: 'Credit bundle with this name already exists.',
+      });
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+/** Validates if name passed in body is not empty */
+export async function validateBodyCreditBundleNameNotEmpty(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { name } = req.body;
+    if (name && name.trim() === '') {
+      return res.status(400).json({
+        error: 'Name cannot be empty or contain only whitespace.',
+      });
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+/** Validates if number of credits in credit bundle is positive */
+export async function validateBodyCreditBundleNumCreditsPositive(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { numCredits } = req.body;
+    if (numCredits <= 0) {
+      return res.status(400).json({
+        error: 'Number of credits must be at least 1.',
+      });
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+/** Validates if base price of credit bundle is positive */
+export async function validateBodyCreditBundleBasePricePositive(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { basePrice } = req.body;
+    if (basePrice <= 0) {
+      return res.status(400).json({
+        error: 'Base price must be positive.',
+      });
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+/** Validates if credit bundle is active */
+export async function validateCreditBundleIsActive(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { isActive } = req.body;
+    if (!isActive) {
+      return res.status(400).json({
+        error: 'Credit bundle is inactive.',
+      });
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
   }
 }
