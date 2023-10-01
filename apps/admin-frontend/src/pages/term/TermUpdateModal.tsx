@@ -41,7 +41,8 @@ export const TermUpdateModal: React.FC<TermUpdateModalProps> = ({
   const isTermDataInvalid = () => {
     return (
       termData === undefined ||
-      (termData.name && termData.name.trim() === '') ||
+      !termData.name ||
+      termData.name.trim() === '' ||
       isDatesInvalid(termData.startDate, termData.endDate) ||
       isStartDateInvalid(termData.startDate)
     );
