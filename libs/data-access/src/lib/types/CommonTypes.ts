@@ -42,4 +42,9 @@ export interface LoginData {
   password: string;
 }
 
+export enum PromotionStatusEnum {
+  ACTIVE = 'ACTIVE',
+  INACTIVE = 'INACTIVE',
+}
+
 // Other shared types and enums...

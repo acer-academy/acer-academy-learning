@@ -244,7 +244,8 @@ export const TermManagement: React.FC = () => {
                               </svg>
                             </td>
                           </tr>
-                        ))}
+                        ))
+                        .reverse()}
                     </tbody>
                   </table>
                 ) : (

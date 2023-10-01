@@ -1,3 +1,5 @@
+import { PromotionStatusEnum } from './CommonTypes';
+
 export interface PromotionData {
   id: string;
   startDate: Date;
@@ -22,9 +24,4 @@ export interface PromotionPutData {
   promoCode?: string;
   percentageDiscount?: number;
   description?: string;
-}
-
-export enum PromotionStatusEnum {
-  ACTIVE = 'ACTIVE',
-  INACTIVE = 'INACTIVE',
 }

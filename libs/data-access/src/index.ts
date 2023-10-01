@@ -18,7 +18,12 @@ export * from './lib/api/term';
 
 // Object.freeze(api);
 
-export { LevelEnum, SubjectEnum, AdminType } from './lib/types/CommonTypes';
+export {
+  LevelEnum,
+  SubjectEnum,
+  AdminType,
+  PromotionStatusEnum,
+} from './lib/types/CommonTypes';
 export {
   QuizQuestionDifficultyEnum,
   QuizQuestionStatusEnum,

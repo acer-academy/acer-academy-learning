@@ -3,6 +3,7 @@ import {
   PromotionPostData,
   PromotionPutData,
 } from 'libs/data-access/src/lib/types/promotion';
+import { PromotionStatusEnum } from '@acer-academy-learning/data-access';
 import { useEffect, useState } from 'react';
 import { PromotionDeleteModal } from './PromotionDelete';
 import { PromotionCreateModal } from './PromotionCreate';
@@ -248,9 +249,11 @@ export const PromotionManagement: React.FC = () => {
                               <span
                                 className={`inline-flex items-center rounded-md 
                                 ${
-                                  promotion.status === 'ACTIVE'
+                                  promotion.status ===
+                                  PromotionStatusEnum.ACTIVE
                                     ? 'bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20'
-                                    : promotion.status === 'INACTIVE'
+                                    : promotion.status ===
+                                      PromotionStatusEnum.INACTIVE
                                     ? 'bg-red-50 px-2 py-1 text-xs font-medium text-red-700 ring-1 ring-inset ring-red-600/20'
                                     : 'bg-black-50 px-2 py-1 text-xs font-medium text-black-700 ring-1 ring-inset ring-black-600/20'
                                 }
@@ -288,7 +291,8 @@ export const PromotionManagement: React.FC = () => {
                               </svg>
                             </td>
                           </tr>
-                        ))}
+                        ))
+                        .reverse()}
                     </tbody>
                   </table>
                 ) : (
