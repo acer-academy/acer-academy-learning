@@ -5,7 +5,7 @@ export interface PromotionData {
   promoCode: string;
   percentageDiscount: number;
   description: string;
-  status: string;
+  status: PromotionStatusEnum;
 }
 
 export interface PromotionPostData {
@@ -22,4 +22,9 @@ export interface PromotionPutData {
   promoCode?: string;
   percentageDiscount?: number;
   description?: string;
+}
+
+export enum PromotionStatusEnum {
+  ACTIVE,
+  INACTIVE,
 }
