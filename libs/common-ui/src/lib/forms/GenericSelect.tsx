@@ -1,27 +1,29 @@
-import { ChangeEvent, Fragment, useMemo, useState } from 'react';
+import { Fragment } from 'react';
 import { Listbox, Transition } from '@headlessui/react';
 import { ChevronDownIcon } from '@heroicons/react/24/outline';
-import { QuizQuestionTypeEnum } from '@acer-academy-learning/data-access';
-import { QuestionTypeOption } from './QuestionTypeOption';
-import { QuestionTypeIcon } from './QuestionTypeIcon';
+import { GenericSelectOption } from './GenericSelectOption';
 
-export type QuestionTypeSelectProps = {
-  selected: QuizQuestionTypeEnum;
-  onChange: (type: QuizQuestionTypeEnum) => void;
+export type GenericSelectProps<T> = {
+  selected: T;
+  onChange: (option: T) => void;
+  options: T[];
+  getDisplayValue: (option: T) => string;
+  getIcon?: (option: T) => React.ReactNode;
 };
 
-export const QuestionTypeSelect = ({
+export const GenericSelect = <T,>({
   selected,
   onChange,
-}: QuestionTypeSelectProps) => {
+  options,
+  getDisplayValue,
+}: GenericSelectProps<T>) => {
   return (
     <Listbox value={selected} onChange={onChange}>
       <div className="relative mt-1">
         {/* <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm border-slate-100 border-solid border-2"> */}
         <Listbox.Button className="relative w-full cursor-default rounded-sm bg-white py-2 pl-3 pr-10 text-left border-slate-100 border-solid border-2">
           <span className="flex items-center truncate">
-            <QuestionTypeIcon type={selected} />
-            {selected}
+            {getDisplayValue(selected)}
           </span>
           <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
             <ChevronDownIcon
@@ -37,8 +39,15 @@ export const QuestionTypeSelect = ({
           leaveTo="opacity-0"
         >
           <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm z-[1]">
-            {Object.values(QuizQuestionTypeEnum).map((quiz, quizIdx) => (
-              <QuestionTypeOption key={quizIdx} type={quiz} />
+            {/* {Object.values(QuizQuestionTypeEnum).map((quiz, quizIdx) => (
+              <GenericSelect key={quizIdx} type={quiz} />
+            ))} */}
+            {options.map((option, idx) => (
+              <GenericSelectOption
+                key={idx}
+                option={option}
+                getDisplayValue={getDisplayValue}
+              />
             ))}
           </Listbox.Options>
         </Transition>

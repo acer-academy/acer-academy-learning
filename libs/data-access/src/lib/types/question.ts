@@ -1,6 +1,6 @@
 import { LevelEnum } from './CommonTypes';
 import { z } from 'zod';
-import { createQuizQuestionSchema } from '../schemas';
+import { createQuizAnswerSchema, createQuizQuestionSchema } from '../schemas';
 import {
   QuizQuestionDifficultyEnum,
   QuizQuestionStatusEnum,
@@ -35,4 +35,5 @@ export interface QuizQuestionPaginationFilter {
   questionType?: QuizQuestionTypeEnum[];
 }
 
+export type CreateQuizAnswerType = z.infer<typeof createQuizAnswerSchema>;
 export type CreateQuizQuestionType = z.infer<typeof createQuizQuestionSchema>;

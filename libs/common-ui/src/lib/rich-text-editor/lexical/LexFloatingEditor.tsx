@@ -5,12 +5,27 @@ import {
 import { ContentEditable } from '@lexical/react/LexicalContentEditable';
 import LexicalErrorBoundary from '@lexical/react/LexicalErrorBoundary';
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import CustomFloatingTextFormatToolbarPlugin from './plugins/CustomFloatingTextFormatToolbarPlugin';
 import EquationsPlugin from './plugins/EquationsPlugin';
 import { EquationNode } from './nodes/EquationNode';
+import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin';
+import { EditorState, LexicalEditor } from 'lexical';
+import { $generateHtmlFromNodes } from '@lexical/html';
 
-export const LexFloatingEditor = () => {
+export type LexFloatingEditorProps = {
+  className?: string;
+  onChange: (val: string) => void;
+  onBlur: (val: string) => void;
+  value: string;
+};
+
+export const LexFloatingEditor = ({
+  className = '',
+  onChange,
+  onBlur,
+  value,
+}: LexFloatingEditorProps) => {
   const initialConfig: InitialConfigType = {
     editable: true,
     namespace: 'Floating Editor',
@@ -29,17 +44,37 @@ export const LexFloatingEditor = () => {
     }
   };
 
+  const onEditorChange = (
+    editorState: EditorState,
+    editor: LexicalEditor,
+    tags: Set<string>,
+  ) => {
+    // .update is the ONLY place that the editor state can be safely mutated
+    editor.update(() => {
+      const rawHtmlString = $generateHtmlFromNodes(editor);
+      onChange(rawHtmlString);
+    });
+  };
+
+  useEffect(() => {
+    if (!isFocused) {
+      console.log('onBlur');
+      onBlur(value);
+    }
+  }, [isFocused, onBlur, value]);
+
   return (
     <LexicalComposer initialConfig={initialConfig}>
       <div
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
-        className={`relative outline-none border-solid ${
+        className={`${className} relative outline-none border-solid ${
           isFocused
             ? 'border-teacher-primary-500'
             : 'border-teacher-primary-200'
         } border-b-2 mb-[-1px]`}
       >
+        <OnChangePlugin onChange={onEditorChange} />
         <RichTextPlugin
           contentEditable={
             <div ref={onRef}>

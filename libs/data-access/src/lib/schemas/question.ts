@@ -23,6 +23,7 @@ export const quizAnswerSchema = z.object({
       }
     }),
   explanation: z.string().trim().optional(),
+  isCorrect: z.boolean(),
 });
 
 export const createQuizAnswerSchema = quizAnswerSchema.omit({ id: true });
@@ -55,8 +56,41 @@ export const quizQuestionSchema = z.object({
   questionType: z.nativeEnum(QuizQuestionTypeEnum),
 });
 
-export const createQuizQuestionSchema = quizQuestionSchema.extend({
-  answers: z
-    .array(createQuizAnswerSchema)
-    .min(2, 'You must have at least 2 answers'),
-});
+const questionAnswerValidateSchema = z
+  .object({
+    questionType: z.nativeEnum(QuizQuestionTypeEnum),
+    answers: z
+      .array(createQuizAnswerSchema)
+      .min(2, 'You must have at least 2 answers')
+      .superRefine((answers, ctx) => {
+        const explored = new Set<string>();
+        answers.forEach((answer) => {
+          if (explored.has(answer.answer.trim())) {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: 'Duplicate answers are not allowed.',
+            });
+          }
+          explored.add(answer.answer.trim());
+        });
+      }),
+  })
+  .superRefine(({ questionType, answers }, ctx) => {
+    const correctCount = answers.filter((ans) => ans.isCorrect).length;
+    if (
+      questionType === QuizQuestionTypeEnum.MCQ ||
+      (questionType === QuizQuestionTypeEnum.TFQ && correctCount !== 1)
+    ) {
+      ctx.addIssue({
+        path: ['answers'],
+        code: z.ZodIssueCode.custom,
+        message: `Not allowed to have more than 1 correct answer for ${questionType}`,
+      });
+    }
+  });
+
+// Have to use intersection for validate messages to work
+export const createQuizQuestionSchema = z.intersection(
+  quizQuestionSchema.omit({ questionType: true }),
+  questionAnswerValidateSchema,
+);
