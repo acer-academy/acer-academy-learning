@@ -32,7 +32,6 @@ transactionRouter.get('/:id', async (req, res) => {
 
 transactionRouter.get('/refund/:id', async (req, res) => {
   try {
-    console.log('inside');
     const { id } = req.params;
     const transaction = await TransactionService.refundTransaction(id);
     return res.status(200).json(transaction);

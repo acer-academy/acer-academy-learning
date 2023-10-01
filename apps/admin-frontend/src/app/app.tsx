@@ -46,6 +46,7 @@ import { TeacherHRManagementPage } from '../pages/hr/TeacherHRManagementPage';
 import { StudentHRManagementPage } from '../pages/hr/StudentHRManagementPage';
 import { AdminHRManagementPage } from '../pages/hr/AdminHRManagementPage';
 import { CreditBundleManagement } from '../pages/creditBundle/CreditBundleManagement';
+import { ClassCreditManagement } from '../pages/classCredit/ClassCreditManagement';
 
 export default function App() {
   return (
@@ -80,7 +81,10 @@ export default function App() {
                 <Route path={ADMINS} element={<AdminHRManagementPage />} />
               </Route>
               <Route path={CREDIT_RESOURCES} element={<Outlet />}>
-                <Route path={CLASS_CREDITS} element={<h1>Class Credits</h1>} />
+                <Route
+                  path={CLASS_CREDITS}
+                  element={<ClassCreditManagement />}
+                />
                 <Route
                   path={CREDIT_BUNDLE}
                   element={<CreditBundleManagement />}

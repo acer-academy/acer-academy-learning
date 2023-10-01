@@ -13,6 +13,8 @@ export * from './lib/api/whitelist';
 export * from './lib/api/student';
 export * from './lib/api/teacher';
 export * from './lib/api/creditBundle';
+export * from './lib/api/transaction';
+export * from './lib/api/term';
 
 // Object.freeze(api);
 
