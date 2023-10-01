@@ -50,10 +50,8 @@ export const LexEditor = ({ value, onChange }: LexEditorProps): JSX.Element => {
     // .update is the ONLY place that the editor state can be safely mutated
     editor.update(() => {
       const rawHtmlString = $generateHtmlFromNodes(editor);
-      console.log(onChange);
       onChange(rawHtmlString);
       // @TODO: Update state here
-      console.log(rawHtmlString);
     });
   };
 
@@ -65,7 +63,7 @@ export const LexEditor = ({ value, onChange }: LexEditorProps): JSX.Element => {
         <SharedHistoryContext>
           <TableContext>
             <SharedAutocompleteContext>
-              <div className="editor-shell border-solid border-2 rounded-t-[10px] border-[#eee]">
+              <div className="editor-shell border-solid border-2 rounded-t-[10px] border-[#eee] flex-grow-0">
                 <Editor />
               </div>
               <Settings />

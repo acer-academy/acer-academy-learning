@@ -15,8 +15,6 @@ export const QuestionTypeSelect = ({
   selected,
   onChange,
 }: QuestionTypeSelectProps) => {
-  // States
-  // const [selected, setSelected] = useState(QuizQuestionTypeEnum.MCQ);
 
   return (
     <Listbox value={selected} onChange={onChange}>

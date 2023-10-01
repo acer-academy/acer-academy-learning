@@ -1436,7 +1436,7 @@ button.action-button:disabled {
   border-top-right-radius: 10px;
   vertical-align: middle;
   overflow: auto;
-  height: 36px;
+  height: 44px;
   position: sticky;
   top: 0;
   z-index: 2;

@@ -5,6 +5,10 @@
  * LICENSE file in the root directory of this source tree.
  *
  */
+
+export const isElement = (node: Node | null): node is Element => {
+  return node?.nodeType === Node.ELEMENT_NODE;
+};
 export function getDOMRangeRect(
   nativeSelection: Selection,
   rootElement: HTMLElement,
@@ -19,6 +23,11 @@ export function getDOMRangeRect(
       inner = inner.firstElementChild as HTMLElement;
     }
     rect = inner.getBoundingClientRect();
+  } else if (
+    isElement(nativeSelection.anchorNode) &&
+    nativeSelection.anchorNode?.parentElement === rootElement
+  ) {
+    rect = nativeSelection.anchorNode.getBoundingClientRect();
   } else {
     rect = domRange.getBoundingClientRect();
   }
