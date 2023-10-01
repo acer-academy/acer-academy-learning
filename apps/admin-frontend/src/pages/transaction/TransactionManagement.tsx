@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { getAllTransactions } from '@acer-academy-learning/data-access';
 import { TransactionData } from 'libs/data-access/src/lib/types/transaction';
 import { AgGridReact } from 'ag-grid-react';
@@ -11,6 +11,8 @@ import {
   RowClickedEvent,
   ValueFormatterParams,
   ValueGetterParams,
+  Column,
+  ColumnResizedEvent,
 } from 'ag-grid-community';
 
 const dateFilterParams = {
@@ -74,6 +76,25 @@ const TransactionsComponent = () => {
   const onPageSizeChange = (newPageSize: number) => {
     setPageSize(newPageSize);
   };
+
+  const gridRef = useRef<AgGridReact | null>(null);
+
+  const autoSizeAll = useCallback((skipHeader: boolean) => {
+    const allColumnIds: string[] = [];
+    if (gridRef.current) {
+      const columns = gridRef.current.columnApi.getColumns();
+      if (columns) {
+        columns.forEach((column: Column) => {
+          allColumnIds.push(column.getId());
+        });
+        gridRef.current.columnApi.autoSizeColumns(allColumnIds, skipHeader);
+      }
+    }
+  }, []);
+
+  const onColumnResized = useCallback((params: ColumnResizedEvent) => {
+    console.log(params);
+  }, []);
 
   // Set up ag-Grid
   const columnDefs = [
@@ -155,9 +176,10 @@ const TransactionsComponent = () => {
         return term.name;
       },
     },
-
     // { headerName: 'Promotion ID', field: 'promotionId' },
   ];
+
+  console.log(columnDefs);
 
   const defaultColDef = {
     sortable: true,
@@ -172,26 +194,37 @@ const TransactionsComponent = () => {
       <h3 className="text-base font-semibold leading-7 text-black mb-4">
         Transactions
       </h3>
-      <div className="mb-3">
-        <span>Show </span>
-        <select
-          value={pageSize}
-          onChange={(e) => onPageSizeChange(Number(e.target.value))}
-          className="border border-gray-300 rounded-md shadow-sm px-25 py-1 mr-2"
+      <div className="flex justify-between mb-3">
+        <button
+          className="rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+          onClick={() => autoSizeAll(false)}
         >
-          <option value={10}>10</option>
-          <option value={15}>15</option>
-          <option value={25}>25</option>
-          <option value={50}>50</option>
-          <option value={100}>100</option>
-        </select>
-        <span> rows per page</span>
+          Auto-Size All
+        </button>
+
+        <div className="flex items-center">
+          <span>Show </span>
+          <select
+            value={pageSize}
+            onChange={(e) => onPageSizeChange(Number(e.target.value))}
+            className="border border-gray-300 rounded-md shadow-sm px-25 py-1 ml-2 mr-2"
+          >
+            <option value={10}>10</option>
+            <option value={15}>15</option>
+            <option value={25}>25</option>
+            <option value={50}>50</option>
+            <option value={100}>100</option>
+          </select>
+          <span>rows per page</span>
+        </div>
       </div>
+
       <div
         className="ag-theme-alpine"
         style={{ height: '500px', width: '100%' }}
       >
         <AgGridReact
+          ref={gridRef}
           columnDefs={columnDefs}
           rowData={transactions}
           defaultColDef={defaultColDef}
@@ -200,6 +233,7 @@ const TransactionsComponent = () => {
           onRowClicked={onRowClicked}
           pagination={true}
           paginationPageSize={pageSize}
+          onColumnResized={onColumnResized}
         />
 
         {selectedTransaction && (

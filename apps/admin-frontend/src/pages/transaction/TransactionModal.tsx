@@ -20,7 +20,6 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
 
   if (!transaction) return null;
 
-  // 1. Add a handler function
   const handleRefund = async () => {
     try {
       await refundTransaction(transaction.id);
@@ -29,8 +28,9 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
       if (typeof onRefunded === 'function') {
         onRefunded();
       }
-    } catch (error) {
-      alert('Refund failed: ' + error.message);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      displayToast(`Refund Failed: ${error.message}!`, ToastType.ERROR);
     }
   };
 
