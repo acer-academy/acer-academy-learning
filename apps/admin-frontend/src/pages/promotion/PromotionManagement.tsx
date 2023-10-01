@@ -2,7 +2,6 @@ import {
   PromotionData,
   PromotionPostData,
   PromotionPutData,
-  PromotionStatusEnum,
 } from 'libs/data-access/src/lib/types/promotion';
 import { useEffect, useState } from 'react';
 import { PromotionDeleteModal } from './PromotionDelete';
@@ -249,11 +248,9 @@ export const PromotionManagement: React.FC = () => {
                               <span
                                 className={`inline-flex items-center rounded-md 
                                 ${
-                                  promotion.status ===
-                                  PromotionStatusEnum.ACTIVE
+                                  promotion.status === 'ACTIVE'
                                     ? 'bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20'
-                                    : promotion.status ===
-                                      PromotionStatusEnum.INACTIVE
+                                    : promotion.status === 'INACTIVE'
                                     ? 'bg-red-50 px-2 py-1 text-xs font-medium text-red-700 ring-1 ring-inset ring-red-600/20'
                                     : 'bg-black-50 px-2 py-1 text-xs font-medium text-black-700 ring-1 ring-inset ring-black-600/20'
                                 }
