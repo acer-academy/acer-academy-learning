@@ -1,7 +1,6 @@
 import express from 'express';
 import AdminService from '../services/AdminService';
 import {
-  AdminPostData,
   AdminGetData,
   AdminPutData,
 } from 'libs/data-access/src/lib/types/admin';

@@ -49,7 +49,7 @@ class StudentDao {
     });
   }
 
-  public async getStudentById(id: string) {
+  public async getStudentById(id: string): Promise<Student> {
     return this.prisma.student.findUnique({
       where: { id },
       include: {
@@ -60,7 +60,7 @@ class StudentDao {
     });
   }
 
-  public async getStudentByEmail(email: string) {
+  public async getStudentByEmail(email: string): Promise<Student> {
     return this.prisma.student.findUnique({
       where: { email },
       include: {

@@ -2,10 +2,7 @@
 import bcrypt from 'bcrypt';
 // import jwt from 'jsonwebtoken';
 import AdminDao from '../dao/AdminDao';
-import {
-  AdminPostData,
-  AdminGetData,
-} from 'libs/data-access/src/lib/types/admin';
+import { AdminGetData } from 'libs/data-access/src/lib/types/admin';
 
 import { Admin, Prisma } from '@prisma/client';
 import jwt from 'jsonwebtoken';
