@@ -18,15 +18,19 @@ export const ClassCreditManagement: React.FC = () => {
   const [studentData, setStudentData] = useState<Student[]>([]);
   const [termData, setTermData] = useState<TermData[]>([]);
   const [currentTerm, setCurrentTerm] = useState<TermData>();
-  const [creditMap, setCreditMap] = useState<{ [studentId: string]: number }>(
-    {},
-  );
+  const [creditMap, setCreditMap] = useState<{ [studentId: string]: number }>({
+    // TODO: REMOVE WHEN DONE TESTING
+    // 'b110f6b9-050d-4b91-80a7-a093f6a8ecda': 10,
+  });
   const [searchbarText, setSearchbarText] = useState('');
   const [blockStudentId, setBlockStudentId] = useState('');
   const [blockStudentName, setBlockStudentName] = useState('');
   const [isBlockModalOpen, setIsBlockModalOpen] = useState(false);
   const [creditFilterMinimum, setCreditFilterMinimum] = useState(-100);
   const [creditFilterMaximum, setCreditFilterMaximum] = useState(100);
+  const [isEditingCredit, setIsEditingCredit] = useState(false);
+  const [editCreditStudentId, setEditCreditStudentId] = useState('');
+  const [updatedCredits, setUpdatedCredits] = useState(0);
 
   const { displayToast, ToastType } = useToast();
 
@@ -61,15 +65,22 @@ export const ClassCreditManagement: React.FC = () => {
 
   const fetchAvailableCredits = async () => {
     try {
+      await fetchAllStudents();
+
+      // Create a copy of the current state object
+      const updatedCreditMap = { ...creditMap };
+
       for (const index in studentData) {
         const response = await getAvailableCredits(
           currentTerm?.id ?? '',
           studentData[index].id,
         );
-        const availableCredits: number = response.data;
-        updateCredits(studentData[index].id, availableCredits);
+        const availableCredits: number = response.data ?? -1;
+        updatedCreditMap[studentData[index].id] = availableCredits;
       }
-      console.log(creditMap);
+      // TODO: REMOVE AFTER TESTING
+      updatedCreditMap['b110f6b9-050d-4b91-80a7-a093f6a8ecda'] = 10;
+      setCreditMap(updatedCreditMap);
     } catch (error) {
       displayToast(
         'Available credits could not be retrieved from the server.',
@@ -77,16 +88,6 @@ export const ClassCreditManagement: React.FC = () => {
       );
       console.log(error);
     }
-  };
-
-  // Function to update the state with a new studentId and availableCredits
-  const updateCredits = (studentId: string, availableCredits: number) => {
-    // Create a copy of the current state object
-    const updatedCreditMap = { ...creditMap };
-    // Update the availableCredits for the specified studentId
-    updatedCreditMap[studentId] = availableCredits;
-    // Set the updated state
-    setCreditMap(updatedCreditMap);
   };
 
   const handleBlockStudent = async () => {
@@ -307,7 +308,53 @@ export const ClassCreditManagement: React.FC = () => {
                               {student.email}
                             </td>
                             <td className="whitespace-normal px-3 py-4 text-sm text-gray-500 max-w-sm">
-                              {creditMap[student.id] ?? 0}
+                              <div className="inline-flex justify-center">
+                                {isEditingCredit &&
+                                editCreditStudentId === student.id ? (
+                                  <input
+                                    name="updatedCredits"
+                                    className="flex w-16 items-center border-0 rounded bg-transparent ring-1 ring-inset focus:ring-2 focus:ring-inset ring-gray-300 text-gray-900 focus:ring-adminGreen-500"
+                                    value={updatedCredits}
+                                    onChange={(e) => {
+                                      setUpdatedCredits(
+                                        parseInt(e.target.value),
+                                      );
+                                    }}
+                                  ></input>
+                                ) : (
+                                  <div className="flex items-center">
+                                    {creditMap[student.id] ?? 0}
+                                  </div>
+                                )}
+                                {isEditingCredit &&
+                                editCreditStudentId === student.id ? (
+                                  <button
+                                    onClick={() => {
+                                      setIsEditingCredit(false);
+                                      // wereUpdatesMade();
+                                    }}
+                                    className="text-adminGreen-600 ml-4 hover:underline"
+                                  >
+                                    Update
+                                  </button>
+                                ) : (
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className="h-4 w-4 ml-4 fill-gray-400 stroke-2 hover:fill-black cursor-pointer"
+                                    viewBox="0 0 16 16"
+                                    onClick={() => {
+                                      setIsEditingCredit(true);
+                                      setEditCreditStudentId(student.id);
+                                      setUpdatedCredits(
+                                        creditMap[student.id] ?? 0,
+                                      );
+                                    }}
+                                  >
+                                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+                                    <path d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
+                                  </svg>
+                                )}
+                              </div>
                             </td>
                             <td className="whitespace-normal px-3 py-4 text-sm text-gray-500 max-w-sm">
                               <span
