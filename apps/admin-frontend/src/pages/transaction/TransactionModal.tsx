@@ -34,9 +34,6 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
     }
   };
 
-  console.log(transaction.referenceId);
-  console.log(transaction.transactionType);
-
   return (
     <Transition.Root show={!!transaction} as={Fragment}>
       <Dialog as="div" className="relative z-10" onClose={onClose}>
@@ -75,8 +72,21 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
                     <div className="mt-2">
                       <div className="flex flex-col gap-y-2 text-sm text-gray-500">
                         <div className="flex justify-between">
-                          <span>ID:</span>
+                          <span>Transaction ID:</span>
                           <span>{transaction.id}</span>
+                        </div>
+
+                        <div className="flex justify-between">
+                          <span>Student Name:</span>
+                          <span>
+                            {transaction.student.firstName}{' '}
+                            {transaction.student.lastName}
+                          </span>
+                        </div>
+
+                        <div className="flex justify-between">
+                          <span>Student ID:</span>
+                          <span>{transaction.student.id}</span>
                         </div>
 
                         <div className="flex justify-between">
@@ -122,7 +132,10 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
                           <span>{transaction.reason}</span>
                         </div>
 
-                        {/* ... continue in this manner for the rest of the fields ... */}
+                        <div className="flex justify-between">
+                          <span>Term:</span>
+                          <span>{transaction.term.name}</span>
+                        </div>
                       </div>
                     </div>
                   </div>

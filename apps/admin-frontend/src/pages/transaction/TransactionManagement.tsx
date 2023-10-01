@@ -93,6 +93,12 @@ const TransactionsComponent = () => {
       filter: 'agTextColumnFilter',
     },
     {
+      headerName: 'Student ID',
+      field: 'student.id',
+      suppressMenu: true,
+      filter: 'agTextColumnFilter',
+    },
+    {
       headerName: 'Amount',
       field: 'amount',
       valueGetter: (params: ValueGetterParams) => {
@@ -107,6 +113,7 @@ const TransactionsComponent = () => {
     {
       headerName: 'Date Time',
       field: 'dateTime',
+      sort: 'desc',
       valueFormatter: (params: ValueFormatterParams) => {
         const date = new Date(params.value); // Assuming the dateTime is in ISO format
         // return date.toLocaleString(); // Convert date to a localized string
@@ -155,22 +162,30 @@ const TransactionsComponent = () => {
   };
 
   return (
-    <div className="ag-theme-alpine" style={{ height: '500px', width: '100%' }}>
-      <AgGridReact
-        columnDefs={columnDefs}
-        rowData={transactions}
-        defaultColDef={defaultColDef}
-        domLayout="autoHeight"
-        animateRows={true}
-        onRowClicked={onRowClicked}
-      />
-      {selectedTransaction && (
-        <TransactionModal
-          transaction={selectedTransaction}
-          onClose={() => setSelectedTransaction(null)}
-          onRefunded={fetchTransactions} // Passing the fetchTransactions function as a prop
+    <div>
+      <h3 className="text-base font-semibold leading-7 text-black mb-4">
+        Transactions
+      </h3>
+      <div
+        className="ag-theme-alpine"
+        style={{ height: '500px', width: '100%' }}
+      >
+        <AgGridReact
+          columnDefs={columnDefs}
+          rowData={transactions}
+          defaultColDef={defaultColDef}
+          domLayout="autoHeight"
+          animateRows={true}
+          onRowClicked={onRowClicked}
         />
-      )}
+        {selectedTransaction && (
+          <TransactionModal
+            transaction={selectedTransaction}
+            onClose={() => setSelectedTransaction(null)}
+            onRefunded={fetchTransactions} // Passing the fetchTransactions function as a prop
+          />
+        )}
+      </div>
     </div>
   );
 };
