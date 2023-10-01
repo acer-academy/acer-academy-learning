@@ -67,20 +67,32 @@ export const ClassCreditManagement: React.FC = () => {
     try {
       await fetchAllStudents();
 
-      // Create a copy of the current state object
-      const updatedCreditMap = { ...creditMap };
+      // Fetch all student IDs
+      const studentIds = studentData.map((student) => student.id);
 
-      for (const index in studentData) {
+      // Fetch available credits for all students in parallel
+      const creditPromises = studentIds.map(async (studentId) => {
         const response = await getAvailableCredits(
           currentTerm?.id ?? '',
-          studentData[index].id,
+          studentId,
         );
-        const availableCredits: number = response.data ?? -1;
-        updatedCreditMap[studentData[index].id] = availableCredits;
-      }
-      // TODO: REMOVE AFTER TESTING
-      updatedCreditMap['b110f6b9-050d-4b91-80a7-a093f6a8ecda'] = 10;
+        const availableCredits = response.data ?? 0;
+        return { studentId, availableCredits };
+      });
+
+      const creditResults = await Promise.all(creditPromises);
+
+      // Create a map of student IDs to available credits
+      const updatedCreditMap = Object.fromEntries(
+        creditResults.map(({ studentId, availableCredits }) => [
+          studentId,
+          availableCredits,
+        ]),
+      );
+
       setCreditMap(updatedCreditMap);
+      console.log(updatedCreditMap);
+      console.log(creditMap);
     } catch (error) {
       displayToast(
         'Available credits could not be retrieved from the server.',
@@ -104,6 +116,23 @@ export const ClassCreditManagement: React.FC = () => {
       );
     } catch (error) {
       displayToast('Blocking of student has failed!', ToastType.ERROR);
+      console.log(error);
+    }
+  };
+
+  const handleEditCredit = async () => {
+    try {
+      // TODO: Edit backend, create a transaction
+      const updatedCreditMap = { ...creditMap };
+      updatedCreditMap[editCreditStudentId] = updatedCredits;
+      setCreditMap(updatedCreditMap);
+      console.log(updatedCreditMap);
+      console.log(creditMap);
+    } catch (error) {
+      displayToast(
+        'Updating class credit for student has failed.',
+        ToastType.ERROR,
+      );
       console.log(error);
     }
   };
@@ -331,7 +360,7 @@ export const ClassCreditManagement: React.FC = () => {
                                   <button
                                     onClick={() => {
                                       setIsEditingCredit(false);
-                                      // wereUpdatesMade();
+                                      handleEditCredit();
                                     }}
                                     className="text-adminGreen-600 ml-4 hover:underline"
                                   >
