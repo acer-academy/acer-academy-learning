@@ -5,6 +5,7 @@ export interface PromotionData {
   promoCode: string;
   percentageDiscount: number;
   description: string;
+  status: string;
 }
 
 export interface PromotionPostData {
