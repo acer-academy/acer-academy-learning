@@ -1,60 +1,60 @@
+import React from 'react';
 import {
-  PromotionData,
-  PromotionPostData,
-  PromotionPutData,
-} from 'libs/data-access/src/lib/types/promotion';
-import { PromotionStatusEnum } from '@acer-academy-learning/data-access';
+  TermData,
+  TermCreateData,
+  TermUpdateData,
+} from 'libs/data-access/src/lib/types/term';
 import { useEffect, useState } from 'react';
-import { PromotionDeleteModal } from './PromotionDelete';
-import { PromotionCreateModal } from './PromotionCreate';
-import { PromotionUpdateModal } from './PromotionUpdate';
 import { useToast } from '@acer-academy-learning/common-ui';
+import { TermDeleteModal } from './TermDeleteModal';
+import { TermCreateModal } from './TermCreateModal';
+import { TermUpdateModal } from './TermUpdateModal';
 import {
-  getAllPromotions as apiGetAllPromotions,
-  createPromotion as apiCreatePromotion,
-  deletePromotion as apiDeletePromotion,
-  updatePromotion as apiUpdatePromotion,
+  getAllTerms as apiGetAllTerms,
+  createTerm as apiCreateTerm,
+  deleteTerm as apiDeleteTerm,
+  updateTerm as apiUpdateTerm,
 } from '@acer-academy-learning/data-access';
 
-export const PromotionManagement: React.FC = () => {
-  const [promotions, setPromotions] = useState<PromotionData[]>([]);
+export const TermManagement: React.FC = () => {
+  const [terms, setTerm] = useState<TermData[]>([]);
   const [searchbarText, setSearchbarText] = useState('');
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [deletePromotionId, setDeletePromotionId] = useState('');
-  const [updatePromotionId, setUpdatePromotionId] = useState('');
-  const [initialPromotion, setInitialPromotion] = useState<PromotionData>();
+  const [deleteTermId, setDeleteTermId] = useState('');
+  const [updateTermId, setUpdateTermId] = useState('');
+  const [initialTerm, setInitialTerm] = useState<TermData>();
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
 
   const { displayToast, ToastType } = useToast();
 
-  const getAllPromotions = async () => {
+  const getAllTerms = async () => {
     try {
-      const response = await apiGetAllPromotions();
-      const allPromotions: PromotionData[] = response.data;
+      const response = await apiGetAllTerms();
+      const allTerms: TermData[] = response.data;
       console.log(response);
-      setPromotions(allPromotions);
+      setTerm(allTerms);
     } catch (error) {
       displayToast(
-        'Promotions could not be retrieved from the server.',
+        'Terms could not be retrieved from the server.',
         ToastType.ERROR,
       );
       console.log(error);
     }
   };
 
-  const createPromotion = async (promotionData: PromotionPostData) => {
+  const createTerm = async (termData: TermCreateData) => {
     try {
-      const response = await apiCreatePromotion(promotionData);
+      const response = await apiCreateTerm(termData);
       console.log(response);
 
-      displayToast('Promotion created successfully.', ToastType.SUCCESS);
+      displayToast('Term created successfully.', ToastType.SUCCESS);
     } catch (error: any) {
       if (error.response) {
         displayToast(`${error.response.data.error}`, ToastType.ERROR);
       } else {
         displayToast(
-          'Promotion could not be created: Unknown error.',
+          'Term could not be created: Unknown error.',
           ToastType.ERROR,
         );
       }
@@ -64,21 +64,18 @@ export const PromotionManagement: React.FC = () => {
     }
   };
 
-  const updatePromotion = async (
-    id: string,
-    promotionData: PromotionPutData,
-  ) => {
+  const updateTerm = async (id: string, updateData: TermUpdateData) => {
     try {
-      const response = await apiUpdatePromotion(id, promotionData);
+      const response = await apiUpdateTerm(id, updateData);
       console.log(response);
 
-      displayToast('Promotion created successfully.', ToastType.SUCCESS);
+      displayToast('Term created successfully.', ToastType.SUCCESS);
     } catch (error: any) {
       if (error.response) {
         displayToast(`${error.response.data.error}`, ToastType.ERROR);
       } else {
         displayToast(
-          'Promotion could not be created: Unknown error.',
+          'Term could not be created: Unknown error.',
           ToastType.ERROR,
         );
       }
@@ -88,18 +85,18 @@ export const PromotionManagement: React.FC = () => {
     }
   };
 
-  const deletePromotion = async () => {
+  const deleteTerm = async () => {
     try {
-      const response = await apiDeletePromotion(deletePromotionId);
+      const response = await apiDeleteTerm(deleteTermId);
 
       console.log(response);
-      displayToast('Promotion deleted successfully.', ToastType.INFO);
+      displayToast('Term deleted successfully.', ToastType.INFO);
     } catch (error: any) {
       if (error.response) {
         displayToast(`${error.response.data.error}`, ToastType.ERROR);
       } else {
         displayToast(
-          'Promotion could not be deleted: Unknown error.',
+          'Term could not be deleted: Unknown error.',
           ToastType.ERROR,
         );
       }
@@ -110,7 +107,7 @@ export const PromotionManagement: React.FC = () => {
   };
 
   useEffect(() => {
-    getAllPromotions();
+    getAllTerms();
   }, [isDeleteModalOpen, isCreateModalOpen, isUpdateModalOpen]);
 
   return (
@@ -119,10 +116,10 @@ export const PromotionManagement: React.FC = () => {
         <div className="relative mt-2 rounded-md shadow-sm">
           <input
             type="text"
-            name="promotion-searchbar"
-            id="promotion-searchbar"
+            name="term-searchbar"
+            id="term-searchbar"
             className="block w-full rounded-md border-0 py-1.5 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-adminGreen-600 sm:text-sm sm:leading-6"
-            placeholder="Search for a promotion..."
+            placeholder="Search for a Term..."
             value={searchbarText}
             onChange={(e) => {
               setSearchbarText(e.target.value);
@@ -140,7 +137,7 @@ export const PromotionManagement: React.FC = () => {
         </div>
 
         <div className="flex justify-between items-center">
-          <span className="text-2xl font-bold tracking-tight">Promotions</span>
+          <span className="text-2xl font-bold tracking-tight">Terms</span>
           <button
             className="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-adminGreen-600 border border-transparent rounded-md hover:bg-adminGreen-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-adminGreen-500"
             onClick={() => {
@@ -154,14 +151,14 @@ export const PromotionManagement: React.FC = () => {
             >
               <path d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z" />
             </svg>
-            Add Promotion
+            Add Term
           </button>
         </div>
         <div className="flow-root">
           <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
             <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
               <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
-                {promotions.length > 0 ? (
+                {terms.length > 0 ? (
                   <table className="min-w-full divide-y divide-gray-300">
                     <thead className="bg-gray-50">
                       <tr>
@@ -169,19 +166,7 @@ export const PromotionManagement: React.FC = () => {
                           scope="col"
                           className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6 max-w-xs"
                         >
-                          Promotion Code
-                        </th>
-                        <th
-                          scope="col"
-                          className="px-3.5 py-3.5 text-left text-sm font-semibold text-gray-900 image-column max-w-xs"
-                        >
-                          Discount (%)
-                        </th>
-                        <th
-                          scope="col"
-                          className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 max-w-sm"
-                        >
-                          Description
+                          Name
                         </th>
                         <th
                           scope="col"
@@ -197,12 +182,6 @@ export const PromotionManagement: React.FC = () => {
                         </th>
                         <th
                           scope="col"
-                          className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 max-w-sm"
-                        >
-                          Status
-                        </th>
-                        <th
-                          scope="col"
                           className="relative py-3.5 pl-3 pr-4 sm:pr-6"
                         >
                           <span className="sr-only">Actions</span>
@@ -210,57 +189,31 @@ export const PromotionManagement: React.FC = () => {
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200 bg-white">
-                      {promotions
+                      {terms
                         .filter(
-                          (promotion) =>
-                            promotion.promoCode
+                          (term) =>
+                            term.name
                               .toLowerCase()
                               .includes(searchbarText.toLowerCase()) ||
-                            promotion.description
-                              ?.toLowerCase()
-                              .includes(searchbarText.toLowerCase()) ||
-                            new Date(promotion.startDate)
+                            new Date(term.startDate)
                               .toDateString()
                               .toLowerCase()
                               .includes(searchbarText.toLowerCase()) ||
-                            new Date(promotion.endDate)
+                            new Date(term.endDate)
                               .toDateString()
                               .toLowerCase()
                               .includes(searchbarText.toLowerCase()),
                         )
-                        .map((promotion) => (
-                          <tr key={promotion.id}>
+                        .map((term) => (
+                          <tr key={term.id}>
                             <td className="whitespace-normal py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6 max-w-xs">
-                              {promotion.promoCode}
-                            </td>
-                            <td className="whitespace-nowrap px-4 py-4 text-sm text-gray-500 image-column max-w-xs">
-                              {promotion.percentageDiscount}
+                              {term.name}
                             </td>
                             <td className="whitespace-normal px-3 py-4 text-sm text-gray-500 max-w-sm">
-                              {promotion.description}
+                              {new Date(term.startDate).toDateString()}
                             </td>
                             <td className="whitespace-normal px-3 py-4 text-sm text-gray-500 max-w-sm">
-                              {new Date(promotion.startDate).toDateString()}
-                            </td>
-                            <td className="whitespace-normal px-3 py-4 text-sm text-gray-500 max-w-sm">
-                              {new Date(promotion.endDate).toDateString()}
-                            </td>
-                            <td className="whitespace-normal px-3 py-4 text-sm text-gray-500 max-w-sm">
-                              <span
-                                className={`inline-flex items-center rounded-md 
-                                ${
-                                  promotion.status ===
-                                  PromotionStatusEnum.ACTIVE
-                                    ? 'bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20'
-                                    : promotion.status ===
-                                      PromotionStatusEnum.INACTIVE
-                                    ? 'bg-red-50 px-2 py-1 text-xs font-medium text-red-700 ring-1 ring-inset ring-red-600/20'
-                                    : 'bg-black-50 px-2 py-1 text-xs font-medium text-black-700 ring-1 ring-inset ring-black-600/20'
-                                }
-                              `}
-                              >
-                                {promotion.status}
-                              </span>
+                              {new Date(term.endDate).toDateString()}
                             </td>
                             <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-center text-sm font-medium sm:pr-6">
                               <svg
@@ -269,8 +222,8 @@ export const PromotionManagement: React.FC = () => {
                                 viewBox="0 0 576 512"
                                 className="h-4 w-4 fill-indigo-600 stroke-2 hover:fill-black cursor-pointer"
                                 onClick={() => {
-                                  setUpdatePromotionId(promotion.id);
-                                  setInitialPromotion(promotion);
+                                  setUpdateTermId(term.id);
+                                  setInitialTerm(term);
                                   setIsUpdateModalOpen(true);
                                 }}
                               >
@@ -283,7 +236,7 @@ export const PromotionManagement: React.FC = () => {
                                 className="h-4 w-4 fill-indigo-600 stroke-2 hover:fill-black cursor-pointer"
                                 viewBox="0 0 16 16"
                                 onClick={() => {
-                                  setDeletePromotionId(promotion.id);
+                                  setDeleteTermId(term.id);
                                   setIsDeleteModalOpen(true);
                                 }}
                               >
@@ -297,7 +250,7 @@ export const PromotionManagement: React.FC = () => {
                   </table>
                 ) : (
                   <div className="text-gray-500 text-center py-4">
-                    No promotions have been created yet.
+                    No Terms have been created yet.
                   </div>
                 )}
               </div>
@@ -306,25 +259,23 @@ export const PromotionManagement: React.FC = () => {
         </div>
       </div>
       {isDeleteModalOpen && (
-        <PromotionDeleteModal
+        <TermDeleteModal
           setIsModalOpen={setIsDeleteModalOpen}
-          deletePromotion={deletePromotion}
+          deleteTerm={deleteTerm}
         />
       )}
       {isCreateModalOpen && (
-        <PromotionCreateModal
+        <TermCreateModal
           setIsModalOpen={setIsCreateModalOpen}
-          currentPromotions={promotions}
-          createPromotion={createPromotion}
+          createTerm={createTerm}
         />
       )}
       {isUpdateModalOpen && (
-        <PromotionUpdateModal
+        <TermUpdateModal
           setIsModalOpen={setIsUpdateModalOpen}
-          currentPromotions={promotions}
-          updatePromotion={updatePromotion}
-          initialPromotion={initialPromotion}
-          updateId={updatePromotionId}
+          updateTerm={updateTerm}
+          initialTerm={initialTerm}
+          updateId={updateTermId}
         />
       )}
     </div>

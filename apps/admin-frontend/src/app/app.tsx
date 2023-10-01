@@ -13,6 +13,7 @@ import { CentreDetails } from '../pages/centre/CentreDetails';
 import { FaqTopicManagement } from '../pages/faq/FaqManagement';
 import { FaqTopicDetails } from '../pages/faq/FaqDetails';
 import { PromotionManagement } from '../pages/promotion/PromotionManagement';
+import { TermManagement } from '../pages/term/TermManagement';
 import {
   LayoutRole,
   SecondaryLayout,
@@ -38,6 +39,7 @@ import {
   CREDIT_RESOURCES,
   CREDIT_BUNDLE,
   TRANSACTION,
+  TERM,
 } from '../libs/routes';
 import AdminForgotPassword from '../pages/entry/AdminForgotPassword';
 import AdminResetPassword from '../pages/entry/AdminResetPassword';
@@ -86,6 +88,7 @@ export default function App() {
                 />
                 <Route path={TRANSACTION} element={<TransactionsComponent />} />
                 <Route path={PROMOTION} element={<PromotionManagement />} />
+                <Route path={TERM} element={<TermManagement />} />
               </Route>
 
               <Route path={`${CENTRE}`} element={<CentreManagement />} />
