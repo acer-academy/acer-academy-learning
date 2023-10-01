@@ -54,6 +54,18 @@ studentRouter.delete('/delete/:id', async (req, res) => {
   }
 });
 
+studentRouter.delete('/block/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const student = await StudentService.blockStudent(id);
+
+    return res.status(200).json({ student: student });
+  } catch (err) {
+    console.log(err);
+    return res.status(400).json({ error: err });
+  }
+});
+
 studentRouter.put('/update/:id', async (req, res) => {
   try {
     const { id } = req.params;

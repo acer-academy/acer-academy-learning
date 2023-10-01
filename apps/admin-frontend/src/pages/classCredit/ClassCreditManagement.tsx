@@ -2,6 +2,7 @@ import {
   getAllStudents,
   getAllTerms,
   getAvailableCredits,
+  blockStudent,
 } from '@acer-academy-learning/data-access';
 import { useToast } from '@acer-academy-learning/common-ui';
 import { Student } from 'libs/data-access/src/lib/types/student';
@@ -86,8 +87,7 @@ export const ClassCreditManagement: React.FC = () => {
 
   const handleBlockStudent = async () => {
     try {
-      // TODO
-      //   await blockStudent(blockStudentId);
+      const response = await blockStudent(blockStudentId);
       displayToast('Successfully blocked student.', ToastType.SUCCESS);
     } catch (error) {
       displayToast('Blocking of student has failed!', ToastType.ERROR);
@@ -100,6 +100,11 @@ export const ClassCreditManagement: React.FC = () => {
     fetchAllTerms();
     fetchAvailableCredits();
   }, []);
+
+  useEffect(() => {
+    fetchAllStudents();
+    fetchAvailableCredits();
+  }, [isBlockModalOpen]);
 
   function classNames(...classes: string[]) {
     return classes.filter(Boolean).join(' ');
@@ -137,7 +142,7 @@ export const ClassCreditManagement: React.FC = () => {
           </span>
           <div className="inline-flex justify-center px-4 py-2">
             <div className="relative inline-block text-left mr-4 py-1.5">
-              Choose Term:
+              Select Term:
             </div>
             <Menu as="div" className="relative inline-block text-left">
               <div>

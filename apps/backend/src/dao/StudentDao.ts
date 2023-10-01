@@ -39,6 +39,16 @@ class StudentDao {
       },
     });
   }
+
+  public async blockStudent(id: string): Promise<Student> {
+    return this.prisma.student.update({
+      where: { id },
+      data: {
+        status: 'BLOCKED',
+      },
+    });
+  }
+
   public async getAllStudents(): Promise<Student[]> {
     return this.prisma.student.findMany({
       include: {
