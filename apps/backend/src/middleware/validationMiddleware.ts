@@ -1098,10 +1098,9 @@ export async function validatePurchaseTransaction(
   next: NextFunction,
 ) {
   try {
-    const { transactionType, amount, currency } = req.body;
+    const { transactionType, amount, currency, creditBundleId } = req.body;
     if (transactionType && transactionType === TransactionType.PURCHASED) {
-      console.log('inside');
-      if (!amount || !currency) {
+      if (!amount || !currency || !creditBundleId) {
         return res
           .status(400)
           .json({ error: 'Please input amount and currency' });
