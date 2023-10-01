@@ -69,6 +69,12 @@ const TransactionsComponent = () => {
     setSelectedTransaction(params.data);
   };
 
+  const [pageSize, setPageSize] = useState(15); // Default page size
+
+  const onPageSizeChange = (newPageSize: number) => {
+    setPageSize(newPageSize);
+  };
+
   // Set up ag-Grid
   const columnDefs = [
     {
@@ -166,6 +172,21 @@ const TransactionsComponent = () => {
       <h3 className="text-base font-semibold leading-7 text-black mb-4">
         Transactions
       </h3>
+      <div className="mb-3">
+        <span>Show </span>
+        <select
+          value={pageSize}
+          onChange={(e) => onPageSizeChange(Number(e.target.value))}
+          className="border border-gray-300 rounded-md shadow-sm px-25 py-1 mr-2"
+        >
+          <option value={10}>10</option>
+          <option value={15}>15</option>
+          <option value={25}>25</option>
+          <option value={50}>50</option>
+          <option value={100}>100</option>
+        </select>
+        <span> rows per page</span>
+      </div>
       <div
         className="ag-theme-alpine"
         style={{ height: '500px', width: '100%' }}
@@ -177,7 +198,10 @@ const TransactionsComponent = () => {
           domLayout="autoHeight"
           animateRows={true}
           onRowClicked={onRowClicked}
+          pagination={true}
+          paginationPageSize={pageSize}
         />
+
         {selectedTransaction && (
           <TransactionModal
             transaction={selectedTransaction}
