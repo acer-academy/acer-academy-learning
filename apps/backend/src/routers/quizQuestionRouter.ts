@@ -7,13 +7,16 @@ import { Prisma } from '@prisma/client';
 import {
   restrictBodyId,
   validateBodyAnswersNotEmpty,
+  validateBodyDifficultiesExist,
   validateBodyDifficultyExists,
   validateBodyLevelsExist,
   validateBodyQuestionTextNotEmpty,
   validateBodyQuizQuestionFormatValid,
   validateBodyQuizQuestionStatusExists,
+  validateBodyQuizQuestionStatusesExist,
   validateBodyQuizQuestionTopicsExist,
   validateBodyQuizQuestionTypeExists,
+  validateBodyQuizQuestionTypesExist,
   validateParamsQuizQuestionExists,
 } from '../middleware/validationMiddleware';
 import { QuizAnswerService } from '../services/QuizAnswerService';
@@ -97,12 +100,18 @@ quizQuestionRouter.post(
   '/filter',
   validateBodyQuizQuestionTopicsExist,
   validateBodyLevelsExist,
-  validateBodyDifficultyExists,
-  validateBodyQuizQuestionTypeExists,
-  validateBodyQuizQuestionStatusExists,
+  validateBodyDifficultiesExist,
+  validateBodyQuizQuestionTypesExist,
+  validateBodyQuizQuestionStatusesExist,
   async (req: Request, res: Response) => {
     try {
-      const filterOptions: QuizQuestionFilterOptions = req.body;
+      const { page = 1, pageSize = 10 } = req.query;
+      const offset = (+page - 1) * +pageSize;
+      const filterOptions: QuizQuestionFilterOptions = {
+        pageSize: +pageSize,
+        offset: offset,
+        ...req.body,
+      };
       const filteredQuestions =
         await quizQuestionService.getFilteredQuizQuestions(filterOptions);
       return res.status(200).json(filteredQuestions);

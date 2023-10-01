@@ -13,7 +13,14 @@ export * from './lib/api/whitelist';
 export * from './lib/api/student';
 export * from './lib/api/teacher';
 export * from './lib/api/creditBundle';
+export * from './lib/api/question';
 
 // Object.freeze(api);
 
 export { LevelEnum, SubjectEnum, AdminType } from './lib/types/CommonTypes';
+export {
+  QuizQuestionDifficultyEnum,
+  QuizQuestionStatusEnum,
+  QuizQuestionTopicEnum,
+  QuizQuestionTypeEnum,
+} from './lib/types/question';

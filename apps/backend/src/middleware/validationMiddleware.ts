@@ -269,15 +269,15 @@ export async function validateBodyQuizQuestionFormatValid(
       questionType,
       answers,
     } = req.body;
-    if (!topics) {
+    if (!topics || topics.length == 0) {
       throw Error(
         'Malformed request; topics were required but none were specified.',
       );
-    } else if (!answers) {
+    } else if (!answers || answers.length == 0) {
       throw Error(
         'Malformed request; answers were required but none were specified.',
       );
-    } else if (!levels) {
+    } else if (!levels || levels.length == 0) {
       throw Error(
         'Malformed request; levels were required but none were specified.',
       );
@@ -312,10 +312,15 @@ export async function validateBodyQuizAnswerFormatValid(
   next: NextFunction,
 ) {
   try {
-    const { answer, questionId } = req.body;
+    const { answer, isCorrect, questionId } = req.body;
     if (!answer) {
       throw Error(
         'Malformed request; answer is required but none were specified.',
+      );
+    }
+    if (!isCorrect) {
+      throw Error(
+        'Malformed request; isCorrect is required but none were specified.',
       );
     }
     if (!questionId) {
@@ -343,9 +348,35 @@ export async function validateBodyQuizQuestionTopicsExist(
       const validTopics = topics.every((topic) =>
         Object.values(QuizQuestionTopicEnum).includes(topic),
       );
-      if (!validTopics || topics.length == 0) {
+      if (!validTopics) {
         return res.status(400).json({
           error: 'Invalid topics provided.',
+        });
+      }
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+/** Validates if an array of difficulties passed in body all exist */
+export async function validateBodyDifficultiesExist(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { difficulty } = req.body;
+    if (difficulty) {
+      const validDifficulties = difficulty.every((difficulty) =>
+        Object.values(QuizQuestionDifficultyEnum).includes(difficulty),
+      );
+      if (!validDifficulties) {
+        return res.status(400).json({
+          error: 'Invalid difficulties provided.',
         });
       }
     }
@@ -383,6 +414,32 @@ export async function validateBodyDifficultyExists(
   }
 }
 
+/** Validates if an array of quiz question statuses passed in body all exist */
+export async function validateBodyQuizQuestionStatusesExist(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { status } = req.body;
+    if (status) {
+      const validStatuses = status.every((status) =>
+        Object.values(QuizQuestionStatusEnum).includes(status),
+      );
+      if (!validStatuses) {
+        return res.status(400).json({
+          error: 'Invalid quiz question statuses provided.',
+        });
+      }
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
 /** Validates if a single quiz question status passed in body exists */
 export async function validateBodyQuizQuestionStatusExists(
   req: Request,
@@ -398,6 +455,32 @@ export async function validateBodyQuizQuestionStatusExists(
       if (!validStatus) {
         return res.status(400).json({
           error: 'Invalid status provided.',
+        });
+      }
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+/** Validates if an array of quiz question types passed in body all exist */
+export async function validateBodyQuizQuestionTypesExist(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { questionType } = req.body;
+    if (questionType) {
+      const validQuestionTypes = questionType.every((questionType) =>
+        Object.values(QuizQuestionTypeEnum).includes(questionType),
+      );
+      if (!validQuestionTypes) {
+        return res.status(400).json({
+          error: 'Invalid quiz question types provided.',
         });
       }
     }
@@ -659,6 +742,9 @@ export async function validateBodyAnswersNotEmpty(
           throw Error('Answer cannot be empty or contain only whitespace');
         }
       });
+      if (!answers.reduce((a, b) => a.isCorrect || b.isCorrect)) {
+        throw Error('Answers provided do not have at least one correct answer');
+      }
     }
     next();
   } catch (error) {
