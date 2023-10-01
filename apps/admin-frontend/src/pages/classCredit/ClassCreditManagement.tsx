@@ -25,6 +25,8 @@ export const ClassCreditManagement: React.FC = () => {
   const [blockStudentId, setBlockStudentId] = useState('');
   const [blockStudentName, setBlockStudentName] = useState('');
   const [isBlockModalOpen, setIsBlockModalOpen] = useState(false);
+  const [creditFilterMinimum, setCreditFilterMinimum] = useState(-100);
+  const [creditFilterMaximum, setCreditFilterMaximum] = useState(100);
 
   const { displayToast, ToastType } = useToast();
 
@@ -67,6 +69,7 @@ export const ClassCreditManagement: React.FC = () => {
         const availableCredits: number = response.data;
         updateCredits(studentData[index].id, availableCredits);
       }
+      console.log(creditMap);
     } catch (error) {
       displayToast(
         'Available credits could not be retrieved from the server.',
@@ -193,7 +196,38 @@ export const ClassCreditManagement: React.FC = () => {
             </Menu>
           </div>
         </div>
-
+        <div className="flex justify-end">
+          <div className="inline-flex justify-center px-4">
+            <div className="relative inline-block text-left mr-4 py-2">
+              Filter by class credits:
+            </div>
+            <input
+              type="number"
+              name="credit-filter-min"
+              id="credit-filter-min"
+              className="block w-20 rounded-md border-0 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-adminGreen-600 sm:text-sm sm:leading-6"
+              placeholder="-100"
+              value={creditFilterMinimum}
+              onChange={(e) => {
+                setCreditFilterMinimum(parseInt(e.target.value));
+              }}
+            />
+            <div className="relative inline-block text-left ml-4 mr-4 py-2">
+              to
+            </div>
+            <input
+              type="number"
+              name="credit-filter-max"
+              id="credit-filter-max"
+              className="block w-20 rounded-md border-0 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-adminGreen-600 sm:text-sm sm:leading-6"
+              placeholder="100"
+              value={creditFilterMaximum}
+              onChange={(e) => {
+                setCreditFilterMaximum(parseInt(e.target.value));
+              }}
+            />
+          </div>
+        </div>
         <div className="flow-root">
           <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
             <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
@@ -254,6 +288,13 @@ export const ClassCreditManagement: React.FC = () => {
                               ?.toLowerCase()
                               .includes(searchbarText.toLowerCase()),
                         )
+                        .filter((student) => {
+                          const credits = creditMap[student.id] ?? 0;
+                          return (
+                            credits >= creditFilterMinimum &&
+                            credits <= creditFilterMaximum
+                          );
+                        })
                         .map((student) => (
                           <tr key={student.id}>
                             <td className="whitespace-normal py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6 max-w-xs">
