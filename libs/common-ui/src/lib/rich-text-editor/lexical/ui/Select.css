@@ -1,4 +1,10 @@
-select {
+:root {
+  --select-border: #393939;
+  --select-focus: #101484;
+  --select-arrow: var(--select-border);
+}
+
+.select {
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -13,15 +19,6 @@ select {
 
   z-index: 1;
   outline: none;
-}
-
-:root {
-  --select-border: #393939;
-  --select-focus: #101484;
-  --select-arrow: var(--select-border);
-}
-
-.select {
   min-width: 160px;
   max-width: 290px;
   border: 1px solid var(--select-border);
