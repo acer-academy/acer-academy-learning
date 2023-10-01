@@ -17,7 +17,6 @@ const AdminSignUp: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [error, setError] = useState<string | null>(null);
 
   const navigate = useNavigate();
   const { displayToast, ToastType } = useToast();
@@ -33,7 +32,7 @@ const AdminSignUp: React.FC = () => {
       await registerAdmin({ firstName, lastName, email, password });
       displayToast('Account created!', ToastType.SUCCESS);
       navigate(LOGIN);
-    } catch (error: any) {
+    } catch (error) {
       displayToast(`${error}`, ToastType.ERROR);
     }
   };
@@ -155,8 +154,6 @@ const AdminSignUp: React.FC = () => {
                     />
                   </div>
                 </div>
-
-                {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
 
                 <div>
                   <button

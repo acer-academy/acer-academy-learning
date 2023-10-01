@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React, { useState, useEffect, useMemo } from 'react';
 import {
@@ -232,7 +233,7 @@ export default function StudentSignUp() {
       await createStudent(payload);
       displayToast('Account created!', ToastType.SUCCESS);
       navigate(LOGIN);
-    } catch (error: any) {
+    } catch (error) {
       console.log(error);
       displayToast(`${error}`, ToastType.ERROR);
     }

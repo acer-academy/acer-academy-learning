@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { AxiosResponse } from 'axios';
 import {
   createContext,
@@ -7,33 +8,37 @@ import {
   useEffect,
 } from 'react';
 
-interface AuthContextProps<UserType> {
-  user: UserType | null;
+import { Student, Teacher, Admin } from '@prisma/client';
+
+type UserData = Student | Teacher | Admin;
+
+interface AuthContextProps<UserData> {
+  user: UserData | null;
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
-  updateUser: (user: UserType) => void;
+  updateUser: (user: UserData) => void;
   isLoading: boolean;
 }
 
 const AuthContext = createContext<AuthContextProps<any> | undefined>(undefined);
 
-interface AuthWrapperProps<UserType> {
+interface AuthWrapperProps<UserData> {
   children: ReactNode;
   loginApi: (credentials: {
     email: string;
     password: string;
-  }) => Promise<UserType>;
+  }) => Promise<UserData>;
   logoutApi: () => Promise<AxiosResponse<any>>;
-  fetchUserApi: () => Promise<UserType>;
+  fetchUserApi: () => Promise<UserData>;
 }
 
-export function AuthWrapper<UserType>({
+export function AuthWrapper<UserData>({
   children,
   loginApi,
   logoutApi,
   fetchUserApi,
-}: AuthWrapperProps<UserType>): JSX.Element {
-  const [user, setUser] = useState<UserType | null>(null);
+}: AuthWrapperProps<UserData>): JSX.Element {
+  const [user, setUser] = useState<UserData | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const login = async (email: string, password: string) => {
@@ -57,7 +62,7 @@ export function AuthWrapper<UserType>({
     }
   };
 
-  const updateUser = (updatedUser: UserType) => {
+  const updateUser = (updatedUser: UserData) => {
     setUser(updatedUser);
   };
 
@@ -65,8 +70,10 @@ export function AuthWrapper<UserType>({
     const fetchUser = async () => {
       try {
         const userInfo = await fetchUserApi();
+        console.log(userInfo);
         const { data } = userInfo;
-        setUser(data);
+        const user: UserData = data;
+        setUser(user);
       } catch (error) {
         console.error('Failed to fetch user info', error);
       }
@@ -85,10 +92,10 @@ export function AuthWrapper<UserType>({
   );
 }
 
-export function useAuth<UserType>(): AuthContextProps<UserType> {
+export function useAuth<UserData>(): AuthContextProps<UserData> {
   const context = useContext(AuthContext);
   if (!context) {
     throw new Error('useAuth must be used within an AuthWrapper');
   }
-  return context as AuthContextProps<UserType>;
+  return context as AuthContextProps<UserData>;
 }
