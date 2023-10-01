@@ -23,3 +23,4 @@ export const CREDIT_RESOURCES = '/credit-resources';
 export const PROMOTION = `${CREDIT_RESOURCES}/promotion`;
 export const TRANSACTION = `${CREDIT_RESOURCES}/transaction`;
 export const CREDIT_BUNDLE = `${CREDIT_RESOURCES}/credit-bundle`;
+export const CLASS_CREDITS = `${CREDIT_RESOURCES}/class-credits`;

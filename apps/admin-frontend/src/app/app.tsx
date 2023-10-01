@@ -38,6 +38,7 @@ import {
   CREDIT_RESOURCES,
   CREDIT_BUNDLE,
   TRANSACTION,
+  CLASS_CREDITS,
 } from '../libs/routes';
 import AdminForgotPassword from '../pages/entry/AdminForgotPassword';
 import AdminResetPassword from '../pages/entry/AdminResetPassword';
@@ -79,6 +80,7 @@ export default function App() {
                 <Route path={ADMINS} element={<AdminHRManagementPage />} />
               </Route>
               <Route path={CREDIT_RESOURCES} element={<Outlet />}>
+                <Route path={CLASS_CREDITS} element={<h1>Class Credits</h1>} />
                 <Route
                   path={CREDIT_BUNDLE}
                   element={<CreditBundleManagement />}
