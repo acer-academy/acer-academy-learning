@@ -25,6 +25,6 @@ export interface PromotionPutData {
 }
 
 export enum PromotionStatusEnum {
-  ACTIVE,
-  INACTIVE,
+  ACTIVE = 'ACTIVE',
+  INACTIVE = 'INACTIVE',
 }

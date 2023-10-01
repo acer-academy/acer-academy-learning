@@ -21,5 +21,6 @@ export const FAQ = '/faq-management';
 // Credit Resources Routes
 export const CREDIT_RESOURCES = '/credit-resources';
 export const PROMOTION = `${CREDIT_RESOURCES}/promotion`;
+export const TERM = `${CREDIT_RESOURCES}/term`;
 export const TRANSACTION = `${CREDIT_RESOURCES}/transaction`;
 export const CREDIT_BUNDLE = `${CREDIT_RESOURCES}/credit-bundle`;
