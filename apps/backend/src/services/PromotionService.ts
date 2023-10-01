@@ -1,5 +1,6 @@
 import { Promotion, Prisma } from '@prisma/client';
 import PromotionDao from '../dao/PromotionDao';
+import TransactionService from './TransactionService';
 
 class PromotionService {
   public async createPromotion(
@@ -31,8 +32,13 @@ class PromotionService {
     return PromotionDao.updatePromotion(promotionId, data);
   }
 
-  public async deletePromotion(promotionId: string): Promise<Promotion> {
-    return PromotionDao.deletePromotion(promotionId);
+  public async deletePromotion(promotionId: string): Promise<Promotion | null> {
+    const transactions = await TransactionService.getTransactionsByPromotionId(
+      promotionId,
+    );
+    if (transactions.length === 0) {
+      return PromotionDao.deletePromotion(promotionId);
+    } else return PromotionDao.softDeletePromotion(promotionId);
   }
 }
 

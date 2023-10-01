@@ -1020,7 +1020,7 @@ export async function validateParamsFaqTopicExists(
   }
 }
 
-/** Check if date in correct format */
+/** Validates that inputted date in correct format */
 export async function validateDateFormat(
   req: Request,
   res: Response,
@@ -1060,8 +1060,7 @@ export async function validateDateFormat(
     });
   }
 }
-
-/** Check if discount for promotion in 2dp */
+/** Validates that promotion description not empty */
 export async function validatePromotionDescription(
   req: Request,
   res: Response,
@@ -1081,7 +1080,7 @@ export async function validatePromotionDescription(
   }
 }
 
-/** Check if promotion description not empty */
+/** Validates that percentage discount for promotion in 2dp */
 export async function validatePromotionPercentageDiscount(
   req: Request,
   res: Response,
@@ -1111,6 +1110,7 @@ export async function validatePromotionPercentageDiscount(
   }
 }
 
+/** Validates promotion code used is unique */
 export async function validatePromotionPromoCodeUnique(
   req: Request,
   res: Response,
@@ -1135,6 +1135,7 @@ export async function validatePromotionPromoCodeUnique(
   }
 }
 
+/** Validates that a term can only be deleted when there is no transactions tied to it */
 export async function validateDeleteTermNoTransactions(
   req: Request,
   res: Response,
@@ -1156,6 +1157,7 @@ export async function validateDeleteTermNoTransactions(
   }
 }
 
+/** Validates transaction type is part of TransactionType enum */
 export async function validateTransactionType(
   req: Request,
   res: Response,
@@ -1175,16 +1177,16 @@ export async function validateTransactionType(
   }
 }
 
+/** Validates specific fields are filled for a purchase transaction */
 export async function validatePurchaseTransaction(
   req: Request,
   res: Response,
   next: NextFunction,
 ) {
   try {
-    const { transactionType, amount, currency } = req.body;
+    const { transactionType, amount, currency, creditBundleId } = req.body;
     if (transactionType && transactionType === TransactionType.PURCHASED) {
-      console.log('inside');
-      if (!amount || !currency) {
+      if (!amount || !currency || !creditBundleId) {
         return res
           .status(400)
           .json({ error: 'Please input amount and currency' });
@@ -1196,6 +1198,7 @@ export async function validatePurchaseTransaction(
   }
 }
 
+/** Validates compulsory fields are filled for a transaction */
 export async function validateTransactionComplusoryFields(
   req: Request,
   res: Response,
