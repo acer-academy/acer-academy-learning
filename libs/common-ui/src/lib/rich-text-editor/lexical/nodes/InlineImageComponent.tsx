@@ -164,12 +164,23 @@ export function UpdateInlineImageDialog({
 
       <div className="Input__wrapper">
         <input
+          className="absolute -left-[9999px]"
           id="caption"
           type="checkbox"
           checked={showCaption}
           onChange={handleShowCaptionChange}
         />
-        <label htmlFor="caption">Show Caption</label>
+        <label
+          className={`relative pr-[55px] cursor-pointer leading-5 inline-block text-[#666] before:absolute before:content-[''] before:right-0 before:top-0 before:w-4 before:h-4 before:border-solid before:border-[1px] before:border-[#666] before:bg-[#fff] after:content-[''] after:w-2 after:h-2 after:bg-[#222] after:absolute after:top-[4px] after:right-[4px] after:transition-all after:ease-in-out${
+            showCaption
+              ? 'after:opacity-1 after:scale-100'
+              : 'after:opacity-0 after:scale-0'
+          } 
+         `}
+          htmlFor="caption"
+        >
+          Show Caption
+        </label>
       </div>
 
       <DialogActions>
