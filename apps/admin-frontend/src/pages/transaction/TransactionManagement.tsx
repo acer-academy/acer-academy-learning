@@ -49,19 +49,19 @@ const TransactionsComponent = () => {
   const [selectedTransaction, setSelectedTransaction] =
     useState<TransactionData | null>(null);
 
+  const fetchTransactions = async () => {
+    try {
+      const response = await getAllTransactions();
+      const allTransactions: TransactionData[] = response.data;
+      console.log(allTransactions);
+      setTransactions(allTransactions);
+    } catch (error) {
+      console.error('Error retrieving transactions:', error);
+    }
+  };
+
   // Use Effect Hook
   useEffect(() => {
-    const fetchTransactions = async () => {
-      try {
-        const response = await getAllTransactions();
-        const allTransactions: TransactionData[] = response.data;
-        console.log(allTransactions);
-        setTransactions(allTransactions);
-      } catch (error) {
-        console.error('Error retrieving transactions:', error);
-      }
-    };
-
     fetchTransactions();
   }, []);
 
@@ -131,6 +131,7 @@ const TransactionsComponent = () => {
       field: 'transactionType',
       cellRenderer: TransactionTypeBadge,
     },
+    { headerName: 'Reference ID', field: 'referenceId' },
     { headerName: 'Reason', field: 'reason' },
     {
       headerName: 'Term',
@@ -142,8 +143,7 @@ const TransactionsComponent = () => {
       },
     },
 
-    { headerName: 'Promotion ID', field: 'promotionId' },
-    { headerName: 'Reference ID', field: 'referenceId' },
+    // { headerName: 'Promotion ID', field: 'promotionId' },
   ];
 
   const defaultColDef = {
@@ -168,6 +168,7 @@ const TransactionsComponent = () => {
         <TransactionModal
           transaction={selectedTransaction}
           onClose={() => setSelectedTransaction(null)}
+          onRefunded={fetchTransactions} // Passing the fetchTransactions function as a prop
         />
       )}
     </div>

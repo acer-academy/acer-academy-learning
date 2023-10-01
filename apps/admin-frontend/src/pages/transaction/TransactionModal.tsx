@@ -1,17 +1,41 @@
 import { Fragment } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { TransactionData } from 'libs/data-access/src/lib/types/transaction';
+import { refundTransaction } from '@acer-academy-learning/data-access';
+import { useToast } from '@acer-academy-learning/common-ui';
+import TransactionTypeBadge from './TransactionTypeBadge';
 
 interface TransactionModalProps {
   transaction: TransactionData | null;
   onClose: () => void;
+  onRefunded?: () => void;
 }
 
 const TransactionModal: React.FC<TransactionModalProps> = ({
   transaction,
   onClose,
+  onRefunded,
 }) => {
+  const { displayToast, ToastType } = useToast();
+
   if (!transaction) return null;
+
+  // 1. Add a handler function
+  const handleRefund = async () => {
+    try {
+      await refundTransaction(transaction.id);
+      displayToast(`Refund Successful!`, ToastType.SUCCESS);
+      onClose();
+      if (typeof onRefunded === 'function') {
+        onRefunded();
+      }
+    } catch (error) {
+      alert('Refund failed: ' + error.message);
+    }
+  };
+
+  console.log(transaction.referenceId);
+  console.log(transaction.transactionType);
 
   return (
     <Transition.Root show={!!transaction} as={Fragment}>
@@ -49,33 +73,71 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
                       Transaction Details
                     </Dialog.Title>
                     <div className="mt-2">
-                      <p className="text-sm text-gray-500">
-                        ID: {transaction.id}
-                        <br />
-                        Amount: {transaction.amount}
-                        <br />
-                        Currency: {transaction.currency}
-                        <br />
-                        Date Time:{' '}
-                        {new Date(transaction.dateTime).toLocaleString()}
-                        <br />
-                        Credits Transacted: {transaction.creditsTransacted}
-                        <br />
-                        Transaction Type: {transaction.transactionType}
-                        <br />
-                        Reason: {transaction.reason}
-                        <br />
-                        Term name: {transaction.term.name}
-                        <br />
-                        Student Name: {transaction.student.firstName}{' '}
-                        {transaction.student.lastName}
-                        <br />
-                        Promotion ID: {transaction.promotionId}
-                        <br />
-                        Reference ID: {transaction.referenceId}
-                      </p>
+                      <div className="flex flex-col gap-y-2 text-sm text-gray-500">
+                        <div className="flex justify-between">
+                          <span>ID:</span>
+                          <span>{transaction.id}</span>
+                        </div>
+
+                        <div className="flex justify-between">
+                          <span>Amount:</span>
+                          <span>{transaction.amount}</span>
+                        </div>
+
+                        <div className="flex justify-between">
+                          <span>Currency:</span>
+                          <span>{transaction.currency}</span>
+                        </div>
+
+                        <div className="flex justify-between">
+                          <span>Date Time:</span>
+                          <span>
+                            {new Date(transaction.dateTime).toLocaleString()}
+                          </span>
+                        </div>
+
+                        <div className="flex justify-between">
+                          <span>Credits Transacted:</span>
+                          <span>
+                            {transaction.transactionType === 'DEDUCTED'
+                              ? `- ${transaction.creditsTransacted}`
+                              : `+ ${transaction.creditsTransacted}`}
+                          </span>
+                        </div>
+
+                        <div className="flex justify-between">
+                          <span>Transaction Type:</span>
+                          <TransactionTypeBadge
+                            value={transaction.transactionType}
+                          />
+                        </div>
+
+                        <div className="flex justify-between">
+                          <span>Reference ID:</span>
+                          <span>{transaction.referenceId}</span>
+                        </div>
+
+                        <div className="flex justify-between">
+                          <span>Reason:</span>
+                          <span>{transaction.reason}</span>
+                        </div>
+
+                        {/* ... continue in this manner for the rest of the fields ... */}
+                      </div>
                     </div>
                   </div>
+                </div>
+                <div className="mt-5 sm:mt-6">
+                  {!transaction.referenceId &&
+                    transaction.transactionType === 'PURCHASED' && (
+                      <button
+                        type="button"
+                        className="mt-3 inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
+                        onClick={handleRefund}
+                      >
+                        Refund
+                      </button>
+                    )}
                 </div>
                 <div className="mt-5 sm:mt-6">
                   <button

@@ -9,3 +9,9 @@ export async function getAllTransactions(): Promise<
 > {
   return client.get(`${URL}`);
 }
+
+export async function refundTransaction(
+  transactionId: string,
+): Promise<AxiosResponse<TransactionData>> {
+  return client.get(`${URL}/refund/${transactionId}`);
+}
