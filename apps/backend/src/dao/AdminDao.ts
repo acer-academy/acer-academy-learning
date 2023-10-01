@@ -7,7 +7,7 @@ class AdminDao {
     return prisma.admin.create({ data });
   }
 
-  async getAdminByEmail(email: string) {
+  async getAdminByEmail(email: string): Promise<Admin> {
     return prisma.admin.findUnique({ where: { email } });
   }
 
@@ -15,7 +15,7 @@ class AdminDao {
     return prisma.admin.findMany();
   }
 
-  async getAdminById(id: string) {
+  async getAdminById(id: string): Promise<Admin> {
     return prisma.admin.findUnique({ where: { id } });
   }
 

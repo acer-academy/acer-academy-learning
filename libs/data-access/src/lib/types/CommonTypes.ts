@@ -42,4 +42,8 @@ export interface LoginData {
   password: string;
 }
 
+export interface LogoutResponse {
+  message: string;
+}
+
 // Other shared types and enums...

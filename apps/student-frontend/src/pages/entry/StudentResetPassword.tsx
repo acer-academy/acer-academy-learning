@@ -3,6 +3,7 @@ import { AcerAcademyLogo } from '@acer-academy-learning/common-ui';
 import { useToast } from '@acer-academy-learning/common-ui';
 import { useLocation } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import { resetStudentPassword } from '@acer-academy-learning/data-access';
 
 const StudentResetPassword: React.FC = () => {
   const location = useLocation();
@@ -18,38 +19,31 @@ const StudentResetPassword: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (password !== confirmPassword) {
+      displayToast('Password do not match', ToastType.ERROR);
+      return;
+    }
+
     if (token) {
-      //   console.log(token);
-      //   console.log(password);
-      // Make an API request to your backend to reset the password
-      const response = await fetch(
-        'http://localhost:8000/api/v1/students/reset-password/',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            token: token,
-            newPassword: password,
-          }),
-        },
-      );
+      try {
+        const response = await resetStudentPassword(token, password);
+        const responseData = await response.data;
 
-      const responseData = await response.json();
+        if (response.status === 200) {
+          // Handle successful password reset, maybe redirect to login page
+          displayToast(
+            `${responseData.message}. Redirecting you over to login.`,
+            ToastType.SUCCESS,
+          );
 
-      if (response.ok) {
-        // Handle successful password reset, maybe redirect to login page
-        displayToast(
-          `${responseData.message}. Redirecting you over to login.`,
-          ToastType.SUCCESS,
-        );
-
-        setTimeout(() => {
-          navigate('/');
-        }, 3000); // redirect after 3 seconds
-      } else {
-        // Handle errors
+          setTimeout(() => {
+            navigate('/');
+          }, 3000); // redirect after 3 seconds
+        } else {
+          displayToast(responseData.error, ToastType.ERROR);
+        }
+      } catch (error) {
+        displayToast('An unexpected error occurred', ToastType.ERROR);
       }
     }
   };
