@@ -42,4 +42,10 @@ export interface LoginData {
   password: string;
 }
 
+export enum StudentStatusEnum {
+  ACTIVE = 'active',
+  INACTIVE = 'inactive',
+  BLOCKED = 'blocked',
+}
+
 // Other shared types and enums...

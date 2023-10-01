@@ -12,6 +12,7 @@ import { Fragment } from 'react';
 import { Menu, Transition } from '@headlessui/react';
 import { ChevronDownIcon } from '@heroicons/react/20/solid';
 import { DeletionConfirmationModal } from './DeletionConfirmationModal';
+import { StudentStatusEnum } from '@acer-academy-learning/data-access';
 
 export const ClassCreditManagement: React.FC = () => {
   const [studentData, setStudentData] = useState<Student[]>([]);
@@ -89,6 +90,14 @@ export const ClassCreditManagement: React.FC = () => {
     try {
       const response = await blockStudent(blockStudentId);
       displayToast('Successfully blocked student.', ToastType.SUCCESS);
+
+      setStudentData((prevStudentData) =>
+        prevStudentData.map((student) =>
+          student.id === blockStudentId
+            ? { ...student, status: StudentStatusEnum.BLOCKED } // Update the status of the blocked student
+            : student,
+        ),
+      );
     } catch (error) {
       displayToast('Blocking of student has failed!', ToastType.ERROR);
       console.log(error);
@@ -100,11 +109,6 @@ export const ClassCreditManagement: React.FC = () => {
     fetchAllTerms();
     fetchAvailableCredits();
   }, []);
-
-  useEffect(() => {
-    fetchAllStudents();
-    fetchAvailableCredits();
-  }, [isBlockModalOpen]);
 
   function classNames(...classes: string[]) {
     return classes.filter(Boolean).join(' ');
@@ -278,7 +282,7 @@ export const ClassCreditManagement: React.FC = () => {
                                     }
                                     `}
                               >
-                                {student.status}
+                                {student.status.toUpperCase()}
                               </span>
                             </td>
                             <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-center text-sm font-medium sm:pr-6">
