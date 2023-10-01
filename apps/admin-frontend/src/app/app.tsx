@@ -35,12 +35,17 @@ import {
   SIGN_UP,
   STUDENTS,
   TEACHERS,
+  CREDIT_RESOURCES,
+  CREDIT_BUNDLE,
+  TRANSACTION,
 } from '../libs/routes';
 import AdminForgotPassword from '../pages/entry/AdminForgotPassword';
 import AdminResetPassword from '../pages/entry/AdminResetPassword';
 import { TeacherHRManagementPage } from '../pages/hr/TeacherHRManagementPage';
 import { StudentHRManagementPage } from '../pages/hr/StudentHRManagementPage';
 import { AdminHRManagementPage } from '../pages/hr/AdminHRManagementPage';
+import TransactionsComponent from '../pages/transaction/TransactionManagement';
+import { CreditBundleManagement } from '../pages/creditBundle/CreditBundleManagement';
 
 export default function App() {
   return (
@@ -74,40 +79,15 @@ export default function App() {
                 <Route path={STUDENTS} element={<StudentHRManagementPage />} />
                 <Route path={ADMINS} element={<AdminHRManagementPage />} />
               </Route>
-            </Route>
-            <Route path={LOGIN} element={<AdminLogin />} />
-            <Route
-              path="/account/changePassword"
-              element={<ChangePassword />}
-            />
-            <Route path="sign-up" element={<AdminSignUp />} />
-            <Route path="forgot-password" element={<AdminForgotPassword />} />
-            <Route path="reset-password" element={<AdminResetPassword />} />
-            <Route
-              element={
-                <EnforceLoginStatePageWrapper redirectTo={LOGIN}>
-                  <SecondaryLayout
-                    navigationMenu={NAV_SECTIONS}
-                    role={LayoutRole.Admin}
-                  />
-                </EnforceLoginStatePageWrapper>
-              }
-            >
-              {/* Nest all routes that has a SecondaryLayout here */}
-              <Route path="/" />
-              <Route
-                path={HUMAN_RESOURCES}
-                element={
-                  <div>
-                    Common HR stuff
-                    <Outlet />
-                  </div>
-                }
-              >
-                <Route path={TEACHERS} element={<h2>Teacher</h2>} />
-                <Route path={STUDENTS} element={<h2>Student</h2>} />
-                <Route path={ADMINS} element={<h2>Admin</h2>} />
+              <Route path={CREDIT_RESOURCES} element={<Outlet />}>
+                <Route
+                  path={CREDIT_BUNDLE}
+                  element={<CreditBundleManagement />}
+                />
+                <Route path={TRANSACTION} element={<TransactionsComponent />} />
+                <Route path={PROMOTION} element={<PromotionManagement />} />
               </Route>
+
               <Route path={`${CENTRE}`} element={<CentreManagement />} />
               <Route path={`${CENTRE}/:centreId`} element={<CentreDetails />} />
               <Route path={`${FAQ}`} element={<FaqTopicManagement />} />
@@ -115,13 +95,14 @@ export default function App() {
                 path={`${FAQ}/:faqTopicId`}
                 element={<FaqTopicDetails />}
               />
-              <Route path={PROMOTION} element={<PromotionManagement />} />
               <Route path={SETTINGS} element={<AdminProfile />} />
               <Route path={CHANGE_PASSWORD} element={<ChangePassword />} />
             </Route>
             <Route path={LOGIN} element={<AdminLogin />} />
             <Route path="/account" element={<Account />} />
             <Route path={SIGN_UP} element={<AdminSignUp />} />
+            <Route path="forgot-password" element={<AdminForgotPassword />} />
+            <Route path="reset-password" element={<AdminResetPassword />} />
           </Routes>
         </ToastProvider>
       </AdminAuthWrapper>

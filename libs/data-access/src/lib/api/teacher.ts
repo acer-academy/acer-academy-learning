@@ -2,7 +2,6 @@
 import { LoginData, LogoutResponse } from '../types/CommonTypes';
 import {
   RegisterTeacherData,
-  Teacher,
   TeacherData,
   UpdateTeacherData,
 } from '../types/teacher';
@@ -65,7 +64,7 @@ export async function registerTeacher(
 export async function updateTeacher(
   id: string,
   data: UpdateTeacherData,
-): Promise<AxiosResponse<any>> {
+): Promise<AxiosResponse<TeacherData>> {
   try {
     return await client.put(`${URL}/${id}`, data);
   } catch (error) {

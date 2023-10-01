@@ -6,6 +6,7 @@ import {
   Cog6ToothIcon,
   QuestionMarkCircleIcon,
   UsersIcon,
+  CurrencyDollarIcon,
   MegaphoneIcon,
 } from '@heroicons/react/24/outline';
 import {
@@ -16,6 +17,9 @@ import {
   PROMOTION,
   STUDENTS,
   TEACHERS,
+  CREDIT_BUNDLE,
+  TRANSACTION,
+  CREDIT_RESOURCES,
 } from './routes';
 export const NAV_SECTIONS: NavigationMenuItem[] = [
   {
@@ -31,7 +35,16 @@ export const NAV_SECTIONS: NavigationMenuItem[] = [
           { name: 'Admin', path: ADMINS },
         ],
       },
-      { name: 'Promotions', path: PROMOTION, icon: MegaphoneIcon },
+      {
+        name: 'Credit Resources',
+        path: CREDIT_RESOURCES,
+        icon: CurrencyDollarIcon,
+        children: [
+          { name: 'Transactions', path: TRANSACTION },
+          { name: 'Credit Bundle', path: CREDIT_BUNDLE },
+          { name: 'Promotions', path: PROMOTION },
+        ],
+      },
       // { name: 'Scheduling', path: '/scheduling', icon: CalendarDaysIcon },
       { name: 'Centre', path: CENTRE, icon: BuildingStorefrontIcon },
       // { name: 'Class Credits', path: '/class-credits', icon: CircleStackIcon },
