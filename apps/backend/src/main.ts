@@ -53,8 +53,7 @@ app.use(
       // You could add a list of allowed origins and check against that too
       if (
         origin.startsWith('http://localhost:') ||
-        origin.startsWith('https://localhost:') ||
-        origin.startsWith('http://127.0.0.1:')
+        origin.startsWith('https://localhost:')
       ) {
         return callback(null, true);
       }
