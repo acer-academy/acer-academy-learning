@@ -22,10 +22,11 @@ class TransactionService {
     transactions.map((transaction) => {
       switch (transaction.transactionType) {
         case TransactionType.PURCHASED:
-        case TransactionType.REFUNDED:
+        case TransactionType.ROLLOVER:
           credits += transaction.creditsTransacted;
           break;
         case TransactionType.DEDUCTED:
+        case TransactionType.STRIPE_DEDUCTED:
           credits -= transaction.creditsTransacted;
           break;
       }
@@ -60,7 +61,34 @@ class TransactionService {
     return TransactionDao.updateTransaction(id, input);
   }
 
-  public async refundTransaction(id: string): Promise<Transaction> {
+  public async rolloverCredits(
+    studentId: string,
+    currentTermId: string,
+    pastTermId: string,
+  ): Promise<Transaction[]> {
+    const rollover = await this.getAvailableCredits(pastTermId, studentId);
+    const deductTransaction = {
+      creditsTransacted: rollover,
+      studentId: studentId,
+      termId: pastTermId,
+      transactionType: TransactionType.DEDUCTED,
+    };
+    let transactions = [];
+    const deduct = await TransactionDao.createTransaction(deductTransaction);
+    transactions.push(deduct);
+    const rolloverTransaction = {
+      ...deductTransaction,
+      termId: currentTermId,
+      transactionType: TransactionType.ROLLOVER,
+      referenceId: deduct.id,
+    };
+    transactions.push(
+      await TransactionDao.createTransaction(rolloverTransaction),
+    );
+    return transactions;
+  }
+
+  public async refundStripeTransaction(id: string): Promise<Transaction> {
     const transaction = await TransactionDao.getTransactionById(id);
     if (transaction.transactionType !== TransactionType.PURCHASED) {
       throw new Error(
@@ -82,7 +110,7 @@ class TransactionService {
       termId: termId,
       studentId: studentId,
       promotionId: promotionId,
-      transactionType: TransactionType.DEDUCTED,
+      transactionType: TransactionType.STRIPE_DEDUCTED,
       reason: 'Manual refund of Stripe Transaction',
     };
 

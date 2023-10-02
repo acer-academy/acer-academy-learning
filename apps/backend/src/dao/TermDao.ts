@@ -14,6 +14,15 @@ class TermDao {
     return this.prisma.term.findMany();
   }
 
+  public async getCurrentTerms(): Promise<Term[]> {
+    return this.prisma.term.findMany({
+      where: {
+        startDate: { lte: new Date().toISOString() },
+        endDate: { gte: new Date().toISOString() },
+      },
+    });
+  }
+
   public async getTermById(id: string): Promise<Term> {
     return this.prisma.term.findUnique({
       where: { id },
