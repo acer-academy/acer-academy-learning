@@ -45,6 +45,7 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import { FaqPage } from '../pages/faq/FaqPage';
 import { StudentProfile } from '../pages/profile/StudentProfile';
 import TransactionManagement from '../pages/transaction/TransactionManagement';
+import { CreditBundleManagement } from '../pages/creditBundle/CreditBundleManagement';
 
 export function App() {
   const queryClient = new QueryClient();
@@ -86,7 +87,10 @@ export function App() {
                 <Route path={BOOKING}>
                   <Route path={VIEW_CLASSES} element={<div>Home</div>} />
                   <Route path={BOOK_CLASSES} element={<div>Home</div>} />
-                  <Route path={BUY_CREDITS} element={<div>Home</div>} />
+                  <Route
+                    path={BUY_CREDITS}
+                    element={<CreditBundleManagement />}
+                  />
                   <Route
                     path={PAST_TRANSACTIONS}
                     element={<TransactionManagement />}
