@@ -12,9 +12,11 @@ import { QuizStatusTag } from './QuizStatusTag';
 import DifficultyTag from './DifficultyTag';
 import TypeTag from './QuestionTypeTag';
 import katex from 'katex';
+import { useNavigate } from 'react-router-dom';
 
 export const QuestionBank: React.FC = () => {
   const { displayToast, ToastType } = useToast();
+  const navigate = useNavigate();
   const [filterOptions, setFilterOptions] =
     useState<QuizQuestionPaginationFilter>({});
   const [currentPage, setCurrentPage] = useState(1);
@@ -56,6 +58,16 @@ export const QuestionBank: React.FC = () => {
     return currentPage === 1;
   };
 
+  const navToSelectedQuestion = (selectedQuestionId: string) => {
+    // for now will push to url/question-bank/questionId, change as needed
+    navigate(`/question-bank/${selectedQuestionId}`);
+  };
+
+  const navToCreateQuestion = () => {
+    // for now will push to url/question-bank/create, change as needed
+    navigate(`/question-bank/create`);
+  };
+
   useEffect(() => {
     getPaginatedFilteredQuestions();
   }, [currentPage, pageSize, filterOptions]);
@@ -64,20 +76,37 @@ export const QuestionBank: React.FC = () => {
     <div className="h-full bg-gray-50">
       <div className="flex min-h-full flex-col gap-7 align-middle py-12 px-12">
         <div className="flex align-middle justify-between">
-          <span className="text-2xl font-bold tracking-tight">
-            Question Bank
-          </span>
+          <div className="flex align-middle gap-4">
+            <span className="text-2xl py-1 font-bold tracking-tight">
+              Question Bank
+            </span>
+            <button
+              className="text-blue-500 hover:text-blue-600"
+              onClick={() => setIsFilterVisible(!isFilterVisible)}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                className="w-7 h-7 fill-teacherBlue-500 hover:fill-teacherBlue-700 transition-colors"
+              >
+                <path d="M18.75 12.75h1.5a.75.75 0 000-1.5h-1.5a.75.75 0 000 1.5zM12 6a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5A.75.75 0 0112 6zM12 18a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5A.75.75 0 0112 18zM3.75 6.75h1.5a.75.75 0 100-1.5h-1.5a.75.75 0 000 1.5zM5.25 18.75h-1.5a.75.75 0 010-1.5h1.5a.75.75 0 010 1.5zM3 12a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5A.75.75 0 013 12zM9 3.75a2.25 2.25 0 100 4.5 2.25 2.25 0 000-4.5zM12.75 12a2.25 2.25 0 114.5 0 2.25 2.25 0 01-4.5 0zM9 15.75a2.25 2.25 0 100 4.5 2.25 2.25 0 000-4.5z" />
+              </svg>
+            </button>
+          </div>
           <button
-            className="text-blue-500 hover:text-blue-600"
-            onClick={() => setIsFilterVisible(!isFilterVisible)}
+            className="inline-flex justify-center px-4 py-2 text-white bg-teacherBlue-500 border border-transparent rounded-md hover:bg-teacherBlue-700"
+            onClick={() => {
+              navToCreateQuestion();
+            }}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              className="w-7 h-7 fill-teacherBlue-500 hover:fill-teacherBlue-700 transition-colors"
+              className="mr-2 h-4 w-4 fill-white stroke-2 relative mt-1"
+              viewBox="0 0 16 16"
             >
-              <path d="M18.75 12.75h1.5a.75.75 0 000-1.5h-1.5a.75.75 0 000 1.5zM12 6a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5A.75.75 0 0112 6zM12 18a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5A.75.75 0 0112 18zM3.75 6.75h1.5a.75.75 0 100-1.5h-1.5a.75.75 0 000 1.5zM5.25 18.75h-1.5a.75.75 0 010-1.5h1.5a.75.75 0 010 1.5zM3 12a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5A.75.75 0 013 12zM9 3.75a2.25 2.25 0 100 4.5 2.25 2.25 0 000-4.5zM12.75 12a2.25 2.25 0 114.5 0 2.25 2.25 0 01-4.5 0zM9 15.75a2.25 2.25 0 100 4.5 2.25 2.25 0 000-4.5z" />
+              <path d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z" />
             </svg>
+            Add Question
           </button>
         </div>
 
@@ -148,7 +177,13 @@ export const QuestionBank: React.FC = () => {
                       </tr>
                     ) : (
                       currentQuestions.map((question) => (
-                        <tr key={question.id}>
+                        <tr
+                          key={question.id}
+                          className="hover:bg-slate-50 hover:cursor-pointer"
+                          onClick={() => {
+                            navToSelectedQuestion(question.id);
+                          }}
+                        >
                           <td className="py-4 pl-3.5 pr-3 text-xs font-medium text-gray-900 max-w-0">
                             <div>
                               <span>

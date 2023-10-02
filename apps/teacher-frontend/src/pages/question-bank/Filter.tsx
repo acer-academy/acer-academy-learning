@@ -205,7 +205,7 @@ export const Filter: React.FC<{ filterSubmitCallback: Function }> = (props) => {
           ))}
         </select>
         <button
-          className="bg-red-500 hover:bg-red-600 text-white rounded-md px-4 py-2 ml-auto"
+          className="bg-teacherBlue-500 hover:bg-teacherBlue-700 text-white rounded-md px-4 py-2 ml-auto"
           onClick={handleResetAll}
         >
           Reset
