@@ -8,12 +8,13 @@ interface DeletionConfirmationModalProps {
   onDeleted: (id: string) => void;
   id: string;
   name: string;
+  isBlock: boolean;
 }
 
 export const DeletionConfirmationModal: React.FC<
   DeletionConfirmationModalProps
 > = (props: DeletionConfirmationModalProps) => {
-  const { open, setOpen, onDeleted, id, name } = props;
+  const { open, setOpen, onDeleted, id, name, isBlock } = props;
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -54,12 +55,13 @@ export const DeletionConfirmationModal: React.FC<
                       as="h3"
                       className="text-base font-semibold leading-6 text-gray-900"
                     >
-                      {`Block ${name}`}
+                      {isBlock ? `Block ${name}` : `Unblock ${name}`}
                     </Dialog.Title>
                     <div className="mt-2">
                       <p className="text-sm text-gray-500">
-                        {`Are you sure you want to block
-                          ${name} from booking classes?`}
+                        {isBlock
+                          ? `Are you sure you want to block ${name} from booking classes?`
+                          : `Are you sure you want to unblock ${name} and allow them to book classes again?`}
                       </p>
                     </div>
                   </div>
@@ -73,7 +75,7 @@ export const DeletionConfirmationModal: React.FC<
                       setOpen(false);
                     }}
                   >
-                    Delete
+                    {isBlock ? `Block` : `Unblock`}
                   </button>
                   <button
                     type="button"

@@ -18,14 +18,14 @@ export const ClassCreditManagement: React.FC = () => {
   const [studentData, setStudentData] = useState<Student[]>([]);
   const [termData, setTermData] = useState<TermData[]>([]);
   const [currentTerm, setCurrentTerm] = useState<TermData>();
-  const [creditMap, setCreditMap] = useState<{ [studentId: string]: number }>({
-    // TODO: REMOVE WHEN DONE TESTING
-    // 'b110f6b9-050d-4b91-80a7-a093f6a8ecda': 10,
-  });
+  const [creditMap, setCreditMap] = useState<{ [studentId: string]: number }>(
+    {},
+  );
   const [searchbarText, setSearchbarText] = useState('');
   const [blockStudentId, setBlockStudentId] = useState('');
   const [blockStudentName, setBlockStudentName] = useState('');
   const [isBlockModalOpen, setIsBlockModalOpen] = useState(false);
+  const [isBlock, setIsBlock] = useState(true);
   const [creditFilterMinimum, setCreditFilterMinimum] = useState(-100);
   const [creditFilterMaximum, setCreditFilterMaximum] = useState(100);
   const [isEditingCredit, setIsEditingCredit] = useState(false);
@@ -116,6 +116,24 @@ export const ClassCreditManagement: React.FC = () => {
       );
     } catch (error) {
       displayToast('Blocking of student has failed!', ToastType.ERROR);
+      console.log(error);
+    }
+  };
+
+  const handleUnblockStudent = async () => {
+    try {
+      const response = await blockStudent(blockStudentId);
+      displayToast('Successfully unblocked student.', ToastType.SUCCESS);
+
+      setStudentData((prevStudentData) =>
+        prevStudentData.map((student) =>
+          student.id === blockStudentId
+            ? { ...student, status: StudentStatusEnum.ACTIVE } // Update the status of the unblocked student
+            : student,
+        ),
+      );
+    } catch (error) {
+      displayToast('Unblocking of student has failed!', ToastType.ERROR);
       console.log(error);
     }
   };
@@ -298,10 +316,12 @@ export const ClassCreditManagement: React.FC = () => {
                         </th>
                         <th
                           scope="col"
-                          className="relative py-3.5 pl-3 pr-4 sm:pr-6"
-                        >
-                          <span className="sr-only">Edit</span>
-                        </th>
+                          className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 max-w-sm"
+                        ></th>
+                        <th
+                          scope="col"
+                          className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 max-w-sm"
+                        ></th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200 bg-white">
@@ -413,21 +433,24 @@ export const ClassCreditManagement: React.FC = () => {
                               >
                                 Send Alert
                               </a>
+                            </td>
+                            <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-center text-sm font-medium sm:pr-6">
                               <a
-                                className={`${
-                                  student.status.toUpperCase() === 'BLOCKED'
-                                    ? 'disabled:opacity-30 pointer-events-none text-gray-300'
-                                    : 'text-indigo-600 hover:text-indigo-900 cursor-pointer'
-                                }`}
+                                className="text-indigo-600 hover:text-indigo-900 cursor-pointer"
                                 onClick={() => {
                                   setBlockStudentId(student.id);
                                   setBlockStudentName(
                                     student.firstName + ' ' + student.lastName,
                                   );
                                   setIsBlockModalOpen(true);
+                                  setIsBlock(
+                                    student.status.toUpperCase() !== 'BLOCKED',
+                                  );
                                 }}
                               >
-                                Block
+                                {student.status.toUpperCase() === 'BLOCKED'
+                                  ? 'Unblock'
+                                  : 'Block'}
                               </a>
                             </td>
                           </tr>
@@ -447,9 +470,10 @@ export const ClassCreditManagement: React.FC = () => {
       <DeletionConfirmationModal
         open={isBlockModalOpen}
         setOpen={setIsBlockModalOpen}
-        onDeleted={handleBlockStudent}
+        onDeleted={isBlock ? handleBlockStudent : handleUnblockStudent}
         id={blockStudentId}
         name={blockStudentName}
+        isBlock={isBlock}
       />
     </div>
   );

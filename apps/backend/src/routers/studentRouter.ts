@@ -57,7 +57,7 @@ studentRouter.delete('/delete/:id', async (req, res) => {
 studentRouter.delete('/block/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const student = await StudentService.blockStudent(id);
+    const student = await StudentService.toggleStudentStatus(id);
 
     return res.status(200).json({ student: student });
   } catch (err) {

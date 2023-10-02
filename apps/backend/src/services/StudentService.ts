@@ -73,8 +73,8 @@ class StudentService {
     return StudentDao.deleteStudent(id);
   }
 
-  public async blockStudent(id: string): Promise<Student> {
-    return StudentDao.blockStudent(id);
+  public async toggleStudentStatus(id: string): Promise<Student> {
+    return StudentDao.toggleStudentStatus(id);
   }
 
   async login(studentEmail: string, studentPassword: string) {

@@ -40,11 +40,23 @@ class StudentDao {
     });
   }
 
-  public async blockStudent(id: string): Promise<Student> {
+  // Changes student status to BLOCKED if it is currently ACTIVE or INACTIVE
+  // Changes student status to ACTIVE if it is currently BLOCKED
+  public async toggleStudentStatus(id: string): Promise<Student> {
+    const student = await this.prisma.student.findUnique({
+      where: { id },
+    });
+
+    if (!student) {
+      throw new Error('Student not found');
+    }
+
+    const newStatus = student.status === 'BLOCKED' ? 'ACTIVE' : 'BLOCKED';
+
     return this.prisma.student.update({
       where: { id },
       data: {
-        status: 'BLOCKED',
+        status: newStatus,
       },
     });
   }
