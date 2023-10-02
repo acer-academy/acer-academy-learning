@@ -33,13 +33,31 @@ transactionRouter.get('/:id', async (req, res) => {
 transactionRouter.get('/refund/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const transaction = await TransactionService.refundTransaction(id);
+    const transaction = await TransactionService.refundStripeTransaction(id);
     return res.status(200).json(transaction);
   } catch (error) {
     console.log(error);
     return res.status(500).json({ error: error.message });
   }
 });
+
+transactionRouter.get(
+  '/rollover/:studentId/:currentTermId/:prevTermId',
+  async (req, res) => {
+    try {
+      const { studentId, currentTermId, prevTermId } = req.params;
+      const transactions = await TransactionService.rolloverCredits(
+        studentId,
+        currentTermId,
+        prevTermId,
+      );
+      return res.status(200).json(transactions);
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({ error: error.message });
+    }
+  },
+);
 
 transactionRouter.get('/student/:id', async (req, res) => {
   try {
