@@ -18,6 +18,9 @@ const TransactionTypeBadge: React.FC<TransactionTypeBadgeProps> = ({
     case 'DEDUCTED':
       className += ' bg-red-100 text-red-700';
       break;
+    case 'STRIPE_DEDUCTED':
+      className += ' bg-red-100 text-red-700';
+      break;
     default:
       className += ' bg-gray-100 text-gray-700';
   }

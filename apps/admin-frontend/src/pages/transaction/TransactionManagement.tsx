@@ -130,8 +130,9 @@ const TransactionsComponent = () => {
       field: 'amount',
       valueGetter: (params: ValueGetterParams) => {
         // If transactionType is 'DEDUCTED', prepend a '-'
-        return `$ ${params.data.amount}`;
+        return `$${params.data.amount}`;
       },
+      width: 120,
     },
     // {
     //   headerName: 'Currency',
@@ -155,9 +156,10 @@ const TransactionsComponent = () => {
       field: 'creditsTransacted',
       valueGetter: (params: ValueGetterParams) => {
         // If transactionType is 'DEDUCTED', prepend a '-'
-        return params.data.transactionType === 'DEDUCTED'
-          ? `- ${params.data.creditsTransacted}`
-          : `+ ${params.data.creditsTransacted}`;
+        return params.data.transactionType === 'DEDUCTED' ||
+          params.data.transactionType === 'STRIPE_DEDUCTED'
+          ? `-${params.data.creditsTransacted}`
+          : `+${params.data.creditsTransacted}`;
       },
     },
     {
