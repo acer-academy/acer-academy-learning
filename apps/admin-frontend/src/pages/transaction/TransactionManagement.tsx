@@ -155,7 +155,8 @@ const TransactionsComponent = () => {
       field: 'creditsTransacted',
       valueGetter: (params: ValueGetterParams) => {
         // If transactionType is 'DEDUCTED', prepend a '-'
-        return params.data.transactionType === 'DEDUCTED'
+        return params.data.transactionType === 'DEDUCTED' ||
+          params.data.transactionType === 'STRIPE_DEDUCTED'
           ? `- ${params.data.creditsTransacted}`
           : `+ ${params.data.creditsTransacted}`;
       },

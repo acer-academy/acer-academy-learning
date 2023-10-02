@@ -109,7 +109,8 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
                         <div className="flex justify-between">
                           <span>Credits Transacted:</span>
                           <span>
-                            {transaction.transactionType === 'DEDUCTED'
+                            {transaction.transactionType === 'DEDUCTED' ||
+                            transaction.transactionType === 'STRIPE_DEDUCTED'
                               ? `- ${transaction.creditsTransacted}`
                               : `+ ${transaction.creditsTransacted}`}
                           </span>
