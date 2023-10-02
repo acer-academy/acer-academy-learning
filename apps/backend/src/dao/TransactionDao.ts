@@ -28,6 +28,11 @@ class TransactionDao {
   ): Promise<Transaction[]> {
     return this.prisma.transaction.findMany({
       where: { studentId },
+      include: {
+        term: true,
+        promotion: true,
+        student: true,
+      },
     });
   }
 

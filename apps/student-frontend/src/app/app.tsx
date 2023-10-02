@@ -44,6 +44,7 @@ import { StudentNotificationPreference } from '../pages/profile/StudentNotificat
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { FaqPage } from '../pages/faq/FaqPage';
 import { StudentProfile } from '../pages/profile/StudentProfile';
+import TransactionManagement from '../pages/transaction/TransactionManagement';
 
 export function App() {
   const queryClient = new QueryClient();
@@ -82,11 +83,14 @@ export function App() {
                   <Route path={RECORDINGS} element={<div>Home</div>} />
                   <Route path={ZOOM_LINK} element={<div>Home</div>} />
                 </Route>
-                <Route path={BOOKING} element={<div>Home</div>}>
+                <Route path={BOOKING}>
                   <Route path={VIEW_CLASSES} element={<div>Home</div>} />
                   <Route path={BOOK_CLASSES} element={<div>Home</div>} />
                   <Route path={BUY_CREDITS} element={<div>Home</div>} />
-                  <Route path={PAST_TRANSACTIONS} element={<div>Home</div>} />
+                  <Route
+                    path={PAST_TRANSACTIONS}
+                    element={<TransactionManagement />}
+                  />
                 </Route>
                 <Route path={REWARDS} element={<div>Home</div>} />
                 <Route path={ACCOUNT}>
