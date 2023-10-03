@@ -198,8 +198,9 @@ model Term {
 
 enum TransactionType {
   PURCHASED
-  DEDUCTED
-  REFUNDED
+  DEDUCTED //attendance
+  STRIPE_DEDUCTED //refunded transaction
+  ROLLOVER
   VOID
 }
 
@@ -304,7 +305,6 @@ model QuizQuestion {
   questionText String                     @db.Text
   status       QuizQuestionStatusEnum
   questionType QuizQuestionTypeEnum
-  options      String[]
   answers      QuizAnswer[]
 }
 
@@ -312,6 +312,7 @@ model QuizAnswer {
   id          String        @id @default(uuid()) @db.Uuid
   answer      String        @db.Text
   explanation String?
+  isCorrect   Boolean
   question    QuizQuestion? @relation(fields: [questionId], references: [id])
   questionId  String?       @db.Uuid
 }

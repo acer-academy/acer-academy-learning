@@ -16,9 +16,11 @@ import { QuizAnswerService } from './QuizAnswerService';
 export interface QuizQuestionFilterOptions {
   topics?: QuizQuestionTopicEnum[];
   levels?: LevelEnum[];
-  difficulty?: QuizQuestionDifficultyEnum;
-  questionType?: QuizQuestionTypeEnum;
-  status?: QuizQuestionStatusEnum;
+  difficulty?: QuizQuestionDifficultyEnum[];
+  questionType?: QuizQuestionTypeEnum[];
+  status?: QuizQuestionStatusEnum[];
+  offset: number;
+  pageSize: number;
 }
 
 export class QuizQuestionService {
@@ -44,34 +46,50 @@ export class QuizQuestionService {
 
   public async getFilteredQuizQuestions(
     filterOptions: QuizQuestionFilterOptions,
-  ): Promise<QuizQuestion[]> {
+  ): Promise<{ questions: QuizQuestion[]; totalCount: number }> {
     const where: Prisma.QuizQuestionWhereInput = {};
+    const { topics, levels, difficulty, questionType, status } = filterOptions;
 
-    if (filterOptions.topics) {
+    if (topics && topics.length > 0) {
       where.topics = {
-        hasSome: filterOptions.topics,
+        hasEvery: filterOptions.topics,
       };
     }
 
-    if (filterOptions.levels) {
+    if (levels && levels.length > 0) {
       where.levels = {
-        hasSome: filterOptions.levels,
+        hasEvery: filterOptions.levels,
       };
     }
 
-    if (filterOptions.difficulty) {
-      where.difficulty = filterOptions.difficulty;
+    if (difficulty && difficulty.length > 0) {
+      where.difficulty = {
+        in: filterOptions.difficulty,
+      };
     }
 
-    if (filterOptions.questionType) {
-      where.questionType = filterOptions.questionType;
+    if (questionType && questionType.length > 0) {
+      where.questionType = {
+        in: filterOptions.questionType,
+      };
     }
 
-    if (filterOptions.status) {
-      where.status = filterOptions.status;
+    if (status && status.length > 0) {
+      where.status = {
+        in: filterOptions.status,
+      };
     }
 
-    return this.quizQuestionDao.getFilteredQuizQuestions(where);
+    const questions = await this.quizQuestionDao.getFilteredQuizQuestions(
+      where,
+      filterOptions.offset,
+      filterOptions.pageSize,
+    );
+
+    const totalCount =
+      await this.quizQuestionDao.getTotalCountOfFilteredQuestions(where);
+
+    return { totalCount, questions };
   }
 
   public async updateQuizQuestion(

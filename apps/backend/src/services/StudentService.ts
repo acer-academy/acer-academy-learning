@@ -90,16 +90,6 @@ class StudentService {
     const token = jwt.sign(
       {
         id: student.id,
-        // firstName: student.firstName,
-        // lastName: student.lastName,
-        // email: student.email,
-        // level: student.level,
-        // subjects: student.subjects,
-        // status: student.status,
-        // school: student.school,
-        // phoneNumber: student.phoneNumber,
-        // parents: student.parents,
-        // centre: student.centre,
       },
       JWT_SECRET_KEY,
       { expiresIn: '4h' },

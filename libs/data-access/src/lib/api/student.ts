@@ -1,5 +1,4 @@
-/* eslint-disable no-useless-catch */
-import { LoginData } from '../types/CommonTypes';
+import { LoginData, LogoutResponse } from '../types/CommonTypes';
 import {
   Student,
   StudentPostData,
@@ -46,20 +45,15 @@ export async function getStudentById(
   return client.get(`${URL}/getStudentById/${studentId}`);
 }
 
-// export async function loginStudent(
-//   data: LoginData,
-// ): Promise<AxiosResponse<any>> {
-//   return client.post(`${URL}/login`, data);
-// }
-
 export async function loginStudent(
   data: LoginData,
-): Promise<AxiosResponse<any>> {
+): Promise<AxiosResponse<{ student: Student }>> {
   try {
-    const response: AxiosResponse<any> = await client.post(
+    const response: AxiosResponse<{ student: Student }> = await client.post(
       `${URL}/login`,
       data,
     );
+    console.log(response);
     return response;
   } catch (error) {
     if (
@@ -76,11 +70,11 @@ export async function loginStudent(
   // return client.post(`${URL}/login`, data);
 }
 
-export async function logoutStudent(): Promise<AxiosResponse<any>> {
+export async function logoutStudent(): Promise<AxiosResponse<LogoutResponse>> {
   return client.post(`${URL}/logout`);
 }
 
-export async function fetchStudent(): Promise<AxiosResponse<any>> {
+export async function fetchStudent(): Promise<AxiosResponse<Student>> {
   return client.get(`${URL}/check-auth`);
 }
 
@@ -123,3 +117,20 @@ export const deleteParent = async (id: string): Promise<any> => {
     throw error;
   }
 };
+
+export async function forgotStudentPassword(
+  email: string,
+  //meant to be any, either returns a message or error from response
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+): Promise<AxiosResponse<any>> {
+  return await client.post(`${URL}/forgot-password`, { email });
+}
+
+export async function resetStudentPassword(
+  token: string,
+  newPassword: string,
+  //meant to be any, either returns a message or error from response
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+): Promise<AxiosResponse<any>> {
+  return await client.post(`${URL}/reset-password`, { token, newPassword });
+}

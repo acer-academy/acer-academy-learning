@@ -49,7 +49,11 @@ class PromotionDao {
     return this.prisma.promotion.findUnique({ where: { promoCode: code } });
   }
 
-  public async deletePromotion(promotionId: string): Promise<Promotion> {
+  public async deletePromotion(promotionId: string): Promise<Promotion | null> {
+    return this.prisma.promotion.delete({ where: { id: promotionId } });
+  }
+
+  public async softDeletePromotion(promotionId: string): Promise<Promotion> {
     return this.prisma.promotion.update({
       where: { id: promotionId },
       data: {

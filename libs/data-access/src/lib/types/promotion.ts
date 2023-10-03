@@ -1,3 +1,5 @@
+import { PromotionStatusEnum } from './CommonTypes';
+
 export interface PromotionData {
   id: string;
   startDate: Date;
@@ -5,6 +7,7 @@ export interface PromotionData {
   promoCode: string;
   percentageDiscount: number;
   description: string;
+  status: PromotionStatusEnum;
 }
 
 export interface PromotionPostData {

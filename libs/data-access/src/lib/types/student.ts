@@ -24,7 +24,8 @@ export interface StudentPostData {
 
 export interface StudentData {
   id: string;
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
   status: StudentStatusEnum;
 }

@@ -20,6 +20,7 @@ import {
   CREDIT_BUNDLE,
   TRANSACTION,
   CREDIT_RESOURCES,
+  TERM,
   CLASS_CREDITS,
 } from './routes';
 export const NAV_SECTIONS: NavigationMenuItem[] = [
@@ -45,6 +46,7 @@ export const NAV_SECTIONS: NavigationMenuItem[] = [
           { name: 'Transactions', path: TRANSACTION },
           { name: 'Credit Bundle', path: CREDIT_BUNDLE },
           { name: 'Promotions', path: PROMOTION },
+          { name: 'Terms', path: TERM },
         ],
       },
       // { name: 'Scheduling', path: '/scheduling', icon: CalendarDaysIcon },

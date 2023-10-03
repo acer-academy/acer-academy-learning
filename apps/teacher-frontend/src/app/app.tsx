@@ -17,6 +17,7 @@ import TeacherProfile from '../pages/profile/TeacherProfile';
 import ChangePassword from '../pages/profile/ChangePassword';
 import TeacherForgotPassword from '../pages/entry/TeacherForgotPassword';
 import TeacherResetPassword from '../pages/entry/TeacherResetPassword';
+import { QuestionBank } from '../pages/question-bank/QuestionBank';
 import { ACCOUNT_NAV, NAV_SECTIONS } from '../libs/layout';
 import {
   ACCOUNT,
@@ -30,6 +31,7 @@ import {
   SETTINGS,
   SIGN_UP,
   SUBJECTS,
+  QUESTION_BANK,
 } from '../libs/routes';
 
 export function App() {
@@ -54,6 +56,7 @@ export function App() {
                 path={DASHBOARD}
                 element={<div>Welcome to AcerTech!</div>}
               />
+              <Route path={QUESTION_BANK} element={<QuestionBank />} />
               <Route path={SUBJECTS} />
               <Route path={ANALYTICS} />
               <Route path={SCHEDULING} />
