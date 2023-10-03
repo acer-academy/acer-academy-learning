@@ -303,6 +303,7 @@ function useFloatingTextFormatToolbar(
     editor.getEditorState().read(() => {
       // Should not to pop up the floating toolbar when using IME input (does not work)
       if (editor.isComposing()) {
+        setIsText(false);
         return;
       }
 
@@ -345,8 +346,9 @@ function useFloatingTextFormatToolbar(
       }
 
       if (
-        !$isCodeHighlightNode(selection.anchor.getNode())
-        // selection.getTextContent() !== ''
+        (!$isCodeHighlightNode(selection.anchor.getNode()) &&
+          selection.getTextContent() !== '') ||
+        $isParagraphNode(node)
       ) {
         setIsText($isTextNode(node) || $isParagraphNode(node));
       } else {
@@ -365,10 +367,8 @@ function useFloatingTextFormatToolbar(
 
   useEffect(() => {
     document.addEventListener('selectionchange', updatePopup);
-    document.addEventListener('click', updatePopup);
     return () => {
       document.removeEventListener('selectionchange', updatePopup);
-      document.removeEventListener('click', updatePopup);
     };
   }, [updatePopup]);
 
