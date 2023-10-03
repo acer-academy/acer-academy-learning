@@ -6,7 +6,7 @@ import {
 } from '@acer-academy-learning/data-access';
 import { useToast } from '@acer-academy-learning/common-ui';
 import { Student } from 'libs/data-access/src/lib/types/student';
-import { TermData } from 'libs/data-access/src/lib/types/transaction';
+import { TermData } from 'libs/data-access/src/lib/types/term';
 import { useEffect, useState } from 'react';
 import { Fragment } from 'react';
 import { Menu, Transition } from '@headlessui/react';
