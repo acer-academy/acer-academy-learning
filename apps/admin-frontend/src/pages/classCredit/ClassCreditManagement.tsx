@@ -13,6 +13,7 @@ import { Menu, Transition } from '@headlessui/react';
 import { ChevronDownIcon } from '@heroicons/react/20/solid';
 import { DeletionConfirmationModal } from './DeletionConfirmationModal';
 import { StudentStatusEnum } from '@acer-academy-learning/data-access';
+import SendAlertModal from './SendAlertModal';
 
 export const ClassCreditManagement: React.FC = () => {
   const [studentData, setStudentData] = useState<Student[]>([]);
@@ -31,6 +32,9 @@ export const ClassCreditManagement: React.FC = () => {
   const [isEditingCredit, setIsEditingCredit] = useState(false);
   const [editCreditStudentId, setEditCreditStudentId] = useState('');
   const [updatedCredits, setUpdatedCredits] = useState(0);
+  const [isSendAlertModalOpen, setIsSendAlertModalOpen] = useState(false);
+  const [alertStudentName, setAlertStudentName] = useState('');
+  const [alertParentName, setAlertParentName] = useState('');
 
   const { displayToast, ToastType } = useToast();
 
@@ -426,9 +430,15 @@ export const ClassCreditManagement: React.FC = () => {
                               <a
                                 className="text-indigo-600 hover:text-indigo-900 mr-4 cursor-pointer"
                                 onClick={() => {
-                                  //   setUpdateCreditBundleId(creditBundle.id);
-                                  //   setUpdateCreditBundleData(creditBundle);
-                                  //   setIsUpdateModalOpen(true);
+                                  setAlertStudentName(
+                                    student.firstName + ' ' + student.lastName,
+                                  );
+                                  setAlertParentName(
+                                    student.parents[0].firstName +
+                                      ' ' +
+                                      student.parents[0].lastName,
+                                  );
+                                  setIsSendAlertModalOpen(true);
                                 }}
                               >
                                 Send Alert
@@ -474,6 +484,13 @@ export const ClassCreditManagement: React.FC = () => {
         id={blockStudentId}
         name={blockStudentName}
         isBlock={isBlock}
+      />
+      <SendAlertModal
+        open={isSendAlertModalOpen}
+        setOpen={setIsSendAlertModalOpen}
+        studentName={alertStudentName}
+        parentName={alertParentName}
+        termName={currentTerm?.name || ''}
       />
     </div>
   );
