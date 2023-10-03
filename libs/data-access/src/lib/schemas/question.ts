@@ -77,9 +77,21 @@ const questionAnswerValidateSchema = z
   })
   .superRefine(({ questionType, answers }, ctx) => {
     const correctCount = answers.filter((ans) => ans.isCorrect).length;
+    if (correctCount === 0) {
+      ctx.addIssue({
+        path: ['answers'],
+        code: z.ZodIssueCode.custom,
+        message: `Need to select ${
+          questionType === QuizQuestionTypeEnum.MCQ ||
+          questionType === QuizQuestionTypeEnum.TFQ
+            ? 'only'
+            : 'at least'
+        } one correct answer for ${questionType}`,
+      });
+    }
     if (
       questionType === QuizQuestionTypeEnum.MCQ ||
-      (questionType === QuizQuestionTypeEnum.TFQ && correctCount !== 1)
+      (questionType === QuizQuestionTypeEnum.TFQ && correctCount > 1)
     ) {
       ctx.addIssue({
         path: ['answers'],

@@ -1,31 +1,33 @@
-import React, { useEffect } from 'react';
+import React, { useMemo } from 'react';
+import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 import {
-  Control,
-  Controller,
-  FieldErrors,
-  FieldValues,
-  UseFormRegister,
-  useFieldArray,
-} from 'react-hook-form';
-import { CreateQuizQuestionType } from '@acer-academy-learning/data-access';
+  CreateQuizQuestionType,
+  QuizQuestionTypeEnum,
+} from '@acer-academy-learning/data-access';
 import { LexEditor, LexFloatingEditor } from '@acer-academy-learning/common-ui';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { DEFAULT_QUESTION_ANSWER } from '../constants/questionAnswer';
+import { AnswerFieldRadio } from './AnswerFieldRadio';
+import { AnswerFieldCheckbox } from './AnswerFieldCheckbox';
+import { TrueFalseField } from './TrueFalseField';
 
-export type QuestionAnswerProps = {
-  register: UseFormRegister<CreateQuizQuestionType>;
-  control: Control<CreateQuizQuestionType>;
-  errors: FieldErrors<CreateQuizQuestionType>;
-};
+export const QuestionAnswers = () => {
+  const { watch, control, register } = useFormContext<CreateQuizQuestionType>();
+  // States/Refs
+  const watchQuestionType = watch('questionType');
 
-export const QuestionAnswers = ({
-  control,
-  register,
-  errors,
-}: QuestionAnswerProps) => {
-  useEffect(() => {
-    console.log(errors);
-  }, [errors]);
+  const IsCorrectFieldTypeComponent = useMemo(() => {
+    if (
+      watchQuestionType === QuizQuestionTypeEnum.MCQ ||
+      watchQuestionType === QuizQuestionTypeEnum.TFQ
+    ) {
+      return AnswerFieldRadio;
+    } else {
+      return AnswerFieldCheckbox;
+    }
+  }, [watchQuestionType]);
+
+  // Hooks
   const {
     fields: answers,
     append,
@@ -34,49 +36,52 @@ export const QuestionAnswers = ({
     name: 'answers',
     control,
   });
+
   return (
-    <fieldset className="owl-t-4">
+    <fieldset className="space-y-4">
       <legend className="sr-only">Question Answers</legend>
-      {answers.map((answer, index) => (
-        <section key={answer.id} className="flex flex-col owl-t-4">
-          <div className="flex items-start owl-l-4">
-            <input
-              id={answer.id}
-              aria-describedby={`${answer.id}.isCorrect`}
-              type="checkbox"
-              className="h-5 w-5 rounded border-gray-300 text-teacher-primary-600 focus:ring-teacher-primary-600"
-              {...register(`answers.${index}.isCorrect`)}
-            />
-            <Controller
+      {(watchQuestionType === QuizQuestionTypeEnum.TFQ && (
+        <TrueFalseField />
+      )) || (
+        <>
+          {answers.map((answer, index) => (
+            <section
               key={answer.id}
-              control={control}
-              name={`answers.${index}.answer`}
-              render={({ field: { onChange, value, onBlur } }) => (
-                <LexFloatingEditor
-                  onChange={onChange}
-                  onBlur={onBlur}
-                  value={value}
-                  className="flex-[5]"
-                />
-              )}
-            />
-            <button type="button" onClick={() => remove(index)}>
-              <XMarkIcon className="h-5 w-5" aria-hidden="true" />
-            </button>
-          </div>
-          <span className="text-red-500">
-            {errors.answers?.[index]?.answer?.message}
-          </span>
-        </section>
-      ))}
-      <span className="text-red-500">{errors.answers?.message}</span>
-      <button
-        className="inline-flex items-center gap-x-1.5 rounded-md bg-teacher-primary-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-teacher-primary-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teacher-primary-600"
-        type="button"
-        onClick={() => append(DEFAULT_QUESTION_ANSWER)}
-      >
-        Add Question
-      </button>
+              className="flex space-x-4 space-y-4 items-end"
+            >
+              <IsCorrectFieldTypeComponent
+                id={answer.id}
+                register={register}
+                index={index}
+                name={'is_correct'}
+              />
+              <Controller
+                key={answer.id}
+                control={control}
+                name={`answers.${index}.answer`}
+                render={({ field: { onChange, value, onBlur } }) => (
+                  <LexFloatingEditor
+                    onChange={onChange}
+                    onBlur={onBlur}
+                    value={value}
+                    className="flex-[5]"
+                  />
+                )}
+              />
+              <button type="button" onClick={() => remove(index)}>
+                <XMarkIcon className="h-5 w-5" aria-hidden="true" />
+              </button>
+            </section>
+          ))}
+          <button
+            className="inline-flex items-center gap-x-1.5 rounded-md bg-teacher-primary-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-teacher-primary-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teacher-primary-600"
+            type="button"
+            onClick={() => append(DEFAULT_QUESTION_ANSWER)}
+          >
+            Add Answer Option
+          </button>
+        </>
+      )}
     </fieldset>
   );
 };

@@ -1,4 +1,5 @@
 import {
+  CreateQuizQuestionType,
   QuizQuestionData,
   QuizQuestionPaginationFilter,
 } from '../types/question';
@@ -19,3 +20,9 @@ export async function getPaginatedFilteredQuestions(
     filterOptions,
   );
 }
+
+export const createQuestion = async (
+  data: CreateQuizQuestionType,
+): Promise<AxiosResponse<QuizQuestionData>> => {
+  return client.post(`${URL}`, data);
+};
