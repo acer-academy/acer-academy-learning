@@ -21,11 +21,13 @@ export const SidebarLayout = ({
         <body class="h-full">
         ```
       */}
-      <div className={`relative h-full ${className ?? ''}`}>
+      <div className={`relative overflow-y-scroll h-full ${className ?? ''}`}>
         {mobileSidebar}
         {desktopSidebar}
 
+        {/* Commenting this out instead of removing in case we changing this later */}
         <main className="py-10 lg:pl-72">
+          {/* <main className="lg:pl-72"> */}
           <div className="px-4 sm:px-6 lg:px-8">
             <Outlet />
           </div>

@@ -35,62 +35,62 @@ import {
   SUBJECTS,
   QUESTION_BANK,
 } from '../libs/routes';
-import { LexicalEditor } from 'lexical';
+import { CreateQuestion } from '../pages/question-bank/CreateQuestion';
+import { QueryClient, QueryClientProvider } from 'react-query';
 
 export function App() {
+  const queryClient = new QueryClient();
   return (
-    <div className="h-full">
-      <TeacherAuthWrapper>
-        <ToastProvider>
-          <ToastContainer />
-          <Routes>
-            <Route
-              element={
-                <EnforceLoginStatePageWrapper redirectTo={LOGIN}>
-                  <PrimaryLayout
-                    role={LayoutRole.Teacher}
-                    navigationMenu={NAV_SECTIONS}
-                    accountNavigation={ACCOUNT_NAV}
-                  />
-                </EnforceLoginStatePageWrapper>
-              }
-            >
+    <QueryClientProvider client={queryClient}>
+      <div className="h-full">
+        <TeacherAuthWrapper>
+          <ToastProvider>
+            <ToastContainer />
+            <Routes>
               <Route
-                path={DASHBOARD}
-                element={<div>Welcome to AcerTech!</div>}
-              />
-              <Route path={QUESTION_BANK} element={<QuestionBank />} />
-              <Route path={SUBJECTS} />
-              <Route path={ANALYTICS} />
-              <Route path={SCHEDULING} />
-              <Route path={REWARDS} />
-              <Route path={ACCOUNT}>
-                <Route path={PROFILE} element={<TeacherProfile />} />
+                element={
+                  <EnforceLoginStatePageWrapper redirectTo={LOGIN}>
+                    <PrimaryLayout
+                      role={LayoutRole.Teacher}
+                      navigationMenu={NAV_SECTIONS}
+                      accountNavigation={ACCOUNT_NAV}
+                    />
+                  </EnforceLoginStatePageWrapper>
+                }
+              >
+                <Route path="/test" element={<CreateQuestion />} />
+                <Route
+                  path={DASHBOARD}
+                  element={<div>Welcome to AcerTech!</div>}
+                />
+                <Route path={QUESTION_BANK} element={<QuestionBank />} />
+                <Route path={SUBJECTS} />
+                <Route path={ANALYTICS} />
+                <Route path={SCHEDULING} />
+                <Route path={REWARDS} />
+                <Route path={ACCOUNT}>
+                  <Route path={PROFILE} element={<TeacherProfile />} />
+                  <Route path={CHANGE_PASSWORD} element={<ChangePassword />} />
+                  <Route path={SETTINGS} />
+                </Route>
+                <Route path={ACCOUNT} element={<TeacherAccount />} />
                 <Route path={CHANGE_PASSWORD} element={<ChangePassword />} />
-                <Route path={SETTINGS} />
               </Route>
-              <Route path={ACCOUNT} element={<TeacherAccount />} />
-              <Route path={CHANGE_PASSWORD} element={<ChangePassword />} />
-            </Route>
-            <Route path={LOGIN} element={<TeacherLogin />} />
-            <Route path={SIGN_UP} element={<TeacherSignUp />} />
-            <Route
-              path="/forgot-password"
-              element={<TeacherForgotPassword />}
-            />
-            <Route path="/reset-password" element={<TeacherResetPassword />} />
-            <Route
-              path="/test"
-              element={
-                <>
-                  <LexEditor />
-                </>
-              }
-            />
-          </Routes>
-        </ToastProvider>
-      </TeacherAuthWrapper>
-    </div>
+              <Route path={LOGIN} element={<TeacherLogin />} />
+              <Route path={SIGN_UP} element={<TeacherSignUp />} />
+              <Route
+                path="/forgot-password"
+                element={<TeacherForgotPassword />}
+              />
+              <Route
+                path="/reset-password"
+                element={<TeacherResetPassword />}
+              />
+            </Routes>
+          </ToastProvider>
+        </TeacherAuthWrapper>
+      </div>
+    </QueryClientProvider>
   );
 }
 
