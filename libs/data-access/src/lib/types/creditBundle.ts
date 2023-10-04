@@ -20,3 +20,7 @@ export interface CreditBundleData {
   basePrice: number;
   isActive: boolean;
 }
+
+export interface CreditBundleCartItem extends CreditBundleData {
+  quantity: number;
+}
