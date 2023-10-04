@@ -22,3 +22,13 @@ export async function getAvailableCredits(
 ): Promise<AxiosResponse<number>> {
   return client.get(`${URL}/availableCredits/${termId}/${studentId}`);
 }
+
+export async function rolloverCredits(
+  studentId: string,
+  currentTermId: string,
+  prevTermId: string,
+): Promise<AxiosResponse<TransactionData[]>> {
+  return client.get(
+    `${URL}/rollover/${studentId}/${currentTermId}/${prevTermId}`,
+  );
+}

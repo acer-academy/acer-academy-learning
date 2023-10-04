@@ -3,6 +3,8 @@ import {
   getAllTerms,
   getAvailableCredits,
   blockStudent,
+  getCurrentTerms,
+  rolloverCredits,
 } from '@acer-academy-learning/data-access';
 import { useToast } from '@acer-academy-learning/common-ui';
 import { Student } from 'libs/data-access/src/lib/types/student';
@@ -14,11 +16,13 @@ import { ChevronDownIcon } from '@heroicons/react/20/solid';
 import { DeletionConfirmationModal } from './DeletionConfirmationModal';
 import { StudentStatusEnum } from '@acer-academy-learning/data-access';
 import SendAlertModal from './SendAlertModal';
+import RolloverCreditModal from './RolloverCreditModal';
 
 export const ClassCreditManagement: React.FC = () => {
   const [studentData, setStudentData] = useState<Student[]>([]);
   const [termData, setTermData] = useState<TermData[]>([]);
-  const [currentTerm, setCurrentTerm] = useState<TermData>();
+  const [currentTerm, setCurrentTerm] = useState<TermData>(); // selected term in dropdown box
+  const [currentTerms, setCurrentTerms] = useState<TermData[]>([]); // current terms with start date before today and end date after today
   const [creditMap, setCreditMap] = useState<{ [studentId: string]: number }>(
     {},
   );
@@ -29,12 +33,12 @@ export const ClassCreditManagement: React.FC = () => {
   const [isBlock, setIsBlock] = useState(true);
   const [creditFilterMinimum, setCreditFilterMinimum] = useState(-100);
   const [creditFilterMaximum, setCreditFilterMaximum] = useState(100);
-  const [isEditingCredit, setIsEditingCredit] = useState(false);
-  const [editCreditStudentId, setEditCreditStudentId] = useState('');
-  const [updatedCredits, setUpdatedCredits] = useState(0);
   const [isSendAlertModalOpen, setIsSendAlertModalOpen] = useState(false);
   const [alertStudentName, setAlertStudentName] = useState('');
   const [alertParentName, setAlertParentName] = useState('');
+  const [isRolloverCreditModalOpen, setIsRolloverCreditModalOpen] =
+    useState(false);
+  const [rolloverCreditStudent, setRolloverCreditStudent] = useState<Student>();
 
   const { displayToast, ToastType } = useToast();
 
@@ -42,8 +46,11 @@ export const ClassCreditManagement: React.FC = () => {
     try {
       const response = await getAllTerms();
       const allTerms: TermData[] = response.data;
+      const currentTermsResponse = await getCurrentTerms();
+      const currentTerms: TermData[] = currentTermsResponse.data;
       setTermData(allTerms);
       setCurrentTerm(allTerms[0]);
+      setCurrentTerms(currentTerms);
     } catch (error) {
       displayToast(
         'Terms could not be retrieved from the server.',
@@ -142,19 +149,19 @@ export const ClassCreditManagement: React.FC = () => {
     }
   };
 
-  const handleEditCredit = async () => {
+  const handleRolloverCredit = async (targetTermId: string) => {
     try {
-      // TODO: Edit backend, create a transaction
-      const updatedCreditMap = { ...creditMap };
-      updatedCreditMap[editCreditStudentId] = updatedCredits;
-      setCreditMap(updatedCreditMap);
-      console.log(updatedCreditMap);
-      console.log(creditMap);
-    } catch (error) {
-      displayToast(
-        'Updating class credit for student has failed.',
-        ToastType.ERROR,
+      const response = await rolloverCredits(
+        rolloverCreditStudent?.id ?? '',
+        targetTermId,
+        currentTerm?.id ?? '',
       );
+      displayToast(
+        'Successfully completed rollover credits for student.',
+        ToastType.SUCCESS,
+      );
+    } catch (error) {
+      displayToast('Rollover credits has failed!', ToastType.ERROR);
       console.log(error);
     }
   };
@@ -167,6 +174,19 @@ export const ClassCreditManagement: React.FC = () => {
 
   function classNames(...classes: string[]) {
     return classes.filter(Boolean).join(' ');
+  }
+
+  function selectedTermInCurrentTerms() {
+    for (const index in currentTerms) {
+      if (currentTerms[index].id === currentTerm?.id) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  function currentTermStartDateInFuture() {
+    return currentTerm && currentTerm.startDate > new Date();
   }
 
   return (
@@ -362,50 +382,24 @@ export const ClassCreditManagement: React.FC = () => {
                             </td>
                             <td className="whitespace-normal px-3 py-4 text-sm text-gray-500 max-w-sm">
                               <div className="inline-flex justify-center">
-                                {isEditingCredit &&
-                                editCreditStudentId === student.id ? (
-                                  <input
-                                    name="updatedCredits"
-                                    className="flex w-16 items-center border-0 rounded bg-transparent ring-1 ring-inset focus:ring-2 focus:ring-inset ring-gray-300 text-gray-900 focus:ring-adminGreen-500"
-                                    value={updatedCredits}
-                                    onChange={(e) => {
-                                      setUpdatedCredits(
-                                        parseInt(e.target.value),
-                                      );
+                                <div className="flex items-center">
+                                  {creditMap[student.id] ?? 0}
+                                </div>
+                                {!(
+                                  selectedTermInCurrentTerms() || // Cannot rollover from current or future terms
+                                  currentTermStartDateInFuture()
+                                ) && creditMap[student.id] > 0 ? ( // Can only rollover positive credits
+                                  <div
+                                    className="ml-5 inline-flex items-center rounded-md bg-black-50 px-2 py-1 text-xs font-medium text-black-700 ring-1 ring-gray-600/20 hover:bg-gray-100 hover:text-black-900 cursor-pointer"
+                                    onClick={() => {
+                                      setRolloverCreditStudent(student);
+                                      setIsRolloverCreditModalOpen(true);
                                     }}
-                                  ></input>
-                                ) : (
-                                  <div className="flex items-center">
-                                    {creditMap[student.id] ?? 0}
+                                  >
+                                    ROLLOVER
                                   </div>
-                                )}
-                                {isEditingCredit &&
-                                editCreditStudentId === student.id ? (
-                                  <button
-                                    onClick={() => {
-                                      setIsEditingCredit(false);
-                                      handleEditCredit();
-                                    }}
-                                    className="text-adminGreen-600 ml-4 hover:underline"
-                                  >
-                                    Update
-                                  </button>
                                 ) : (
-                                  <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    className="h-4 w-4 ml-4 fill-gray-400 stroke-2 hover:fill-black cursor-pointer"
-                                    viewBox="0 0 16 16"
-                                    onClick={() => {
-                                      setIsEditingCredit(true);
-                                      setEditCreditStudentId(student.id);
-                                      setUpdatedCredits(
-                                        creditMap[student.id] ?? 0,
-                                      );
-                                    }}
-                                  >
-                                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
-                                    <path d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
-                                  </svg>
+                                  <div />
                                 )}
                               </div>
                             </td>
@@ -491,6 +485,21 @@ export const ClassCreditManagement: React.FC = () => {
         studentName={alertStudentName}
         parentName={alertParentName}
         termName={currentTerm?.name || ''}
+      />
+      <RolloverCreditModal
+        open={isRolloverCreditModalOpen}
+        setOpen={setIsRolloverCreditModalOpen}
+        studentName={
+          rolloverCreditStudent
+            ? rolloverCreditStudent.firstName +
+              ' ' +
+              rolloverCreditStudent.lastName
+            : ''
+        }
+        currentTermName={currentTerm?.name || ''}
+        numCredits={creditMap[rolloverCreditStudent?.id ?? '']}
+        currentTerms={currentTerms}
+        onClick={handleRolloverCredit}
       />
     </div>
   );
