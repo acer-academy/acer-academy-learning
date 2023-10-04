@@ -34,6 +34,7 @@ import {
   SIGN_UP,
   SUBJECTS,
   QUESTION_BANK,
+  CREATE_QUESTION,
 } from '../libs/routes';
 import { CreateQuestion } from '../pages/question-bank/CreateQuestion';
 import { QueryClient, QueryClientProvider } from 'react-query';
@@ -58,15 +59,20 @@ export function App() {
                   </EnforceLoginStatePageWrapper>
                 }
               >
-                <Route path="/test" element={<CreateQuestion />} />
                 <Route
                   path={DASHBOARD}
                   element={<div>Welcome to AcerTech!</div>}
                 />
+                {/* Question Bank routes */}
                 <Route path={QUESTION_BANK} element={<QuestionBank />} />
+                <Route path={CREATE_QUESTION} element={<CreateQuestion />} />
+                {/* Subject routes */}
                 <Route path={SUBJECTS} />
+                {/* Analytics routes */}
                 <Route path={ANALYTICS} />
+                {/* Scheduling routes */}
                 <Route path={SCHEDULING} />
+                {/* Rewards routes */}
                 <Route path={REWARDS} />
                 <Route path={ACCOUNT}>
                   <Route path={PROFILE} element={<TeacherProfile />} />

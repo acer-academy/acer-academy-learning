@@ -18,3 +18,4 @@ export const SETTINGS = `${ACCOUNT}/settings`;
 
 // Question Bank
 export const QUESTION_BANK = '/question-bank';
+export const CREATE_QUESTION = `${QUESTION_BANK}/create`;
