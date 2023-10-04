@@ -80,8 +80,16 @@ export const RolloverCreditModal: React.FC<RolloverCreditModalProps> = (
                     </Dialog.Title>
                     <div className="mt-4">
                       <p className="text-sm text-gray-500 whitespace-pre-line">
-                        {`Rollover ${numCredits} credits for ${studentName} from ${currentTermName} to: `}
+                        {`Rollover `}
+                        <strong>{numCredits}</strong>
+                        {numCredits === 1 ? ' credit ' : ' credits '}
+                        for
+                        <strong> {studentName} </strong>
+                        from
+                        <strong> {currentTermName} </strong>
+                        to:
                       </p>
+
                       <Menu
                         as="div"
                         className="relative inline-block text-left mt-3"
