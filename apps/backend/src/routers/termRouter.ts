@@ -27,6 +27,15 @@ termRouter.get('/', async (req, res) => {
   }
 });
 
+termRouter.get('/current', async (req, res) => {
+  try {
+    const currentTerms = await TermService.getCurrentTerms();
+    return res.status(200).json(currentTerms);
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+});
+
 termRouter.get('/:termId', async (req, res) => {
   try {
     const { termId } = req.params;
@@ -54,7 +63,6 @@ termRouter.put('/:termId', validateDateFormat, async (req, res) => {
   }
 });
 
-// should a term be able to be deleted? - linked to transactions
 termRouter.delete(
   '/:termId',
   validateDeleteTermNoTransactions,

@@ -1189,7 +1189,7 @@ export async function validatePurchaseTransaction(
       if (!amount || !currency || !creditBundleId) {
         return res
           .status(400)
-          .json({ error: 'Please input amount and currency' });
+          .json({ error: 'Please input amount, credit bundle and currency' });
       }
     }
     next();
@@ -1205,15 +1205,8 @@ export async function validateTransactionComplusoryFields(
   next: NextFunction,
 ) {
   try {
-    const { transactionType, termId, studentId, dateTime, creditsTransacted } =
-      req.body;
-    if (
-      !transactionType ||
-      !termId ||
-      !studentId ||
-      !dateTime ||
-      !creditsTransacted
-    ) {
+    const { transactionType, termId, studentId, creditsTransacted } = req.body;
+    if (!transactionType || !termId || !studentId || !creditsTransacted) {
       return res
         .status(400)
         .json({ error: 'Please input all fields before proceeding' });

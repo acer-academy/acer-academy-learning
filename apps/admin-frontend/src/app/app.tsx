@@ -13,6 +13,7 @@ import { CentreDetails } from '../pages/centre/CentreDetails';
 import { FaqTopicManagement } from '../pages/faq/FaqManagement';
 import { FaqTopicDetails } from '../pages/faq/FaqDetails';
 import { PromotionManagement } from '../pages/promotion/PromotionManagement';
+import { TermManagement } from '../pages/term/TermManagement';
 import {
   LayoutRole,
   SecondaryLayout,
@@ -38,12 +39,14 @@ import {
   CREDIT_RESOURCES,
   CREDIT_BUNDLE,
   TRANSACTION,
+  TERM,
 } from '../libs/routes';
 import AdminForgotPassword from '../pages/entry/AdminForgotPassword';
 import AdminResetPassword from '../pages/entry/AdminResetPassword';
 import { TeacherHRManagementPage } from '../pages/hr/TeacherHRManagementPage';
 import { StudentHRManagementPage } from '../pages/hr/StudentHRManagementPage';
 import { AdminHRManagementPage } from '../pages/hr/AdminHRManagementPage';
+import TransactionsComponent from '../pages/transaction/TransactionManagement';
 import { CreditBundleManagement } from '../pages/creditBundle/CreditBundleManagement';
 
 export default function App() {
@@ -83,8 +86,9 @@ export default function App() {
                   path={CREDIT_BUNDLE}
                   element={<CreditBundleManagement />}
                 />
-                <Route path={TRANSACTION} element={<h2>Transaction</h2>} />
+                <Route path={TRANSACTION} element={<TransactionsComponent />} />
                 <Route path={PROMOTION} element={<PromotionManagement />} />
+                <Route path={TERM} element={<TermManagement />} />
               </Route>
 
               <Route path={`${CENTRE}`} element={<CentreManagement />} />

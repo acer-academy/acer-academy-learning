@@ -198,8 +198,9 @@ model Term {
 
 enum TransactionType {
   PURCHASED
-  DEDUCTED
-  REFUNDED
+  DEDUCTED //attendance
+  STRIPE_DEDUCTED //refunded transaction
+  ROLLOVER
   VOID
 }
 

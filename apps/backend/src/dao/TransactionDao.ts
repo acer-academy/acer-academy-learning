@@ -8,7 +8,13 @@ class TransactionDao {
   }
 
   public async getAllTransactions(): Promise<Transaction[]> {
-    return this.prisma.transaction.findMany();
+    return this.prisma.transaction.findMany({
+      include: {
+        term: true,
+        promotion: true,
+        student: true,
+      },
+    });
   }
 
   public async getTransactionById(id: string): Promise<Transaction> {
@@ -22,6 +28,11 @@ class TransactionDao {
   ): Promise<Transaction[]> {
     return this.prisma.transaction.findMany({
       where: { studentId },
+      include: {
+        term: true,
+        promotion: true,
+        student: true,
+      },
     });
   }
 

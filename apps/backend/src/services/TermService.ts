@@ -17,6 +17,10 @@ class TermService {
     return TermDao.getAllTerms();
   }
 
+  public async getCurrentTerms(): Promise<Term[]> {
+    return TermDao.getCurrentTerms();
+  }
+
   public async getTermById(id: string): Promise<Term> {
     return TermDao.getTermById(id);
   }
