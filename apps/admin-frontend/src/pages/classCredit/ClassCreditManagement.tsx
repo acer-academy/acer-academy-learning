@@ -76,8 +76,6 @@ export const ClassCreditManagement: React.FC = () => {
 
   const fetchAvailableCredits = async () => {
     try {
-      await fetchAllStudents();
-
       // Fetch all student IDs
       const studentIds = studentData.map((student) => student.id);
 
@@ -102,8 +100,6 @@ export const ClassCreditManagement: React.FC = () => {
       );
 
       setCreditMap(updatedCreditMap);
-      console.log(updatedCreditMap);
-      console.log(creditMap);
     } catch (error) {
       displayToast(
         'Available credits could not be retrieved from the server.',
@@ -156,6 +152,13 @@ export const ClassCreditManagement: React.FC = () => {
         targetTermId,
         currentTerm?.id ?? '',
       );
+
+      const updatedCreditMap = {
+        ...creditMap,
+        [rolloverCreditStudent?.id ?? '']: 0,
+      };
+      setCreditMap(updatedCreditMap);
+
       displayToast(
         'Successfully completed rollover credits for student.',
         ToastType.SUCCESS,
@@ -169,8 +172,14 @@ export const ClassCreditManagement: React.FC = () => {
   useEffect(() => {
     fetchAllStudents();
     fetchAllTerms();
-    fetchAvailableCredits();
   }, []);
+
+  useEffect(() => {
+    // Only fetch available credits when currentTerm changes and studentData is available
+    if (currentTerm && studentData.length > 0) {
+      fetchAvailableCredits();
+    }
+  }, [currentTerm, studentData]);
 
   function classNames(...classes: string[]) {
     return classes.filter(Boolean).join(' ');
