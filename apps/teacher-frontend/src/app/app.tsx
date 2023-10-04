@@ -35,9 +35,11 @@ import {
   SUBJECTS,
   QUESTION_BANK,
   CREATE_QUESTION,
+  UPDATE_QUESTION,
 } from '../libs/routes';
 import { CreateQuestion } from '../pages/question-bank/CreateQuestion';
 import { QueryClient, QueryClientProvider } from 'react-query';
+import { UpdateQuestion } from '../pages/question-bank/UpdateQuestion';
 
 export function App() {
   const queryClient = new QueryClient();
@@ -64,8 +66,11 @@ export function App() {
                   element={<div>Welcome to AcerTech!</div>}
                 />
                 {/* Question Bank routes */}
-                <Route path={QUESTION_BANK} element={<QuestionBank />} />
-                <Route path={CREATE_QUESTION} element={<CreateQuestion />} />
+                <Route path={QUESTION_BANK}>
+                  <Route path={QUESTION_BANK} element={<QuestionBank />} />
+                  <Route path={CREATE_QUESTION} element={<CreateQuestion />} />
+                  <Route path={UPDATE_QUESTION} element={<UpdateQuestion />} />
+                </Route>
                 {/* Subject routes */}
                 <Route path={SUBJECTS} />
                 {/* Analytics routes */}

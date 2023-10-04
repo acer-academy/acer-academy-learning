@@ -14,6 +14,7 @@ export * from './lib/layout';
 export * from './lib/wrapper/EnforceLoginStateWrapper';
 export * from './lib/wrapper/PublicPageWrapper';
 export * from './lib/wrapper/FullscreenSpinner';
+export * from './lib/wrapper/Spinner';
 export * from './lib/forms';
 export * from './lib/utils/camelCaseToTitleCase';
 export * from './lib/utils/screamingSnakeToTitleCase';

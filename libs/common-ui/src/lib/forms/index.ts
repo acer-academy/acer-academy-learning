@@ -5,3 +5,4 @@ export * from './GenericBadge';
 export * from './GenericBadges';
 export * from './GenericSelect';
 export * from './GenericSelectOption';
+export * from './ErrorField';

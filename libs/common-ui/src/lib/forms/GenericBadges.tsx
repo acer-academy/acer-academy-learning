@@ -2,7 +2,7 @@ import React from 'react';
 import { GenericBadge } from './GenericBadge';
 
 export type GenericBadgesProps<T> = {
-  badges: T[];
+  badges?: T[];
   getDisplayValue: (item: T) => string;
   onChange: (badges: T[]) => void;
 };
@@ -13,13 +13,15 @@ export const GenericBadges = <T,>({
   onChange,
 }: GenericBadgesProps<T>) => {
   const handleRemove = (idx: number) => {
-    const newBadges = [...badges];
-    newBadges.splice(idx, 1);
-    onChange(newBadges);
+    if (badges) {
+      const newBadges = [...badges];
+      newBadges.splice(idx, 1);
+      onChange(newBadges);
+    }
   };
   return (
     <section className="space-x-1">
-      {badges.map((badge, idx) => (
+      {badges?.map((badge, idx) => (
         <GenericBadge
           key={idx}
           badge={getDisplayValue(badge)}

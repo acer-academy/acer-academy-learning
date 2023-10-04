@@ -74,8 +74,8 @@ export const QuestionBank: React.FC = () => {
   }, [currentPage, pageSize, filterOptions]);
 
   return (
-    <div className="h-full bg-gray-50">
-      <div className="flex min-h-full flex-col gap-7 align-middle py-12 px-12">
+    <div className="h-full">
+      <div className="flex min-h-full flex-col gap-7 align-middle">
         <div className="flex align-middle justify-between">
           <div className="flex align-middle gap-4">
             <span className="text-2xl py-1 font-bold tracking-tight">

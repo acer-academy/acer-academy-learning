@@ -37,3 +37,7 @@ export interface QuizQuestionPaginationFilter {
 
 export type CreateQuizAnswerType = z.infer<typeof createQuizAnswerSchema>;
 export type CreateQuizQuestionType = z.infer<typeof createQuizQuestionSchema>;
+export type UpdateQuizQuestionParams = {
+  questionId: string;
+  data: CreateQuizQuestionType;
+};

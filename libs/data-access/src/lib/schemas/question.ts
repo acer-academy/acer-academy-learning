@@ -84,14 +84,15 @@ const questionAnswerValidateSchema = z
         message: `Need to select ${
           questionType === QuizQuestionTypeEnum.MCQ ||
           questionType === QuizQuestionTypeEnum.TFQ
-            ? 'only'
+            ? ''
             : 'at least'
         } one correct answer for ${questionType}`,
       });
     }
     if (
-      questionType === QuizQuestionTypeEnum.MCQ ||
-      (questionType === QuizQuestionTypeEnum.TFQ && correctCount > 1)
+      (questionType === QuizQuestionTypeEnum.MCQ ||
+        questionType === QuizQuestionTypeEnum.TFQ) &&
+      correctCount > 1
     ) {
       ctx.addIssue({
         path: ['answers'],
