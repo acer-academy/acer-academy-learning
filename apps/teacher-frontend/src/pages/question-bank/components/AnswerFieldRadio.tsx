@@ -1,6 +1,6 @@
 import { CreateQuizQuestionType } from '@acer-academy-learning/data-access';
-import React, { useEffect } from 'react';
-import { UseFormRegister, useFormContext } from 'react-hook-form';
+import React from 'react';
+import { Controller, UseFormRegister, useFormContext } from 'react-hook-form';
 
 export type AnswerFieldRadioProps = {
   register: UseFormRegister<CreateQuizQuestionType>;
@@ -13,18 +13,37 @@ export const AnswerFieldRadio = ({
   register,
   index,
 }: AnswerFieldRadioProps) => {
-  const { setValue } = useFormContext<CreateQuizQuestionType>();
-  useEffect(() => {
-    setValue(`answers.${index}.isCorrect`, false);
-  }, [setValue, index]);
+  const { setValue, watch, control } = useFormContext<CreateQuizQuestionType>();
+  const watchAllAnswers = watch(`answers`);
+
+  const onRadioChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    onChange: (...event: any[]) => void,
+  ) => {
+    // Check this one
+    onChange(e.target.checked);
+    // Uncheck all other radio buttons
+    watchAllAnswers.forEach((_, currIdx) => {
+      if (currIdx !== index) {
+        setValue(`answers.${currIdx}.isCorrect`, false);
+      }
+    });
+  };
+
   return (
-    <input
-      id={id}
-      aria-label="Radio button to indicate correct answer"
-      type="radio"
-      className="h-4 w-4 border-gray-300 text-teacher-primary-600 focus:ring-teacher-primary-600"
-      {...register(`answers.${index}.isCorrect`)}
-      name={name}
+    <Controller
+      control={control}
+      name={`answers.${index}.isCorrect`}
+      render={({ field: { onChange, value, onBlur } }) => (
+        <input
+          id={id}
+          aria-label="Radio button to indicate correct answer"
+          type="radio"
+          onChange={(e) => onRadioChange(e, onChange)}
+          className="h-4 w-4 border-gray-300 text-teacher-primary-600 focus:ring-teacher-primary-600"
+          name={name}
+        />
+      )}
     />
   );
 };

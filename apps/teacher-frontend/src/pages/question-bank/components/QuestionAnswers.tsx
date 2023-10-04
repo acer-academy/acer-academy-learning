@@ -56,7 +56,6 @@ export const QuestionAnswers = () => {
                 name={'is_correct'}
               />
               <Controller
-                key={answer.id}
                 control={control}
                 name={`answers.${index}.answer`}
                 render={({ field: { onChange, value, onBlur } }) => (
@@ -68,7 +67,11 @@ export const QuestionAnswers = () => {
                   />
                 )}
               />
-              <button type="button" onClick={() => remove(index)}>
+              <button
+                className={`${answers.length > 2 ? 'visible' : 'invisible'}`}
+                type="button"
+                onClick={() => remove(index)}
+              >
                 <XMarkIcon className="h-5 w-5" aria-hidden="true" />
               </button>
             </section>
