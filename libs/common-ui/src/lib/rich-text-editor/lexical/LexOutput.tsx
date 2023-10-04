@@ -7,22 +7,27 @@ import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
 import React from 'react';
 import Placeholder from './ui/Placeholder';
 import LexicalErrorBoundary from '@lexical/react/LexicalErrorBoundary';
+import { RenderInitialContentPlugin } from './plugins/RenderInitialContentPlugin';
+import EquationsPlugin from './plugins/EquationsPlugin';
+import { EquationNode } from './nodes/EquationNode';
 
 export type LexOutputProps = {
-  initialState: string;
+  htmlString: string;
 };
 
-export const LexOutput = ({ initialState = '' }: LexOutputProps) => {
+export const LexOutput = ({ htmlString }: LexOutputProps) => {
   const initialConfig: InitialConfigType = {
-    editorState: initialState,
     namespace: 'Output',
     editable: false,
+    nodes: [EquationNode],
     onError: (error: Error) => {
       throw error;
     },
   };
   return (
     <LexicalComposer initialConfig={initialConfig}>
+      <RenderInitialContentPlugin htmlString={htmlString} />
+      <EquationsPlugin />
       <RichTextPlugin
         contentEditable={<ContentEditable />}
         placeholder={<Placeholder>No content to render</Placeholder>}

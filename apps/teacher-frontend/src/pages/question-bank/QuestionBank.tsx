@@ -4,7 +4,7 @@ import {
   QuizQuestionPaginationFilter,
 } from 'libs/data-access/src/lib/types/question';
 import { useEffect, useState } from 'react';
-import { useToast } from '@acer-academy-learning/common-ui';
+import { LexOutput, useToast } from '@acer-academy-learning/common-ui';
 import { Filter } from './Filter';
 import { LevelTag } from './LevelTag';
 import { TopicTag } from './TopicTag';
@@ -13,6 +13,7 @@ import DifficultyTag from './DifficultyTag';
 import TypeTag from './QuestionTypeTag';
 import katex from 'katex';
 import { useNavigate } from 'react-router-dom';
+import { CREATE_QUESTION } from '../../libs/routes';
 
 export const QuestionBank: React.FC = () => {
   const { displayToast, ToastType } = useToast();
@@ -65,7 +66,7 @@ export const QuestionBank: React.FC = () => {
 
   const navToCreateQuestion = () => {
     // for now will push to url/question-bank/create, change as needed
-    navigate(`/question-bank/create`);
+    navigate(CREATE_QUESTION);
   };
 
   useEffect(() => {
@@ -187,9 +188,10 @@ export const QuestionBank: React.FC = () => {
                           <td className="py-4 pl-3.5 pr-3 text-xs font-medium text-gray-900 max-w-0">
                             <div>
                               <span>
-                                {question.questionText.length > 400
+                                {/* {question.questionText.length > 400
                                   ? question.questionText.slice(0, 100) + '...'
-                                  : question.questionText}
+                                  : question.questionText} */}
+                                <LexOutput htmlString={question.questionText} />
                               </span>
                             </div>
                           </td>
