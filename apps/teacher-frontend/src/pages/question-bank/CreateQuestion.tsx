@@ -64,7 +64,7 @@ export const CreateQuestion = () => {
     <FormProvider {...formMethods}>
       <section className="space-y-4">
         <BackButton />
-        <QuestionCard onSubmitForm={onSubmitForm} />
+        <QuestionCard onSubmitForm={onSubmitForm} submitText="Create" />
       </section>
     </FormProvider>
   );

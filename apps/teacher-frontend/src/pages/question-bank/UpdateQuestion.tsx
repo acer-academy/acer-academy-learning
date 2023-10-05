@@ -71,7 +71,7 @@ export const UpdateQuestion = () => {
       <FormProvider {...formMethods}>
         <section className="space-y-4">
           <BackButton />
-          <QuestionCard onSubmitForm={onSubmitForm} />
+          <QuestionCard onSubmitForm={onSubmitForm} submitText={'Update'} />
         </section>
       </FormProvider>
     );

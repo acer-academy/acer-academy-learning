@@ -156,7 +156,7 @@ export const QuestionAnswers = () => {
           <legend className="sr-only">Question Answers</legend>
           <ErrorField message={errors.answers?.root?.message} />
           <button
-            className="inline-flex items-center gap-x-1.5 rounded-md bg-teacher-primary-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-teacher-primary-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teacher-primary-600"
+            className="inline-flex items-center gap-x-1.5 rounded-md bg-teacher-primary-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-teacher-primary-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teacher-primary-600 w-fit"
             type="button"
             onClick={() => append(DEFAULT_QUESTION_ANSWER)}
           >

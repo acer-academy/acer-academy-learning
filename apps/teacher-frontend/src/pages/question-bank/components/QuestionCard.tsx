@@ -20,9 +20,13 @@ const difficulties = Object.values(QuizQuestionDifficultyEnum);
 
 export type QuestionCardProps = {
   onSubmitForm: (values: CreateQuizQuestionType) => Promise<void>;
+  submitText?: string;
 };
 
-export const QuestionCard = ({ onSubmitForm }: QuestionCardProps) => {
+export const QuestionCard = ({
+  onSubmitForm,
+  submitText,
+}: QuestionCardProps) => {
   const { displayToast, ToastType } = useToast();
   const {
     formState: { errors },
@@ -118,7 +122,7 @@ export const QuestionCard = ({ onSubmitForm }: QuestionCardProps) => {
           marginTop: '3rem',
         }}
       >
-        Submit
+        {submitText ?? 'Submit'}
       </button>
     </form>
   );
