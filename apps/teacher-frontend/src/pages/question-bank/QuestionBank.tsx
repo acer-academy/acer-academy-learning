@@ -259,7 +259,7 @@ export const QuestionBank: React.FC = () => {
                           <td className="whitespace-nowrap py-4 pl-3 pr-3 font-medium text-gray-900">
                             <TypeTag type={question.questionType} />
                           </td>
-                          <td className="whitespace-nowrap py-4 pl-3 pr-3 font-medium text-gray-900 space-x-1">
+                          <td className="whitespace-nowrap font-medium text-gray-900 space-x-1 w-max">
                             <button
                               type="button"
                               onClick={(e) => {
