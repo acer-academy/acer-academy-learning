@@ -35,14 +35,14 @@ export const QuestionCard = ({
     getValues,
   } = useFormContext<CreateQuizQuestionType>();
 
-  const { isSubmitting } = useFormState();
+  const { isSubmitting, isDirty } = useFormState();
 
   const handleSubmitForm = async (values: CreateQuizQuestionType) => {
     onSubmitForm(values);
   };
 
   useEffect(() => {
-    if (isSubmitting && Object.keys(errors).length !== 0) {
+    if (isDirty && isSubmitting && Object.keys(errors).length !== 0) {
       const msg = Object.entries(errors)
         .filter(
           ([type, errorObj]) => errorObj.message || errorObj.root?.message,

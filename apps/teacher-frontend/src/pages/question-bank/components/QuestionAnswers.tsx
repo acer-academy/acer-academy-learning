@@ -138,9 +138,6 @@ export const QuestionAnswers = () => {
                       )}
                     />
                     <button
-                      className={`${
-                        answers.length > 2 ? 'visible' : 'invisible'
-                      }`}
                       type="button"
                       onClick={() =>
                         setValue(`answers.${index}.explanation`, null)
