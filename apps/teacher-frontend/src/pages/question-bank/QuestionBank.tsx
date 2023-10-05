@@ -19,12 +19,12 @@ import { QuizStatusTag } from './QuizStatusTag';
 import DifficultyTag from './DifficultyTag';
 import TypeTag from './QuestionTypeTag';
 import katex from 'katex';
-import { useNavigate } from 'react-router-dom';
-import { CREATE_QUESTION } from '../../libs/routes';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { useMutation } from 'react-query';
 
 export const QuestionBank: React.FC = () => {
+  const location = useLocation();
   const { displayToast, ToastType } = useToast();
   const { mutate: deleteQuizQuestionMutate } = useMutation(deleteQuizQuestion, {
     onSuccess: async () => {
@@ -84,12 +84,12 @@ export const QuestionBank: React.FC = () => {
 
   const navToSelectedQuestion = (selectedQuestionId: string) => {
     // for now will push to url/question-bank/questionId, change as needed
-    navigate(`/question-bank/${selectedQuestionId}`);
+    navigate(`${location.pathname}/${selectedQuestionId}`);
   };
 
   const navToCreateQuestion = () => {
     // for now will push to url/question-bank/create, change as needed
-    navigate(CREATE_QUESTION);
+    navigate(`${location.pathname}/create`);
   };
 
   useEffect(() => {
