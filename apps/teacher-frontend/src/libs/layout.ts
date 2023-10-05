@@ -4,7 +4,6 @@ import {
   ANALYTICS,
   DASHBOARD,
   PROFILE,
-  QUESTION_BANK,
   REWARDS,
   SCHEDULING,
   SETTINGS,
@@ -27,9 +26,8 @@ export const NAV_SECTIONS: NavigationMenuItem[] = [
     children: [
       {
         name: 'Question Bank',
-        path: '/question-bank',
+        path: `${SUBJECTS}/math/question-bank`,
         icon: InboxStackIcon,
-        dynamicRoute: true,
       },
     ],
     noSideBar: true,

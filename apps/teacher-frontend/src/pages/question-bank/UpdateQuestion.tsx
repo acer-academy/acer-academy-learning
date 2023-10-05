@@ -12,7 +12,7 @@ import {
 } from '@acer-academy-learning/data-access';
 import React, { useEffect, useMemo } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import omitDeep from 'omit-deep-lodash';
 import { FormProvider } from 'react-hook-form';
 import { QuestionCard } from './components/QuestionCard';
@@ -21,14 +21,18 @@ import { AxiosError } from 'axios';
 
 export const UpdateQuestion = () => {
   // Hooks/States
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { displayToast, ToastType } = useToast();
   const { questionId } = useParams();
   const memoedQuestionId = useMemo(() => questionId ?? '', [questionId]);
   const { mutate: mutateQuizQuestion } = useMutation(updateQuizQuestion, {
-    onSuccess: () => {
+    onSuccess: async () => {
       displayToast('Successfully updated question!', ToastType.SUCCESS);
-      queryClient.invalidateQueries({ queryKey: [memoedQuestionId] });
+      await queryClient.invalidateQueries({
+        queryKey: ['question', memoedQuestionId],
+      });
+      navigate(-1);
     },
     onError: (error: AxiosError<{ error: string }>) => {
       displayToast(
