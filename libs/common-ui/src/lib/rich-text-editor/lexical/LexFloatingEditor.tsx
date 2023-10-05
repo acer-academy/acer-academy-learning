@@ -20,7 +20,6 @@ export type LexFloatingEditorProps = {
   className?: string;
   onChange: (val: string) => void;
   onBlur: () => void;
-  value: string;
   htmlString?: string;
   placeholder?: string;
 };
@@ -34,7 +33,6 @@ export const LexFloatingEditor = forwardRef<
       className = '',
       onChange,
       onBlur,
-      value,
       htmlString,
       placeholder,
     }: LexFloatingEditorProps,
@@ -76,7 +74,7 @@ export const LexFloatingEditor = forwardRef<
       if (!isFocused) {
         onBlur();
       }
-    }, [isFocused, onBlur, value]);
+    }, [isFocused, onBlur]);
 
     return (
       <LexicalComposer initialConfig={initialConfig}>
@@ -89,39 +87,39 @@ export const LexFloatingEditor = forwardRef<
           }}
         >
           {htmlString && <RenderInitialContentPlugin htmlString={htmlString} />}
-          {(isContentLoaded && (
-            <div
-              ref={ref}
-              onFocus={() => setIsFocused(true)}
-              onBlur={() => setIsFocused(false)}
-              className={`${className} relative outline-none border-solid ${
-                isFocused
-                  ? 'border-teacher-primary-500'
-                  : 'border-teacher-primary-300'
-              } border-b-2 mb-[-1px]`}
-            >
-              <OnChangePlugin onChange={onEditorChange} />
-              <RichTextPlugin
-                contentEditable={
-                  <div ref={onRef}>
-                    <ContentEditable className="outline-none" />
-                  </div>
-                }
-                placeholder={
-                  <span className="absolute top-0 text-gray-400 select-none pointer-events-none ">
-                    {placeholder ?? 'Enter rich text here...'}
-                  </span>
-                }
-                ErrorBoundary={LexicalErrorBoundary}
+          <div
+            ref={ref}
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
+            className={`${className} ${
+              isContentLoaded ? 'opacity-100' : 'opacity-0'
+            } transition-opacity duration-75 ease-in relative outline-none border-solid ${
+              isFocused
+                ? 'border-teacher-primary-500'
+                : 'border-teacher-primary-300'
+            } border-b-2 mb-[-1px]`}
+          >
+            <OnChangePlugin onChange={onEditorChange} />
+            <RichTextPlugin
+              contentEditable={
+                <div ref={onRef}>
+                  <ContentEditable className="outline-none" />
+                </div>
+              }
+              placeholder={
+                <span className="absolute top-0 text-gray-400 select-none pointer-events-none ">
+                  {placeholder ?? 'Enter rich text here...'}
+                </span>
+              }
+              ErrorBoundary={LexicalErrorBoundary}
+            />
+            <EquationsPlugin />
+            {floatingAnchorElem && (
+              <CustomFloatingTextFormatToolbarPlugin
+                anchorElem={floatingAnchorElem}
               />
-              <EquationsPlugin />
-              {floatingAnchorElem && (
-                <CustomFloatingTextFormatToolbarPlugin
-                  anchorElem={floatingAnchorElem}
-                />
-              )}
-            </div>
-          )) || <Spinner />}
+            )}
+          </div>
         </EditorEventContextProvider>
       </LexicalComposer>
     );

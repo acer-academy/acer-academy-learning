@@ -11,7 +11,7 @@ export type RenderExistingTextPluginProps = {
 export const RenderInitialContentPlugin = ({
   htmlString,
 }: RenderExistingTextPluginProps) => {
-  const { setIsContentLoaded } = useEditorEventContext();
+  const { isContentLoaded, setIsContentLoaded } = useEditorEventContext();
   const [editor] = useLexicalComposerContext();
   useEffect(() => {
     editor.update(() => {
@@ -24,7 +24,9 @@ export const RenderInitialContentPlugin = ({
       const nodes = $generateNodesFromDOM(editor, dom);
       $getRoot().select();
       $insertNodes(nodes);
-      setIsContentLoaded(true);
+      if (!isContentLoaded) {
+        setIsContentLoaded(true);
+      }
     });
   }, []);
 

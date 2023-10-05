@@ -5,6 +5,7 @@ import { Controller, UseFormRegister, useFormContext } from 'react-hook-form';
 export type AnswerFieldRadioProps = {
   register: UseFormRegister<CreateQuizQuestionType>;
   index: number;
+  className?: string;
 } & Partial<HTMLInputElement>;
 
 export const AnswerFieldRadio = ({
@@ -12,6 +13,7 @@ export const AnswerFieldRadio = ({
   name,
   register,
   index,
+  className,
 }: AnswerFieldRadioProps) => {
   const { setValue, watch, control, getValues } =
     useFormContext<CreateQuizQuestionType>();
@@ -42,7 +44,7 @@ export const AnswerFieldRadio = ({
           type="radio"
           onChange={(e) => onRadioChange(e, onChange)}
           checked={getValues(`answers.${index}.isCorrect`)}
-          className="h-4 w-4 border-gray-300 text-teacher-primary-600 focus:ring-teacher-primary-600"
+          className={`h-4 w-4 border-gray-300 text-teacher-primary-600 focus:ring-teacher-primary-600 ${className}`}
           name={name}
         />
       )}
