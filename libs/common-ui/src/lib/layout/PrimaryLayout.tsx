@@ -20,12 +20,14 @@ export type PrimaryLayoutProps = {
   accountNavigation: NavigationMenuItem;
   navigationMenu: NavigationMenuItem[];
   role: LayoutRole;
+  routesWithoutSidebar?: string[];
 };
 
 export const PrimaryLayout = ({
   navigationMenu,
   role,
   accountNavigation,
+  routesWithoutSidebar,
 }: PrimaryLayoutProps) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const secondaryMenu = useGetSecondaryMenu([
@@ -51,11 +53,6 @@ export const PrimaryLayout = ({
             <div className="flex items-center gap-x-12">
               <a href="#" className="-m-1.5 p-1.5">
                 <span className="sr-only">Your Company</span>
-                {/* <img
-                  className="h-8 w-auto"
-                  src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-                  alt=""
-                /> */}
                 {role === LayoutRole.Student ? (
                   <img
                     className={'h-9 w-auto'}
@@ -160,6 +157,7 @@ export const PrimaryLayout = ({
           desktopSidebar={
             <PrimaryDesktopSideBar navigationMenu={secondaryMenu} />
           }
+          routesWithoutSidebar={routesWithoutSidebar}
         />
       </div>
     </ThemeProvider>

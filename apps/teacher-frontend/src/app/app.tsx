@@ -36,10 +36,14 @@ import {
   QUESTION_BANK,
   CREATE_QUESTION,
   UPDATE_QUESTION,
+  WITHOUT_SIDEBARS,
+  SUBJECT_MAIN,
 } from '../libs/routes';
 import { CreateQuestion } from '../pages/question-bank/CreateQuestion';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { UpdateQuestion } from '../pages/question-bank/UpdateQuestion';
+import { Subjects } from '../pages/subjects/Subjects';
+import { Subject } from '../pages/subjects/Subject';
 
 export function App() {
   const queryClient = new QueryClient();
@@ -57,6 +61,7 @@ export function App() {
                       role={LayoutRole.Teacher}
                       navigationMenu={NAV_SECTIONS}
                       accountNavigation={ACCOUNT_NAV}
+                      routesWithoutSidebar={WITHOUT_SIDEBARS}
                     />
                   </EnforceLoginStatePageWrapper>
                 }
@@ -65,14 +70,23 @@ export function App() {
                   path={DASHBOARD}
                   element={<div>Welcome to AcerTech!</div>}
                 />
-                {/* Question Bank routes */}
-                <Route path={QUESTION_BANK}>
-                  <Route path={QUESTION_BANK} element={<QuestionBank />} />
-                  <Route path={CREATE_QUESTION} element={<CreateQuestion />} />
-                  <Route path={UPDATE_QUESTION} element={<UpdateQuestion />} />
-                </Route>
                 {/* Subject routes */}
-                <Route path={SUBJECTS} />
+                <Route path={SUBJECTS}>
+                  <Route path={SUBJECTS} element={<Subjects />} />
+                  <Route path={SUBJECT_MAIN} element={<Subject />} />
+                  {/* Question Bank routes */}
+                  <Route path={QUESTION_BANK}>
+                    <Route path={QUESTION_BANK} element={<QuestionBank />} />
+                    <Route
+                      path={CREATE_QUESTION}
+                      element={<CreateQuestion />}
+                    />
+                    <Route
+                      path={UPDATE_QUESTION}
+                      element={<UpdateQuestion />}
+                    />
+                  </Route>
+                </Route>
                 {/* Analytics routes */}
                 <Route path={ANALYTICS} />
                 {/* Scheduling routes */}

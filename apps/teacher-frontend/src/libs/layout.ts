@@ -4,12 +4,17 @@ import {
   ANALYTICS,
   DASHBOARD,
   PROFILE,
+  QUESTION_BANK,
   REWARDS,
   SCHEDULING,
   SETTINGS,
   SUBJECTS,
 } from './routes';
-import { UserIcon, Cog6ToothIcon } from '@heroicons/react/24/outline';
+import {
+  UserIcon,
+  Cog6ToothIcon,
+  InboxStackIcon,
+} from '@heroicons/react/24/outline';
 
 export const NAV_SECTIONS: NavigationMenuItem[] = [
   {
@@ -19,6 +24,15 @@ export const NAV_SECTIONS: NavigationMenuItem[] = [
   {
     name: 'SUBJECTS',
     path: SUBJECTS,
+    children: [
+      {
+        name: 'Question Bank',
+        path: '/question-bank',
+        icon: InboxStackIcon,
+        dynamicRoute: true,
+      },
+    ],
+    noSideBar: true,
   },
   {
     name: 'ANALYTICS',
