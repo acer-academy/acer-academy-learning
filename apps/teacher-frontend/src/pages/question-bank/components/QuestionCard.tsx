@@ -10,7 +10,7 @@ import {
   CreateQuizQuestionType,
   QuizQuestionDifficultyEnum,
 } from '@acer-academy-learning/data-access';
-import { Controller, useFormContext } from 'react-hook-form';
+import { Controller, useFormContext, useFormState } from 'react-hook-form';
 import { QuestionAnswers } from './QuestionAnswers';
 import { QuestionTopicsCombo } from './QuestionTopicsCombo';
 import { QuestionLevelsCombo } from './QuestionLevelsCombo';
@@ -35,13 +35,14 @@ export const QuestionCard = ({
     getValues,
   } = useFormContext<CreateQuizQuestionType>();
 
+  const { isSubmitting } = useFormState();
+
   const handleSubmitForm = async (values: CreateQuizQuestionType) => {
     onSubmitForm(values);
   };
 
   useEffect(() => {
-    console.log(errors);
-    if (Object.keys(errors).length !== 0) {
+    if (isSubmitting && Object.keys(errors).length !== 0) {
       const msg = Object.entries(errors)
         .filter(
           ([type, errorObj]) => errorObj.message || errorObj.root?.message,
