@@ -1,4 +1,9 @@
-import { PrismaClient, Prisma, Student } from '@prisma/client';
+import {
+  PrismaClient,
+  Prisma,
+  Student,
+  StudentStatusEnum,
+} from '@prisma/client';
 
 class StudentDao {
   private prisma: PrismaClient;
@@ -39,6 +44,31 @@ class StudentDao {
       },
     });
   }
+
+  // Changes student status to BLOCKED if it is currently ACTIVE or INACTIVE
+  // Changes student status to ACTIVE if it is currently BLOCKED
+  public async toggleStudentStatus(id: string): Promise<Student> {
+    const student = await this.prisma.student.findUnique({
+      where: { id },
+    });
+
+    if (!student) {
+      throw new Error('Student not found');
+    }
+
+    const newStatus =
+      student.status === StudentStatusEnum.BLOCKED
+        ? StudentStatusEnum.ACTIVE
+        : StudentStatusEnum.BLOCKED;
+
+    return this.prisma.student.update({
+      where: { id },
+      data: {
+        status: newStatus,
+      },
+    });
+  }
+
   public async getAllStudents(): Promise<Student[]> {
     return this.prisma.student.findMany({
       include: {

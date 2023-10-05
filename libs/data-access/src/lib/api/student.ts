@@ -85,10 +85,14 @@ export async function updateStudent(
   return (await client.put(`${URL}/update/${email}`, data)).data;
 }
 
-export async function deleteStudent(
-  email: string,
-): Promise<AxiosResponse<any>> {
-  return await client.delete(`${URL}/delete/${email}`);
+export async function deleteStudent(id: string): Promise<AxiosResponse<any>> {
+  return await client.delete(`${URL}/delete/${id}`);
+}
+
+export async function blockStudent(
+  id: string,
+): Promise<AxiosResponse<Student>> {
+  return await client.delete(`${URL}/block/${id}`);
 }
 
 export const updateParent = async (

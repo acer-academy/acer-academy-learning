@@ -8,6 +8,10 @@ export async function getAllTerms(): Promise<AxiosResponse<TermData[]>> {
   return client.get(`${URL}`);
 }
 
+export async function getCurrentTerms(): Promise<AxiosResponse<TermData[]>> {
+  return client.get(`${URL}/current`);
+}
+
 export async function getTermById(id: string): Promise<TermData> {
   return client.get(`${URL}/${id}`);
 }
