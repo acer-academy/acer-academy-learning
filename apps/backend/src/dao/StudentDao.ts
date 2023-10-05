@@ -1,4 +1,9 @@
-import { PrismaClient, Prisma, Student } from '@prisma/client';
+import {
+  PrismaClient,
+  Prisma,
+  Student,
+  StudentStatusEnum,
+} from '@prisma/client';
 
 class StudentDao {
   private prisma: PrismaClient;
@@ -51,7 +56,10 @@ class StudentDao {
       throw new Error('Student not found');
     }
 
-    const newStatus = student.status === 'BLOCKED' ? 'ACTIVE' : 'BLOCKED';
+    const newStatus =
+      student.status === StudentStatusEnum.BLOCKED
+        ? StudentStatusEnum.ACTIVE
+        : StudentStatusEnum.BLOCKED;
 
     return this.prisma.student.update({
       where: { id },

@@ -289,6 +289,11 @@ export const ClassCreditManagement: React.FC = () => {
               className="block w-20 rounded-md border-0 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-adminGreen-600 sm:text-sm sm:leading-6"
               placeholder="-100"
               value={creditFilterMinimum}
+              onBlur={() => {
+                if (!creditFilterMinimum) {
+                  setCreditFilterMinimum(-100);
+                }
+              }}
               onChange={(e) => {
                 setCreditFilterMinimum(parseInt(e.target.value));
               }}
@@ -303,6 +308,11 @@ export const ClassCreditManagement: React.FC = () => {
               className="block w-20 rounded-md border-0 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-adminGreen-600 sm:text-sm sm:leading-6"
               placeholder="100"
               value={creditFilterMaximum}
+              onBlur={() => {
+                if (!creditFilterMaximum) {
+                  setCreditFilterMaximum(100);
+                }
+              }}
               onChange={(e) => {
                 setCreditFilterMaximum(parseInt(e.target.value));
               }}
