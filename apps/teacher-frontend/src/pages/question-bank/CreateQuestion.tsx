@@ -1,9 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { QuestionCard } from './components/QuestionCard';
 import {
-  CreateQuizAnswerType,
   CreateQuizQuestionType,
-  LevelEnum,
   QuizQuestionStatusEnum,
   QuizQuestionTypeEnum,
   createQuestion,
@@ -12,6 +10,7 @@ import {
 import { useToast, useZodForm } from '@acer-academy-learning/common-ui';
 import { FormProvider } from 'react-hook-form';
 import { useMutation } from 'react-query';
+import { AxiosError } from 'axios';
 
 export const CreateQuestion = () => {
   const { displayToast, ToastType } = useToast();
@@ -40,8 +39,8 @@ export const CreateQuestion = () => {
       displayToast('Successfully created question!', ToastType.SUCCESS);
       console.log('success');
     },
-    onError: (error) => {
-      displayToast('Error :(', ToastType.ERROR);
+    onError: (error: AxiosError) => {
+      displayToast('Error: ' + error.message, ToastType.ERROR);
       console.log(error);
     },
   });

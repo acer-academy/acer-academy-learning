@@ -25,6 +25,7 @@ export interface QuizQuestionData {
   status: QuizQuestionStatusEnum;
   questionType: QuizQuestionTypeEnum;
   answers: QuizAnswer[];
+  createdAt: Date;
 }
 
 export interface QuizQuestionPaginationFilter {
