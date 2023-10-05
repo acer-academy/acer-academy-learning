@@ -7,6 +7,7 @@ import { useToast } from '@acer-academy-learning/common-ui';
 import { getAllCreditBundles as apiGetAllCreditBundles } from '@acer-academy-learning/data-access';
 import CartComponent from './CartComponent';
 import { ShoppingCartIcon } from '@heroicons/react/24/solid';
+import CreditsBar from '../../components/CreditsBar';
 
 export const CreditBundleManagement: React.FC = () => {
   //Cart
@@ -87,6 +88,7 @@ export const CreditBundleManagement: React.FC = () => {
 
   return (
     <div className="h-full bg-gray-50">
+      <CreditsBar />
       <div className="flex min-h-full flex-col gap-7 align-middle py-12 px-12">
         <div className="relative mt-2 rounded-md shadow-sm">
           <input
