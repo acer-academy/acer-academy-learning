@@ -27,3 +27,4 @@ export * from './lib/rich-text-editor/lexical/LexEditor';
 export * from './lib/rich-text-editor/lexical/LexOutput';
 export * from './lib/utils/';
 export * from './lib/rich-text-editor/lexical';
+export * from './lib/modals/WarningModal';

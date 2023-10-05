@@ -44,3 +44,7 @@ export const updateQuizQuestion = async ({
   console.log(res);
   return res.data;
 };
+
+export const deleteQuizQuestion = async (questionId: string): Promise<void> => {
+  return client.delete(`${URL}/${questionId}`);
+};
