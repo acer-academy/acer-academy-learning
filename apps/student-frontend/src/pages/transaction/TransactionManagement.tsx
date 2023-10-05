@@ -17,6 +17,7 @@ import {
 
 import { useAuth } from '@acer-academy-learning/common-ui';
 import { Student } from '@prisma/client';
+import CreditsBar from '../../components/CreditsBar';
 
 const dateFilterParams = {
   comparator: (filterLocalDateAtMidnight: Date, cellValue: string) => {
@@ -176,6 +177,7 @@ const TransactionManagement = () => {
 
   return (
     <div>
+      <CreditsBar />
       <h3 className="text-base font-semibold leading-7 text-black mb-4">
         Transactions
       </h3>
