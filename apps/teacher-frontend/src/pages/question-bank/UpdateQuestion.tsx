@@ -11,7 +11,7 @@ import {
   updateQuizQuestion,
 } from '@acer-academy-learning/data-access';
 import React, { useEffect, useMemo } from 'react';
-import { useMutation, useQuery } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useParams } from 'react-router-dom';
 import omitDeep from 'omit-deep-lodash';
 import { FormProvider } from 'react-hook-form';
@@ -21,18 +21,23 @@ import { AxiosError } from 'axios';
 
 export const UpdateQuestion = () => {
   // Hooks/States
+  const queryClient = useQueryClient();
   const { displayToast, ToastType } = useToast();
+  const { questionId } = useParams();
+  const memoedQuestionId = useMemo(() => questionId ?? '', [questionId]);
   const { mutate: mutateQuizQuestion } = useMutation(updateQuizQuestion, {
     onSuccess: () => {
       displayToast('Successfully updated question!', ToastType.SUCCESS);
+      queryClient.invalidateQueries({ queryKey: [memoedQuestionId] });
     },
-    onError: (error: AxiosError) => {
-      displayToast('Error updating question: ', ToastType.ERROR);
+    onError: (error: AxiosError<{ error: string }>) => {
+      displayToast(
+        error.response?.data.error ?? 'Unknown error',
+        ToastType.ERROR,
+      );
       console.log(error);
     },
   });
-  const { questionId } = useParams();
-  const memoedQuestionId = useMemo(() => questionId ?? '', [questionId]);
   const { data, isSuccess } = useQuery(
     ['question', memoedQuestionId],
     () => getQuizQuestionById(memoedQuestionId),
@@ -48,6 +53,7 @@ export const UpdateQuestion = () => {
     schema: createQuizQuestionSchema,
     defaultValues: wrangledData,
     mode: 'onTouched',
+    criteriaMode: 'all',
   });
 
   // Side effects

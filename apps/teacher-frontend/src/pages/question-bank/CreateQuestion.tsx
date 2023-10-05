@@ -15,9 +15,11 @@ import {
 import { FormProvider } from 'react-hook-form';
 import { useMutation } from 'react-query';
 import { AxiosError } from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 export const CreateQuestion = () => {
   const { displayToast, ToastType } = useToast();
+  const navigate = useNavigate();
   const formMethods = useZodForm({
     schema: createQuizQuestionSchema,
     defaultValues: {
@@ -37,21 +39,25 @@ export const CreateQuestion = () => {
       status: QuizQuestionStatusEnum.READY,
     },
     mode: 'onTouched',
+    criteriaMode: 'all',
   });
-  const { mutate: createQuestionMutation } = useMutation(createQuestion, {
-    onSuccess: () => {
-      displayToast('Successfully created question!', ToastType.SUCCESS);
-      console.log('success');
+  const { mutateAsync: createQuestionMutationAsync } = useMutation(
+    createQuestion,
+    {
+      onSuccess: () => {
+        displayToast('Successfully created question!', ToastType.SUCCESS);
+      },
+      onError: (error: AxiosError) => {
+        displayToast('Error: ' + error.message, ToastType.ERROR);
+        console.log(error);
+      },
     },
-    onError: (error: AxiosError) => {
-      displayToast('Error: ' + error.message, ToastType.ERROR);
-      console.log(error);
-    },
-  });
+  );
 
   // Handlers
   const onSubmitForm = async (values: CreateQuizQuestionType) => {
-    createQuestionMutation(values);
+    await createQuestionMutationAsync(values);
+    navigate(-1);
   };
 
   return (

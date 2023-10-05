@@ -18,6 +18,10 @@ const TRUE_FALSE_VALUES: CreateQuizAnswerType[] = [
   },
 ];
 
+export type TrueFalseFieldProps = {
+  answers?: CreateQuizAnswerType[];
+};
+
 export const TrueFalseField = () => {
   const { register, control, setValue } =
     useFormContext<CreateQuizQuestionType>();

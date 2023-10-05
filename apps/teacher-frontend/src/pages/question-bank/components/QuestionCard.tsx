@@ -2,6 +2,7 @@ import {
   GenericSelect,
   LexEditor,
   screamingSnakeToTitleCase,
+  useToast,
 } from '@acer-academy-learning/common-ui';
 import { useEffect } from 'react';
 import { QuestionTypeSelect } from './QuestionTypeSelect';
@@ -13,6 +14,7 @@ import { Controller, useFormContext } from 'react-hook-form';
 import { QuestionAnswers } from './QuestionAnswers';
 import { QuestionTopicsCombo } from './QuestionTopicsCombo';
 import { QuestionLevelsCombo } from './QuestionLevelsCombo';
+import { omit } from 'lodash';
 
 const difficulties = Object.values(QuizQuestionDifficultyEnum);
 
@@ -21,6 +23,7 @@ export type QuestionCardProps = {
 };
 
 export const QuestionCard = ({ onSubmitForm }: QuestionCardProps) => {
+  const { displayToast, ToastType } = useToast();
   const {
     formState: { errors },
     control,
@@ -29,15 +32,44 @@ export const QuestionCard = ({ onSubmitForm }: QuestionCardProps) => {
   } = useFormContext<CreateQuizQuestionType>();
 
   const handleSubmitForm = async (values: CreateQuizQuestionType) => {
-    console.log(values);
-    // createQuestionMutation(values);
     onSubmitForm(values);
   };
 
   useEffect(() => {
-    console.log('EROR');
     console.log(errors);
-  }, [errors]);
+    if (Object.keys(errors).length !== 0) {
+      const msg = Object.entries(errors)
+        .filter(
+          ([type, errorObj]) => errorObj.message || errorObj.root?.message,
+        )
+        .map(([type, errorObj]) => (
+          <p key={type}>
+            {type.charAt(0).toLocaleUpperCase() + type.substring(1)} Error:{' '}
+            {errorObj.message ?? errorObj.root?.message}
+          </p>
+        ));
+      const answer = Object.entries(omit(errors.answers, 'root') ?? {})
+        .filter?.(([key, answer]: [string, any]) => answer)
+        .map?.(([key, answer]: [string, any]) => (
+          <p key={key}>
+            Answer Error {key}: {answer?.root?.message}
+            {answer?.answer?.message}
+            {answer?.explanation?.message}
+            {answer?.isCorrect?.message}
+          </p>
+        ));
+      // console.log(errors.answers);
+      // console.log(msg);
+      // console.log(answer);
+      displayToast(
+        <div>
+          {msg}
+          {answer}
+        </div>,
+        ToastType.ERROR,
+      );
+    }
+  }, [errors, displayToast, ToastType]);
   return (
     <form
       onSubmit={handleSubmit((values) => handleSubmitForm(values))}

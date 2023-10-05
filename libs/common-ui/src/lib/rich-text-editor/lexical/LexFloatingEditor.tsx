@@ -14,7 +14,7 @@ import { EditorState, LexicalEditor } from 'lexical';
 import { $generateHtmlFromNodes } from '@lexical/html';
 import { RenderInitialContentPlugin } from './plugins/RenderInitialContentPlugin';
 import { EditorEventContextProvider } from './context/EventContext';
-import { Spinner } from '../../wrapper/Spinner';
+import FocusPlugin from './plugins/FocusPlugin';
 
 export type LexFloatingEditorProps = {
   className?: string;
@@ -71,10 +71,10 @@ export const LexFloatingEditor = forwardRef<
     };
 
     useEffect(() => {
-      if (!isFocused) {
+      if (!isFocused && isContentLoaded) {
         onBlur();
       }
-    }, [isFocused, onBlur]);
+    }, [isFocused, onBlur, isContentLoaded]);
 
     return (
       <LexicalComposer initialConfig={initialConfig}>
@@ -89,8 +89,6 @@ export const LexFloatingEditor = forwardRef<
           {htmlString && <RenderInitialContentPlugin htmlString={htmlString} />}
           <div
             ref={ref}
-            onFocus={() => setIsFocused(true)}
-            onBlur={() => setIsFocused(false)}
             className={`${className} ${
               isContentLoaded ? 'opacity-100' : 'opacity-0'
             } transition-opacity duration-75 ease-in relative outline-none border-solid ${
@@ -99,6 +97,7 @@ export const LexFloatingEditor = forwardRef<
                 : 'border-teacher-primary-300'
             } border-b-2 mb-[-1px]`}
           >
+            <FocusPlugin />
             <OnChangePlugin onChange={onEditorChange} />
             <RichTextPlugin
               contentEditable={

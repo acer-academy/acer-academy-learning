@@ -4,16 +4,25 @@ import {
   CreateQuizQuestionType,
   QuizQuestionTypeEnum,
 } from '@acer-academy-learning/data-access';
-import { LexFloatingEditor } from '@acer-academy-learning/common-ui';
+import {
+  ErrorField,
+  LexFloatingEditor,
+} from '@acer-academy-learning/common-ui';
 import { DocumentPlusIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { DEFAULT_QUESTION_ANSWER } from '../constants';
 import { AnswerFieldRadio } from './AnswerFieldRadio';
 import { AnswerFieldCheckbox } from './AnswerFieldCheckbox';
 import { TrueFalseField } from './TrueFalseField';
-
+import { stripHtml } from 'string-strip-html';
 export const QuestionAnswers = () => {
-  const { watch, control, register, setValue } =
-    useFormContext<CreateQuizQuestionType>();
+  const {
+    watch,
+    control,
+    register,
+    setValue,
+    formState: { errors },
+    trigger,
+  } = useFormContext<CreateQuizQuestionType>();
   // Hooks
   const {
     fields: answers,
@@ -39,7 +48,7 @@ export const QuestionAnswers = () => {
   }, [watchQuestionType]);
 
   return (
-    <fieldset className="space-y-4">
+    <fieldset className="space-y-4 flex flex-col">
       {(watchQuestionType === QuizQuestionTypeEnum.TFQ && (
         <TrueFalseField />
       )) || (
@@ -48,7 +57,10 @@ export const QuestionAnswers = () => {
             const explanation = watchAnswers[index].explanation;
             return (
               <section key={answer.id} className="flex flex-col">
-                <div className="flex space-x-4 items-center">
+                <div
+                  onBlur={() => trigger(`answers`)}
+                  className="flex space-x-4 items-center"
+                >
                   <IsCorrectFieldTypeComponent
                     id={answer.id}
                     register={register}
@@ -59,26 +71,45 @@ export const QuestionAnswers = () => {
                   <button
                     type="button"
                     title="Add Explanation"
-                    className={`hover:text-teacher-primary-900 text-teacher-primary-600`}
+                    className={`${
+                      typeof explanation !== 'string' &&
+                      'hover:text-teacher-primary-900'
+                    } ${
+                      typeof explanation === 'string'
+                        ? 'text-teacher-primary-200'
+                        : 'text-teacher-primary-600'
+                    }`}
+                    disabled={typeof explanation === 'string'}
                     onClick={() => {
                       setValue(`answers.${index}.explanation`, '');
                     }}
                   >
                     <DocumentPlusIcon className="h-6 w-6" aria-hidden="true" />
                   </button>
-                  <Controller
-                    control={control}
-                    name={`answers.${index}.answer`}
-                    render={({ field: { onChange, value, onBlur } }) => (
-                      <LexFloatingEditor
-                        onChange={onChange}
-                        onBlur={onBlur}
-                        className="flex-[5]"
-                        htmlString={answer.answer}
-                        placeholder="Enter answer..."
-                      />
-                    )}
-                  />
+                  <div className="flex flex-col flex-[5]">
+                    <Controller
+                      control={control}
+                      name={`answers.${index}.answer`}
+                      render={({ field: { onChange, value, onBlur } }) => (
+                        <>
+                          <LexFloatingEditor
+                            onChange={onChange}
+                            onBlur={onBlur}
+                            htmlString={answer.answer}
+                            placeholder="Enter answer..."
+                          />
+                          <ErrorField
+                            message={
+                              (value !== '' &&
+                                stripHtml(value).result === '' &&
+                                'Answer cannot be empty.') ||
+                              undefined
+                            }
+                          />
+                        </>
+                      )}
+                    />
+                  </div>
                   <button
                     className={`${
                       answers.length > 2 ? 'visible' : 'invisible'
@@ -123,6 +154,7 @@ export const QuestionAnswers = () => {
             );
           })}
           <legend className="sr-only">Question Answers</legend>
+          <ErrorField message={errors.answers?.root?.message} />
           <button
             className="inline-flex items-center gap-x-1.5 rounded-md bg-teacher-primary-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-teacher-primary-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teacher-primary-600"
             type="button"
