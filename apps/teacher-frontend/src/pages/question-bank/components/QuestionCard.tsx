@@ -74,7 +74,7 @@ export const QuestionCard = ({
         ToastType.ERROR,
       );
     }
-  }, [errors, displayToast, ToastType]);
+  }, [errors, displayToast, ToastType, isSubmitting]);
   return (
     <form
       onSubmit={handleSubmit((values) => handleSubmitForm(values))}

@@ -102,7 +102,7 @@ export const QuestionAnswers = () => {
                             message={
                               (value !== '' &&
                                 stripHtml(value).result === '' &&
-                                'Answer cannot be empty.') ||
+                                'Answer cannot be left empty.') ||
                               undefined
                             }
                           />
