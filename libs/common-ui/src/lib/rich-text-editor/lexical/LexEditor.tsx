@@ -15,25 +15,39 @@ import { SharedHistoryContext } from './context/SharedHistoryContext';
 import Editor from './Editor';
 import PlaygroundNodes from './nodes/PlaygroundNodes';
 import { TableContext } from './plugins/TablePlugin';
-import Settings from './Settings';
 import PlaygroundEditorTheme from './themes/PlaygroundEditorTheme';
 import './index.css';
 import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin';
 import { EditorState, LexicalEditor } from 'lexical';
 import { $generateHtmlFromNodes } from '@lexical/html';
+import { EditorEventContextProvider } from './context/EventContext';
+import { RenderInitialContentPlugin } from './plugins/RenderInitialContentPlugin';
+import { Spinner } from '../../wrapper/Spinner';
 
 // console.warn(
 //   'If you are profiling the playground app, please ensure you turn off the debug view. You can disable it by pressing on the settings control in the bottom-left of your screen and toggling the debug view setting.',
 // );
 
 export type LexEditorProps = {
-  value: string;
+  htmlString?: string;
   onChange: (val: string) => void;
+  errorMessage?: string;
+  onBlur: () => void;
 };
 
-export const LexEditor = ({ value, onChange }: LexEditorProps): JSX.Element => {
+export const LexEditor = ({
+  htmlString,
+  onChange,
+  errorMessage,
+  onBlur,
+}: LexEditorProps): JSX.Element => {
+  // States
+  const [isFocused, setIsFocused] = React.useState(false);
+  const [isContentLoaded, setIsContentLoaded] = React.useState(
+    !htmlString || false,
+  );
+  // Context
   const initialConfig = {
-    editorState: undefined,
     namespace: 'LexEditor',
     nodes: [...PlaygroundNodes],
     onError: (error: Error) => {
@@ -47,30 +61,55 @@ export const LexEditor = ({ value, onChange }: LexEditorProps): JSX.Element => {
     editor: LexicalEditor,
     tags: Set<string>,
   ) => {
-    // .update is the ONLY place that the editor state can be safely mutated
     editor.update(() => {
       const rawHtmlString = $generateHtmlFromNodes(editor);
       onChange(rawHtmlString);
-      // @TODO: Update state here
     });
   };
 
   return (
-    <SettingsContext>
-      <LexicalComposer initialConfig={initialConfig}>
-        {/* To update changes */}
-        <OnChangePlugin onChange={onEditorChange} ignoreSelectionChange />
-        <SharedHistoryContext>
-          <TableContext>
-            <SharedAutocompleteContext>
-              <div className="editor-shell border-solid border-2 rounded-t-[10px] border-[#eee] flex-grow-0">
-                <Editor />
-              </div>
-              <Settings />
-            </SharedAutocompleteContext>
-          </TableContext>
-        </SharedHistoryContext>
-      </LexicalComposer>
-    </SettingsContext>
+    <EditorEventContextProvider
+      value={{
+        isFocused,
+        setIsFocused,
+        errorMessage,
+        isContentLoaded,
+        setIsContentLoaded,
+      }}
+    >
+      <SettingsContext>
+        <LexicalComposer initialConfig={initialConfig}>
+          <OnChangePlugin onChange={onEditorChange} ignoreSelectionChange />
+          <SharedHistoryContext>
+            <TableContext>
+              <SharedAutocompleteContext>
+                <div
+                  onFocus={() => setIsFocused(true)}
+                  onBlur={() => {
+                    onBlur();
+                    setIsFocused(false);
+                  }}
+                  className={`editor-shell border-solid border-[1px] rounded-t-[10px] ${
+                    errorMessage
+                      ? 'border-red-500'
+                      : isFocused
+                      ? 'border-black'
+                      : 'border-[#eee]'
+                  } flex-grow-0`}
+                >
+                  {htmlString && (
+                    <RenderInitialContentPlugin htmlString={htmlString} />
+                  )}
+                  {(isContentLoaded && <Editor />) || <Spinner />}
+                </div>
+                <span className="text-xs text-red-500 font-semibold">
+                  {errorMessage}
+                </span>
+              </SharedAutocompleteContext>
+            </TableContext>
+          </SharedHistoryContext>
+        </LexicalComposer>
+      </SettingsContext>
+    </EditorEventContextProvider>
   );
 };

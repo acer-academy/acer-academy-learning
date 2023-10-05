@@ -13,7 +13,8 @@ export const AnswerFieldRadio = ({
   register,
   index,
 }: AnswerFieldRadioProps) => {
-  const { setValue, watch, control } = useFormContext<CreateQuizQuestionType>();
+  const { setValue, watch, control, getValues } =
+    useFormContext<CreateQuizQuestionType>();
   const watchAllAnswers = watch(`answers`);
 
   const onRadioChange = (
@@ -40,6 +41,7 @@ export const AnswerFieldRadio = ({
           aria-label="Radio button to indicate correct answer"
           type="radio"
           onChange={(e) => onRadioChange(e, onChange)}
+          checked={getValues(`answers.${index}.isCorrect`)}
           className="h-4 w-4 border-gray-300 text-teacher-primary-600 focus:ring-teacher-primary-600"
           name={name}
         />

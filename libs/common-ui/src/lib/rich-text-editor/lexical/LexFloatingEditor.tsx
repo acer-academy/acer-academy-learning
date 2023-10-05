@@ -5,25 +5,24 @@ import {
 import { ContentEditable } from '@lexical/react/LexicalContentEditable';
 import LexicalErrorBoundary from '@lexical/react/LexicalErrorBoundary';
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
-import React, {
-  HTMLProps,
-  forwardRef,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import React, { HTMLProps, forwardRef, useEffect, useState } from 'react';
 import CustomFloatingTextFormatToolbarPlugin from './plugins/CustomFloatingTextFormatToolbarPlugin';
 import EquationsPlugin from './plugins/EquationsPlugin';
 import { EquationNode } from './nodes/EquationNode';
 import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin';
 import { EditorState, LexicalEditor } from 'lexical';
 import { $generateHtmlFromNodes } from '@lexical/html';
+import { RenderInitialContentPlugin } from './plugins/RenderInitialContentPlugin';
+import { EditorEventContextProvider } from './context/EventContext';
+import { Spinner } from '../../wrapper/Spinner';
 
 export type LexFloatingEditorProps = {
   className?: string;
   onChange: (val: string) => void;
-  onBlur: (val: string) => void;
+  onBlur: () => void;
   value: string;
+  htmlString?: string;
+  placeholder?: string;
 };
 
 export const LexFloatingEditor = forwardRef<
@@ -31,7 +30,14 @@ export const LexFloatingEditor = forwardRef<
   HTMLProps<HTMLDivElement> & LexFloatingEditorProps
 >(
   (
-    { className = '', onChange, onBlur, value }: LexFloatingEditorProps,
+    {
+      className = '',
+      onChange,
+      onBlur,
+      value,
+      htmlString,
+      placeholder,
+    }: LexFloatingEditorProps,
     ref,
   ) => {
     const initialConfig: InitialConfigType = {
@@ -45,6 +51,9 @@ export const LexFloatingEditor = forwardRef<
     const [floatingAnchorElem, setFloatingAnchorElem] =
       useState<HTMLDivElement | null>(null);
     const [isFocused, setIsFocused] = useState<boolean>(false);
+    const [isContentLoaded, setIsContentLoaded] = useState<boolean>(
+      !htmlString || false,
+    );
 
     const onRef = (_floatingAnchorElem: HTMLDivElement) => {
       if (_floatingAnchorElem !== null) {
@@ -57,7 +66,6 @@ export const LexFloatingEditor = forwardRef<
       editor: LexicalEditor,
       tags: Set<string>,
     ) => {
-      // .update is the ONLY place that the editor state can be safely mutated
       editor.update(() => {
         const rawHtmlString = $generateHtmlFromNodes(editor);
         onChange(rawHtmlString);
@@ -66,43 +74,55 @@ export const LexFloatingEditor = forwardRef<
 
     useEffect(() => {
       if (!isFocused) {
-        onBlur(value);
+        onBlur();
       }
     }, [isFocused, onBlur, value]);
 
     return (
       <LexicalComposer initialConfig={initialConfig}>
-        <div
-          ref={ref}
-          onFocus={() => setIsFocused(true)}
-          onBlur={() => setIsFocused(false)}
-          className={`${className} relative outline-none border-solid ${
-            isFocused
-              ? 'border-teacher-primary-500'
-              : 'border-teacher-primary-200'
-          } border-b-2 mb-[-1px]`}
+        <EditorEventContextProvider
+          value={{
+            isFocused,
+            setIsFocused,
+            isContentLoaded,
+            setIsContentLoaded,
+          }}
         >
-          <OnChangePlugin onChange={onEditorChange} />
-          <RichTextPlugin
-            contentEditable={
-              <div ref={onRef}>
-                <ContentEditable className="outline-none" />
-              </div>
-            }
-            placeholder={
-              <span className="absolute top-0 text-gray-300 select-none pointer-events-none ">
-                Enter rich text here...
-              </span>
-            }
-            ErrorBoundary={LexicalErrorBoundary}
-          />
-          <EquationsPlugin />
-          {floatingAnchorElem && (
-            <CustomFloatingTextFormatToolbarPlugin
-              anchorElem={floatingAnchorElem}
-            />
-          )}
-        </div>
+          {htmlString && <RenderInitialContentPlugin htmlString={htmlString} />}
+          {(isContentLoaded && (
+            <div
+              ref={ref}
+              onFocus={() => setIsFocused(true)}
+              onBlur={() => setIsFocused(false)}
+              className={`${className} relative outline-none border-solid ${
+                isFocused
+                  ? 'border-teacher-primary-500'
+                  : 'border-teacher-primary-300'
+              } border-b-2 mb-[-1px]`}
+            >
+              <OnChangePlugin onChange={onEditorChange} />
+              <RichTextPlugin
+                contentEditable={
+                  <div ref={onRef}>
+                    <ContentEditable className="outline-none" />
+                  </div>
+                }
+                placeholder={
+                  <span className="absolute top-0 text-gray-400 select-none pointer-events-none ">
+                    {placeholder ?? 'Enter rich text here...'}
+                  </span>
+                }
+                ErrorBoundary={LexicalErrorBoundary}
+              />
+              <EquationsPlugin />
+              {floatingAnchorElem && (
+                <CustomFloatingTextFormatToolbarPlugin
+                  anchorElem={floatingAnchorElem}
+                />
+              )}
+            </div>
+          )) || <Spinner />}
+        </EditorEventContextProvider>
       </LexicalComposer>
     );
   },

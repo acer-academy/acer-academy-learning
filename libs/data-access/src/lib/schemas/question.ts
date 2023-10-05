@@ -22,7 +22,7 @@ export const quizAnswerSchema = z.object({
         });
       }
     }),
-  explanation: z.string().trim().optional(),
+  explanation: z.string().trim().nullable().optional(),
   isCorrect: z.boolean(),
 });
 

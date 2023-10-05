@@ -96,6 +96,7 @@ import InsertLayoutDialog from '../LayoutPlugin/InsertLayoutDialog';
 import { INSERT_PAGE_BREAK } from '../PageBreakPlugin';
 import { InsertTableDialog } from '../TablePlugin';
 import { IS_APPLE } from '../../../../utils/environment';
+import { useEditorEventContext } from '../../context/EventContext';
 
 const blockTypeToBlockName = {
   bullet: 'Bulleted List',
@@ -360,7 +361,14 @@ function BlockFormatDropDown({
 }
 
 function Divider(): JSX.Element {
-  return <div className="divider" />;
+  const { isFocused, errorMessage } = useEditorEventContext();
+  return (
+    <div
+      className={`w-[1px] ml-1 mr-1 ${
+        errorMessage ? 'bg-red-500' : isFocused ? 'bg-black' : 'bg-[#eee]'
+      }`}
+    />
+  );
 }
 
 function FontDropDown({
@@ -790,8 +798,18 @@ export default function ToolbarPlugin({
     activeEditor.dispatchCommand(INSERT_IMAGE_COMMAND, payload);
   };
 
+  const { isFocused, errorMessage } = useEditorEventContext();
+
   return (
-    <div className="toolbar">
+    <div
+      className={`toolbar border-b border-solid ${
+        errorMessage
+          ? 'border-red-500'
+          : isFocused
+          ? 'border-black'
+          : 'border-[#eee]'
+      }`}
+    >
       <button
         disabled={!canUndo || !isEditable}
         onClick={() => {

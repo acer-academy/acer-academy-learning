@@ -1,20 +1,31 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 import {
   CreateQuizQuestionType,
   QuizQuestionTypeEnum,
 } from '@acer-academy-learning/data-access';
-import { LexEditor, LexFloatingEditor } from '@acer-academy-learning/common-ui';
+import { LexFloatingEditor } from '@acer-academy-learning/common-ui';
 import { XMarkIcon } from '@heroicons/react/24/outline';
-import { DEFAULT_QUESTION_ANSWER } from '../constants/questionAnswer';
+import { DEFAULT_QUESTION_ANSWER } from '../constants';
 import { AnswerFieldRadio } from './AnswerFieldRadio';
 import { AnswerFieldCheckbox } from './AnswerFieldCheckbox';
 import { TrueFalseField } from './TrueFalseField';
 
 export const QuestionAnswers = () => {
-  const { watch, control, register } = useFormContext<CreateQuizQuestionType>();
+  const { watch, control, register, getValues } =
+    useFormContext<CreateQuizQuestionType>();
+  // Hooks
+  const {
+    fields: answers,
+    append,
+    remove,
+  } = useFieldArray({
+    name: 'answers',
+    control,
+  });
   // States/Refs
   const watchQuestionType = watch('questionType');
+  const watchAnswers = watch('answers');
 
   const IsCorrectFieldTypeComponent = useMemo(() => {
     if (
@@ -27,19 +38,8 @@ export const QuestionAnswers = () => {
     }
   }, [watchQuestionType]);
 
-  // Hooks
-  const {
-    fields: answers,
-    append,
-    remove,
-  } = useFieldArray({
-    name: 'answers',
-    control,
-  });
-
   return (
     <fieldset className="space-y-4">
-      <legend className="sr-only">Question Answers</legend>
       {(watchQuestionType === QuizQuestionTypeEnum.TFQ && (
         <TrueFalseField />
       )) || (
@@ -64,6 +64,7 @@ export const QuestionAnswers = () => {
                     onBlur={onBlur}
                     value={value}
                     className="flex-[5]"
+                    htmlString={getValues(`answers.${index}.answer`)}
                   />
                 )}
               />
@@ -76,6 +77,7 @@ export const QuestionAnswers = () => {
               </button>
             </section>
           ))}
+          <legend className="sr-only">Question Answers</legend>
           <button
             className="inline-flex items-center gap-x-1.5 rounded-md bg-teacher-primary-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-teacher-primary-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teacher-primary-600"
             type="button"

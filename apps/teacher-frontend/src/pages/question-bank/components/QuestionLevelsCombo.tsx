@@ -1,4 +1,5 @@
 import {
+  ErrorField,
   GenericBadges,
   GenericComboBox,
   screamingSnakeToTitleCase,
@@ -8,14 +9,14 @@ import {
   LevelEnum,
 } from '@acer-academy-learning/data-access';
 import React from 'react';
-import { Control, Controller } from 'react-hook-form';
-
-export type QuestionTopicsComboProps = {
-  control: Control<CreateQuizQuestionType>;
-};
+import { Controller, useFormContext } from 'react-hook-form';
 
 const levelsEnums = Object.values(LevelEnum);
-export const QuestionLevelsCombo = ({ control }: QuestionTopicsComboProps) => {
+export const QuestionLevelsCombo = () => {
+  const {
+    control,
+    formState: { errors },
+  } = useFormContext<CreateQuizQuestionType>();
   return (
     <>
       <h3 className="text-base font-semibold leading-6 text-gray-900">
@@ -31,6 +32,7 @@ export const QuestionLevelsCombo = ({ control }: QuestionTopicsComboProps) => {
               badges={value}
               getDisplayValue={(badge) => screamingSnakeToTitleCase(badge)}
             />
+            <ErrorField message={errors.levels?.message} />
             <GenericComboBox
               options={levelsEnums}
               onChange={onChange}

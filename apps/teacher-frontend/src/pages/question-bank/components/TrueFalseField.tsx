@@ -1,41 +1,47 @@
-import { CreateQuizQuestionType } from '@acer-academy-learning/data-access';
-import React, { useEffect } from 'react';
-import { useFormContext } from 'react-hook-form';
+import {
+  CreateQuizAnswerType,
+  CreateQuizQuestionType,
+} from '@acer-academy-learning/data-access';
+import { Controller, useFormContext } from 'react-hook-form';
 import { AnswerFieldRadio } from './AnswerFieldRadio';
+import { LexOutput } from '@acer-academy-learning/common-ui';
+import { useEffect } from 'react';
 
-const TRUE_FALSE_VALUES = [
+const TRUE_FALSE_VALUES: CreateQuizAnswerType[] = [
   {
-    id: 'true',
-    label: 'True',
+    answer: '<p><span style="white-space: pre-wrap;">True</span></p>',
+    isCorrect: false,
   },
   {
-    id: 'false',
-    label: 'False',
+    answer: '<p><span style="white-space: pre-wrap;">False</span></p>',
+    isCorrect: false,
   },
 ];
 
 export const TrueFalseField = () => {
-  const { setValue, register } = useFormContext<CreateQuizQuestionType>();
+  const { register, control, setValue } =
+    useFormContext<CreateQuizQuestionType>();
   useEffect(() => {
-    setValue(`answers.0`, { answer: 'True', isCorrect: true });
-    setValue(`answers.1`, { answer: 'False', isCorrect: false });
-  }, []);
+    setValue('answers', TRUE_FALSE_VALUES);
+  }, [setValue]);
+
   return (
     <>
       {TRUE_FALSE_VALUES.map((current, index) => (
-        <div key={current.id} className="flex items-center">
+        <div key={index} className="flex items-center text-center space-x-4">
           <AnswerFieldRadio
-            id={current.id}
+            id={current.answer}
             register={register}
             name="true-false-selection"
             index={index}
           />
-          <label
-            htmlFor={current.id}
-            className="ml-3 block text-md font-medium leading-6 text-gray-900"
-          >
-            {current.label}
-          </label>
+          <Controller
+            control={control}
+            name={`answers.${index}.answer`}
+            render={({ field: { onChange, value, onBlur } }) => (
+              <LexOutput onChange={onChange} htmlString={current.answer} />
+            )}
+          />
         </div>
       ))}
     </>
