@@ -24,6 +24,7 @@ export {
   SubjectEnum,
   AdminType,
   PromotionStatusEnum,
+  StudentStatusEnum,
 } from './lib/types/CommonTypes';
 export {
   QuizQuestionDifficultyEnum,

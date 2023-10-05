@@ -21,3 +21,20 @@ export async function refundTransaction(
 ): Promise<AxiosResponse<TransactionData>> {
   return client.get(`${URL}/refund/${transactionId}`);
 }
+
+export async function getAvailableCredits(
+  termId: string,
+  studentId: string,
+): Promise<AxiosResponse<number>> {
+  return client.get(`${URL}/availableCredits/${termId}/${studentId}`);
+}
+
+export async function rolloverCredits(
+  studentId: string,
+  currentTermId: string,
+  prevTermId: string,
+): Promise<AxiosResponse<TransactionData[]>> {
+  return client.get(
+    `${URL}/rollover/${studentId}/${currentTermId}/${prevTermId}`,
+  );
+}

@@ -51,4 +51,10 @@ export enum PromotionStatusEnum {
   INACTIVE = 'INACTIVE',
 }
 
+export enum StudentStatusEnum {
+  ACTIVE = 'active',
+  INACTIVE = 'inactive',
+  BLOCKED = 'blocked',
+}
+
 // Other shared types and enums...

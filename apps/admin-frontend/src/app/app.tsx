@@ -40,6 +40,7 @@ import {
   CREDIT_BUNDLE,
   TRANSACTION,
   TERM,
+  CLASS_CREDITS,
 } from '../libs/routes';
 import AdminForgotPassword from '../pages/entry/AdminForgotPassword';
 import AdminResetPassword from '../pages/entry/AdminResetPassword';
@@ -48,6 +49,7 @@ import { StudentHRManagementPage } from '../pages/hr/StudentHRManagementPage';
 import { AdminHRManagementPage } from '../pages/hr/AdminHRManagementPage';
 import TransactionsComponent from '../pages/transaction/TransactionManagement';
 import { CreditBundleManagement } from '../pages/creditBundle/CreditBundleManagement';
+import { ClassCreditManagement } from '../pages/classCredit/ClassCreditManagement';
 
 export default function App() {
   return (
@@ -82,6 +84,10 @@ export default function App() {
                 <Route path={ADMINS} element={<AdminHRManagementPage />} />
               </Route>
               <Route path={CREDIT_RESOURCES} element={<Outlet />}>
+                <Route
+                  path={CLASS_CREDITS}
+                  element={<ClassCreditManagement />}
+                />
                 <Route
                   path={CREDIT_BUNDLE}
                   element={<CreditBundleManagement />}
