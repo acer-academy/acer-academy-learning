@@ -1,4 +1,5 @@
 import {
+  BackButton,
   FullscreenSpinner,
   useToast,
   useZodForm,
@@ -62,7 +63,10 @@ export const UpdateQuestion = () => {
   if (isSuccess && Object.keys(wrangledData).length !== 0) {
     return (
       <FormProvider {...formMethods}>
-        <QuestionCard onSubmitForm={onSubmitForm} />
+        <section className="space-y-4">
+          <BackButton />
+          <QuestionCard onSubmitForm={onSubmitForm} />
+        </section>
       </FormProvider>
     );
   }

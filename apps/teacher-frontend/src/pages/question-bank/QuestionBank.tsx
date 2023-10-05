@@ -199,7 +199,7 @@ export const QuestionBank: React.FC = () => {
                     {currentQuestions.length === 0 ? (
                       <tr>
                         <td
-                          colSpan={6}
+                          colSpan={7}
                           className="whitespace-nowrap py-4 px-4 font-light italic text-gray-400 text-center"
                         >
                           No questions found.

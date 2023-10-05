@@ -7,7 +7,11 @@ import {
   createQuestion,
   createQuizQuestionSchema,
 } from '@acer-academy-learning/data-access';
-import { useToast, useZodForm } from '@acer-academy-learning/common-ui';
+import {
+  BackButton,
+  useToast,
+  useZodForm,
+} from '@acer-academy-learning/common-ui';
 import { FormProvider } from 'react-hook-form';
 import { useMutation } from 'react-query';
 import { AxiosError } from 'axios';
@@ -52,7 +56,10 @@ export const CreateQuestion = () => {
 
   return (
     <FormProvider {...formMethods}>
-      <QuestionCard onSubmitForm={onSubmitForm} />
+      <section className="space-y-4">
+        <BackButton />
+        <QuestionCard onSubmitForm={onSubmitForm} />
+      </section>
     </FormProvider>
   );
 };
