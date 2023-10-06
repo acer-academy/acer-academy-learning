@@ -2,8 +2,6 @@ import React from 'react';
 import { QuestionCard } from './components/QuestionCard';
 import {
   CreateQuizQuestionType,
-  QuizQuestionStatusEnum,
-  QuizQuestionTypeEnum,
   createQuestion,
   createQuizQuestionSchema,
 } from '@acer-academy-learning/data-access';
