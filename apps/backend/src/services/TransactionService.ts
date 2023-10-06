@@ -1,14 +1,24 @@
 import { Prisma, Transaction, TransactionType } from '@prisma/client';
 import TransactionDao from '../dao/TransactionDao';
 import { StripeTransactionService } from './StripeTransactionService';
+import { TermService } from './TermService';
 
 const stripeTransactionService = new StripeTransactionService();
+const termService = new TermService();
 
 class TransactionService {
   public async createTransaction(
     input: Prisma.TransactionUncheckedCreateInput,
   ): Promise<Transaction> {
-    const creditTransaction = await TransactionDao.createTransaction(input);
+    const currentTerms = await termService.getCurrentTerms();
+    const currentTerm = currentTerms[0];
+
+    const creditTransaction = await TransactionDao.createTransaction({
+      ...input,
+      currency: 'sgd',
+      termId: currentTerm.id,
+    });
+
     if (creditTransaction.transactionType === TransactionType.PURCHASED) {
       const stripeTransaction =
         await stripeTransactionService.createStripeTransaction(

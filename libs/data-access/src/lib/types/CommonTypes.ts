@@ -57,4 +57,8 @@ export enum StudentStatusEnum {
   BLOCKED = 'blocked',
 }
 
+export enum StripeTransactionStatus {
+  
+}
+
 // Other shared types and enums...

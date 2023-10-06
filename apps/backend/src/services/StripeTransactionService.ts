@@ -1,6 +1,6 @@
 import Stripe from 'stripe';
 import dotenv from 'dotenv';
-import { StripeTransaction, Transaction } from '@prisma/client';
+import { Prisma, StripeTransaction, Transaction } from '@prisma/client';
 import { StripeTransactionDao } from '../dao/StripeTransactionDao';
 
 dotenv.config();
@@ -75,5 +75,23 @@ export class StripeTransactionService {
     transactionId: string,
   ): Promise<StripeTransaction> {
     return this.stripeTransactionDao.getStripeTransactionById(transactionId);
+  }
+
+  public async getStripeTransactionByPaymentIntentId(
+    paymentIntentId: string,
+  ): Promise<StripeTransaction> {
+    return this.stripeTransactionDao.getStripeTransactionByPaymentIntentId(
+      paymentIntentId,
+    );
+  }
+
+  public async updateStripeTransaction(
+    id: string,
+    stripeTransactionData: Prisma.StripeTransactionUncheckedUpdateInput,
+  ): Promise<StripeTransaction> {
+    return this.stripeTransactionDao.updateStripeTransaction(
+      id,
+      stripeTransactionData,
+    );
   }
 }

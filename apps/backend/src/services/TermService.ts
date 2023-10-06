@@ -1,7 +1,7 @@
 import { Prisma, Term } from '@prisma/client';
 import TermDao from '../dao/TermDao';
 
-class TermService {
+export class TermService {
   public async createTerm(input: Prisma.TermCreateInput): Promise<Term> {
     return TermDao.createTerm(input);
   }
@@ -29,5 +29,3 @@ class TermService {
     return TermDao.deleteTerm(id);
   }
 }
-
-export default new TermService();
