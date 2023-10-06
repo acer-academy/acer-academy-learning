@@ -5,6 +5,7 @@ import { XMarkIcon } from '@heroicons/react/24/outline';
 import { PromotionData } from 'libs/data-access/src/lib/types/promotion';
 import { useToast } from '@acer-academy-learning/common-ui';
 import { getValidPromotions } from '@acer-academy-learning/data-access';
+import CreditCardModal from './CreditCardModal';
 
 export default function CartComponent({
   isOpen,
@@ -24,6 +25,7 @@ export default function CartComponent({
   >(undefined);
   const [promoCode, setPromoCode] = useState('');
   const [validPromotions, setValidPromotions] = useState<PromotionData[]>([]);
+  const [isCreditCardModalOpen, setIsCreditCardModalOpen] = useState(false);
 
   const { displayToast, ToastType } = useToast();
 
@@ -275,12 +277,18 @@ export default function CartComponent({
                       </div>
 
                       <div className="mt-6">
-                        <a
-                          href="#"
-                          className="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
-                        >
-                          Checkout
-                        </a>
+                        <div className="mt-6 flex justify-center">
+                          <button
+                            onClick={() => setIsCreditCardModalOpen(true)}
+                            className="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
+                          >
+                            Open Credit Card Modal
+                          </button>
+                          <CreditCardModal
+                            isOpen={isCreditCardModalOpen}
+                            onClose={() => setIsCreditCardModalOpen(false)}
+                          />
+                        </div>
                       </div>
                       <div className="mt-6 flex justify-center text-center text-sm text-gray-500">
                         <p>
