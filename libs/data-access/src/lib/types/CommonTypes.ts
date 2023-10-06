@@ -58,7 +58,11 @@ export enum StudentStatusEnum {
 }
 
 export enum StripeTransactionStatus {
-  
+  PROCESSING = 'PROCESSING',
+  SUCCEEDED = 'SUCCEEDED',
+  FAILED = 'FAILED',
+  VOID = 'VOID',
+  REFUNDED = 'REFUNDED',
 }
 
 // Other shared types and enums...

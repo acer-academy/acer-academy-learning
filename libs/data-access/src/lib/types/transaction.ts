@@ -1,10 +1,12 @@
+import { StripeTransactionStatus } from './CommonTypes';
 import { StudentData } from './student';
 
 export interface StripeTransactionData {
   id: string;
   paymentIntentId: string;
   amount: number;
-  
+  status: StripeTransactionStatus;
+  receiptUrl?: string;
 }
 export interface TransactionData {
   id: string;
@@ -20,6 +22,8 @@ export interface TransactionData {
   student: StudentData;
   referenceId: string | null;
   term: TermData;
+  stripeTransactionId?: string;
+  stripeTransaction?: StripeTransactionData;
 }
 
 export interface TermData {
