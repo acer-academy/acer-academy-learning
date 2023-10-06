@@ -80,6 +80,7 @@ export const CreditBundleManagement: React.FC = () => {
   };
 
   const updateCreditBundle = async (
+    updateCreditBundleId: string,
     creditBundleData: CreditBundleUpdateData,
   ) => {
     try {
@@ -128,7 +129,12 @@ export const CreditBundleManagement: React.FC = () => {
 
   useEffect(() => {
     getAllCreditBundles();
-  }, [isDeleteModalOpen, isCreateModalOpen, isUpdateModalOpen]);
+  }, [
+    isDeleteModalOpen,
+    isCreateModalOpen,
+    isUpdateModalOpen,
+    updateCreditBundle,
+  ]);
 
   return (
     <div className="h-full bg-gray-50">
@@ -277,8 +283,9 @@ export const CreditBundleManagement: React.FC = () => {
                                 <a
                                   className={`${'text-indigo-600 hover:text-indigo-900 cursor-pointer'}`}
                                   onClick={() => {
-                                    setUpdateCreditBundleId(creditBundle.id);
-                                    updateCreditBundle({ isActive: true });
+                                    updateCreditBundle(creditBundle.id, {
+                                      isActive: true,
+                                    });
                                   }}
                                 >
                                   Reactivate

@@ -101,6 +101,7 @@ class TransactionService {
       studentId: studentId,
       termId: pastTermId,
       transactionType: TransactionType.DEDUCTED,
+      reason: 'Deducted for rollover to next term',
     };
     const transactions = [];
     const deduct = await TransactionDao.createTransaction(deductTransaction);

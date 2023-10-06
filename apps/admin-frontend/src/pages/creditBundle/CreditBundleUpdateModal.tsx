@@ -6,7 +6,10 @@ import { useState } from 'react';
 
 interface CreditBundleUpdateModalProps {
   setIsModalOpen: (isModalOpen: boolean) => void;
-  updateCreditBundle: (creditBundleData: CreditBundleUpdateData) => void;
+  updateCreditBundle: (
+    id: string,
+    creditBundleData: CreditBundleUpdateData,
+  ) => void;
   currentCreditBundle: CreditBundleData;
   allCreditBundles: CreditBundleData[];
 }
@@ -216,7 +219,9 @@ export const CreditBundleUpdateModal: React.FC<
                     ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
                     : 'bg-adminGreen-600 hover:bg-adminGreen-500 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-adminGreen-500'
                 }`}
-              onClick={() => updateCreditBundle(creditBundleData)}
+              onClick={() =>
+                updateCreditBundle(currentCreditBundle.id, creditBundleData)
+              }
             >
               Save Changes
             </button>
