@@ -743,7 +743,7 @@ export async function validateBodyAnswersNotEmpty(
           throw Error('Answer cannot be empty or contain only whitespace');
         }
       });
-      if (!answers.reduce((a, b) => a.isCorrect || b.isCorrect)) {
+      if (!answers.reduce((a, b) => a || b.isCorrect, false)) {
         throw Error('Answers provided do not have at least one correct answer');
       }
     }

@@ -66,12 +66,6 @@ export const PromotionUpdateModal: React.FC<PromotionUpdateModalProps> = ({
     }
   };
 
-  const isStartDateInvalid = (startDate: string | undefined) => {
-    if (startDate !== undefined) {
-      return new Date(startDate) < new Date();
-    }
-  };
-
   const isPromotionDataInvalid = () => {
     return (
       promotionData === undefined ||
@@ -80,7 +74,6 @@ export const PromotionUpdateModal: React.FC<PromotionUpdateModalProps> = ({
       (promotionData.promoCode && promotionData.promoCode.trim() === '') ||
       promotionData.percentageDiscount === 0 ||
       isDatesInvalid(promotionData.startDate, promotionData.endDate) ||
-      isStartDateInvalid(promotionData.startDate) ||
       promotionData.description === ''
     );
   };
@@ -93,7 +86,7 @@ export const PromotionUpdateModal: React.FC<PromotionUpdateModalProps> = ({
           <div className="relative bg-white p-5 rounded-lg shadow-md h-42 w-96">
             <div className="flex flex-col items-start justify-between gap-3">
               <h3 className="text-lg font-semibold leading-6 text-gray-900">
-                Create promotion
+                Update promotion
               </h3>
               <div className="w-full mt-3 mb-3">
                 <label
@@ -214,11 +207,7 @@ export const PromotionUpdateModal: React.FC<PromotionUpdateModalProps> = ({
                     type="date"
                     name="startDate"
                     id="startDate"
-                    className={`block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ${
-                      isStartDateInvalid(promotionData.startDate)
-                        ? 'ring-red-300 text-red-900 focus:ring-red-500'
-                        : 'ring-gray-300 text-gray-900 focus:ring-adminGreen-500'
-                    } placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6`}
+                    className={`block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6`}
                     value={
                       promotionData.startDate === undefined
                         ? undefined
@@ -234,14 +223,6 @@ export const PromotionUpdateModal: React.FC<PromotionUpdateModalProps> = ({
                     aria-describedby="address-error"
                   />
                 </div>
-                {isStartDateInvalid(promotionData.startDate) && (
-                  <p
-                    className="absolute b-0 text-sm text-red-600"
-                    id="address-error"
-                  >
-                    Needs to be a future Date
-                  </p>
-                )}
               </div>
               <div className="w-full mb-5">
                 <label
@@ -278,7 +259,7 @@ export const PromotionUpdateModal: React.FC<PromotionUpdateModalProps> = ({
                     aria-describedby="address-error"
                   />
                 </div>
-                {/* {isDatesInvalid(
+                {isDatesInvalid(
                   promotionData.startDate,
                   promotionData.endDate,
                 ) && (
@@ -288,7 +269,7 @@ export const PromotionUpdateModal: React.FC<PromotionUpdateModalProps> = ({
                   >
                     End Date must be after Start Date
                   </p>
-                )} */}
+                )}
               </div>
             </div>
             <div className="mt-5 flex justify-end">

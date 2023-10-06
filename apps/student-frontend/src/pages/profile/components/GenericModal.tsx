@@ -1,12 +1,5 @@
 import { Dialog, Transition } from '@headlessui/react';
-import {
-  Dispatch,
-  Fragment,
-  PropsWithChildren,
-  SetStateAction,
-  useState,
-} from 'react';
-import { ParentFields } from '../../entry/StudentSignUp';
+import { Dispatch, Fragment, PropsWithChildren, SetStateAction } from 'react';
 
 export type GenericModalProps = {
   isOpen: boolean;
@@ -22,10 +15,6 @@ export const GenericModal = ({
 }: PropsWithChildren<GenericModalProps>) => {
   function closeModal() {
     setIsOpen(false);
-  }
-
-  function openModal() {
-    setIsOpen(true);
   }
 
   return (

@@ -26,9 +26,6 @@ export {
   PromotionStatusEnum,
   StudentStatusEnum,
 } from './lib/types/CommonTypes';
-export {
-  QuizQuestionDifficultyEnum,
-  QuizQuestionStatusEnum,
-  QuizQuestionTopicEnum,
-  QuizQuestionTypeEnum,
-} from './lib/types/question';
+export * from './lib/types/question';
+export * from './lib/schemas';
+export * from './lib/constants';

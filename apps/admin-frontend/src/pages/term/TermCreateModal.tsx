@@ -23,7 +23,8 @@ export const TermCreateModal: React.FC<TermCreateModalProps> = ({
   };
 
   const isStartDateInvalid = (startDate: string) => {
-    return new Date(startDate) < new Date();
+    const today = new Date();
+    return new Date(startDate) < new Date(today.toISOString().substring(0, 10));
   };
 
   const isTermDataInvalid = () => {

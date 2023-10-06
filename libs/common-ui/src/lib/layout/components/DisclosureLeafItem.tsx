@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { NavigationMenuItem } from './type';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation, useParams } from 'react-router-dom';
 import { classNames } from '../../utils/classNames';
 import { useMenuItem } from '../hooks/useMenuItem';
 import { getThemeClassName } from '../../utils/getThemeClassName';
@@ -22,6 +22,8 @@ export const DisclosureLeafItem = ({
   bgColor,
   bgHoverColor,
 }: DisclosureChildItem) => {
+  const params = useParams();
+  const location = useLocation();
   const [isActive] = useMenuItem(item);
   const { role } = useThemeContext();
   const sizeStyles = useMemo(
@@ -34,7 +36,7 @@ export const DisclosureLeafItem = ({
 
   return (
     <NavLink
-      to={`${item.path}`}
+      to={`${item.dynamicRoute ? location.pathname + item.path : item.path}`}
       className={classNames(
         // Needs to be fixed later on
         isActive
