@@ -78,7 +78,7 @@ export const CreditBundleManagement: React.FC = () => {
     creditBundleData: CreditBundleUpdateData,
   ) => {
     try {
-      creditBundleData.name = creditBundleData.name.trim();
+      creditBundleData.name = creditBundleData.name?.trim();
       creditBundleData.description = creditBundleData.description?.trim();
       const response = await apiUpdateCreditBundle(
         updateCreditBundleId,
@@ -268,19 +268,32 @@ export const CreditBundleManagement: React.FC = () => {
                               >
                                 Edit
                               </a>
-                              <a
-                                className={`${
-                                  !creditBundle.isActive
-                                    ? 'disabled:opacity-30 pointer-events-none text-gray-300'
-                                    : 'text-indigo-600 hover:text-indigo-900 cursor-pointer'
-                                }`}
-                                onClick={() => {
-                                  setDeleteCreditBundleId(creditBundle.id);
-                                  setIsDeleteModalOpen(true);
-                                }}
-                              >
-                                Delete
-                              </a>
+                              {!creditBundle.isActive && (
+                                <a
+                                  className={`${'text-indigo-600 hover:text-indigo-900 cursor-pointer'}`}
+                                  onClick={() => {
+                                    setUpdateCreditBundleId(creditBundle.id);
+                                    updateCreditBundle({ isActive: true });
+                                  }}
+                                >
+                                  Reactivate
+                                </a>
+                              )}
+                              {creditBundle.isActive && (
+                                <a
+                                  className={`${
+                                    !creditBundle.isActive
+                                      ? 'disabled:opacity-30 pointer-events-none text-gray-300'
+                                      : 'text-indigo-600 hover:text-indigo-900 cursor-pointer'
+                                  }`}
+                                  onClick={() => {
+                                    setDeleteCreditBundleId(creditBundle.id);
+                                    setIsDeleteModalOpen(true);
+                                  }}
+                                >
+                                  Delete
+                                </a>
+                              )}
                             </td>
                           </tr>
                         ))}

@@ -1,5 +1,11 @@
 import { StudentData } from './student';
 
+export interface StripeTransactionData {
+  id: string;
+  paymentIntentId: string;
+  amount: number;
+  
+}
 export interface TransactionData {
   id: string;
   amount: number;
