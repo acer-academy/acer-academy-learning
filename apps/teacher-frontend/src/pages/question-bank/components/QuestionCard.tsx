@@ -10,6 +10,7 @@ import { QuestionTypeSelect } from './QuestionTypeSelect';
 import {
   CreateQuizQuestionType,
   QuizQuestionDifficultyEnum,
+  QuizQuestionStatusEnum,
 } from '@acer-academy-learning/data-access';
 import { Controller, useFormContext, useFormState } from 'react-hook-form';
 import { QuestionAnswers } from './QuestionAnswers';
@@ -18,6 +19,7 @@ import { QuestionLevelsCombo } from './QuestionLevelsCombo';
 import { omit } from 'lodash';
 
 const difficulties = Object.values(QuizQuestionDifficultyEnum);
+const statuses = Object.values(QuizQuestionStatusEnum);
 
 export type QuestionCardProps = {
   onSubmitForm: (values: CreateQuizQuestionType) => Promise<void>;
@@ -29,23 +31,17 @@ export const QuestionCard = ({
   submitText,
 }: QuestionCardProps) => {
   const { displayToast, ToastType } = useToast();
-  const { control, handleSubmit, getValues, watch } =
+  const { control, handleSubmit, getValues } =
     useFormContext<CreateQuizQuestionType>();
 
-  const { isSubmitting, isDirty, errors, dirtyFields } =
+  const { isSubmitting, errors, dirtyFields } =
     useFormState<CreateQuizQuestionType>();
 
   const handleSubmitForm = async (values: CreateQuizQuestionType) => {
     onSubmitForm(values);
   };
 
-  const watchAll = watch();
   useEffect(() => {
-    console.log(watchAll);
-  }, [watchAll]);
-
-  useEffect(() => {
-    console.log(errors);
     if (
       Object.keys(dirtyFields).length > 0 &&
       isSubmitting &&
@@ -73,9 +69,6 @@ export const QuestionCard = ({
             {answer?.isCorrect?.message}
           </p>
         ));
-      // console.log(errors.answers);
-      // console.log(msg);
-      // console.log(answer);
       displayToast(
         <div>
           {msg}
@@ -127,6 +120,23 @@ export const QuestionCard = ({
             getDisplayValue={(option) => screamingSnakeToTitleCase(option)}
             placeholder="Choose Difficulty"
             errorMessage={errors.difficulty?.message}
+          />
+        )}
+      />
+      <h3 className="text-base font-semibold leading-6 text-gray-900">
+        Status:
+      </h3>
+      <Controller
+        control={control}
+        name="status"
+        render={({ field: { onChange, value } }) => (
+          <GenericSelect
+            options={statuses}
+            onChange={onChange}
+            selected={value}
+            getDisplayValue={(option) => screamingSnakeToTitleCase(option)}
+            placeholder="Choose Status"
+            errorMessage={errors.status?.message}
           />
         )}
       />

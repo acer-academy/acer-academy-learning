@@ -6,15 +6,13 @@ import { ContentEditable } from '@lexical/react/LexicalContentEditable';
 import LexicalErrorBoundary from '@lexical/react/LexicalErrorBoundary';
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
 import React, { HTMLProps, forwardRef, useEffect, useState } from 'react';
-import CustomFloatingTextFormatToolbarPlugin from '../lexical/plugins/CustomFloatingTextFormatToolbarPlugin';
-import EquationsPlugin from '../lexical/plugins/EquationsPlugin';
-import { EquationNode } from '../lexical/nodes/EquationNode';
 import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin';
 import { EditorState, LexicalEditor } from 'lexical';
-import { $generateHtmlFromNodes } from '@lexical/html';
-import FocusPlugin from '../lexical/plugins/FocusPlugin';
 import { EditorEventContextProvider } from './context/EventContext';
 import { RenderInitialContentPlugin } from './plugins/RenderInitialContentPlugin';
+import CustomFloatingTextFormatToolbarPlugin from './plugins/CustomFloatingTextFormatToolbarPlugin';
+import EquationsPlugin from './plugins/EquationsPlugin';
+import { EquationNode } from './nodes/EquationNode';
 
 export type LexFloatingEditorProps = {
   className?: string;
