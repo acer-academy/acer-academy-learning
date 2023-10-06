@@ -15,10 +15,11 @@ class TermDao {
   }
 
   public async getCurrentTerms(): Promise<Term[]> {
+    const current = new Date();
     return this.prisma.term.findMany({
       where: {
-        startDate: { lte: new Date().toISOString() },
-        endDate: { gte: new Date().toISOString() },
+        startDate: { lte: current },
+        endDate: { gte: current },
       },
     });
   }

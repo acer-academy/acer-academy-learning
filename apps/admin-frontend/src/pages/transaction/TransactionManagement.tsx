@@ -15,6 +15,7 @@ import {
   ColumnResizedEvent,
 } from 'ag-grid-community';
 import { convertIntToFloat } from '@acer-academy-learning/data-access';
+import ReceiptUrlButton from './ReceiptUrlButton';
 
 const dateFilterParams = {
   comparator: (filterLocalDateAtMidnight: Date, cellValue: string) => {
@@ -177,6 +178,11 @@ const TransactionsComponent = () => {
         const term = params.data.term;
         return term.name;
       },
+    },
+    {
+      headerName: 'Receipt',
+      field: 'stripeTransaction.receiptUrl',
+      cellRenderer: ReceiptUrlButton,
     },
     // { headerName: 'Promotion ID', field: 'promotionId' },
   ];
