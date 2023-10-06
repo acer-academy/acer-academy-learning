@@ -1,4 +1,9 @@
-import { PrismaClient, Prisma, Student } from '@prisma/client';
+import {
+  PrismaClient,
+  Prisma,
+  Student,
+  StudentStatusEnum,
+} from '@prisma/client';
 
 class StudentDao {
   private prisma: PrismaClient;
@@ -8,12 +13,10 @@ class StudentDao {
   }
 
   public async createStudent(
-    input: Prisma.StudentCreateInput,
+    input: Prisma.StudentUncheckedCreateInput,
   ): Promise<Student> {
     return this.prisma.student.create({
-      data: {
-        ...input,
-      },
+      data: { ...input },
     });
   }
 
@@ -25,6 +28,9 @@ class StudentDao {
       where: { id },
       data: {
         ...input,
+      },
+      include: {
+        parents: true,
       },
     });
   }
@@ -38,6 +44,31 @@ class StudentDao {
       },
     });
   }
+
+  // Changes student status to BLOCKED if it is currently ACTIVE or INACTIVE
+  // Changes student status to ACTIVE if it is currently BLOCKED
+  public async toggleStudentStatus(id: string): Promise<Student> {
+    const student = await this.prisma.student.findUnique({
+      where: { id },
+    });
+
+    if (!student) {
+      throw new Error('Student not found');
+    }
+
+    const newStatus =
+      student.status === StudentStatusEnum.BLOCKED
+        ? StudentStatusEnum.ACTIVE
+        : StudentStatusEnum.BLOCKED;
+
+    return this.prisma.student.update({
+      where: { id },
+      data: {
+        status: newStatus,
+      },
+    });
+  }
+
   public async getAllStudents(): Promise<Student[]> {
     return this.prisma.student.findMany({
       include: {
@@ -48,7 +79,7 @@ class StudentDao {
     });
   }
 
-  public async getStudentById(id: string) {
+  public async getStudentById(id: string): Promise<Student> {
     return this.prisma.student.findUnique({
       where: { id },
       include: {
@@ -59,9 +90,46 @@ class StudentDao {
     });
   }
 
-  public async getStudentByEmail(email: string) {
+  public async getStudentByEmail(email: string): Promise<Student> {
     return this.prisma.student.findUnique({
       where: { email },
+      include: {
+        parents: true,
+        centre: true,
+        notificationPreference: true,
+      },
+    });
+  }
+
+  // Parents
+  public async updateParent(
+    id: string,
+    input: Prisma.ParentUpdateInput,
+  ): Promise<Student> {
+    const res = await this.prisma.parent.update({
+      where: { id },
+      data: {
+        ...input,
+      },
+    });
+    const stuId = res.studentId;
+    return this.prisma.student.findUnique({
+      where: { id: stuId },
+      include: {
+        parents: true,
+        centre: true,
+        notificationPreference: true,
+      },
+    });
+  }
+
+  public async deleteParent(parentId: string): Promise<Student | null> {
+    const res = await this.prisma.parent.delete({
+      where: { id: parentId },
+    });
+    const stuId = res.studentId;
+    return this.prisma.student.findUnique({
+      where: { id: stuId },
       include: {
         parents: true,
         centre: true,

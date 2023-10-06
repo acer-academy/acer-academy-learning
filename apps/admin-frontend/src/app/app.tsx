@@ -13,6 +13,7 @@ import { CentreDetails } from '../pages/centre/CentreDetails';
 import { FaqTopicManagement } from '../pages/faq/FaqManagement';
 import { FaqTopicDetails } from '../pages/faq/FaqDetails';
 import { PromotionManagement } from '../pages/promotion/PromotionManagement';
+import { TermManagement } from '../pages/term/TermManagement';
 import {
   LayoutRole,
   SecondaryLayout,
@@ -26,13 +27,29 @@ import { NAV_SECTIONS } from '../libs/layout';
 import {
   ADMINS,
   CENTRE,
+  CHANGE_PASSWORD,
   FAQ,
   HUMAN_RESOURCES,
   LOGIN,
+  PROMOTION,
+  SETTINGS,
   SIGN_UP,
   STUDENTS,
   TEACHERS,
+  CREDIT_RESOURCES,
+  CREDIT_BUNDLE,
+  TRANSACTION,
+  TERM,
+  CLASS_CREDITS,
 } from '../libs/routes';
+import AdminForgotPassword from '../pages/entry/AdminForgotPassword';
+import AdminResetPassword from '../pages/entry/AdminResetPassword';
+import { TeacherHRManagementPage } from '../pages/hr/TeacherHRManagementPage';
+import { StudentHRManagementPage } from '../pages/hr/StudentHRManagementPage';
+import { AdminHRManagementPage } from '../pages/hr/AdminHRManagementPage';
+import TransactionsComponent from '../pages/transaction/TransactionManagement';
+import { CreditBundleManagement } from '../pages/creditBundle/CreditBundleManagement';
+import { ClassCreditManagement } from '../pages/classCredit/ClassCreditManagement';
 
 export default function App() {
   return (
@@ -52,80 +69,49 @@ export default function App() {
               }
             >
               {/* Nest all routes that has a SecondaryLayout here */}
-              <Route path="/" element={<h1>Main</h1>} />
-              <Route path={CENTRE} element={<h1>Main</h1>} />
-              <Route path={FAQ} element={<h1>Main</h1>} />
+              <Route path="/" element={<h1>Welcome to AcerTech!</h1>} />
               <Route
                 path={HUMAN_RESOURCES}
                 element={
                   <div>
-                    Common HR stuff
+                    <h1>Human Resource Management</h1>
                     <Outlet />
                   </div>
                 }
               >
-                <Route path={TEACHERS} element={<h2>Teacher</h2>} />
-                <Route path={STUDENTS} element={<h2>Student</h2>} />
-                <Route path={ADMINS} element={<h2>Admin</h2>} />
+                <Route path={TEACHERS} element={<TeacherHRManagementPage />} />
+                <Route path={STUDENTS} element={<StudentHRManagementPage />} />
+                <Route path={ADMINS} element={<AdminHRManagementPage />} />
               </Route>
-              <Route path={CENTRE} />
-              <Route path={FAQ} />
-            </Route>
-            <Route path={LOGIN} element={<AdminLogin />} />
-            <Route path="/account" element={<Account />} />
-            <Route path="/profile" element={<AdminProfile />} />
-            <Route path="/changePassword" element={<ChangePassword />} />
-            <Route path="account" element={<Account />} />
-            <Route path="sign-up" element={<AdminSignUp />} />
-            <Route path="forgot-password" element={<AdminForgotPassword />} />
-            <Route path="reset-password" element={<AdminResetPassword />} />
-            <Route
-              element={
-                <EnforceLoginStatePageWrapper redirectTo={LOGIN}>
-                  <SecondaryLayout
-                    navigationMenu={NAV_SECTIONS}
-                    role={LayoutRole.Admin}
-                  />
-                </EnforceLoginStatePageWrapper>
-              }
-            >
-              {/* Nest all routes that has a SecondaryLayout here */}
-              <Route path="/" element={<h1>Main</h1>} />
-              <Route path={CENTRE} element={<h1>Main</h1>} />
-              <Route path={FAQ} element={<h1>Main</h1>} />
+              <Route path={CREDIT_RESOURCES} element={<Outlet />}>
+                <Route
+                  path={CLASS_CREDITS}
+                  element={<ClassCreditManagement />}
+                />
+                <Route
+                  path={CREDIT_BUNDLE}
+                  element={<CreditBundleManagement />}
+                />
+                <Route path={TRANSACTION} element={<TransactionsComponent />} />
+                <Route path={PROMOTION} element={<PromotionManagement />} />
+                <Route path={TERM} element={<TermManagement />} />
+              </Route>
+
+              <Route path={`${CENTRE}`} element={<CentreManagement />} />
+              <Route path={`${CENTRE}/:centreId`} element={<CentreDetails />} />
+              <Route path={`${FAQ}`} element={<FaqTopicManagement />} />
               <Route
-                path={HUMAN_RESOURCES}
-                element={
-                  <div>
-                    Common HR stuff
-                    <Outlet />
-                  </div>
-                }
-              >
-                <Route path={TEACHERS} element={<h2>Teacher</h2>} />
-                <Route path={STUDENTS} element={<h2>Student</h2>} />
-                <Route path={ADMINS} element={<h2>Admin</h2>} />
-              </Route>
-              <Route path={CENTRE} />
-              <Route path={FAQ} />
+                path={`${FAQ}/:faqTopicId`}
+                element={<FaqTopicDetails />}
+              />
+              <Route path={SETTINGS} element={<AdminProfile />} />
+              <Route path={CHANGE_PASSWORD} element={<ChangePassword />} />
             </Route>
             <Route path={LOGIN} element={<AdminLogin />} />
             <Route path="/account" element={<Account />} />
             <Route path={SIGN_UP} element={<AdminSignUp />} />
-            <Route path="centre-management" element={<CentreManagement />} />
-            <Route
-              path="centre-management/:centreId"
-              element={<CentreDetails />}
-            />
-            <Route path="faq-management" element={<FaqTopicManagement />} />
-            <Route
-              path="faq-management/:faqTopicId"
-              element={<FaqTopicDetails />}
-            />
-            <Route
-              path="promotion-management"
-              element={<PromotionManagement />}
-            />
+            <Route path="forgot-password" element={<AdminForgotPassword />} />
+            <Route path="reset-password" element={<AdminResetPassword />} />
           </Routes>
         </ToastProvider>
       </AdminAuthWrapper>

@@ -1,16 +1,17 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React, { useState, useEffect, useMemo } from 'react';
 import {
   AcerAcademyLogo,
   PublicPageWrapper,
 } from '@acer-academy-learning/common-ui';
-import { retrieveCentres } from '../../api/centre';
-import { registerStudent } from '../../api/student';
+import { getAllCentres } from '@acer-academy-learning/data-access';
+import { createStudent } from '@acer-academy-learning/data-access';
 import { useToast } from '@acer-academy-learning/common-ui';
 import { LevelEnum, SubjectEnum } from '@acer-academy-learning/data-access';
-import { Centre } from 'libs/data-access/src/lib/types/student';
 import { LOGIN } from '../../libs/routes';
 import { useNavigate } from 'react-router-dom';
+import { CentreData } from 'libs/data-access/src/lib/types/centre';
 
 interface InputFieldProps {
   label: string;
@@ -62,7 +63,7 @@ interface ParentFieldsProps {
 }
 
 //Parent fields component
-const ParentFields: React.FC<ParentFieldsProps> = ({
+export const ParentFields: React.FC<ParentFieldsProps> = ({
   label,
   firstName,
   setFirstName,
@@ -131,7 +132,7 @@ export default function StudentSignUp() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [selectedSubjects, setSelectedSubjects] = useState<string[]>([]);
   const [selectedLevel, setSelectedLevel] = useState('');
-  const [centres, setCentres] = useState<Centre[]>([]);
+  const [centres, setCentres] = useState<CentreData[]>([]);
   const [selectedCentre, setSelectedCentre] = useState('');
 
   //parent particualrs
@@ -146,8 +147,9 @@ export default function StudentSignUp() {
   useEffect(() => {
     const fetchCentres = async () => {
       try {
-        const data = await retrieveCentres();
-        setCentres(data);
+        const response = await getAllCentres();
+        const allCentres: CentreData[] = response.data;
+        setCentres(allCentres);
       } catch (err) {
         // setError(err);
       } finally {
@@ -212,6 +214,11 @@ export default function StudentSignUp() {
       parents: parents,
     };
 
+    if (payload.subjects.length === 0) {
+      displayToast('You need to select at least 1 subject', ToastType.ERROR);
+      return;
+    }
+
     if (password !== confirmPassword) {
       displayToast('Password do not match', ToastType.ERROR);
       return;
@@ -223,11 +230,11 @@ export default function StudentSignUp() {
     }
 
     try {
-      console.log(payload);
-      await registerStudent(payload);
+      await createStudent(payload);
       displayToast('Account created!', ToastType.SUCCESS);
       navigate(LOGIN);
-    } catch (error: any) {
+    } catch (error) {
+      console.log(error);
       displayToast(`${error}`, ToastType.ERROR);
     }
 

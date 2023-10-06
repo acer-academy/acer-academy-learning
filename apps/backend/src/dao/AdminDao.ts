@@ -1,22 +1,21 @@
-// admin.dao.ts
-import { PrismaClient, Prisma } from '@prisma/client';
-import {
-  AdminPostData,
-  AdminPutData,
-} from 'libs/data-access/src/lib/types/admin';
+import { PrismaClient, Prisma, Admin } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
 class AdminDao {
-  async createAdmin(data: AdminPostData) {
+  async createAdmin(data: Prisma.AdminUncheckedCreateInput): Promise<Admin> {
     return prisma.admin.create({ data });
   }
 
-  async getAdminByEmail(email: string) {
+  async getAdminByEmail(email: string): Promise<Admin> {
     return prisma.admin.findUnique({ where: { email } });
   }
 
-  getAdminById(id: string) {
+  async getAllAdmins(): Promise<Admin[]> {
+    return prisma.admin.findMany();
+  }
+
+  async getAdminById(id: string): Promise<Admin> {
     return prisma.admin.findUnique({ where: { id } });
   }
 
@@ -28,8 +27,8 @@ class AdminDao {
     });
   }
 
-  async deleteAdmin(email: string) {
-    return prisma.admin.delete({ where: { email } });
+  async deleteAdmin(id: string) {
+    return prisma.admin.delete({ where: { id } });
   }
 }
 

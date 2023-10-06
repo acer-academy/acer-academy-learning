@@ -6,6 +6,7 @@ import {
   BOOK_CLASSES,
   BUY_CREDITS,
   DASHBOARD,
+  FAQ,
   NOTIFICATIONS,
   PAST_TRANSACTIONS,
   PROFILE,
@@ -25,6 +26,7 @@ import {
   UserIcon,
   BellIcon,
   Cog6ToothIcon,
+  QuestionMarkCircleIcon,
 } from '@heroicons/react/24/outline';
 export const NAV_SECTIONS: NavigationMenuItem[] = [
   {
@@ -64,5 +66,6 @@ export const ACCOUNT_NAV: NavigationMenuItem = {
     { name: 'Profile', path: PROFILE, icon: UserIcon },
     { name: 'Notifications', path: NOTIFICATIONS, icon: BellIcon },
     { name: 'Settings', path: SETTINGS, icon: Cog6ToothIcon },
+    { name: 'FAQ', path: FAQ, icon: QuestionMarkCircleIcon },
   ],
 };

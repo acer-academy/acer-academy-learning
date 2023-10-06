@@ -6,6 +6,7 @@ import {
 } from '@acer-academy-learning/common-ui';
 import { useAuth } from '@acer-academy-learning/common-ui';
 import { DASHBOARD } from '../../libs/routes';
+import { useToast } from '@acer-academy-learning/common-ui';
 
 const StudentLogin: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -13,6 +14,7 @@ const StudentLogin: React.FC = () => {
 
   const navigate = useNavigate();
   const { login } = useAuth();
+  const { displayToast, ToastType } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -21,7 +23,7 @@ const StudentLogin: React.FC = () => {
       await login(email, password);
       navigate(DASHBOARD);
     } catch (error) {
-      console.error('An error occurred', error);
+      displayToast(`${error}`, ToastType.ERROR);
     }
   };
 
@@ -101,7 +103,7 @@ const StudentLogin: React.FC = () => {
 
                   <div className="flex items-center justify-between">
                     <div className="flex items-center">
-                      <input
+                      {/* <input
                         id="remember-me"
                         name="remember-me"
                         type="checkbox"
@@ -112,12 +114,12 @@ const StudentLogin: React.FC = () => {
                         className="ml-3 block text-sm leading-6 text-gray-700"
                       >
                         Remember me
-                      </label>
+                      </label> */}
                     </div>
 
                     <div className="text-sm leading-6">
                       <a
-                        href="#"
+                        href="/forgot-password"
                         className="font-semibold text-indigo-600 hover:text-indigo-500"
                       >
                         Forgot password?

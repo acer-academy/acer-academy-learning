@@ -1,6 +1,8 @@
 // Auth routes
 export const LOGIN = '/login';
 export const SIGN_UP = '/sign-up';
+export const FORGOT_PASSWORD = '/forgot-password';
+export const RESET_PASSWORD = '/reset-password';
 
 // Dashboard routes
 export const DASHBOARD = '/';
@@ -27,3 +29,4 @@ export const ACCOUNT = '/account';
 export const PROFILE = `${ACCOUNT}/profile`;
 export const NOTIFICATIONS = `${ACCOUNT}/notifications`;
 export const SETTINGS = `${ACCOUNT}/settings`;
+export const FAQ = `${ACCOUNT}/faq`;

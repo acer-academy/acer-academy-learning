@@ -1,4 +1,4 @@
-import { LevelEnum, SubjectEnum } from './CommonTypes';
+import { LevelEnum, SubjectEnum, StudentStatusEnum } from './CommonTypes';
 import { Teacher } from './teacher';
 // import { Centre } from './CommonTypes';
 
@@ -10,21 +10,24 @@ export interface Centre {
   teachers?: Teacher[];
 }
 
-export enum StudentStatus {
-  ACTIVE = 'active',
-  INACTIVE = 'inactive',
-  BLOCKED = 'blocked',
-}
 export interface StudentPostData {
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
+  password: string;
+  level: LevelEnum;
+  subjects: SubjectEnum[];
+  school: string;
+  phoneNumber: string;
+  centreId: string;
 }
 
 export interface StudentData {
   id: string;
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
-  status: StudentStatus;
+  status: StudentStatusEnum;
 }
 
 export interface NotificationPreference {
@@ -44,6 +47,7 @@ export interface NotificationPreferenceUpdateData {
   centrePref?: string[];
 }
 export interface Parent {
+  id: string;
   firstName: string;
   lastName: string;
   phoneNumber: string;
@@ -55,6 +59,7 @@ export interface Student {
   firstName: string;
   lastName: string;
   phoneNumber: string;
+  status: StudentStatusEnum;
   school: string;
   level: LevelEnum[];
   subjects: SubjectEnum[];
@@ -63,3 +68,15 @@ export interface Student {
   isAuthenticated: boolean;
   notificationPreference: NotificationPreference;
 }
+
+export interface UpdateStudentData {
+  firstName?: string;
+  lastName?: string;
+  password?: string;
+}
+
+export type UpdateParentData = {
+  firstName?: string;
+  lastName?: string;
+  password?: string;
+};

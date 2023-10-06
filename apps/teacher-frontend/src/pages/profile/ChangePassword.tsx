@@ -1,7 +1,8 @@
 import { useAuth } from '@acer-academy-learning/common-ui';
 import { useState } from 'react';
 import { useToast } from '@acer-academy-learning/common-ui';
-import { updateTeacher } from '../../api/teacher';
+import { updateTeacher } from '@acer-academy-learning/data-access';
+import { Teacher, TeacherData } from 'libs/data-access/src/lib/types/teacher';
 
 const ChangePassword: React.FC = () => {
   const { user } = useAuth<Teacher>();
@@ -21,10 +22,10 @@ const ChangePassword: React.FC = () => {
       return;
     }
     try {
-      await updateTeacher(user.id, { password });
+      const id = user?.id ?? '';
+      await updateTeacher(id, { password });
       setPassword('');
       setConfirmPassword('');
-      //@TODO: SET USER HERE FOR AUTH CONTEXT
       displayToast('Password succesfully changed!', ToastType.SUCCESS);
     } catch (error: any) {
       displayToast(`${error}`, ToastType.ERROR);
@@ -32,14 +33,14 @@ const ChangePassword: React.FC = () => {
   };
 
   return (
-    <div className="h-full bg-gray-50">
+    <div className="lex min-h-full flex-1 flex-col justify-center py-12 sm:px-6 lg:px-8 mx-8 sm:mx-auto sm:w-full sm:max-w-[1000px]">
       <h2 className="mt-6 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
         Change Password
       </h2>
 
       <div className="bg-white px-6 py-12 shadow sm:rounded-lg sm:px-12">
         <div>
-          <span className="block text-sm font-medium leading-6 text-gray-900">
+          <span className="block text-sm font-medium leading-6 text-gray-900 mt-4">
             New Password
           </span>
           <div className="mt-2">
@@ -59,7 +60,7 @@ const ChangePassword: React.FC = () => {
         <div>
           <label
             htmlFor="confirmPassword"
-            className="block text-sm font-medium leading-6 text-gray-900"
+            className="block text-sm font-medium leading-6 text-gray-900 mt-4"
           >
             Reconfirm Password
           </label>
@@ -77,7 +78,7 @@ const ChangePassword: React.FC = () => {
         </div>
         <div>
           <button
-            className="rounded bg-indigo-600 px-2 py-1 text-xs font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            className="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 mt-6"
             onClick={changePassword}
           >
             Change Password

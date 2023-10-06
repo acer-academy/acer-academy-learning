@@ -42,4 +42,19 @@ export interface LoginData {
   password: string;
 }
 
+export interface LogoutResponse {
+  message: string;
+}
+
+export enum PromotionStatusEnum {
+  ACTIVE = 'ACTIVE',
+  INACTIVE = 'INACTIVE',
+}
+
+export enum StudentStatusEnum {
+  ACTIVE = 'active',
+  INACTIVE = 'inactive',
+  BLOCKED = 'blocked',
+}
+
 // Other shared types and enums...

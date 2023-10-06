@@ -5,14 +5,40 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { JWT_SECRET_KEY } from '../config/config';
 import EmailUtility from './EmailUtility';
+import { WhitelistService } from './WhitelistService';
 
 class StudentService {
+  constructor(
+    private whitelistService: WhitelistService = new WhitelistService(),
+  ) {}
+
   public async createStudent(
-    input: Prisma.StudentCreateInput,
+    input: Prisma.StudentUncheckedCreateInput,
   ): Promise<Student> {
+    // Check if the email is whitelisted
+    const isWhitelisted = await this.whitelistService.isEmailWhitelisted(
+      input.email,
+      'STUDENT',
+    );
+
+    if (!isWhitelisted) {
+      throw new Error('Unable to create student as email is not whitelisted!');
+    }
+
+    const checkForUser = await StudentDao.getStudentByEmail(input.email);
+
+    if (checkForUser) {
+      throw new Error('Email already exists.');
+    }
+
+    const whitelistItem = await this.whitelistService.getWhitelistByEmail(
+      input.email,
+    );
+
     input.password = await bcrypt.hash(input.password, 10);
     return StudentDao.createStudent({
       ...input,
+      whitelistItemId: whitelistItem.id,
       notificationPreference: {
         create: {
           isUnsubscribed: false,
@@ -37,11 +63,18 @@ class StudentService {
     id: string,
     input: Prisma.StudentUpdateInput,
   ): Promise<Student> {
+    if (input.password) {
+      input.password = await bcrypt.hash(input.password, 10);
+    }
     return StudentDao.updateStudent(id, input);
   }
 
   public async deleteStudent(id: string): Promise<Student> {
     return StudentDao.deleteStudent(id);
+  }
+
+  public async toggleStudentStatus(id: string): Promise<Student> {
+    return StudentDao.toggleStudentStatus(id);
   }
 
   async login(studentEmail: string, studentPassword: string) {
@@ -50,23 +83,13 @@ class StudentService {
       !student ||
       !(await bcrypt.compare(studentPassword, student.password))
     ) {
-      throw new Error('Invalid credentials');
+      throw new Error('Invalid credentials.');
     }
 
     // Generate a JWT token with necessary student details
     const token = jwt.sign(
       {
         id: student.id,
-        // firstName: student.firstName,
-        // lastName: student.lastName,
-        // email: student.email,
-        // level: student.level,
-        // subjects: student.subjects,
-        // status: student.status,
-        // school: student.school,
-        // phoneNumber: student.phoneNumber,
-        // parents: student.parents,
-        // centre: student.centre,
       },
       JWT_SECRET_KEY,
       { expiresIn: '4h' },
@@ -119,6 +142,14 @@ class StudentService {
     // Hash and update the new password
     const hashedPassword = await bcrypt.hash(newPassword, 10);
     await StudentDao.updateStudent(student.id, { password: hashedPassword });
+  }
+
+  public async updateParent(id: string, input: Prisma.ParentUpdateInput) {
+    return StudentDao.updateParent(id, input);
+  }
+
+  public async deleteParent(id: string): Promise<Student> {
+    return StudentDao.deleteParent(id);
   }
 }
 

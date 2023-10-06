@@ -8,6 +8,7 @@ export interface TeacherData {
   levels: LevelEnum[];
   subjects: SubjectEnum[];
   centreId: string;
+  whitelistItemId: string;
 }
 
 export interface Teacher {
@@ -19,4 +20,22 @@ export interface Teacher {
   subjects: SubjectEnum[];
   centre?: Centre;
   isAuthenticated: boolean;
+}
+
+export interface RegisterTeacherData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  levels: LevelEnum[];
+  subjects: SubjectEnum[];
+  centreId: string;
+}
+
+export interface UpdateTeacherData {
+  firstName?: string;
+  lastName?: string;
+  password?: string;
+  subjects?: SubjectEnum[];
+  levels?: LevelEnum[];
 }

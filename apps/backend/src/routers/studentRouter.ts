@@ -32,8 +32,20 @@ studentRouter.get('/getStudentById/:id', async (req, res) => {
 
 studentRouter.post('/create', async (req, res) => {
   try {
-    const studentData: Prisma.StudentCreateInput = req.body;
+    const studentData: Prisma.StudentUncheckedCreateInput = req.body;
     const student = await StudentService.createStudent(studentData);
+
+    return res.status(200).json({ student: student });
+  } catch (err) {
+    console.log(err);
+    return res.status(400).json({ error: err.message });
+  }
+});
+
+studentRouter.delete('/delete/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const student = await StudentService.deleteStudent(id);
 
     return res.status(200).json({ student: student });
   } catch (err) {
@@ -42,10 +54,10 @@ studentRouter.post('/create', async (req, res) => {
   }
 });
 
-studentRouter.delete('/delete/:id', async (req, res) => {
+studentRouter.delete('/block/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const student = await StudentService.deleteStudent(id);
+    const student = await StudentService.toggleStudentStatus(id);
 
     return res.status(200).json({ student: student });
   } catch (err) {
@@ -159,6 +171,29 @@ studentRouter.post('/reset-password', async (req, res) => {
     res.status(200).json({ message: 'Password reset successfully' });
   } catch (error) {
     res.status(400).json({ error: error.message });
+  }
+});
+
+studentRouter.put('/update-parent/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const parentData: Prisma.ParentUpdateInput = req.body;
+    const student = await StudentService.updateParent(id, parentData);
+    res.status(200).json({ student: student });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+studentRouter.delete('/delete-parent/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const student = await StudentService.deleteParent(id);
+
+    return res.status(200).json({ student: student });
+  } catch (err) {
+    console.log(err);
+    return res.status(400).json({ error: err });
   }
 });
 

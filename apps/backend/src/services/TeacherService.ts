@@ -4,28 +4,48 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { JWT_SECRET_KEY } from '../config/config';
 import EmailUtility from './EmailUtility';
+import { WhitelistService } from './WhitelistService';
+import { assert } from 'console';
 
 export class TeacherService {
-  constructor(private teacherDao: TeacherDao = new TeacherDao()) {}
+  constructor(
+    private teacherDao: TeacherDao = new TeacherDao(),
+    private whitelistService: WhitelistService = new WhitelistService(),
+  ) {}
 
   public async createTeacher(
-    teacherData: Prisma.TeacherCreateInput,
+    teacherData: Prisma.TeacherUncheckedCreateInput,
   ): Promise<Teacher> {
+    // Check if the email is whitelisted
+    const isWhitelisted = await this.whitelistService.isEmailWhitelisted(
+      teacherData.email,
+      'TEACHER',
+    );
+
+    if (!isWhitelisted) {
+      throw new Error('Unable to create teacher as email is not whitelisted!');
+    }
+
+    const teacherWhitelistItem =
+      await this.whitelistService.getWhitelistByEmail(teacherData.email);
+    assert(teacherWhitelistItem !== null);
+
     teacherData.password = await bcrypt.hash(teacherData.password, 10);
-    return this.teacherDao.createTeacher(teacherData);
+    return this.teacherDao.createTeacher({
+      ...teacherData,
+      whitelistItemId: teacherWhitelistItem.id,
+    });
   }
 
   public async getAllTeachers(): Promise<Teacher[]> {
     return this.teacherDao.getAllTeachers();
   }
 
-  public async getTeacherById(teacherId: string) {
+  public async getTeacherById(teacherId: string): Promise<Teacher> {
     return this.teacherDao.getTeacherById(teacherId);
   }
 
-  public async getTeacherByEmail(
-    teacherEmail: string,
-  ): Promise<Teacher | null> {
+  public async getTeacherByEmail(teacherEmail: string): Promise<Teacher> {
     return this.teacherDao.getTeacherByEmail(teacherEmail);
   }
 
@@ -61,19 +81,13 @@ export class TeacherService {
       !teacher ||
       !(await bcrypt.compare(teacherPassword, teacher.password))
     ) {
-      throw new Error('Invalid credentials');
+      throw new Error('Invalid credentials.');
     }
 
     // Generate a JWT token with necessary teacher details
     const token = jwt.sign(
       {
         id: teacher.id,
-        // email: teacher.email,
-        // firstName: teacher.firstName,
-        // lastName: teacher.lastName,
-        // levels: teacher.levels,
-        // subjects: teacher.subjects,
-        // centre: teacher.centre,
       },
       JWT_SECRET_KEY,
       { expiresIn: '4h' },

@@ -31,7 +31,7 @@ export const FaqArticleCreateModal: React.FC<FaqArticleCreateModalProps> = ({
     <div className="fixed inset-0 z-10 flex items-center justify-center overflow-x-hidden overflow-y-auto outline-none focus:outline-none">
       <div className="fixed inset-0 z-10 flex items-center justify-center overflow-x-hidden overflow-y-auto outline-none focus:outline-none">
         <div className="fixed inset-0 bg-gray-500 opacity-75"></div>
-        <div className="relative bg-white p-5 rounded-lg shadow-md h-42 w-4/6">
+        <div className="relative bg-white p-5 rounded-lg shadow-md h-42 w-1/3">
           <div className="flex flex-col items-start justify-between gap-3">
             <h3 className="text-lg font-semibold leading-6 text-gray-900">
               Create FAQ Article

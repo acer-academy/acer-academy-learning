@@ -5,6 +5,7 @@ import {
   PublicPageWrapper,
 } from '@acer-academy-learning/common-ui';
 import { useAuth } from '@acer-academy-learning/common-ui';
+import { useToast } from '@acer-academy-learning/common-ui';
 
 const AdminLogin: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -12,6 +13,7 @@ const AdminLogin: React.FC = () => {
 
   const navigate = useNavigate();
   const { login } = useAuth();
+  const { displayToast, ToastType } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,7 +22,7 @@ const AdminLogin: React.FC = () => {
       await login(email, password);
       navigate('/');
     } catch (error) {
-      console.error('An error occurred', error);
+      displayToast(`${error}`, ToastType.ERROR);
     }
   };
 
@@ -37,6 +39,9 @@ const AdminLogin: React.FC = () => {
 
           <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-[480px]">
             <div className="bg-white px-6 py-12 shadow sm:rounded-lg sm:px-12">
+              <h2 className="text-2xl font-semibold leading-7 text-gray-900 mb-7">
+                Sign in to your account
+              </h2>
               <form className="space-y-6" onSubmit={handleSubmit}>
                 <div>
                   <label
@@ -82,7 +87,7 @@ const AdminLogin: React.FC = () => {
 
                 <div className="flex items-center justify-between">
                   <div className="flex items-center">
-                    <input
+                    {/* <input
                       id="remember-me"
                       name="remember-me"
                       type="checkbox"
@@ -93,12 +98,12 @@ const AdminLogin: React.FC = () => {
                       className="ml-3 block text-sm leading-6 text-gray-900"
                     >
                       Remember me
-                    </label>
+                    </label> */}
                   </div>
 
                   <div className="text-sm leading-6">
                     <a
-                      href="#"
+                      href="forgot-password"
                       className="font-semibold text-indigo-600 hover:text-indigo-500"
                     >
                       Forgot password?
@@ -118,7 +123,7 @@ const AdminLogin: React.FC = () => {
             </div>
 
             <p className="mt-10 text-center text-sm text-gray-500">
-              Not a member?{' '}
+              Don't have an account?{' '}
               <a
                 href="/sign-up"
                 className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"

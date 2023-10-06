@@ -32,7 +32,12 @@ model Student {
   centre   Centre @relation(fields: [centreId], references: [id])
   centreId String @db.Uuid
 
+  whitelistItem   WhitelistItem @relation(fields: [whitelistItemId], references: [id])
+  whitelistItemId String        @unique @db.Uuid
+
   notificationPreference NotificationPreference?
+
+  transaction Transaction[]
 }
 
 model Parent {
@@ -56,6 +61,9 @@ model Admin {
   email     String        @unique
   password  String
   type      AdminTypeEnum @default(STANDARD_ADMIN)
+
+  whitelistItem   WhitelistItem @relation(fields: [whitelistItemId], references: [id])
+  whitelistItemId String        @unique @db.Uuid
 }
 
 enum SubjectEnum {
@@ -94,6 +102,9 @@ model Teacher {
   // announcements Announcement[]
   // assignments Assignment[]
   // quizzes Quiz[]
+
+  whitelistItem   WhitelistItem @relation(fields: [whitelistItemId], references: [id])
+  whitelistItemId String        @unique @db.Uuid
 }
 
 model NotificationPreference {
@@ -127,13 +138,21 @@ model Classroom {
   // sessions Session[]
 }
 
+enum PromotionStatus {
+  ACTIVE
+  INACTIVE
+}
+
 model Promotion {
-  id                 String   @id @default(uuid()) @db.Uuid
+  id                 String          @id @default(uuid()) @db.Uuid
   startDate          DateTime
   endDate            DateTime
-  promoCode          String   @unique
+  promoCode          String          @unique
   percentageDiscount Float
   description        String
+  status             PromotionStatus @default(ACTIVE)
+
+  transactions Transaction[]
 }
 
 model FaqTopic {
@@ -149,4 +168,151 @@ model FaqArticle {
   body       String
   faqTopic   FaqTopic @relation(fields: [faqTopicId], references: [id])
   faqTopicId String   @db.Uuid
+}
+
+enum Role {
+  TEACHER
+  STUDENT
+  ADMIN
+  SUPER_ADMIN
+}
+
+model WhitelistItem {
+  id    String @id @default(uuid()) @db.Uuid
+  email String @unique
+  role  Role
+
+  student Student?
+  admin   Admin?
+  teacher Teacher?
+}
+
+model Term {
+  id        String   @id @default(uuid()) @db.Uuid
+  name      String
+  startDate DateTime
+  endDate   DateTime
+
+  transactions Transaction[]
+}
+
+enum TransactionType {
+  PURCHASED
+  DEDUCTED //attendance
+  STRIPE_DEDUCTED //refunded transaction
+  ROLLOVER
+  VOID
+}
+
+model Transaction {
+  id                String          @id @default(uuid()) @db.Uuid
+  amount            Float?
+  currency          String?
+  dateTime          DateTime        @default(now()) @db.Timestamptz
+  creditsTransacted Int
+  transactionType   TransactionType
+  reason            String?
+
+  referenceId String?
+
+  term   Term   @relation(fields: [termId], references: [id])
+  termId String @db.Uuid
+
+  student   Student @relation(fields: [studentId], references: [id])
+  studentId String  @db.Uuid
+
+  promotion   Promotion? @relation(fields: [promotionId], references: [id])
+  promotionId String?    @db.Uuid
+
+  //stripeTransaction StripeTransaction? 
+
+  creditBundle   CreditBundle? @relation(fields: [creditBundleId], references: [id])
+  creditBundleId String?       @db.Uuid
+}
+
+model CreditBundle {
+  id          String  @id @default(uuid()) @db.Uuid
+  name        String  @unique
+  description String?
+  numCredits  Int
+  basePrice   Float
+  isActive    Boolean @default(true)
+
+  transactions Transaction[]
+}
+
+enum QuizQuestionDifficultyEnum {
+  BASIC
+  INTERMEDIATE
+  ADVANCED
+}
+
+enum QuizQuestionTopicEnum {
+  WHOLE_NUMBERS
+  MONEY
+  MEASUREMENT
+  GEOMETRY
+  DATA_REPRESENTATION_AND_INTERPRETATION
+  FRACTIONS
+  AREA_AND_VOLUME
+  DECIMALS
+  PERCENTAGE
+  RATIO
+  RATE_AND_SPEED
+  DATA_ANALYSIS
+  ALGEBRA
+  NUMBERS_AND_OPERATIONS
+  RATIO_AND_PROPORTION
+  ALGEBRAIC_EXPRESSIONS_AND_FORMULAE
+  FUNCTIONS_AND_GRAPHS
+  EQUATIONS_AND_INEQUALITIES
+  SET_LANGUAGE_AND_NOTATION
+  MATRICES
+  ANGLES_TRIANGLES_AND_POLYGONS
+  CONGRUENCE_AND_SIMILARITY
+  PROPERTIES_OF_CIRCLES
+  PYTHAGORAS_THEOREM_AND_TRIGONOMETRY
+  MENSURATION
+  COORDINATE_GEOMETRY
+  VECTORS_IN_2D
+  DATA_HANDLING_AND_ANALYSIS
+  PROBABILITY
+  SEQUENCE_AND_SERIES
+  VECTORS
+  INTRODUCTION_TO_COMPLEX_NUMBERS
+  CALCULUS
+  PROBABILITY_AND_STATISTICS
+}
+
+enum QuizQuestionStatusEnum {
+  READY
+  DRAFT
+  DISABLED
+}
+
+enum QuizQuestionTypeEnum {
+  MCQ
+  MRQ
+  TFQ
+  OPEN_ENDED
+}
+
+model QuizQuestion {
+  id           String                     @id @default(uuid()) @db.Uuid
+  topics       QuizQuestionTopicEnum[]
+  levels       LevelEnum[]
+  difficulty   QuizQuestionDifficultyEnum
+  questionText String                     @db.Text
+  status       QuizQuestionStatusEnum
+  questionType QuizQuestionTypeEnum
+  answers      QuizAnswer[]
+}
+
+model QuizAnswer {
+  id          String        @id @default(uuid()) @db.Uuid
+  answer      String        @db.Text
+  explanation String?
+  isCorrect   Boolean
+  question    QuizQuestion? @relation(fields: [questionId], references: [id])
+  questionId  String?       @db.Uuid
 }

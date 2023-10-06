@@ -1,0 +1,38 @@
+-- CreateEnum
+CREATE TYPE "QuizQuestionDifficultyEnum" AS ENUM ('BASIC', 'INTERMEDIATE', 'ADVANCED');
+
+-- CreateEnum
+CREATE TYPE "QuizQuestionTopicEnum" AS ENUM ('WHOLE_NUMBERS', 'MONEY', 'MEASUREMENT', 'GEOMETRY', 'DATA_REPRESENTATION_AND_INTERPRETATION', 'FRACTIONS', 'AREA_AND_VOLUME', 'DECIMALS', 'PERCENTAGE', 'RATIO', 'RATE_AND_SPEED', 'DATA_ANALYSIS', 'ALGEBRA', 'NUMBERS_AND_OPERATIONS', 'RATIO_AND_PROPORTION', 'ALGEBRAIC_EXPRESSIONS_AND_FORMULAE', 'FUNCTIONS_AND_GRAPHS', 'EQUATIONS_AND_INEQUALITIES', 'SET_LANGUAGE_AND_NOTATION', 'MATRICES', 'ANGLES_TRIANGLES_AND_POLYGONS', 'CONGRUENCE_AND_SIMILARITY', 'PROPERTIES_OF_CIRCLES', 'PYTHAGORAS_THEOREM_AND_TRIGONOMETRY', 'MENSURATION', 'COORDINATE_GEOMETRY', 'VECTORS_IN_2D', 'DATA_HANDLING_AND_ANALYSIS', 'PROBABILITY', 'SEQUENCE_AND_SERIES', 'VECTORS', 'INTRODUCTION_TO_COMPLEX_NUMBERS', 'CALCULUS', 'PROBABILITY_AND_STATISTICS');
+
+-- CreateEnum
+CREATE TYPE "QuizQuestionStatusEnum" AS ENUM ('READY', 'DRAFT', 'DISABLED');
+
+-- CreateEnum
+CREATE TYPE "QuizQuestionTypeEnum" AS ENUM ('MCQ', 'MRQ', 'TFQ', 'OPEN_ENDED');
+
+-- CreateTable
+CREATE TABLE "QuizQuestion" (
+    "id" UUID NOT NULL,
+    "topics" "QuizQuestionTopicEnum"[],
+    "levels" "LevelEnum"[],
+    "difficulty" "QuizQuestionDifficultyEnum" NOT NULL,
+    "questionText" TEXT NOT NULL,
+    "status" "QuizQuestionStatusEnum" NOT NULL,
+    "questionType" "QuizQuestionTypeEnum" NOT NULL,
+    "options" TEXT[],
+
+    CONSTRAINT "QuizQuestion_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "QuizAnswer" (
+    "id" UUID NOT NULL,
+    "answer" TEXT NOT NULL,
+    "explanation" TEXT,
+    "questionId" UUID,
+
+    CONSTRAINT "QuizAnswer_pkey" PRIMARY KEY ("id")
+);
+
+-- AddForeignKey
+ALTER TABLE "QuizAnswer" ADD CONSTRAINT "QuizAnswer_questionId_fkey" FOREIGN KEY ("questionId") REFERENCES "QuizQuestion"("id") ON DELETE SET NULL ON UPDATE CASCADE;

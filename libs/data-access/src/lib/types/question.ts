@@ -1,0 +1,84 @@
+import { LevelEnum } from './CommonTypes';
+
+export enum QuizQuestionStatusEnum {
+  READY = 'READY',
+  DRAFT = 'DRAFT',
+  DISABLED = 'DISABLED',
+}
+
+export enum QuizQuestionDifficultyEnum {
+  BASIC = 'BASIC',
+  INTERMEDIATE = 'INTERMEDIATE',
+  ADVANCED = 'ADVANCED',
+}
+
+export enum QuizQuestionTypeEnum {
+  MCQ = 'MCQ',
+  MRQ = 'MRQ',
+  TFQ = 'TFQ',
+  OPEN_ENDED = 'OPEN_ENDED',
+}
+
+export enum QuizQuestionTopicEnum {
+  WHOLE_NUMBERS = 'WHOLE_NUMBERS',
+  MONEY = 'MONEY',
+  MEASUREMENT = 'MEASUREMENT',
+  GEOMETRY = 'GEOMETRY',
+  DATA_REPRESENTATION_AND_INTERPRETATION = 'DATA_REPRESENTATION_AND_INTERPRETATION',
+  FRACTIONS = 'FRACTIONS',
+  AREA_AND_VOLUME = 'AREA_AND_VOLUME',
+  DECIMALS = 'DECIMALS',
+  PERCENTAGE = 'PERCENTAGE',
+  RATIO = 'RATIO',
+  RATE_AND_SPEED = 'RATE_AND_SPEED',
+  DATA_ANALYSIS = 'DATA_ANALYSIS',
+  ALGEBRA = 'ALGEBRA',
+  NUMBERS_AND_OPERATIONS = 'NUMBERS_AND_OPERATIONS',
+  RATIO_AND_PROPORTION = 'RATIO_AND_PROPORTION',
+  ALGEBRAIC_EXPRESSIONS_AND_FORMULAE = 'ALGEBRAIC_EXPRESSIONS_AND_FORMULAE',
+  FUNCTIONS_AND_GRAPHS = 'FUNCTIONS_AND_GRAPHS',
+  EQUATIONS_AND_INEQUALITIES = 'EQUATIONS_AND_INEQUALITIES',
+  SET_LANGUAGE_AND_NOTATION = 'SET_LANGUAGE_AND_NOTATION',
+  MATRICES = 'MATRICES',
+  ANGLES_TRIANGLES_AND_POLYGONS = 'ANGLES_TRIANGLES_AND_POLYGONS',
+  CONGRUENCE_AND_SIMILARITY = 'CONGRUENCE_AND_SIMILARITY',
+  PROPERTIES_OF_CIRCLES = 'PROPERTIES_OF_CIRCLES',
+  PYTHAGORAS_THEOREM_AND_TRIGONOMETRY = 'PYTHAGORAS_THEOREM_AND_TRIGONOMETRY',
+  MENSURATION = 'MENSURATION',
+  COORDINATE_GEOMETRY = 'COORDINATE_GEOMETRY',
+  VECTORS_IN_2D = 'VECTORS_IN_2D',
+  DATA_HANDLING_AND_ANALYSIS = 'DATA_HANDLING_AND_ANALYSIS',
+  PROBABILITY = 'PROBABILITY',
+  SEQUENCE_AND_SERIES = 'SEQUENCE_AND_SERIES',
+  VECTORS = 'VECTORS',
+  INTRODUCTION_TO_COMPLEX_NUMBERS = 'INTRODUCTION_TO_COMPLEX_NUMBERS',
+  CALCULUS = 'CALCULUS',
+  PROBABILITY_AND_STATISTICS = 'PROBABILITY_AND_STATISTICS',
+}
+
+export interface QuizAnswer {
+  id: string;
+  answer: string;
+  isCorrect: boolean;
+  explanation?: string;
+  questionId?: string;
+}
+
+export interface QuizQuestionData {
+  id: string;
+  topics: QuizQuestionTopicEnum[];
+  levels: LevelEnum[];
+  difficulty: QuizQuestionDifficultyEnum;
+  questionText: string;
+  status: QuizQuestionStatusEnum;
+  questionType: QuizQuestionTypeEnum;
+  answers: QuizAnswer[];
+}
+
+export interface QuizQuestionPaginationFilter {
+  difficulty?: QuizQuestionDifficultyEnum[];
+  levels?: LevelEnum[];
+  topics?: QuizQuestionTopicEnum[];
+  status?: QuizQuestionStatusEnum[];
+  questionType?: QuizQuestionTypeEnum[];
+}

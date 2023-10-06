@@ -1,0 +1,16 @@
+/* 
+.ag-row-even {
+  background-color: #f2f2f2; 
+}
+.ag-row-odd {
+  background-color: #ffffff; 
+} */
+
+.ag-theme-alpine {
+  --ag-header-height: 50px;
+
+  /* --ag-header-foreground-color: white; */
+  /* --ag-header-background-color: #a4cb9d;
+  --ag-header-cell-hover-background-color: #388e3c;
+  --ag-header-cell-moving-background-color: #388e3c; */
+}

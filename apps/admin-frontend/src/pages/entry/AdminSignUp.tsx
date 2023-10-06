@@ -5,7 +5,8 @@ import {
   AcerAcademyLogo,
   PublicPageWrapper,
 } from '@acer-academy-learning/common-ui';
-import { registerAdmin } from '../../api/admin';
+// import { registerAdmin } from '../../api/admin';
+import { registerAdmin } from '@acer-academy-learning/data-access';
 import { useToast } from '@acer-academy-learning/common-ui';
 import { LOGIN } from '../../libs/routes';
 import { useNavigate } from 'react-router-dom';
@@ -16,7 +17,6 @@ const AdminSignUp: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [error, setError] = useState<string | null>(null);
 
   const navigate = useNavigate();
   const { displayToast, ToastType } = useToast();
@@ -32,7 +32,7 @@ const AdminSignUp: React.FC = () => {
       await registerAdmin({ firstName, lastName, email, password });
       displayToast('Account created!', ToastType.SUCCESS);
       navigate(LOGIN);
-    } catch (error: any) {
+    } catch (error) {
       displayToast(`${error}`, ToastType.ERROR);
     }
   };
@@ -49,6 +49,9 @@ const AdminSignUp: React.FC = () => {
 
           <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-[480px]">
             <div className="bg-white px-6 py-12 shadow sm:rounded-lg sm:px-12">
+              <h2 className="text-2xl font-semibold leading-7 text-gray-900 mb-6">
+                Create your account
+              </h2>
               <form className="space-y-6" onSubmit={handleSubmit}>
                 <div>
                   <label
@@ -152,8 +155,6 @@ const AdminSignUp: React.FC = () => {
                   </div>
                 </div>
 
-                {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
-
                 <div>
                   <button
                     type="submit"
@@ -171,7 +172,7 @@ const AdminSignUp: React.FC = () => {
                 href={LOGIN}
                 className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
               >
-                Return to Login
+                Sign in
               </a>
             </p>
           </div>

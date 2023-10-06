@@ -1,20 +1,29 @@
 import express from 'express';
 import AdminService from '../services/AdminService';
 import {
-  AdminPostData,
   AdminGetData,
   AdminPutData,
 } from 'libs/data-access/src/lib/types/admin';
 import jwt from 'jsonwebtoken';
 import { JWT_SECRET_KEY } from '../config/config';
+import { Prisma } from '@prisma/client';
 
 const router = express.Router();
 
 router.post('/register', async (req, res) => {
   try {
-    const input = req.body as AdminPostData;
+    const input: Prisma.AdminUncheckedCreateInput = req.body;
     const admin = await AdminService.register(input);
     res.status(201).json(admin);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+router.get('/getAllAdmins', async (_, res) => {
+  try {
+    const admins = await AdminService.getAllAdmins();
+    res.status(200).json(admins);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -108,10 +117,10 @@ router.put('/update/:id', async (req, res) => {
   }
 });
 
-router.delete('/delete/:email', async (req, res) => {
+router.delete('/delete/:id', async (req, res) => {
   try {
-    const { email } = req.params;
-    await AdminService.deleteAdmin(email);
+    const { id } = req.params;
+    await AdminService.deleteAdmin(id);
     res.status(200).json({ message: 'Admin deleted successfully' });
   } catch (error) {
     res.status(400).json({ error: error.message });

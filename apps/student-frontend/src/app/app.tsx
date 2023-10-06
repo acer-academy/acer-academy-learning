@@ -23,22 +23,29 @@ import {
   BOOK_CLASSES,
   BUY_CREDITS,
   DASHBOARD,
+  FORGOT_PASSWORD,
   LOGIN,
   NOTIFICATIONS,
   PAST_TRANSACTIONS,
   PROFILE,
   QUIZZES,
   RECORDINGS,
+  RESET_PASSWORD,
   REWARDS,
   SETTINGS,
   SIGN_UP,
   SUBJECTS,
   VIEW_CLASSES,
   ZOOM_LINK,
+  FAQ,
 } from '../libs/routes';
 import { ToastContainer } from 'react-toastify';
 import { StudentNotificationPreference } from '../pages/profile/StudentNotificationPreference';
 import { QueryClient, QueryClientProvider } from 'react-query';
+import { FaqPage } from '../pages/faq/FaqPage';
+import { StudentProfile } from '../pages/profile/StudentProfile';
+import TransactionManagement from '../pages/transaction/TransactionManagement';
+import { CreditBundleManagement } from '../pages/creditBundle/CreditBundleManagement';
 
 export function App() {
   const queryClient = new QueryClient();
@@ -51,7 +58,11 @@ export function App() {
             <Routes>
               <Route path={LOGIN} element={<StudentLogin />} />
               <Route path={SIGN_UP} element={<StudentSignUp />} />
-              <Route path="/account" element={<StudentAccount />} />
+              <Route
+                path={FORGOT_PASSWORD}
+                element={<StudentForgotPassword />}
+              />
+              <Route path={RESET_PASSWORD} element={<StudentResetPassword />} />
               <Route
                 element={
                   <EnforceLoginStatePageWrapper redirectTo={LOGIN}>
@@ -63,27 +74,37 @@ export function App() {
                   </EnforceLoginStatePageWrapper>
                 }
               >
-                <Route path={DASHBOARD} element={<div>Home</div>} />
+                <Route
+                  path={DASHBOARD}
+                  element={<div>Welcome to AcerTech!</div>}
+                />
                 <Route path={SUBJECTS} element={<div>Home</div>}>
                   <Route path={ASSIGNMENTS} element={<div>Home</div>} />
                   <Route path={QUIZZES} element={<div>Home</div>} />
                   <Route path={RECORDINGS} element={<div>Home</div>} />
                   <Route path={ZOOM_LINK} element={<div>Home</div>} />
                 </Route>
-                <Route path={BOOKING} element={<div>Home</div>}>
+                <Route path={BOOKING}>
                   <Route path={VIEW_CLASSES} element={<div>Home</div>} />
                   <Route path={BOOK_CLASSES} element={<div>Home</div>} />
-                  <Route path={BUY_CREDITS} element={<div>Home</div>} />
-                  <Route path={PAST_TRANSACTIONS} element={<div>Home</div>} />
+                  <Route
+                    path={BUY_CREDITS}
+                    element={<CreditBundleManagement />}
+                  />
+                  <Route
+                    path={PAST_TRANSACTIONS}
+                    element={<TransactionManagement />}
+                  />
                 </Route>
                 <Route path={REWARDS} element={<div>Home</div>} />
-                <Route path={ACCOUNT} element={<div>Home</div>}>
-                  <Route path={PROFILE} element={<div>Home</div>} />
+                <Route path={ACCOUNT}>
+                  <Route path={PROFILE} element={<StudentProfile />} />
                   <Route
                     path={NOTIFICATIONS}
                     element={<StudentNotificationPreference />}
                   />
                   <Route path={SETTINGS} element={<div>Home</div>} />
+                  <Route path={FAQ} element={<FaqPage />} />
                 </Route>
               </Route>
             </Routes>

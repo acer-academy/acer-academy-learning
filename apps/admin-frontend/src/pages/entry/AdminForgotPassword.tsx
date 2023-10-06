@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { AcerAcademyLogo } from '@acer-academy-learning/common-ui';
 import { useToast } from '@acer-academy-learning/common-ui';
+import { forgotAdminPassword } from '@acer-academy-learning/data-access';
+import axios from 'axios';
 
 const AdminForgotPassword: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -10,27 +12,32 @@ const AdminForgotPassword: React.FC = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch(
-        'http://localhost:8000/api/v1/admins/forgot-password/',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ email }),
-        },
-      );
+      const response = await forgotAdminPassword(email);
+      const responseData = response.data; // Use the `data` property
 
-      const responseData = await response.json();
-
-      if (response.ok) {
+      if (response.status >= 200 && response.status < 300) {
+        // Check the `status` property
         displayToast(responseData.message, ToastType.SUCCESS);
       } else {
         displayToast(responseData.error, ToastType.ERROR);
       }
-    } catch (error) {
-      console.error('An error occurred', error);
-      displayToast('An unexpected error occurred', ToastType.ERROR);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      if (axios.isAxiosError(error)) {
+        // The error is an Axios error
+        if (error.response) {
+          // The request was made and the server responded with a status code
+          // that falls out of the range of 2xx
+          displayToast(error.response.data.error, ToastType.ERROR);
+        } else {
+          // The request was made but no response was received or
+          // An error occurred while setting up the request
+          displayToast('An unexpected error occurred', ToastType.ERROR);
+        }
+      } else {
+        // The error is not an Axios error
+        displayToast('An unexpected error occurred', ToastType.ERROR);
+      }
     }
   };
 
