@@ -23,6 +23,7 @@ import termRouter from './routers/termRouter';
 import creditBundleRouter from './routers/creditBundleRouter';
 import quizQuestionRouter from './routers/quizQuestionRouter';
 import quizAnswerRouter from './routers/quizAnswerRouter';
+import stripeWebhookRouter from './routers/stripeWebhookRouter';
 
 dotenv.config();
 
@@ -93,6 +94,7 @@ app.use('/api/v1/transactions', transactionRouter);
 app.use('/api/v1/credit-bundles', creditBundleRouter);
 app.use('/api/v1/quiz-questions', quizQuestionRouter);
 app.use('/api/v1/quiz-answers', quizAnswerRouter);
+app.use('/api/v1/stripe-webhook', stripeWebhookRouter);
 
 // Start the server
 const server = app.listen(port, () => {

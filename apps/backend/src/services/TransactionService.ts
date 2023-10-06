@@ -1,8 +1,11 @@
 import { Prisma, Transaction, TransactionType } from '@prisma/client';
 import TransactionDao from '../dao/TransactionDao';
+import { StripeTransactionService } from './StripeTransactionService';
 
+const stripeTransactionService = new StripeTransactionService();
 class TransactionService {
   public async getAllTransactions(): Promise<Transaction[]> {
+    await stripeTransactionService.createTransaction();
     return TransactionDao.getAllTransactions();
   }
 
@@ -73,7 +76,7 @@ class TransactionService {
       termId: pastTermId,
       transactionType: TransactionType.DEDUCTED,
     };
-    let transactions = [];
+    const transactions = [];
     const deduct = await TransactionDao.createTransaction(deductTransaction);
     transactions.push(deduct);
     const rolloverTransaction = {
