@@ -340,12 +340,12 @@ export default function CartComponent({
                               {selectedPromotion.percentageDiscount.toFixed(2)}
                               %)
                             </p>
-                            <p>-${discountAmount.toFixed(2)}</p>
+                            <p>-${convertIntToFloat(discountAmount)}</p>
                           </div>
                           <div className="border-t border-gray-200  bg-gray-100 mt-2  py-1">
                             <div className="flex justify-between text-base font-medium text-gray-900">
                               <p>Total after discount</p>
-                              <p>${totalAfterDiscount.toFixed(2)}</p>
+                              <p>${convertIntToFloat(totalAfterDiscount)}</p>
                             </div>
                           </div>
                         </div>
