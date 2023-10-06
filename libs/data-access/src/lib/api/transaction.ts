@@ -1,4 +1,4 @@
-import { TransactionData } from '../types/transaction';
+import { TransactionData, TransactionCreateData } from '../types/transaction';
 import client from './client';
 import { AxiosResponse } from 'axios';
 
@@ -37,4 +37,10 @@ export async function rolloverCredits(
   return client.get(
     `${URL}/rollover/${studentId}/${currentTermId}/${prevTermId}`,
   );
+}
+
+export async function createTransaction(
+  input: TransactionCreateData,
+): Promise<TransactionData> {
+  return client.post(`${URL}`, input);
 }

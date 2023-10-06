@@ -32,3 +32,12 @@ export interface TermData {
   startDate: string;
   endDate: string;
 }
+
+export interface TransactionCreateData {
+  amount: number;
+  currency: string;
+  creditsTransacted: number;
+  transactionType: string;
+  studentId: string;
+  creditBundleIdArray: string[];
+}

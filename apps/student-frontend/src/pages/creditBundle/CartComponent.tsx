@@ -5,6 +5,9 @@ import { XMarkIcon } from '@heroicons/react/24/outline';
 import { PromotionData } from 'libs/data-access/src/lib/types/promotion';
 import { useToast } from '@acer-academy-learning/common-ui';
 import { getValidPromotions } from '@acer-academy-learning/data-access';
+import CreditCardModal from './CreditCardModal';
+import { useAuth } from '@acer-academy-learning/common-ui';
+import { Student } from '@prisma/client';
 import { convertIntToFloat } from '@acer-academy-learning/data-access';
 
 export default function CartComponent({
@@ -25,8 +28,24 @@ export default function CartComponent({
   >(undefined);
   const [promoCode, setPromoCode] = useState('');
   const [validPromotions, setValidPromotions] = useState<PromotionData[]>([]);
-
+  const [isCreditCardModalOpen, setIsCreditCardModalOpen] = useState(false);
   const { displayToast, ToastType } = useToast();
+
+  const [subtotal, setSubtotal] = useState(0);
+  const [totalCredits, setTotalCredits] = useState(0);
+  const [discountAmount, setDiscountAmount] = useState(0);
+  const [totalAfterDiscount, setTotalAfterDiscount] = useState(0);
+  const { user: authUser } = useAuth<Student>();
+  const IdOfStudent = authUser?.id;
+
+  const [transactionState, setTransactionState] = useState({
+    amount: subtotal,
+    currency: 'SGD',
+    creditsTransacted: totalCredits,
+    transactionType: 'PURCHASED',
+    studentId: IdOfStudent, // You'll have to decide where this value comes from.
+    creditBundleIdArray: [],
+  });
 
   const fetchValidPromotions = async () => {
     try {
@@ -46,17 +65,55 @@ export default function CartComponent({
     fetchValidPromotions();
   }, []);
 
-  const subtotal = cartItems.reduce(
-    (acc, item) => acc + item.basePrice * item.quantity,
-    0,
-  );
+  // Update subtotal and totalCredits when cartItems changes
+  useEffect(() => {
+    const newSubtotal = cartItems.reduce(
+      (acc, item) => acc + item.basePrice * item.quantity,
+      0,
+    );
+    const newTotalCredits = cartItems.reduce(
+      (acc, item) => acc + item.numCredits * item.quantity,
+      0,
+    );
 
-  // const totalAfterDiscount = subtotal.
+    const newCreditBundleIdArray = [];
+    cartItems.forEach((item) => {
+      for (let i = 0; i < item.quantity; i++) {
+        newCreditBundleIdArray.push(item.id);
+      }
+    });
 
-  const totalCredits = cartItems.reduce(
-    (acc, item) => acc + item.numCredits * item.quantity,
-    0,
-  );
+    setSubtotal(newSubtotal);
+    setTotalCredits(newTotalCredits);
+
+    setTransactionState((prevState) => ({
+      ...prevState,
+      creditBundleIdArray: newCreditBundleIdArray,
+    }));
+
+    console.log(cartItems);
+  }, [cartItems]);
+
+  // Update discountAmount and totalAfterDiscount when subtotal or selectedPromotion changes
+  useEffect(() => {
+    const newDiscountAmount =
+      (selectedPromotion?.percentageDiscount / 100) * subtotal;
+    const newTotalAfterDiscount = subtotal - newDiscountAmount;
+
+    setDiscountAmount(newDiscountAmount);
+    setTotalAfterDiscount(newTotalAfterDiscount);
+  }, [selectedPromotion, subtotal]);
+
+  // Update transactionState when subtotal, totalCredits, or totalAfterDiscount changes
+  useEffect(() => {
+    setTransactionState((prevState) => ({
+      ...prevState,
+      amount: selectedPromotion ? totalAfterDiscount : subtotal,
+      creditsTransacted: totalCredits,
+    }));
+  }, [subtotal, totalCredits, totalAfterDiscount, selectedPromotion]);
+
+  console.log(transactionState);
 
   const applyPromotion = (promoCode: string) => {
     if (!validPromotions) {
@@ -271,18 +328,44 @@ export default function CartComponent({
                           <p>Subtotal</p>
                           <p>${convertIntToFloat(subtotal)}</p>
                         </div>
-                        <p className="mt-0.5 text-sm text-gray-500">
-                          Shipping and taxes calculated at checkout.
-                        </p>
+                        <p className="mt-0.5 text-sm text-gray-500"></p>
                       </div>
 
+                      {/* Promotion Applied and Total after discount */}
+                      {selectedPromotion && (
+                        <div>
+                          <div className="flex justify-between text-base font-medium text-gray-900">
+                            <p>
+                              Discount (
+                              {selectedPromotion.percentageDiscount.toFixed(2)}
+                              %)
+                            </p>
+                            <p>-${discountAmount.toFixed(2)}</p>
+                          </div>
+                          <div className="border-t border-gray-200  bg-gray-100 mt-2  py-1">
+                            <div className="flex justify-between text-base font-medium text-gray-900">
+                              <p>Total after discount</p>
+                              <p>${totalAfterDiscount.toFixed(2)}</p>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
                       <div className="mt-6">
-                        <a
-                          href="#"
-                          className="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
-                        >
-                          Checkout
-                        </a>
+                        <div className="mt-6 flex justify-center">
+                          <button
+                            onClick={() => setIsCreditCardModalOpen(true)}
+                            className="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
+                          >
+                            Make Payment
+                          </button>
+                          <CreditCardModal
+                            isOpen={isCreditCardModalOpen}
+                            onClose={() => setIsCreditCardModalOpen(false)}
+                            cartItems={cartItems}
+                            transactionState={transactionState}
+                          />
+                        </div>
                       </div>
                       <div className="mt-6 flex justify-center text-center text-sm text-gray-500">
                         <p>
