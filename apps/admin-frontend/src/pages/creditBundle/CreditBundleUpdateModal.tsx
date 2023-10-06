@@ -3,6 +3,10 @@ import {
   CreditBundleUpdateData,
 } from 'libs/data-access/src/lib/types/creditBundle';
 import { useState } from 'react';
+import {
+  convertIntToFloat,
+  convertFloatToInt,
+} from '@acer-academy-learning/data-access';
 
 interface CreditBundleUpdateModalProps {
   setIsModalOpen: (isModalOpen: boolean) => void;
@@ -180,11 +184,11 @@ export const CreditBundleUpdateModal: React.FC<
                       : 'ring-gray-300 text-gray-900 focus:ring-adminGreen-500'
                   } placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6`}
                   placeholder="12"
-                  value={creditBundleData.basePrice}
+                  value={convertIntToFloat(creditBundleData.basePrice)}
                   onChange={(e) => {
                     setCreditBundleData({
                       ...creditBundleData,
-                      basePrice: parseFloat(e.target.value),
+                      basePrice: convertFloatToInt(parseFloat(e.target.value)),
                     });
                   }}
                   aria-invalid={true}
