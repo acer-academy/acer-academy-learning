@@ -6,6 +6,8 @@ import { PromotionData } from 'libs/data-access/src/lib/types/promotion';
 import { useToast } from '@acer-academy-learning/common-ui';
 import { getValidPromotions } from '@acer-academy-learning/data-access';
 import CreditCardModal from './CreditCardModal';
+import { useAuth } from '@acer-academy-learning/common-ui';
+import { Student } from '@prisma/client';
 
 export default function CartComponent({
   isOpen,
@@ -26,8 +28,23 @@ export default function CartComponent({
   const [promoCode, setPromoCode] = useState('');
   const [validPromotions, setValidPromotions] = useState<PromotionData[]>([]);
   const [isCreditCardModalOpen, setIsCreditCardModalOpen] = useState(false);
-
   const { displayToast, ToastType } = useToast();
+
+  const [subtotal, setSubtotal] = useState(0);
+  const [totalCredits, setTotalCredits] = useState(0);
+  const [discountAmount, setDiscountAmount] = useState(0);
+  const [totalAfterDiscount, setTotalAfterDiscount] = useState(0);
+  const { user: authUser } = useAuth<Student>();
+  const IdOfStudent = authUser?.id;
+
+  const [transactionState, setTransactionState] = useState({
+    amount: subtotal,
+    currency: 'SGD',
+    creditsTransacted: totalCredits,
+    transactionType: 'PURCHASED',
+    studentId: IdOfStudent, // You'll have to decide where this value comes from.
+    creditBundleIdArray: [],
+  });
 
   const fetchValidPromotions = async () => {
     try {
@@ -47,21 +64,55 @@ export default function CartComponent({
     fetchValidPromotions();
   }, []);
 
-  const subtotal = cartItems.reduce(
-    (acc, item) => acc + item.basePrice * item.quantity,
-    0,
-  );
+  // Update subtotal and totalCredits when cartItems changes
+  useEffect(() => {
+    const newSubtotal = cartItems.reduce(
+      (acc, item) => acc + item.basePrice * item.quantity,
+      0,
+    );
+    const newTotalCredits = cartItems.reduce(
+      (acc, item) => acc + item.numCredits * item.quantity,
+      0,
+    );
 
-  // const totalAfterDiscount = subtotal.
+    const newCreditBundleIdArray = [];
+    cartItems.forEach((item) => {
+      for (let i = 0; i < item.quantity; i++) {
+        newCreditBundleIdArray.push(item.id);
+      }
+    });
 
-  const totalCredits = cartItems.reduce(
-    (acc, item) => acc + item.numCredits * item.quantity,
-    0,
-  );
+    setSubtotal(newSubtotal);
+    setTotalCredits(newTotalCredits);
 
-  const discountAmount =
-    (selectedPromotion?.percentageDiscount / 100) * subtotal;
-  const totalAfterDiscount = subtotal - discountAmount;
+    setTransactionState((prevState) => ({
+      ...prevState,
+      creditBundleIdArray: newCreditBundleIdArray,
+    }));
+
+    console.log(cartItems);
+  }, [cartItems]);
+
+  // Update discountAmount and totalAfterDiscount when subtotal or selectedPromotion changes
+  useEffect(() => {
+    const newDiscountAmount =
+      (selectedPromotion?.percentageDiscount / 100) * subtotal;
+    const newTotalAfterDiscount = subtotal - newDiscountAmount;
+
+    setDiscountAmount(newDiscountAmount);
+    setTotalAfterDiscount(newTotalAfterDiscount);
+  }, [selectedPromotion, subtotal]);
+
+  // Update transactionState when subtotal, totalCredits, or totalAfterDiscount changes
+  useEffect(() => {
+    setTransactionState((prevState) => ({
+      ...prevState,
+      amount: selectedPromotion ? totalAfterDiscount : subtotal,
+      creditsTransacted: totalCredits,
+    }));
+  }, [subtotal, totalCredits, totalAfterDiscount, selectedPromotion]);
+
+  console.log(transactionState);
 
   const applyPromotion = (promoCode: string) => {
     if (!validPromotions) {
@@ -309,6 +360,8 @@ export default function CartComponent({
                           <CreditCardModal
                             isOpen={isCreditCardModalOpen}
                             onClose={() => setIsCreditCardModalOpen(false)}
+                            cartItems={cartItems}
+                            transactionState={transactionState}
                           />
                         </div>
                       </div>

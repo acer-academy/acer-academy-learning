@@ -1,10 +1,15 @@
 import React, { useState } from 'react';
 import visaLogo from '../../assets/Visa_Inc._logo.svg.png';
 import mastercardLogo from '../../assets/MasterCard_Logo.svg.png';
+import { CreditBundleCartItem } from 'libs/data-access/src/lib/types/creditBundle';
+import { createTransaction } from '@acer-academy-learning/data-access';
+import { useToast } from '@acer-academy-learning/common-ui';
 
 type Props = {
   isOpen: boolean;
   onClose: () => void;
+  cartItems: CreditBundleCartItem[];
+  transactionState: any;
 };
 
 const logos = {
@@ -20,7 +25,13 @@ type Errors = {
   cvv?: string;
 };
 
-const CreditCardModal: React.FC<Props> = ({ isOpen, onClose }) => {
+const CreditCardModal: React.FC<Props> = ({
+  isOpen,
+  onClose,
+  cartItems,
+  transactionState,
+}) => {
+  const { displayToast, ToastType } = useToast();
   const [cardNumber, setCardNumber] = useState<string>('');
   const [cardHolder, setCardHolder] = useState<string>('');
   const [month, setMonth] = useState<string>('');
@@ -34,6 +45,9 @@ const CreditCardModal: React.FC<Props> = ({ isOpen, onClose }) => {
     year: '',
     cvv: '',
   });
+
+  //   console.log(cartItems);
+  console.log(transactionState);
 
   const handleCardHolderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -141,9 +155,20 @@ const CreditCardModal: React.FC<Props> = ({ isOpen, onClose }) => {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(cardNumber, cardHolder, month, year, cvv);
+    try {
+      const response = await createTransaction(transactionState);
+
+      displayToast('Paid successfully.', ToastType.SUCCESS);
+    } catch (error: any) {
+      if (error.response) {
+        displayToast(`${error.response.data.error}`, ToastType.ERROR);
+      } else {
+        displayToast('Unknown error.', ToastType.ERROR);
+      }
+      console.log(error);
+    }
   };
 
   if (!isOpen) return null;
