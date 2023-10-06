@@ -129,7 +129,9 @@ const TransactionsComponent = () => {
       headerName: 'Amount',
       field: 'amount',
       valueGetter: (params: ValueGetterParams) => {
-        // If transactionType is 'DEDUCTED', prepend a '-'
+        if (params.data.amount === null || params.data.amount === undefined) {
+          return '—';
+        }
         return `$${params.data.amount}`;
       },
       width: 120,
