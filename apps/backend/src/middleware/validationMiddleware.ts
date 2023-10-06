@@ -1184,9 +1184,9 @@ export async function validatePurchaseTransaction(
   next: NextFunction,
 ) {
   try {
-    const { transactionType, amount, currency, creditBundleId } = req.body;
+    const { transactionType, amount, creditBundleIdArray } = req.body;
     if (transactionType && transactionType === TransactionType.PURCHASED) {
-      if (!amount || !currency || !creditBundleId) {
+      if (!amount || !creditBundleIdArray) {
         return res
           .status(400)
           .json({ error: 'Please input amount, credit bundle and currency' });
@@ -1205,8 +1205,8 @@ export async function validateTransactionComplusoryFields(
   next: NextFunction,
 ) {
   try {
-    const { transactionType, termId, studentId, creditsTransacted } = req.body;
-    if (!transactionType || !termId || !studentId || !creditsTransacted) {
+    const { transactionType, studentId, creditsTransacted } = req.body;
+    if (!transactionType || !studentId || !creditsTransacted) {
       return res
         .status(400)
         .json({ error: 'Please input all fields before proceeding' });
