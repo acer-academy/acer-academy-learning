@@ -9,11 +9,13 @@ import { useEffect } from 'react';
 
 const TRUE_FALSE_VALUES: CreateQuizAnswerType[] = [
   {
-    answer: '<p><span style="white-space: pre-wrap;">True</span></p>',
+    answer:
+      '{"root":{"children":[{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"True","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1}],"direction":"ltr","format":"","indent":0,"type":"root","version":1}}',
     isCorrect: false,
   },
   {
-    answer: '<p><span style="white-space: pre-wrap;">False</span></p>',
+    answer:
+      '{"root":{"children":[{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"False","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1}],"direction":"ltr","format":"","indent":0,"type":"root","version":1}}',
     isCorrect: false,
   },
 ];

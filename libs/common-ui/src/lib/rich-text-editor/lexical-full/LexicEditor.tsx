@@ -22,6 +22,7 @@ import { EditorState, LexicalEditor } from 'lexical';
 import { Spinner } from '../../wrapper/Spinner';
 import { EditorEventContextProvider } from './context/EventContext';
 import { RenderInitialContentPlugin } from './plugins/RenderInitialContentPlugin';
+import './index.css';
 
 // console.warn(
 //   'If you are profiling the playground app, please ensure you turn off the debug view. You can disable it by pressing on the settings control in the bottom-left of your screen and toggling the debug view setting.',

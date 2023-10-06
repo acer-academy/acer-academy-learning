@@ -1,7 +1,6 @@
 export * from './lib/common-ui';
 // Images
 export * from './lib/assets/acer-academy-logo.png';
-export * from './lib/rich-text-editor/lexical/images';
 
 export { AcerAcademyLogo } from './lib/logo/logo';
 export { useAuth } from './lib/wrapper/AuthContext';
@@ -23,12 +22,11 @@ export * from './lib/enum-ui-mappers/topicEnumUIMapper';
 export * from './lib/enum-ui-mappers/quizStatusEnumUIMapper';
 export * from './lib/enum-ui-mappers/difficultyEnumUIMapper';
 export * from './lib/enum-ui-mappers/quizQuestionTypeEnumUIMapper';
-export * from './lib/rich-text-editor/lexical/LexEditor';
 export * from './lib/utils/';
-export * from './lib/rich-text-editor/lexical';
 export * from './lib/modals/WarningModal';
 export * from './lib/buttons';
 export * from './lib/logo';
 export * from './lib/rich-text-editor/lexical-full/LexicEditor';
 export * from './lib/rich-text-editor/lexical-full/LexOutput';
 export * from './lib/rich-text-editor/lexical-full/LexFloatingEditor';
+export * from './lib/rich-text-editor/lexical-full/images';
