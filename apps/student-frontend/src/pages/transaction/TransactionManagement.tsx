@@ -129,6 +129,9 @@ const TransactionManagement = () => {
       headerName: 'Amount',
       field: 'amount',
       valueGetter: (params: ValueGetterParams) => {
+        if (params.data.amount === null || params.data.amount === undefined) {
+          return '—';
+        }
         return `$${params.data.amount}`;
       },
       width: 120,
@@ -137,7 +140,6 @@ const TransactionManagement = () => {
     //   headerName: 'Currency',
     //   field: 'currency',
     // },
-
     {
       headerName: 'Credits Transacted',
       field: 'creditsTransacted',
