@@ -120,7 +120,7 @@ transactionRouter.post(
 transactionRouter.put('/:id', validateTransactionType, async (req, res) => {
   try {
     const { id } = req.params;
-    const input: Prisma.TransactionUpdateInput = req.body;
+    const input: Prisma.TransactionUncheckedUpdateInput = req.body;
     const transaction = await TransactionService.updateTransaction(id, input);
     return res.status(200).json(transaction);
   } catch (error) {

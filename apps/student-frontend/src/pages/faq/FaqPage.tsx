@@ -14,7 +14,6 @@ export const FaqPage: React.FC = () => {
     try {
       const response = await getAllFaqTopics();
       const allFaqTopics: FaqTopicData[] = response.data;
-      console.log(response);
       setFaqTopics(allFaqTopics);
     } catch (error) {
       displayToast(

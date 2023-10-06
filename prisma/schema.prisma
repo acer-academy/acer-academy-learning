@@ -206,7 +206,7 @@ enum TransactionType {
 
 model Transaction {
   id                String          @id @default(uuid()) @db.Uuid
-  amount            Float?
+  amount            Int?
   currency          String?
   dateTime          DateTime        @default(now()) @db.Timestamptz
   creditsTransacted Int
@@ -224,10 +224,35 @@ model Transaction {
   promotion   Promotion? @relation(fields: [promotionId], references: [id])
   promotionId String?    @db.Uuid
 
-  //stripeTransaction StripeTransaction? 
+  creditBundleIdArray String[]
 
-  creditBundle   CreditBundle? @relation(fields: [creditBundleId], references: [id])
-  creditBundleId String?       @db.Uuid
+  stripeTransaction   StripeTransaction? @relation(fields: [stripeTransactionId], references: [id])
+  stripeTransactionId String?            @db.Uuid
+}
+
+enum StripeTransactionStatus {
+  PROCESSING
+  SUCCEEDED
+  FAILED
+  VOID
+  REFUNDED
+}
+
+model StripeTransaction {
+  id              String @id @default(uuid()) @db.Uuid
+  paymentIntentId String @unique
+  amount          Int
+  currency        String
+
+  createdAt DateTime @default(now()) @db.Timestamptz
+  updatedAt DateTime @updatedAt @db.Timestamptz
+
+  status StripeTransactionStatus @default(PROCESSING)
+
+  receiptUrl String?
+  chargeId   String? @unique
+
+  transactions Transaction[]
 }
 
 model CreditBundle {
@@ -235,10 +260,8 @@ model CreditBundle {
   name        String  @unique
   description String?
   numCredits  Int
-  basePrice   Float
+  basePrice   Int
   isActive    Boolean @default(true)
-
-  transactions Transaction[]
 }
 
 enum QuizQuestionDifficultyEnum {

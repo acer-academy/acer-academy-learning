@@ -1,7 +1,10 @@
-import { Fragment, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { CreditBundleCartItem } from 'libs/data-access/src/lib/types/creditBundle';
 import { Dialog, Transition } from '@headlessui/react';
 import { XMarkIcon } from '@heroicons/react/24/outline';
+import { PromotionData } from 'libs/data-access/src/lib/types/promotion';
+import { useToast } from '@acer-academy-learning/common-ui';
+import { getValidPromotions } from '@acer-academy-learning/data-access';
 
 export default function CartComponent({
   isOpen,
@@ -16,17 +19,71 @@ export default function CartComponent({
   onRemove: (bundleId: string) => void;
   onChangeQuantity: (bundleId: string, newQuantity: number) => void;
 }) {
+  const [selectedPromotion, setSelectedPromotion] = useState<
+    PromotionData | undefined
+  >(undefined);
   const [promoCode, setPromoCode] = useState('');
+  const [validPromotions, setValidPromotions] = useState<PromotionData[]>([]);
+
+  const { displayToast, ToastType } = useToast();
+
+  const fetchValidPromotions = async () => {
+    try {
+      const response = await getValidPromotions();
+      const allPromotions: PromotionData[] = response.data;
+      setValidPromotions(allPromotions);
+    } catch (error) {
+      displayToast(
+        'Promotions could not be retrieved from the server.',
+        ToastType.ERROR,
+      );
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchValidPromotions();
+  }, []);
 
   const subtotal = cartItems.reduce(
     (acc, item) => acc + item.basePrice * item.quantity,
     0,
   );
 
+  // const totalAfterDiscount = subtotal.
+
   const totalCredits = cartItems.reduce(
     (acc, item) => acc + item.numCredits * item.quantity,
     0,
   );
+
+  const applyPromotion = (promoCode: string) => {
+    if (!validPromotions) {
+      setSelectedPromotion(undefined);
+      displayToast(
+        'Promo code is not valid! Please try again.',
+        ToastType.ERROR,
+      );
+      return;
+    }
+
+    const promo = validPromotions.find((p) => p.promoCode === promoCode);
+
+    if (!promo) {
+      setSelectedPromotion(undefined);
+      displayToast(
+        'Promo code is not valid! Please try again.',
+        ToastType.ERROR,
+      );
+    } else {
+      setSelectedPromotion(promo);
+      setPromoCode('');
+      displayToast(
+        `Promo code ${promoCode} is applied successfully!`,
+        ToastType.SUCCESS,
+      );
+    }
+  };
 
   return (
     <Transition.Root show={isOpen} as={Fragment}>
@@ -187,15 +244,24 @@ export default function CartComponent({
                           <button
                             type="button"
                             className="ml-3 bg-indigo-600 border border-transparent rounded-md py-2 px-4 inline-flex items-center text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                            onClick={() => {
-                              // Handle promo code application logic here
-                              console.log('Promo code applied:', promoCode);
-                            }}
+                            onClick={() => applyPromotion(promoCode)}
                           >
                             Apply
                           </button>
                         </div>
                       </div>
+
+                      {/* Promotion Applied */}
+                      {selectedPromotion && (
+                        <div className="pt-4 pb-2">
+                          <div className="flex justify-between text-base font-medium text-gray-900">
+                            <p>Promotion Applied</p>
+                            <p>
+                              {selectedPromotion.percentageDiscount.toFixed(2)}%
+                            </p>
+                          </div>
+                        </div>
+                      )}
 
                       {/* Subtotal */}
                       <div className="pt-4 pb-2">

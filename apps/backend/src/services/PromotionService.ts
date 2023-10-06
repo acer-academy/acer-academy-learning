@@ -1,45 +1,43 @@
 import { Promotion, Prisma } from '@prisma/client';
-import PromotionDao from '../dao/PromotionDao';
-import TransactionService from './TransactionService';
+import { PromotionDao } from '../dao/PromotionDao';
 
-class PromotionService {
+export class PromotionService {
+  constructor(private promotionDao: PromotionDao = new PromotionDao()) {}
   public async createPromotion(
     input: Prisma.PromotionCreateInput,
   ): Promise<Promotion> {
-    return PromotionDao.createPromotion(input);
+    return this.promotionDao.createPromotion(input);
   }
 
   public async getAllPromotions(): Promise<Promotion[]> {
-    return PromotionDao.getAllPromotions();
+    return this.promotionDao.getAllPromotions();
   }
 
   public async getAllValidPromotions(): Promise<Promotion[]> {
-    return PromotionDao.getAllValidPromotions();
+    return this.promotionDao.getAllValidPromotions();
   }
 
   public async getPromotionById(promotionId: string): Promise<Promotion> {
-    return PromotionDao.getPromotionById(promotionId);
+    return this.promotionDao.getPromotionById(promotionId);
   }
 
   public async getPromotionByPromoCode(code: string): Promise<Promotion> {
-    return PromotionDao.getPromotionByPromoCode(code);
+    return this.promotionDao.getPromotionByPromoCode(code);
   }
 
   public async updatePromotion(
     promotionId: string,
     data: Prisma.PromotionUpdateInput,
   ): Promise<Promotion> {
-    return PromotionDao.updatePromotion(promotionId, data);
+    return this.promotionDao.updatePromotion(promotionId, data);
   }
 
   public async deletePromotion(promotionId: string): Promise<Promotion | null> {
-    const transactions = await TransactionService.getTransactionsByPromotionId(
-      promotionId,
-    );
-    if (transactions.length === 0) {
-      return PromotionDao.deletePromotion(promotionId);
-    } else return PromotionDao.softDeletePromotion(promotionId);
+    const promotion = await this.promotionDao.getPromotionById(promotionId);
+    if (promotion.transactions.length > 0) {
+      return this.promotionDao.softDeletePromotion(promotionId);
+    } else {
+      return this.promotionDao.deletePromotion(promotionId);
+    }
   }
 }
-
-export default new PromotionService();

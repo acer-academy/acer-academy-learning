@@ -65,7 +65,7 @@ class TransactionDao {
 
   public async updateTransaction(
     id: string,
-    input: Prisma.TransactionUpdateInput,
+    input: Prisma.TransactionUncheckedUpdateInput,
   ): Promise<Transaction> {
     return this.prisma.transaction.update({ where: { id }, data: input });
   }
