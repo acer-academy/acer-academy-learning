@@ -14,6 +14,7 @@ import {
   Column,
   ColumnResizedEvent,
 } from 'ag-grid-community';
+import { convertIntToFloat } from '@acer-academy-learning/data-access';
 
 const dateFilterParams = {
   comparator: (filterLocalDateAtMidnight: Date, cellValue: string) => {
@@ -55,7 +56,6 @@ const TransactionsComponent = () => {
     try {
       const response = await getAllTransactions();
       const allTransactions: TransactionData[] = response.data;
-      console.log(allTransactions);
       setTransactions(allTransactions);
     } catch (error) {
       console.error('Error retrieving transactions:', error);
@@ -92,9 +92,7 @@ const TransactionsComponent = () => {
     }
   }, []);
 
-  const onColumnResized = useCallback((params: ColumnResizedEvent) => {
-    console.log(params);
-  }, []);
+  const onColumnResized = useCallback((params: ColumnResizedEvent) => {}, []);
 
   // Set up ag-Grid
   const columnDefs = [
@@ -132,7 +130,7 @@ const TransactionsComponent = () => {
         if (params.data.amount === null || params.data.amount === undefined) {
           return '—';
         }
-        return `$${params.data.amount}`;
+        return `$${convertIntToFloat(params.data.amount)}`;
       },
       width: 120,
     },
@@ -182,8 +180,6 @@ const TransactionsComponent = () => {
     },
     // { headerName: 'Promotion ID', field: 'promotionId' },
   ];
-
-  console.log(columnDefs);
 
   const defaultColDef = {
     sortable: true,

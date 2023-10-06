@@ -13,6 +13,8 @@ import {
   createCreditBundle as apiCreateCreditBundle,
   updateCreditBundle as apiUpdateCreditBundle,
   deleteCreditBundle as apiDeleteCreditBundle,
+  convertIntToFloat,
+  convertFloatToInt,
 } from '@acer-academy-learning/data-access';
 
 export const CreditBundleManagement: React.FC = () => {
@@ -55,6 +57,9 @@ export const CreditBundleManagement: React.FC = () => {
   ) => {
     try {
       creditBundleData.name = creditBundleData.name.trim();
+      creditBundleData.basePrice = convertFloatToInt(
+        creditBundleData.basePrice,
+      );
       const response = await apiCreateCreditBundle(creditBundleData);
       console.log(response);
 
@@ -75,10 +80,11 @@ export const CreditBundleManagement: React.FC = () => {
   };
 
   const updateCreditBundle = async (
+    updateCreditBundleId: string,
     creditBundleData: CreditBundleUpdateData,
   ) => {
     try {
-      creditBundleData.name = creditBundleData.name.trim();
+      creditBundleData.name = creditBundleData.name?.trim();
       creditBundleData.description = creditBundleData.description?.trim();
       const response = await apiUpdateCreditBundle(
         updateCreditBundleId,
@@ -123,7 +129,12 @@ export const CreditBundleManagement: React.FC = () => {
 
   useEffect(() => {
     getAllCreditBundles();
-  }, [isDeleteModalOpen, isCreateModalOpen, isUpdateModalOpen]);
+  }, [
+    isDeleteModalOpen,
+    isCreateModalOpen,
+    isUpdateModalOpen,
+    updateCreditBundle,
+  ]);
 
   return (
     <div className="h-full bg-gray-50">
@@ -240,7 +251,7 @@ export const CreditBundleManagement: React.FC = () => {
                               {creditBundle.numCredits}
                             </td>
                             <td className="whitespace-normal px-3 py-4 text-sm text-gray-500 max-w-sm">
-                              {'$' + creditBundle.basePrice.toFixed(2)}
+                              {'$' + convertIntToFloat(creditBundle.basePrice)}
                             </td>
                             <td className="whitespace-normal px-3 py-4 text-sm text-gray-500 max-w-sm">
                               <span
@@ -268,19 +279,33 @@ export const CreditBundleManagement: React.FC = () => {
                               >
                                 Edit
                               </a>
-                              <a
-                                className={`${
-                                  !creditBundle.isActive
-                                    ? 'disabled:opacity-30 pointer-events-none text-gray-300'
-                                    : 'text-indigo-600 hover:text-indigo-900 cursor-pointer'
-                                }`}
-                                onClick={() => {
-                                  setDeleteCreditBundleId(creditBundle.id);
-                                  setIsDeleteModalOpen(true);
-                                }}
-                              >
-                                Delete
-                              </a>
+                              {!creditBundle.isActive && (
+                                <a
+                                  className={`${'text-indigo-600 hover:text-indigo-900 cursor-pointer'}`}
+                                  onClick={() => {
+                                    updateCreditBundle(creditBundle.id, {
+                                      isActive: true,
+                                    });
+                                  }}
+                                >
+                                  Reactivate
+                                </a>
+                              )}
+                              {creditBundle.isActive && (
+                                <a
+                                  className={`${
+                                    !creditBundle.isActive
+                                      ? 'disabled:opacity-30 pointer-events-none text-gray-300'
+                                      : 'text-indigo-600 hover:text-indigo-900 cursor-pointer'
+                                  }`}
+                                  onClick={() => {
+                                    setDeleteCreditBundleId(creditBundle.id);
+                                    setIsDeleteModalOpen(true);
+                                  }}
+                                >
+                                  Delete
+                                </a>
+                              )}
                             </td>
                           </tr>
                         ))}

@@ -14,10 +14,12 @@ import {
   Column,
   ColumnResizedEvent,
 } from 'ag-grid-community';
+import { convertIntToFloat } from '@acer-academy-learning/data-access';
 
 import { useAuth } from '@acer-academy-learning/common-ui';
 import { Student } from '@prisma/client';
 import CreditsBar from '../../components/CreditsBar';
+import ReceiptUrlButton from './ReceiptUrlButton';
 
 const dateFilterParams = {
   comparator: (filterLocalDateAtMidnight: Date, cellValue: string) => {
@@ -132,7 +134,7 @@ const TransactionManagement = () => {
         if (params.data.amount === null || params.data.amount === undefined) {
           return '—';
         }
-        return `$${params.data.amount}`;
+        return `$${convertIntToFloat(params.data.amount)}`;
       },
       width: 120,
     },
@@ -166,6 +168,12 @@ const TransactionManagement = () => {
         return term.name;
       },
     },
+    {
+      headerName: 'Receipt',
+      field: 'stripeTransaction.receiptUrl',
+      cellRenderer: ReceiptUrlButton,
+    },
+
     // { headerName: 'Promotion ID', field: 'promotionId' },
   ];
 

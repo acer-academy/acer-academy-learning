@@ -6,10 +6,11 @@ export interface CreditBundleCreateData {
 }
 
 export interface CreditBundleUpdateData {
-  name: string;
+  name?: string;
   description?: string;
-  numCredits: number;
-  basePrice: number;
+  numCredits?: number;
+  basePrice?: number;
+  isActive?: boolean;
 }
 
 export interface CreditBundleData {

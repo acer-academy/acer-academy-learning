@@ -8,6 +8,7 @@ import { getAllCreditBundles as apiGetAllCreditBundles } from '@acer-academy-lea
 import CartComponent from './CartComponent';
 import { ShoppingCartIcon } from '@heroicons/react/24/solid';
 import CreditsBar from '../../components/CreditsBar';
+import { convertIntToFloat } from '@acer-academy-learning/data-access';
 
 export const CreditBundleManagement: React.FC = () => {
   //Cart
@@ -71,7 +72,6 @@ export const CreditBundleManagement: React.FC = () => {
         (bundle) => bundle.isActive,
       );
 
-      console.log(response);
       setCreditBundles(activeCreditBundles);
     } catch (error) {
       displayToast(
@@ -193,7 +193,7 @@ export const CreditBundleManagement: React.FC = () => {
                               {creditBundle.numCredits}
                             </td>
                             <td className="whitespace-normal px-3 py-4 text-sm text-gray-500 max-w-sm">
-                              {'$' + creditBundle.basePrice.toFixed(2)}
+                              {'$' + convertIntToFloat(creditBundle.basePrice)}
                             </td>
                             <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-center text-sm font-medium sm:pr-6">
                               <a
