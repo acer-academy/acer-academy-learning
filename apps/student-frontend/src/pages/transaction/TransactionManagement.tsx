@@ -102,9 +102,9 @@ const TransactionManagement = () => {
     }
   }, []);
 
-  // const onColumnResized = useCallback((params: ColumnResizedEvent) => {
-  //   console.log(params);
-  // }, []);
+  const onColumnResized = useCallback((params: ColumnResizedEvent) => {
+    console.log(params);
+  }, []);
 
   // Set up ag-Grid
   const columnDefs = [

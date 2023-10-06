@@ -92,8 +92,7 @@ const TransactionsComponent = () => {
     }
   }, []);
 
-  // const onColumnResized = useCallback((params: ColumnResizedEvent) => {
-  // }, []);
+  const onColumnResized = useCallback((params: ColumnResizedEvent) => {}, []);
 
   // Set up ag-Grid
   const columnDefs = [
