@@ -32,7 +32,7 @@ export const PromotionCreateModal: React.FC<PromotionCreateModalProps> = ({
   };
 
   const isPercentageDiscountInvalid = (percentageDiscount: number) => {
-    let checkDecimal = percentageDiscount.toString().split('.');
+    const checkDecimal = percentageDiscount.toString().split('.');
     return (
       percentageDiscount > 100 ||
       (checkDecimal[1] && checkDecimal[1].length > 2)
@@ -40,8 +40,8 @@ export const PromotionCreateModal: React.FC<PromotionCreateModalProps> = ({
   };
 
   const isDatesInvalid = (startDate: string, endDate: string) => {
-    let start = new Date(startDate);
-    let end = new Date(endDate);
+    const start = new Date(startDate);
+    const end = new Date(endDate);
     return start > end;
   };
 

@@ -1,5 +1,5 @@
 import express from 'express';
-import PromotionService from '../services/PromotionService';
+import { PromotionService } from '../services/PromotionService';
 import { Prisma } from '@prisma/client';
 import {
   validateDateFormat,
@@ -9,6 +9,7 @@ import {
 } from '../middleware/validationMiddleware';
 
 const promotionRouter = express.Router();
+const promotionService = new PromotionService();
 
 promotionRouter.post(
   '/createPromotion',
@@ -19,7 +20,7 @@ promotionRouter.post(
   async (req, res) => {
     try {
       const body: Prisma.PromotionCreateInput = req.body;
-      const promotion = await PromotionService.createPromotion(body);
+      const promotion = await promotionService.createPromotion(body);
       return res.status(200).json(promotion);
     } catch (err) {
       console.log(err);
@@ -30,7 +31,7 @@ promotionRouter.post(
 
 promotionRouter.get('/getAllPromotions', async (_, res) => {
   try {
-    const promotions = await PromotionService.getAllPromotions();
+    const promotions = await promotionService.getAllPromotions();
     return res.status(200).json(promotions);
   } catch (err) {
     console.log(err);
@@ -40,8 +41,8 @@ promotionRouter.get('/getAllPromotions', async (_, res) => {
 
 promotionRouter.get('/validPromotions', async (_, res) => {
   try {
-    const promotions = await PromotionService.getAllValidPromotions();
-    return res.status(200).json({ promotions: promotions });
+    const promotions = await promotionService.getAllValidPromotions();
+    return res.status(200).json(promotions);
   } catch (err) {
     console.log(err);
     return res.status(400).json({ error: err });
@@ -51,7 +52,7 @@ promotionRouter.get('/validPromotions', async (_, res) => {
 promotionRouter.get('/getPromotionById/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const promotion = await PromotionService.getPromotionById(id);
+    const promotion = await promotionService.getPromotionById(id);
     return res.status(200).json(promotion);
   } catch (err) {
     console.log(err);
@@ -62,7 +63,7 @@ promotionRouter.get('/getPromotionById/:id', async (req, res) => {
 promotionRouter.get('/getPromotionByPromoCode/:promoCode', async (req, res) => {
   try {
     const { promoCode } = req.params;
-    const promotion = await PromotionService.getPromotionByPromoCode(promoCode);
+    const promotion = await promotionService.getPromotionByPromoCode(promoCode);
     return res.status(200).json(promotion);
   } catch (err) {
     console.log(err);
@@ -80,7 +81,7 @@ promotionRouter.put(
     try {
       const { id } = req.params;
       const input: Prisma.PromotionUpdateInput = req.body;
-      const updatedPromotion = await PromotionService.updatePromotion(
+      const updatedPromotion = await promotionService.updatePromotion(
         id,
         input,
       );
@@ -95,7 +96,7 @@ promotionRouter.put(
 promotionRouter.delete('/deletePromotion/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const promo = await PromotionService.deletePromotion(id);
+    const promo = await promotionService.deletePromotion(id);
     return res.status(200).json(promo);
   } catch (err) {
     console.log(err);

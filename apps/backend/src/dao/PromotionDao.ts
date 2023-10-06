@@ -1,6 +1,6 @@
-import { PrismaClient, Promotion, Prisma } from '@prisma/client';
+import { PrismaClient, Promotion, Prisma, Transaction } from '@prisma/client';
 
-class PromotionDao {
+export class PromotionDao {
   private prisma: PrismaClient;
 
   constructor() {
@@ -22,10 +22,16 @@ class PromotionDao {
   }
 
   public async getAllValidPromotions(): Promise<Promotion[]> {
+    const currentDate = new Date();
     return this.prisma.promotion.findMany({
       where: {
-        startDate: { lte: new Date().toISOString() },
-        endDate: { gte: new Date().toISOString() },
+        startDate: {
+          lte: currentDate,
+        },
+
+        endDate: {
+          gte: currentDate,
+        },
         status: 'ACTIVE',
       },
     });
@@ -41,8 +47,13 @@ class PromotionDao {
     });
   }
 
-  public async getPromotionById(promotionId: string): Promise<Promotion> {
-    return this.prisma.promotion.findUnique({ where: { id: promotionId } });
+  public async getPromotionById(
+    promotionId: string,
+  ): Promise<Promotion & { transactions: Transaction[] }> {
+    return this.prisma.promotion.findUnique({
+      where: { id: promotionId },
+      include: { transactions: true },
+    });
   }
 
   public async getPromotionByPromoCode(code: string): Promise<Promotion> {
@@ -62,5 +73,3 @@ class PromotionDao {
     });
   }
 }
-
-export default new PromotionDao();

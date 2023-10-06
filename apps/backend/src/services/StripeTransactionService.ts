@@ -1,5 +1,7 @@
 import Stripe from 'stripe';
 import dotenv from 'dotenv';
+import { StripeTransaction, Transaction } from '@prisma/client';
+import { StripeTransactionDao } from '../dao/StripeTransactionDao';
 
 dotenv.config();
 const stripeKey = process.env.STRIPE_API_KEY;
@@ -8,36 +10,70 @@ const stripe = new Stripe(stripeKey, {
 });
 
 export class StripeTransactionService {
-  constructor() {}
+  constructor(
+    private stripeTransactionDao: StripeTransactionDao = new StripeTransactionDao(),
+  ) {}
 
-  public async createTransaction(): Promise<void> {
-    // const paymentIntent = await stripe.paymentIntents.create({
-    //   amount: 500,
-    //   currency: 'sgd',
-    //   payment_method: 'pm_card_pendingRefund',
-    //   confirm: true,
-    //   automatic_payment_methods: {
-    //     allow_redirects: 'never',
-    //     enabled: true,
-    //   },
-    //   metadata: {
-    //     transactionId: '123',
-    //   },
-    // });
+  public async createStripeTransaction(
+    creditTransaction: Transaction,
+  ): Promise<StripeTransaction | null> {
+    try {
+      const paymentIntent = await stripe.paymentIntents.create({
+        amount: creditTransaction.amount,
+        currency: 'sgd',
+        payment_method: 'pm_card_visa',
+        confirm: true,
+        automatic_payment_methods: {
+          allow_redirects: 'never',
+          enabled: true,
+        },
+        metadata: {
+          creditTransactionId: creditTransaction.id,
+        },
+      });
 
-    // const paymentIntent = await stripe.refunds.create({
-    //   payment_intent: 'pi_3Ny3DsFslg0wD1QJ0bL6osy2',
-    //   amount: 500,
-    // });
+      return this.stripeTransactionDao.createStripeTransaction({
+        paymentIntentId: paymentIntent.id,
+        amount: paymentIntent.amount,
+        currency: 'sgd',
+        status:
+          paymentIntent.status === 'succeeded' ? 'SUCCEEDED' : 'PROCESSING',
+      });
+    } catch (err) {
+      if (err instanceof Stripe.errors.StripeError) {
+        const stripeError = err as Stripe.errors.StripeError;
+        console.log(stripeError.message);
+        return this.stripeTransactionDao.createStripeTransaction({
+          paymentIntentId: stripeError.payment_intent.id,
+          amount: stripeError.payment_intent.amount,
+          currency: 'sgd',
+          status: 'FAILED',
+          chargeId: stripeError.charge,
+        });
+      }
+    }
+  }
 
-    // const paymentIntent = await stripe.paymentIntents.retrieve(
-    //   'pi_3Ny3DsFslg0wD1QJ0bL6osy2',
-    // );
+  public async refundStripeTransaction(
+    paymentIntentId: string,
+    amount: number,
+  ): Promise<StripeTransaction> {
+    const refund = await stripe.refunds.create({
+      payment_intent: paymentIntentId,
+      amount: amount,
+    });
 
-    const transaction = await stripe.balanceTransactions.retrieve(
-      'txn_3Ny3DsFslg0wD1QJ0aQLkSa8',
-    );
+    const stripeTransaction =
+      await this.stripeTransactionDao.getStripeTransactionByPaymentIntentId(
+        refund.payment_intent as string,
+      );
 
-    console.log(transaction);
+    return stripeTransaction;
+  }
+
+  public async getStripeTransactionById(
+    transactionId: string,
+  ): Promise<StripeTransaction> {
+    return this.stripeTransactionDao.getStripeTransactionById(transactionId);
   }
 }

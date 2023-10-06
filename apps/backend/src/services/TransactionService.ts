@@ -3,9 +3,31 @@ import TransactionDao from '../dao/TransactionDao';
 import { StripeTransactionService } from './StripeTransactionService';
 
 const stripeTransactionService = new StripeTransactionService();
+
 class TransactionService {
+  public async createTransaction(
+    input: Prisma.TransactionUncheckedCreateInput,
+  ): Promise<Transaction> {
+    const creditTransaction = await TransactionDao.createTransaction(input);
+    if (creditTransaction.transactionType === TransactionType.PURCHASED) {
+      const stripeTransaction =
+        await stripeTransactionService.createStripeTransaction(
+          creditTransaction,
+        );
+
+      if (!stripeTransaction) {
+        throw new Error('Stripe Transaction not created');
+      } else {
+        await TransactionDao.updateTransaction(creditTransaction.id, {
+          stripeTransactionId: stripeTransaction.id,
+        });
+      }
+    }
+
+    return creditTransaction;
+  }
+
   public async getAllTransactions(): Promise<Transaction[]> {
-    await stripeTransactionService.createTransaction();
     return TransactionDao.getAllTransactions();
   }
 
@@ -51,15 +73,9 @@ class TransactionService {
     return TransactionDao.getTransactionsByPromotionId(id);
   }
 
-  public async createTransaction(
-    input: Prisma.TransactionUncheckedCreateInput,
-  ): Promise<Transaction> {
-    return TransactionDao.createTransaction(input);
-  }
-
   public async updateTransaction(
     id: string,
-    input: Prisma.TransactionUpdateInput,
+    input: Prisma.TransactionUncheckedUpdateInput,
   ): Promise<Transaction> {
     return TransactionDao.updateTransaction(id, input);
   }
@@ -92,36 +108,45 @@ class TransactionService {
   }
 
   public async refundStripeTransaction(id: string): Promise<Transaction> {
-    const transaction = await TransactionDao.getTransactionById(id);
-    if (transaction.transactionType !== TransactionType.PURCHASED) {
+    const creditTransaction = await TransactionDao.getTransactionById(id);
+    if (creditTransaction.transactionType !== TransactionType.PURCHASED) {
       throw new Error(
         'Transaction is a deduction/refund and cannot be refunded',
       );
     }
-    const {
-      amount,
-      currency,
-      creditsTransacted,
-      termId,
-      studentId,
-      promotionId,
-    } = transaction;
-    const refundTransaction = {
-      amount: amount,
-      currency: currency,
-      creditsTransacted: creditsTransacted,
-      termId: termId,
-      studentId: studentId,
-      promotionId: promotionId,
+
+    const refundTransactionInput = {
+      ...creditTransaction,
       transactionType: TransactionType.STRIPE_DEDUCTED,
-      reason: 'Manual refund of Stripe Transaction',
+      reason: 'Manual deduction due to refund of Stripe Transaction',
     };
 
-    const created = await TransactionDao.createTransaction(refundTransaction);
-    TransactionDao.updateTransaction(transaction.id, {
-      referenceId: created.id,
+    const stripeTransactionId = creditTransaction.stripeTransactionId;
+    const stripeTransaction =
+      await stripeTransactionService.getStripeTransactionById(
+        stripeTransactionId,
+      );
+
+    if (stripeTransaction.status === 'REFUNDED') {
+      throw new Error('Stripe Transaction has already been refunded');
+    }
+
+    // api call to stripe to refund transaction
+    await stripeTransactionService.refundStripeTransaction(
+      stripeTransaction.paymentIntentId,
+      creditTransaction.amount,
+    );
+
+    // creating credit transaction in db
+    const refundedTransaction = await TransactionDao.createTransaction(
+      refundTransactionInput,
+    );
+
+    TransactionDao.updateTransaction(creditTransaction.id, {
+      referenceId: refundedTransaction.id,
     });
-    return created;
+
+    return refundedTransaction;
   }
 }
 

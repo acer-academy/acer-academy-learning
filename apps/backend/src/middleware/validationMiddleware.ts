@@ -14,7 +14,7 @@ import { ClassroomService } from '../services/ClassroomService';
 import { FaqArticleService } from '../services/FaqArticleService';
 import { FaqTopicService } from '../services/FaqTopicService';
 import { TeacherService } from '../services/TeacherService';
-import promotionService from '../services/PromotionService';
+import { PromotionService } from '../services/PromotionService';
 import transactionService from '../services/TransactionService';
 import { CreditBundleService } from '../services/CreditBundleService';
 import { QuizQuestionService } from '../services/QuizQuestionService';
@@ -28,6 +28,7 @@ const faqTopicService = new FaqTopicService();
 const creditBundleService = new CreditBundleService();
 const quizQuestionService = new QuizQuestionService();
 const quizAnswerService = new QuizAnswerService();
+const promotionService = new PromotionService();
 
 /*
  * Validators Naming Convention: (Expand on as we code)
@@ -1029,16 +1030,15 @@ export async function validateDateFormat(
   try {
     const postgresDatetimeRegex =
       /^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[+-]\d{2}:\d{2}))$/;
-    let isValidStartDate, isValidEndDate, isValidDateTime;
 
-    isValidStartDate = req.body.startDate
+    const isValidStartDate = req.body.startDate
       ? postgresDatetimeRegex.test(req.body.startDate)
       : true;
-    isValidEndDate = req.body.endDate
+    const isValidEndDate = req.body.endDate
       ? postgresDatetimeRegex.test(req.body.endDate)
       : true;
 
-    isValidDateTime = req.body.dateTime
+    const isValidDateTime = req.body.dateTime
       ? postgresDatetimeRegex.test(req.body.dateTime)
       : true;
 
@@ -1088,13 +1088,13 @@ export async function validatePromotionPercentageDiscount(
 ) {
   try {
     if (req.body.percentageDiscount) {
-      let checkType = parseFloat(req.body.percentageDiscount);
+      const checkType = parseFloat(req.body.percentageDiscount);
       if (!checkType) {
         return res.status(500).json({
           error: 'Percentage Discount needs to be numbers',
         });
       }
-      let check = req.body.percentageDiscount.toString().split('.');
+      const check = req.body.percentageDiscount.toString().split('.');
       if (check[1] && check[1].length > 2) {
         return res.status(500).json({
           error:
