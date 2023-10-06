@@ -1,10 +1,14 @@
-import { Fragment } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { TransactionData } from 'libs/data-access/src/lib/types/transaction';
+import { TermData } from 'libs/data-access/src/lib/types/term';
 import { refundTransaction } from '@acer-academy-learning/data-access';
 import { useToast } from '@acer-academy-learning/common-ui';
 import TransactionTypeBadge from './TransactionTypeBadge';
-import { convertIntToFloat } from '@acer-academy-learning/data-access';
+import {
+  convertIntToFloat,
+  getCurrentTerms,
+} from '@acer-academy-learning/data-access';
 
 interface TransactionModalProps {
   transaction: TransactionData | null;
@@ -18,6 +22,25 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
   onRefunded,
 }) => {
   const { displayToast, ToastType } = useToast();
+  const [currentTerm, setCurrentTerm] = useState<TermData>();
+
+  const fetchTerms = async () => {
+    try {
+      const currentTermsResponse = await getCurrentTerms();
+      const currentTerms: TermData[] = currentTermsResponse.data;
+      setCurrentTerm(currentTerms[0]);
+    } catch (error) {
+      displayToast(
+        'Terms could not be retrieved from the server.',
+        ToastType.ERROR,
+      );
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchTerms();
+  }, []);
 
   if (!transaction) return null;
 
@@ -146,7 +169,8 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
                 </div>
                 <div className="mt-5 sm:mt-6">
                   {!transaction.referenceId &&
-                    transaction.transactionType === 'PURCHASED' && (
+                    transaction.transactionType === 'PURCHASED' &&
+                    transaction.termId === currentTerm?.id && (
                       <button
                         type="button"
                         className="mt-3 inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"

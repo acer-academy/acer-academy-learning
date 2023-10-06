@@ -138,7 +138,7 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
                     </div>
                   </div>
                 </div>
-                <div className="mt-5 sm:mt-6">
+                {/* <div className="mt-5 sm:mt-6">
                   {!transaction.referenceId &&
                     transaction.transactionType === 'PURCHASED' && (
                       <button
@@ -149,7 +149,7 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
                         Refund
                       </button>
                     )}
-                </div>
+                </div> */}
                 <div className="mt-5 sm:mt-6">
                   <button
                     type="button"
