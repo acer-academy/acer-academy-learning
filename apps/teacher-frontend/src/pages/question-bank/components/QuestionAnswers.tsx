@@ -131,7 +131,7 @@ export const QuestionAnswers = () => {
                           onChange={onChange}
                           onBlur={onBlur}
                           className="flex-[5]"
-                          htmlString={explanation ?? ''}
+                          editorStateStr={explanation ?? ''}
                           placeholder="Enter explanation..."
                         />
                       )}
