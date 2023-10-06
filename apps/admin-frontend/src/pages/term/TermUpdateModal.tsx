@@ -32,19 +32,12 @@ export const TermUpdateModal: React.FC<TermUpdateModalProps> = ({
     }
   };
 
-  const isStartDateInvalid = (startDate: string | undefined) => {
-    if (startDate !== undefined) {
-      return new Date(startDate) < new Date();
-    }
-  };
-
   const isTermDataInvalid = () => {
     return (
       termData === undefined ||
       !termData.name ||
       termData.name.trim() === '' ||
-      isDatesInvalid(termData.startDate, termData.endDate) ||
-      isStartDateInvalid(termData.startDate)
+      isDatesInvalid(termData.startDate, termData.endDate)
     );
   };
 
@@ -56,7 +49,7 @@ export const TermUpdateModal: React.FC<TermUpdateModalProps> = ({
           <div className="relative bg-white p-5 rounded-lg shadow-md h-42 w-96">
             <div className="flex flex-col items-start justify-between gap-3">
               <h3 className="text-lg font-semibold leading-6 text-gray-900">
-                Create Term
+                Update Term
               </h3>
               <div className="w-full mt-3 mb-3">
                 <label
@@ -96,11 +89,7 @@ export const TermUpdateModal: React.FC<TermUpdateModalProps> = ({
                     type="date"
                     name="startDate"
                     id="startDate"
-                    className={`block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ${
-                      isStartDateInvalid(termData.startDate)
-                        ? 'ring-red-300 text-red-900 focus:ring-red-500'
-                        : 'ring-gray-300 text-gray-900 focus:ring-adminGreen-500'
-                    } placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6`}
+                    className={`block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6`}
                     value={
                       termData.startDate === undefined
                         ? undefined
@@ -116,14 +105,6 @@ export const TermUpdateModal: React.FC<TermUpdateModalProps> = ({
                     aria-describedby="address-error"
                   />
                 </div>
-                {isStartDateInvalid(termData.startDate) && (
-                  <p
-                    className="absolute b-0 text-sm text-red-600"
-                    id="address-error"
-                  >
-                    Needs to be a future Date
-                  </p>
-                )}
               </div>
               <div className="w-full mb-5">
                 <label
