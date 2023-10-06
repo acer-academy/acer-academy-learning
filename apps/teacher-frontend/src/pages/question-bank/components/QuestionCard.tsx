@@ -1,8 +1,9 @@
 import {
   GenericSelect,
-  LexEditor,
   screamingSnakeToTitleCase,
   useToast,
+  LexicEditor,
+  ErrorField,
 } from '@acer-academy-learning/common-ui';
 import { useEffect } from 'react';
 import { QuestionTypeSelect } from './QuestionTypeSelect';
@@ -28,28 +29,37 @@ export const QuestionCard = ({
   submitText,
 }: QuestionCardProps) => {
   const { displayToast, ToastType } = useToast();
-  const {
-    formState: { errors },
-    control,
-    handleSubmit,
-    getValues,
-  } = useFormContext<CreateQuizQuestionType>();
+  const { control, handleSubmit, getValues, watch } =
+    useFormContext<CreateQuizQuestionType>();
 
-  const { isSubmitting, isDirty } = useFormState();
+  const { isSubmitting, isDirty, errors, dirtyFields } =
+    useFormState<CreateQuizQuestionType>();
 
   const handleSubmitForm = async (values: CreateQuizQuestionType) => {
     onSubmitForm(values);
   };
 
+  const watchAll = watch();
   useEffect(() => {
-    if (isDirty && isSubmitting && Object.keys(errors).length !== 0) {
+    console.log(watchAll);
+  }, [watchAll]);
+
+  useEffect(() => {
+    console.log(errors);
+    if (
+      Object.keys(dirtyFields).length > 0 &&
+      isSubmitting &&
+      Object.keys(errors).length !== 0
+    ) {
       const msg = Object.entries(errors)
         .filter(
           ([type, errorObj]) => errorObj.message || errorObj.root?.message,
         )
         .map(([type, errorObj]) => (
-          <p key={type}>
-            {type.charAt(0).toLocaleUpperCase() + type.substring(1)} Error:{' '}
+          <p key={type} className="space-y-1">
+            <strong>
+              {type.charAt(0).toLocaleUpperCase() + type.substring(1)} Error:{' '}
+            </strong>
             {errorObj.message ?? errorObj.root?.message}
           </p>
         ));
@@ -57,7 +67,7 @@ export const QuestionCard = ({
         .filter?.(([key, answer]: [string, any]) => answer)
         .map?.(([key, answer]: [string, any]) => (
           <p key={key}>
-            Answer Error {key}: {answer?.root?.message}
+            <strong>Answer Error {key}:</strong> {answer?.root?.message}
             {answer?.answer?.message}
             {answer?.explanation?.message}
             {answer?.isCorrect?.message}
@@ -74,7 +84,7 @@ export const QuestionCard = ({
         ToastType.ERROR,
       );
     }
-  }, [errors, displayToast, ToastType, isSubmitting]);
+  }, [errors, displayToast, ToastType, isSubmitting, dirtyFields]);
   return (
     <form
       onSubmit={handleSubmit((values) => handleSubmitForm(values))}
@@ -86,13 +96,17 @@ export const QuestionCard = ({
       <Controller
         control={control}
         name="questionText"
-        render={({ field: { onChange, value, onBlur } }) => (
-          <LexEditor
-            errorMessage={errors.questionText?.message}
-            onChange={onChange}
-            htmlString={getValues('questionText')}
-            onBlur={onBlur}
-          />
+        render={({ field: { onChange, value, onBlur }, fieldState }) => (
+          <>
+            <LexicEditor
+              errorMessage={errors.questionText?.message}
+              onChange={onChange}
+              editorStateStr={getValues('questionText')}
+              onBlur={onBlur}
+            />
+            <ErrorField message={errors.questionText?.message} />
+            {/* <LexOutput htmlString={value} /> */}
+          </>
         )}
       />
       <QuestionTypeSelect />

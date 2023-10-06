@@ -19,7 +19,7 @@ import { PlainTextPlugin } from '@lexical/react/LexicalPlainTextPlugin';
 import { $getNodeByKey } from 'lexical';
 import * as React from 'react';
 import { useEffect, useRef } from 'react';
-import useLayoutEffect from '../../../utils/useLayoutEffect';
+import useLayoutEffect from ';
 
 import { useSharedHistoryContext } from '../context/SharedHistoryContext';
 import StickyEditorTheme from '../themes/StickyEditorTheme';

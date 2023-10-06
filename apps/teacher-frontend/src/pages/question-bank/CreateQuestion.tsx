@@ -16,28 +16,14 @@ import { FormProvider } from 'react-hook-form';
 import { useMutation } from 'react-query';
 import { AxiosError } from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { DEFAULT_QUESTION } from './constants';
 
 export const CreateQuestion = () => {
   const { displayToast, ToastType } = useToast();
   const navigate = useNavigate();
   const formMethods = useZodForm({
     schema: createQuizQuestionSchema,
-    defaultValues: {
-      questionType: QuizQuestionTypeEnum.MCQ,
-      answers: [
-        {
-          answer: '',
-          isCorrect: false,
-        },
-        {
-          answer: '',
-          isCorrect: false,
-        },
-      ],
-      topics: [],
-      levels: [],
-      status: QuizQuestionStatusEnum.READY,
-    },
+    defaultValues: DEFAULT_QUESTION,
     mode: 'onTouched',
     criteriaMode: 'all',
   });

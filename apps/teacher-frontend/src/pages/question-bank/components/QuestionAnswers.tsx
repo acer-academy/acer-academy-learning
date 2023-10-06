@@ -9,11 +9,10 @@ import {
   LexFloatingEditor,
 } from '@acer-academy-learning/common-ui';
 import { DocumentPlusIcon, XMarkIcon } from '@heroicons/react/24/outline';
-import { DEFAULT_QUESTION_ANSWER } from '../constants';
+import { DEFAULT_QUESTION_ANSWER, LEX_JSON_EMPTY } from '../constants';
 import { AnswerFieldRadio } from './AnswerFieldRadio';
 import { AnswerFieldCheckbox } from './AnswerFieldCheckbox';
 import { TrueFalseField } from './TrueFalseField';
-import { stripHtml } from 'string-strip-html';
 export const QuestionAnswers = () => {
   const {
     watch,
@@ -95,13 +94,13 @@ export const QuestionAnswers = () => {
                           <LexFloatingEditor
                             onChange={onChange}
                             onBlur={onBlur}
-                            htmlString={answer.answer}
+                            editorStateStr={answer.answer}
                             placeholder="Enter answer..."
                           />
                           <ErrorField
                             message={
                               (value !== '' &&
-                                stripHtml(value).result === '' &&
+                                value === LEX_JSON_EMPTY &&
                                 'Answer cannot be left empty.') ||
                               undefined
                             }

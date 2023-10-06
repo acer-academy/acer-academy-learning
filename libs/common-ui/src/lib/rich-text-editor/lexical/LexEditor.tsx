@@ -23,6 +23,7 @@ import { $generateHtmlFromNodes } from '@lexical/html';
 import { EditorEventContextProvider } from './context/EventContext';
 import { RenderInitialContentPlugin } from './plugins/RenderInitialContentPlugin';
 import { Spinner } from '../../wrapper/Spinner';
+import { TestEditor } from './TestEditor';
 
 // console.warn(
 //   'If you are profiling the playground app, please ensure you turn off the debug view. You can disable it by pressing on the settings control in the bottom-left of your screen and toggling the debug view setting.',
@@ -84,11 +85,11 @@ export const LexEditor = ({
             <TableContext>
               <SharedAutocompleteContext>
                 <div
-                  onFocus={() => setIsFocused(true)}
-                  onBlur={() => {
-                    onBlur();
-                    setIsFocused(false);
-                  }}
+                  // onFocus={() => setIsFocused(true)}
+                  // onBlur={() => {
+                  //   onBlur();
+                  //   setIsFocused(false);
+                  // }}
                   className={`editor-shell border-solid border-[1px] rounded-t-[10px] ${
                     errorMessage
                       ? 'border-red-500'

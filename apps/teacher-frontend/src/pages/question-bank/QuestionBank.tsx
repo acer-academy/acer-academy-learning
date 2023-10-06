@@ -220,7 +220,7 @@ export const QuestionBank: React.FC = () => {
                                 {/* {question.questionText.length > 400
                                   ? question.questionText.slice(0, 100) + '...'
                                   : question.questionText} */}
-                                <LexOutput htmlString={question.questionText} />
+                                <LexOutput htmlString={question.questionText} shorten />
                               </span>
                             </div>
                           </td>

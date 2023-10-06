@@ -6,21 +6,21 @@ import { ContentEditable } from '@lexical/react/LexicalContentEditable';
 import LexicalErrorBoundary from '@lexical/react/LexicalErrorBoundary';
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
 import React, { HTMLProps, forwardRef, useEffect, useState } from 'react';
-import CustomFloatingTextFormatToolbarPlugin from './plugins/CustomFloatingTextFormatToolbarPlugin';
-import EquationsPlugin from './plugins/EquationsPlugin';
-import { EquationNode } from './nodes/EquationNode';
+import CustomFloatingTextFormatToolbarPlugin from '../lexical/plugins/CustomFloatingTextFormatToolbarPlugin';
+import EquationsPlugin from '../lexical/plugins/EquationsPlugin';
+import { EquationNode } from '../lexical/nodes/EquationNode';
 import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin';
 import { EditorState, LexicalEditor } from 'lexical';
 import { $generateHtmlFromNodes } from '@lexical/html';
-import { RenderInitialContentPlugin } from './plugins/RenderInitialContentPlugin';
+import FocusPlugin from '../lexical/plugins/FocusPlugin';
 import { EditorEventContextProvider } from './context/EventContext';
-import FocusPlugin from './plugins/FocusPlugin';
+import { RenderInitialContentPlugin } from './plugins/RenderInitialContentPlugin';
 
 export type LexFloatingEditorProps = {
   className?: string;
   onChange: (val: string) => void;
   onBlur: () => void;
-  htmlString?: string;
+  editorStateStr?: string;
   placeholder?: string;
 };
 
@@ -33,7 +33,7 @@ export const LexFloatingEditor = forwardRef<
       className = '',
       onChange,
       onBlur,
-      htmlString,
+      editorStateStr,
       placeholder,
     }: LexFloatingEditorProps,
     ref,
@@ -50,7 +50,7 @@ export const LexFloatingEditor = forwardRef<
       useState<HTMLDivElement | null>(null);
     const [isFocused, setIsFocused] = useState<boolean>(false);
     const [isContentLoaded, setIsContentLoaded] = useState<boolean>(
-      !htmlString || false,
+      !editorStateStr || false,
     );
 
     const onRef = (_floatingAnchorElem: HTMLDivElement) => {
@@ -65,8 +65,9 @@ export const LexFloatingEditor = forwardRef<
       tags: Set<string>,
     ) => {
       editor.update(() => {
-        const rawHtmlString = $generateHtmlFromNodes(editor);
-        onChange(rawHtmlString);
+        const json = editorState.toJSON();
+        const jsonString = JSON.stringify(json);
+        onChange(jsonString);
       });
     };
 
@@ -86,7 +87,9 @@ export const LexFloatingEditor = forwardRef<
             setIsContentLoaded,
           }}
         >
-          {htmlString && <RenderInitialContentPlugin htmlString={htmlString} />}
+          {editorStateStr && (
+            <RenderInitialContentPlugin editorStateStr={editorStateStr} />
+          )}
           <div
             ref={ref}
             className={`${className} ${
@@ -97,7 +100,7 @@ export const LexFloatingEditor = forwardRef<
                 : 'border-teacher-primary-300'
             } border-b-2 mb-[-1px]`}
           >
-            <FocusPlugin />
+            {/* <FocusPlugin /> */}
             <OnChangePlugin onChange={onEditorChange} />
             <RichTextPlugin
               contentEditable={

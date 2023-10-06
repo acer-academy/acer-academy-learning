@@ -7,17 +7,26 @@ import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
 import React, { useEffect, useState } from 'react';
 import Placeholder from './ui/Placeholder';
 import LexicalErrorBoundary from '@lexical/react/LexicalErrorBoundary';
-import { RenderInitialContentPlugin } from './plugins/RenderInitialContentPlugin';
 import EquationsPlugin from './plugins/EquationsPlugin';
 import { EquationNode } from './nodes/EquationNode';
 import { EditorEventContextProvider } from './context/EventContext';
+import { HeadingNode, QuoteNode } from '@lexical/rich-text';
+import PlaygroundNodes from './nodes/PlaygroundNodes';
+import { LayoutPlugin } from './plugins/LayoutPlugin/LayoutPlugin';
+import { RenderInitialContentPlugin } from '../lexical-full/plugins/RenderInitialContentPlugin';
+import { Hmac } from 'crypto';
 
 export type LexOutputProps = {
   htmlString: string;
   onChange?: (val: string) => void;
+  shorten?: boolean;
 };
 
-export const LexOutput = ({ htmlString, onChange }: LexOutputProps) => {
+export const LexOutput = ({
+  htmlString,
+  onChange,
+  shorten,
+}: LexOutputProps) => {
   useEffect(() => {
     if (onChange) {
       onChange(htmlString);
@@ -26,7 +35,7 @@ export const LexOutput = ({ htmlString, onChange }: LexOutputProps) => {
   const initialConfig: InitialConfigType = {
     namespace: 'Output',
     editable: false,
-    nodes: [EquationNode],
+    nodes: [...PlaygroundNodes],
     onError: (error: Error) => {
       throw error;
     },
@@ -38,13 +47,19 @@ export const LexOutput = ({ htmlString, onChange }: LexOutputProps) => {
       value={{ isContentLoaded, setIsContentLoaded, isFocused, setIsFocused }}
     >
       <LexicalComposer initialConfig={initialConfig}>
-        <RenderInitialContentPlugin htmlString={htmlString} />
+        {htmlString && (
+          <RenderInitialContentPlugin
+            shorten={shorten}
+            editorStateStr={htmlString}
+          />
+        )}
         <EquationsPlugin />
         <RichTextPlugin
           contentEditable={<ContentEditable />}
           placeholder={<Placeholder>No content to render</Placeholder>}
           ErrorBoundary={LexicalErrorBoundary}
         />
+        <LayoutPlugin />
       </LexicalComposer>
     </EditorEventContextProvider>
   );

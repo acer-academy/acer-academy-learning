@@ -15,10 +15,14 @@ export const quizAnswerSchema = z.object({
     .string()
     .trim()
     .superRefine((answer, ctx) => {
-      if (answer && stripHtml(answer).result.length === 0) {
+      if (
+        answer &&
+        answer ===
+          '{"root":{"children":[{"children":[],"direction":null,"format":"","indent":0,"type":"paragraph","version":1}],"direction":null,"format":"","indent":0,"type":"root","version":1}}'
+      ) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: 'Answer field cannot be left empty.',
+          message: 'Answer field cannot be left empty',
         });
       }
     }),
@@ -45,10 +49,14 @@ export const quizQuestionSchema = z.object({
     .string()
     .trim()
     .superRefine((questionText, ctx) => {
-      if (questionText && stripHtml(questionText).result.length === 0) {
+      if (
+        questionText &&
+        questionText ===
+          '{"root":{"children":[{"children":[],"direction":null,"format":"","indent":0,"type":"paragraph","version":1}],"direction":null,"format":"","indent":0,"type":"root","version":1}}'
+      ) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: 'Question text is required.',
+          message: 'Question text is required',
         });
       }
     }),
@@ -68,7 +76,7 @@ const questionAnswerValidateSchema = z
           if (explored.has(answer.answer.trim())) {
             ctx.addIssue({
               code: z.ZodIssueCode.custom,
-              message: 'Duplicate answers are not allowed.',
+              message: 'Duplicate answers are not allowed',
             });
           }
           explored.add(answer.answer.trim());
