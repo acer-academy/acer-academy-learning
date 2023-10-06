@@ -200,10 +200,7 @@ export default function CartComponent({
                               <li key={bundle.id} className="flex py-6">
                                 <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
                                   <img
-                                    src={
-                                      bundle.imageSrc ||
-                                      'default-image-path.jpg'
-                                    }
+                                    src="https://as1.ftcdn.net/v2/jpg/06/39/60/58/1000_F_639605861_mIWA6CTBwaeMgCr12N0AicgvJgf7pcik.jpg"
                                     alt={bundle.description || bundle.name}
                                     className="h-full w-full object-cover object-center"
                                   />
