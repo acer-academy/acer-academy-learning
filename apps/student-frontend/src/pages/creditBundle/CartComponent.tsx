@@ -59,6 +59,10 @@ export default function CartComponent({
     0,
   );
 
+  const discountAmount =
+    (selectedPromotion?.percentageDiscount / 100) * subtotal;
+  const totalAfterDiscount = subtotal - discountAmount;
+
   const applyPromotion = (promoCode: string) => {
     if (!validPromotions) {
       setSelectedPromotion(undefined);
@@ -271,10 +275,28 @@ export default function CartComponent({
                           <p>Subtotal</p>
                           <p>${subtotal.toFixed(2)}</p>
                         </div>
-                        <p className="mt-0.5 text-sm text-gray-500">
-                          Shipping and taxes calculated at checkout.
-                        </p>
+                        <p className="mt-0.5 text-sm text-gray-500"></p>
                       </div>
+
+                      {/* Promotion Applied and Total after discount */}
+                      {selectedPromotion && (
+                        <div>
+                          <div className="flex justify-between text-base font-medium text-gray-900">
+                            <p>
+                              Discount (
+                              {selectedPromotion.percentageDiscount.toFixed(2)}
+                              %)
+                            </p>
+                            <p>-${discountAmount.toFixed(2)}</p>
+                          </div>
+                          <div className="border-t border-gray-200  bg-gray-100 mt-2  py-1">
+                            <div className="flex justify-between text-base font-medium text-gray-900">
+                              <p>Total after discount</p>
+                              <p>${totalAfterDiscount.toFixed(2)}</p>
+                            </div>
+                          </div>
+                        </div>
+                      )}
 
                       <div className="mt-6">
                         <div className="mt-6 flex justify-center">
@@ -282,7 +304,7 @@ export default function CartComponent({
                             onClick={() => setIsCreditCardModalOpen(true)}
                             className="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
                           >
-                            Open Credit Card Modal
+                            Make Payment
                           </button>
                           <CreditCardModal
                             isOpen={isCreditCardModalOpen}
