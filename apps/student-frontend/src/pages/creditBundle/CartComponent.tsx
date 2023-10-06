@@ -5,6 +5,7 @@ import { XMarkIcon } from '@heroicons/react/24/outline';
 import { PromotionData } from 'libs/data-access/src/lib/types/promotion';
 import { useToast } from '@acer-academy-learning/common-ui';
 import { getValidPromotions } from '@acer-academy-learning/data-access';
+import { convertIntToFloat } from '@acer-academy-learning/data-access';
 
 export default function CartComponent({
   isOpen,
@@ -157,9 +158,9 @@ export default function CartComponent({
                                       <h3>{bundle.name}</h3>
                                       <p className="ml-4">
                                         $
-                                        {(
-                                          bundle.basePrice * bundle.quantity
-                                        ).toFixed(2)}
+                                        {convertIntToFloat(
+                                          bundle.basePrice * bundle.quantity,
+                                        )}
                                       </p>
                                     </div>
                                     <p className="mt-1 text-sm text-gray-500">
@@ -168,7 +169,8 @@ export default function CartComponent({
                                   </div>
 
                                   <p className="text-sm text-gray-400">
-                                    Price: ${bundle.basePrice.toFixed(2)}
+                                    Price: $
+                                    {convertIntToFloat(bundle.basePrice)}
                                   </p>
                                   <p className="text-sm text-gray-400">
                                     Credits: {bundle.numCredits}
@@ -267,7 +269,7 @@ export default function CartComponent({
                       <div className="pt-4 pb-2">
                         <div className="flex justify-between text-base font-medium text-gray-900">
                           <p>Subtotal</p>
-                          <p>${subtotal.toFixed(2)}</p>
+                          <p>${convertIntToFloat(subtotal)}</p>
                         </div>
                         <p className="mt-0.5 text-sm text-gray-500">
                           Shipping and taxes calculated at checkout.

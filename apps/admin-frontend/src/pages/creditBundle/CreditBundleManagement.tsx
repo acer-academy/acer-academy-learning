@@ -13,6 +13,8 @@ import {
   createCreditBundle as apiCreateCreditBundle,
   updateCreditBundle as apiUpdateCreditBundle,
   deleteCreditBundle as apiDeleteCreditBundle,
+  convertIntToFloat,
+  convertFloatToInt,
 } from '@acer-academy-learning/data-access';
 
 export const CreditBundleManagement: React.FC = () => {
@@ -55,6 +57,9 @@ export const CreditBundleManagement: React.FC = () => {
   ) => {
     try {
       creditBundleData.name = creditBundleData.name.trim();
+      creditBundleData.basePrice = convertFloatToInt(
+        creditBundleData.basePrice,
+      );
       const response = await apiCreateCreditBundle(creditBundleData);
       console.log(response);
 
@@ -240,7 +245,7 @@ export const CreditBundleManagement: React.FC = () => {
                               {creditBundle.numCredits}
                             </td>
                             <td className="whitespace-normal px-3 py-4 text-sm text-gray-500 max-w-sm">
-                              {'$' + creditBundle.basePrice.toFixed(2)}
+                              {'$' + convertIntToFloat(creditBundle.basePrice)}
                             </td>
                             <td className="whitespace-normal px-3 py-4 text-sm text-gray-500 max-w-sm">
                               <span
