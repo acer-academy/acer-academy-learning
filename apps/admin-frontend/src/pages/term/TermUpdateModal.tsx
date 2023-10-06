@@ -49,7 +49,7 @@ export const TermUpdateModal: React.FC<TermUpdateModalProps> = ({
           <div className="relative bg-white p-5 rounded-lg shadow-md h-42 w-96">
             <div className="flex flex-col items-start justify-between gap-3">
               <h3 className="text-lg font-semibold leading-6 text-gray-900">
-                Create Term
+                Update Term
               </h3>
               <div className="w-full mt-3 mb-3">
                 <label
