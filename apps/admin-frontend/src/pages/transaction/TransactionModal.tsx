@@ -4,6 +4,7 @@ import { TransactionData } from 'libs/data-access/src/lib/types/transaction';
 import { refundTransaction } from '@acer-academy-learning/data-access';
 import { useToast } from '@acer-academy-learning/common-ui';
 import TransactionTypeBadge from './TransactionTypeBadge';
+import { convertIntToFloat } from '@acer-academy-learning/data-access';
 
 interface TransactionModalProps {
   transaction: TransactionData | null;
@@ -91,7 +92,9 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
 
                         <div className="flex justify-between">
                           <span>Amount:</span>
-                          <span>{transaction.amount}</span>
+                          <span>
+                            {'$' + convertIntToFloat(transaction.amount)}
+                          </span>
                         </div>
 
                         <div className="flex justify-between">

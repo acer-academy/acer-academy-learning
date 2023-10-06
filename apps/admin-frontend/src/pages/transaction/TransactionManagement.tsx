@@ -14,6 +14,7 @@ import {
   Column,
   ColumnResizedEvent,
 } from 'ag-grid-community';
+import { convertIntToFloat } from '@acer-academy-learning/data-access';
 
 const dateFilterParams = {
   comparator: (filterLocalDateAtMidnight: Date, cellValue: string) => {
@@ -132,7 +133,7 @@ const TransactionsComponent = () => {
         if (params.data.amount === null || params.data.amount === undefined) {
           return '—';
         }
-        return `$${params.data.amount}`;
+        return `$${convertIntToFloat(params.data.amount)}`;
       },
       width: 120,
     },

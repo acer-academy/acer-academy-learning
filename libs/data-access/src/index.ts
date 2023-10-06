@@ -29,3 +29,4 @@ export {
 export * from './lib/types/question';
 export * from './lib/schemas';
 export * from './lib/constants';
+export * from './lib/api/helper/price-conversion';
