@@ -56,7 +56,6 @@ const TransactionsComponent = () => {
     try {
       const response = await getAllTransactions();
       const allTransactions: TransactionData[] = response.data;
-      console.log(allTransactions);
       setTransactions(allTransactions);
     } catch (error) {
       console.error('Error retrieving transactions:', error);
@@ -93,9 +92,8 @@ const TransactionsComponent = () => {
     }
   }, []);
 
-  const onColumnResized = useCallback((params: ColumnResizedEvent) => {
-    console.log(params);
-  }, []);
+  // const onColumnResized = useCallback((params: ColumnResizedEvent) => {
+  // }, []);
 
   // Set up ag-Grid
   const columnDefs = [
@@ -183,8 +181,6 @@ const TransactionsComponent = () => {
     },
     // { headerName: 'Promotion ID', field: 'promotionId' },
   ];
-
-  console.log(columnDefs);
 
   const defaultColDef = {
     sortable: true,

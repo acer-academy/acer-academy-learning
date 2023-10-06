@@ -72,7 +72,6 @@ export const CreditBundleManagement: React.FC = () => {
         (bundle) => bundle.isActive,
       );
 
-      console.log(response);
       setCreditBundles(activeCreditBundles);
     } catch (error) {
       displayToast(
