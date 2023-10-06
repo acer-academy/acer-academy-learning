@@ -5,6 +5,7 @@ import { refundTransaction } from '@acer-academy-learning/data-access';
 import { useToast } from '@acer-academy-learning/common-ui';
 import TransactionTypeBadge from './TransactionTypeBadge';
 import { convertIntToFloat } from '@acer-academy-learning/data-access';
+import ReceiptUrlButton from './ReceiptUrlButton';
 
 interface TransactionModalProps {
   transaction: TransactionData | null;
@@ -123,6 +124,15 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
                         <div className="flex justify-between">
                           <span>Term:</span>
                           <span>{transaction.term.name}</span>
+                        </div>
+
+                        <div className="flex justify-between">
+                          <span>Receipt URL:</span>
+                          <ReceiptUrlButton
+                            value={
+                              transaction.stripeTransaction?.receiptUrl ?? ''
+                            }
+                          />
                         </div>
                       </div>
                     </div>

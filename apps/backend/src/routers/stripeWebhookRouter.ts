@@ -30,8 +30,6 @@ stripeWebhookRouter.post('/', async (req, res) => {
     res.status(400).send(`Webhook Error: ${err.message}`);
   }
 
-  console.log(payload.type);
-  console.log(payload.type === 'charge.succeeded');
   switch (payload.type) {
     case 'charge.succeeded':
       console.log(payload.data.object);

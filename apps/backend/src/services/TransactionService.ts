@@ -101,6 +101,7 @@ class TransactionService {
       studentId: studentId,
       termId: pastTermId,
       transactionType: TransactionType.DEDUCTED,
+      reason: 'Deducted for rollover to next term',
     };
     const transactions = [];
     const deduct = await TransactionDao.createTransaction(deductTransaction);
@@ -126,7 +127,11 @@ class TransactionService {
     }
 
     const refundTransactionInput = {
-      ...creditTransaction,
+      amount: creditTransaction.amount,
+      currency: 'SGD',
+      creditsTransacted: creditTransaction.creditsTransacted,
+      termId: creditTransaction.termId,
+      studentId: creditTransaction.studentId,
       transactionType: TransactionType.STRIPE_DEDUCTED,
       reason: 'Manual deduction due to refund of Stripe Transaction',
     };
@@ -148,9 +153,10 @@ class TransactionService {
     );
 
     // creating credit transaction in db
-    const refundedTransaction = await TransactionDao.createTransaction(
-      refundTransactionInput,
-    );
+    const refundedTransaction = await TransactionDao.createTransaction({
+      ...refundTransactionInput,
+      stripeTransactionId: stripeTransaction.id,
+    });
 
     TransactionDao.updateTransaction(creditTransaction.id, {
       referenceId: refundedTransaction.id,

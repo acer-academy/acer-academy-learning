@@ -13,6 +13,7 @@ class TransactionDao {
         term: true,
         promotion: true,
         student: true,
+        stripeTransaction: true,
       },
     });
   }
@@ -32,6 +33,7 @@ class TransactionDao {
         term: true,
         promotion: true,
         student: true,
+        stripeTransaction: true,
       },
     });
   }
