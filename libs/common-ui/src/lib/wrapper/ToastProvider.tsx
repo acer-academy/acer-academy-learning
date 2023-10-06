@@ -1,4 +1,4 @@
-import React, { createContext, useContext } from 'react';
+import React, { ReactNode, createContext, useContext } from 'react';
 import { toast, ToastOptions, ToastPosition } from 'react-toastify';
 
 const toastConfig: ToastOptions = {
@@ -9,7 +9,7 @@ const toastConfig: ToastOptions = {
   pauseOnHover: true,
   draggable: true,
   progress: undefined,
-  theme: 'light', 
+  theme: 'light',
 };
 
 enum ToastType {
@@ -21,17 +21,17 @@ enum ToastType {
 }
 
 interface ToastContextProps {
-  displayToast: (message: string, type: ToastType) => void;
-  ToastType: typeof ToastType;  // Adding the ToastType enum to the context
+  displayToast: (message: ReactNode, type: ToastType) => void;
+  ToastType: typeof ToastType; // Adding the ToastType enum to the context
 }
 
 const ToastContext = createContext<ToastContextProps | null>(null);
 
 export const useToast = () => {
   const context = useContext(ToastContext);
-  
+
   if (!context) {
-    throw new Error("useToast must be used within a ToastProvider");
+    throw new Error('useToast must be used within a ToastProvider');
   }
 
   return context;
@@ -42,7 +42,7 @@ interface ToastProviderProps {
 }
 
 export const ToastProvider: React.FC<ToastProviderProps> = ({ children }) => {
-  const displayToast = (message: string, type: ToastType) => {
+  const displayToast = (message: ReactNode, type: ToastType) => {
     let toastFunction;
 
     switch (type) {
@@ -72,4 +72,3 @@ export const ToastProvider: React.FC<ToastProviderProps> = ({ children }) => {
     </ToastContext.Provider>
   );
 };
-

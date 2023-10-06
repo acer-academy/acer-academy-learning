@@ -53,6 +53,9 @@ export class QuizQuestionDao {
       },
       skip: offset,
       take: pageSize,
+      orderBy: {
+        createdAt: 'desc',
+      },
     });
   }
 

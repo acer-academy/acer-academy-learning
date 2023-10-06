@@ -9,7 +9,11 @@ import {
   SETTINGS,
   SUBJECTS,
 } from './routes';
-import { UserIcon, Cog6ToothIcon } from '@heroicons/react/24/outline';
+import {
+  UserIcon,
+  Cog6ToothIcon,
+  InboxStackIcon,
+} from '@heroicons/react/24/outline';
 
 export const NAV_SECTIONS: NavigationMenuItem[] = [
   {
@@ -19,6 +23,14 @@ export const NAV_SECTIONS: NavigationMenuItem[] = [
   {
     name: 'SUBJECTS',
     path: SUBJECTS,
+    children: [
+      {
+        name: 'Question Bank',
+        path: `${SUBJECTS}/math/question-bank`,
+        icon: InboxStackIcon,
+      },
+    ],
+    noSideBar: true,
   },
   {
     name: 'ANALYTICS',

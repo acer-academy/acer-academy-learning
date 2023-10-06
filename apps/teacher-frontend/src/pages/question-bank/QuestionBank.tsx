@@ -1,10 +1,17 @@
-import { getPaginatedFilteredQuestions as apiGetPaginatedFilteredQuestions } from '@acer-academy-learning/data-access';
+import {
+  getPaginatedFilteredQuestions as apiGetPaginatedFilteredQuestions,
+  deleteQuizQuestion,
+} from '@acer-academy-learning/data-access';
 import {
   QuizQuestionData,
   QuizQuestionPaginationFilter,
 } from 'libs/data-access/src/lib/types/question';
 import { useEffect, useState } from 'react';
-import { useToast } from '@acer-academy-learning/common-ui';
+import {
+  LexOutput,
+  WarningModal,
+  useToast,
+} from '@acer-academy-learning/common-ui';
 import { Filter } from './Filter';
 import { LevelTag } from './LevelTag';
 import { TopicTag } from './TopicTag';
@@ -12,10 +19,25 @@ import { QuizStatusTag } from './QuizStatusTag';
 import DifficultyTag from './DifficultyTag';
 import TypeTag from './QuestionTypeTag';
 import katex from 'katex';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline';
+import { useMutation } from 'react-query';
 
 export const QuestionBank: React.FC = () => {
+  const location = useLocation();
   const { displayToast, ToastType } = useToast();
+  const { mutate: deleteQuizQuestionMutate } = useMutation(deleteQuizQuestion, {
+    onSuccess: async () => {
+      await getPaginatedFilteredQuestions();
+      displayToast('Successfully deleted question', ToastType.SUCCESS);
+    },
+    onError: (error: any) => {
+      displayToast(
+        'Error deleting question: ' + error.error.message,
+        ToastType.ERROR,
+      );
+    },
+  });
   const navigate = useNavigate();
   const [filterOptions, setFilterOptions] =
     useState<QuizQuestionPaginationFilter>({});
@@ -26,6 +48,8 @@ export const QuestionBank: React.FC = () => {
   );
   const [totalCount, setTotalCount] = useState(0);
   const [isFilterVisible, setIsFilterVisible] = useState(true);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [deleteQuestionId, setDeleteQuestionId] = useState('');
 
   const getPaginatedFilteredQuestions = async () => {
     try {
@@ -60,12 +84,12 @@ export const QuestionBank: React.FC = () => {
 
   const navToSelectedQuestion = (selectedQuestionId: string) => {
     // for now will push to url/question-bank/questionId, change as needed
-    navigate(`/question-bank/${selectedQuestionId}`);
+    navigate(`${location.pathname}/${selectedQuestionId}`);
   };
 
   const navToCreateQuestion = () => {
     // for now will push to url/question-bank/create, change as needed
-    navigate(`/question-bank/create`);
+    navigate(`${location.pathname}/create`);
   };
 
   useEffect(() => {
@@ -73,8 +97,8 @@ export const QuestionBank: React.FC = () => {
   }, [currentPage, pageSize, filterOptions]);
 
   return (
-    <div className="h-full bg-gray-50">
-      <div className="flex min-h-full flex-col gap-7 align-middle py-12 px-12">
+    <div className="h-full">
+      <div className="flex min-h-full flex-col gap-7 align-middle">
         <div className="flex align-middle justify-between">
           <div className="flex align-middle gap-4">
             <span className="text-2xl py-1 font-bold tracking-tight">
@@ -163,13 +187,19 @@ export const QuestionBank: React.FC = () => {
                       >
                         Type
                       </th>
+                      <th
+                        scope="col"
+                        className="px-3 py-3.5 text-left text-lg font-bold text-gray-900"
+                      >
+                        Actions
+                      </th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200 bg-white">
                     {currentQuestions.length === 0 ? (
                       <tr>
                         <td
-                          colSpan={6}
+                          colSpan={7}
                           className="whitespace-nowrap py-4 px-4 font-light italic text-gray-400 text-center"
                         >
                           No questions found.
@@ -187,9 +217,10 @@ export const QuestionBank: React.FC = () => {
                           <td className="py-4 pl-3.5 pr-3 text-xs font-medium text-gray-900 max-w-0">
                             <div>
                               <span>
-                                {question.questionText.length > 400
+                                {/* {question.questionText.length > 400
                                   ? question.questionText.slice(0, 100) + '...'
-                                  : question.questionText}
+                                  : question.questionText} */}
+                                <LexOutput htmlString={question.questionText} shorten />
                               </span>
                             </div>
                           </td>
@@ -227,6 +258,29 @@ export const QuestionBank: React.FC = () => {
                           </td>
                           <td className="whitespace-nowrap py-4 pl-3 pr-3 font-medium text-gray-900">
                             <TypeTag type={question.questionType} />
+                          </td>
+                          <td className="whitespace-nowrap font-medium text-gray-900 space-x-1 w-max">
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                navToSelectedQuestion(question.id);
+                              }}
+                              className="inline-flex items-center rounded-md bg-green-500 px-3 py-2 text-sm font-semibold shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-green-600"
+                            >
+                              <PencilSquareIcon className="w-6 h-6 text-white" />
+                            </button>
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setDeleteQuestionId(question.id);
+                                setDeleteModalOpen(true);
+                              }}
+                              className="inline-flex items-center rounded-md bg-red-500 px-3 py-2 text-sm font-semibold shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-red-600"
+                            >
+                              <TrashIcon className="w-6 h-6 text-white" />
+                            </button>
                           </td>
                         </tr>
                       ))
@@ -300,6 +354,17 @@ export const QuestionBank: React.FC = () => {
           </button>
         </div>
       </div>
+      <WarningModal
+        open={deleteModalOpen}
+        setOpen={setDeleteModalOpen}
+        title={'Delete Question'}
+        description={
+          'Are you sure you want to delete this queston? The question and answers for this question data will be removed and cannot be undone.'
+        }
+        confirmContent={'Delete'}
+        dismissContent={'Cancel'}
+        onConfirm={() => deleteQuizQuestionMutate(deleteQuestionId)}
+      />
     </div>
   );
 };

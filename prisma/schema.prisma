@@ -306,6 +306,7 @@ model QuizQuestion {
   status       QuizQuestionStatusEnum
   questionType QuizQuestionTypeEnum
   answers      QuizAnswer[]
+  createdAt    DateTime                   @default(now())
 }
 
 model QuizAnswer {
@@ -315,4 +316,5 @@ model QuizAnswer {
   isCorrect   Boolean
   question    QuizQuestion? @relation(fields: [questionId], references: [id])
   questionId  String?       @db.Uuid
+  createdAt   DateTime      @default(now())
 }
