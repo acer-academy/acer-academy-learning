@@ -43,11 +43,13 @@ export const GenericComboBox = <T,>({
     <Combobox value={selected} onChange={onChange} multiple>
       <div className="relative mt-1">
         <div className="relative w-full cursor-default overflow-hidden rounded-lg bg-white text-left shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-teacher-primary-300 sm:text-sm">
-          <Combobox.Input<T[]>
-            className="w-full border-none py-2 pl-3 pr-10 text-base leading-5 text-gray-900 focus:ring-0 break-normal"
-            placeholder="Search here..."
-            onChange={(event) => setQuery(event.target.value)}
-          />
+          <Combobox.Button>
+            <Combobox.Input<T[]>
+              className="w-full border-none py-2 pl-3 pr-10 text-base leading-5 text-gray-900 focus:ring-0 break-normal"
+              placeholder="Search here..."
+              onChange={(event) => setQuery(event.target.value)}
+            />
+          </Combobox.Button>
           <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
             <ChevronUpDownIcon
               className="h-5 w-5 text-gray-400"
