@@ -42,11 +42,8 @@ export const QuestionCard = ({
   };
 
   useEffect(() => {
-    if (
-      Object.keys(dirtyFields).length > 0 &&
-      isSubmitting &&
-      Object.keys(errors).length !== 0
-    ) {
+    if (isSubmitting && Object.keys(errors).length !== 0) {
+      console.log(errors);
       const msg = Object.entries(errors)
         .filter(
           ([type, errorObj]) => errorObj.message || errorObj.root?.message,
@@ -60,7 +57,10 @@ export const QuestionCard = ({
           </p>
         ));
       const answer = Object.entries(omit(errors.answers, 'root') ?? {})
-        .filter?.(([key, answer]: [string, any]) => answer)
+        .filter?.(
+          ([key, answer]: [string, any]) =>
+            answer.answer && answer.explanation && answer.isCorrect,
+        )
         .map?.(([key, answer]: [string, any]) => (
           <p key={key}>
             <strong>Answer Error {key}:</strong> {answer?.root?.message}

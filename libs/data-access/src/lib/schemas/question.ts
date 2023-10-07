@@ -43,8 +43,12 @@ export const quizQuestionSchema = z.object({
     .min(1, 'You must select at least one topic'),
   levels: z
     .array(z.nativeEnum(LevelEnum))
-    .min(1, 'You must select at least one subject'),
-  difficulty: z.nativeEnum(QuizQuestionDifficultyEnum),
+    .min(1, 'You must select at least one level'),
+  difficulty: z.nativeEnum(QuizQuestionDifficultyEnum, {
+    errorMap: (issue, _ctx) => {
+      return { message: 'You must select at least one difficulty' };
+    },
+  }),
   questionText: z
     .string()
     .trim()
