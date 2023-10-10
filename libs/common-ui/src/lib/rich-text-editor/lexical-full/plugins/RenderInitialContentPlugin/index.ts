@@ -1,8 +1,8 @@
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { SerializedEditorState, SerializedLexicalNode } from 'lexical';
-import { useEffect } from 'react';
 import { useEditorEventContext } from '../../context/EventContext';
 import { cloneDeep } from 'lodash';
+import useLayoutEffectImpl from '../../../../utils/useLayoutEffect';
 
 export type RenderExistingTextPluginProps = {
   editorStateStr: string;
@@ -49,9 +49,8 @@ export const RenderInitialContentPlugin = ({
 }: RenderExistingTextPluginProps) => {
   const { setIsContentLoaded } = useEditorEventContext();
   const [editor] = useLexicalComposerContext();
-  useEffect(() => {
+  useLayoutEffectImpl(() => {
     setTimeout(() => {
-      // editor.update(() => {
       // Shorten the structure if to long
       const shortened: SerializedEditorState<SerializedLexicalNode> =
         JSON.parse(editorStateStr);
@@ -75,7 +74,6 @@ export const RenderInitialContentPlugin = ({
       if (setIsContentLoaded) {
         setIsContentLoaded(true);
       }
-      // });
     });
   }, []);
 

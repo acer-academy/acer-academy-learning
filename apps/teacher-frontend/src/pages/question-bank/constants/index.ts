@@ -1,7 +1,6 @@
 import {
   CreateQuizAnswerType,
   CreateQuizQuestionType,
-  LevelEnum,
   QuizQuestionStatusEnum,
   QuizQuestionTypeEnum,
 } from '@acer-academy-learning/data-access';
@@ -29,5 +28,15 @@ export const DEFAULT_QUESTION_ANSWER: CreateQuizAnswerType = {
   isCorrect: false,
 };
 
-export const LEX_JSON_EMPTY =
-  '{"root":{"children":[{"children":[],"direction":null,"format":"","indent":0,"type":"paragraph","version":1}],"direction":null,"format":"","indent":0,"type":"root","version":1}}';
+export const TRUE_FALSE_VALUES: CreateQuizAnswerType[] = [
+  {
+    answer:
+      '{"root":{"children":[{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"True","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1}],"direction":"ltr","format":"","indent":0,"type":"root","version":1}}',
+    isCorrect: false,
+  },
+  {
+    answer:
+      '{"root":{"children":[{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"False","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1}],"direction":"ltr","format":"","indent":0,"type":"root","version":1}}',
+    isCorrect: false,
+  },
+];

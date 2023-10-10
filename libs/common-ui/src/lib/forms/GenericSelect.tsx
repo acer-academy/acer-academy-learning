@@ -67,8 +67,8 @@ export const GenericSelect = <T,>({
             ))}
           </Listbox.Options>
         </Transition>
-        <ErrorField message={errorMessage} />
       </div>
+      <ErrorField message={errorMessage} />
     </Listbox>
   );
 };
