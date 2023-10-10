@@ -50,29 +50,31 @@ export const RenderInitialContentPlugin = ({
   const { setIsContentLoaded } = useEditorEventContext();
   const [editor] = useLexicalComposerContext();
   useLayoutEffectImpl(() => {
-    // Shorten the structure if to long
-    const shortened: SerializedEditorState<SerializedLexicalNode> =
-      JSON.parse(editorStateStr);
-    if (shorten) {
-      const formattedChildren = recursiveReplaceImage(
-        cloneDeep(shortened.root.children),
-      );
-      // Slice it
-      shortened.root.children = formattedChildren;
-      if (shortened.root.children.length > 2) {
-        shortened.root.children = shortened.root.children.slice(0, 2);
+    setTimeout(() => {
+      // Shorten the structure if to long
+      const shortened: SerializedEditorState<SerializedLexicalNode> =
+        JSON.parse(editorStateStr);
+      if (shorten) {
+        const formattedChildren = recursiveReplaceImage(
+          cloneDeep(shortened.root.children),
+        );
+        // Slice it
+        shortened.root.children = formattedChildren;
+        if (shortened.root.children.length > 2) {
+          shortened.root.children = shortened.root.children.slice(0, 2);
+        }
+        const jsonStr = JSON.stringify(shortened);
+        const modifiedEditorState = editor.parseEditorState(jsonStr);
+        editor.setEditorState(modifiedEditorState);
+      } else {
+        // If nothing
+        const editorState = editor.parseEditorState(editorStateStr);
+        editor.setEditorState(editorState);
       }
-      const jsonStr = JSON.stringify(shortened);
-      const modifiedEditorState = editor.parseEditorState(jsonStr);
-      editor.setEditorState(modifiedEditorState);
-    } else {
-      // If nothing
-      const editorState = editor.parseEditorState(editorStateStr);
-      editor.setEditorState(editorState);
-    }
-    if (setIsContentLoaded) {
-      setIsContentLoaded(true);
-    }
+      if (setIsContentLoaded) {
+        setIsContentLoaded(true);
+      }
+    });
   }, []);
 
   return null;

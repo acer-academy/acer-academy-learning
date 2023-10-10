@@ -46,7 +46,6 @@ export const QuestionCard = ({
   };
 
   const handleError = (errors: FieldErrors<CreateQuizQuestionType>) => {
-    console.log(errors);
     const msg = Object.entries(errors).map(([type, errorObj]) => (
       <>
         <p key={type} className="space-y-1">
@@ -74,7 +73,7 @@ export const QuestionCard = ({
           )}
       </>
     ));
-    displayToast(<div>{msg}</div>, ToastType.ERROR);
+    displayToast(<div key={'error-msg'}>{msg}</div>, ToastType.ERROR);
   };
 
   return (

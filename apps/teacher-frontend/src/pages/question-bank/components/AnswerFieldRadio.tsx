@@ -43,7 +43,7 @@ export const AnswerFieldRadio = ({
           aria-label="Radio button to indicate correct answer"
           type="radio"
           onChange={(e) => onRadioChange(e, onChange)}
-          defaultChecked={getValues(`answers.${index}.isCorrect`)}
+          checked={getValues(`answers.${index}.isCorrect`)}
           className={`h-4 w-4 border-gray-300 text-teacher-primary-600 focus:ring-teacher-primary-600 ${className}`}
           name={name}
         />

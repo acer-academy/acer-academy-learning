@@ -1,0 +1,1 @@
+export const LEX_DEFAULT_JSON_STRING = `{"root":{"children":[{"children":[],"direction":null,"format":"","indent":0,"type":"paragraph","version":1}],"direction":null,"format":"","indent":0,"type":"root","version":1}}`;
