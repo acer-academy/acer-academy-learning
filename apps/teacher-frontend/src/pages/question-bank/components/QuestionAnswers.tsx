@@ -9,10 +9,11 @@ import {
   LexFloatingEditor,
 } from '@acer-academy-learning/common-ui';
 import { DocumentPlusIcon, XMarkIcon } from '@heroicons/react/24/outline';
-import { DEFAULT_QUESTION_ANSWER, LEX_JSON_EMPTY } from '../constants';
+import { DEFAULT_QUESTION_ANSWER } from '../constants';
 import { AnswerFieldRadio } from './AnswerFieldRadio';
 import { AnswerFieldCheckbox } from './AnswerFieldCheckbox';
 import { TrueFalseField } from './TrueFalseField';
+import { ErrorMessage } from '@hookform/error-message';
 export const QuestionAnswers = () => {
   const {
     watch,
@@ -97,13 +98,12 @@ export const QuestionAnswers = () => {
                             editorStateStr={answer.answer}
                             placeholder="Enter answer..."
                           />
-                          <ErrorField
-                            message={
-                              (value !== '' &&
-                                value === LEX_JSON_EMPTY &&
-                                'Answer cannot be left empty.') ||
-                              undefined
-                            }
+                          <ErrorMessage
+                            errors={errors}
+                            name={`answers.${index}.answer`}
+                            render={({ message }) => (
+                              <ErrorField message={message} />
+                            )}
                           />
                         </>
                       )}
@@ -149,8 +149,11 @@ export const QuestionAnswers = () => {
               </section>
             );
           })}
-          <legend className="sr-only">Question Answers</legend>
-          <ErrorField message={errors.answers?.root?.message} />
+          <ErrorMessage
+            errors={errors}
+            name="answers"
+            render={({ message }) => <ErrorField message={message} />}
+          />
           <button
             className="inline-flex items-center gap-x-1.5 rounded-md bg-teacher-primary-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-teacher-primary-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teacher-primary-600 w-fit"
             type="button"

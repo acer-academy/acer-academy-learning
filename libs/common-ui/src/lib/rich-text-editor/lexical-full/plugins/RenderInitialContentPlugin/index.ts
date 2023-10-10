@@ -1,8 +1,8 @@
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { SerializedEditorState, SerializedLexicalNode } from 'lexical';
-import { useEffect } from 'react';
 import { useEditorEventContext } from '../../context/EventContext';
 import { cloneDeep } from 'lodash';
+import useLayoutEffectImpl from '../../../../utils/useLayoutEffect';
 
 export type RenderExistingTextPluginProps = {
   editorStateStr: string;
@@ -49,34 +49,30 @@ export const RenderInitialContentPlugin = ({
 }: RenderExistingTextPluginProps) => {
   const { setIsContentLoaded } = useEditorEventContext();
   const [editor] = useLexicalComposerContext();
-  useEffect(() => {
-    setTimeout(() => {
-      // editor.update(() => {
-      // Shorten the structure if to long
-      const shortened: SerializedEditorState<SerializedLexicalNode> =
-        JSON.parse(editorStateStr);
-      if (shorten) {
-        const formattedChildren = recursiveReplaceImage(
-          cloneDeep(shortened.root.children),
-        );
-        // Slice it
-        shortened.root.children = formattedChildren;
-        if (shortened.root.children.length > 2) {
-          shortened.root.children = shortened.root.children.slice(0, 2);
-        }
-        const jsonStr = JSON.stringify(shortened);
-        const modifiedEditorState = editor.parseEditorState(jsonStr);
-        editor.setEditorState(modifiedEditorState);
-      } else {
-        // If nothing
-        const editorState = editor.parseEditorState(editorStateStr);
-        editor.setEditorState(editorState);
+  useLayoutEffectImpl(() => {
+    // Shorten the structure if to long
+    const shortened: SerializedEditorState<SerializedLexicalNode> =
+      JSON.parse(editorStateStr);
+    if (shorten) {
+      const formattedChildren = recursiveReplaceImage(
+        cloneDeep(shortened.root.children),
+      );
+      // Slice it
+      shortened.root.children = formattedChildren;
+      if (shortened.root.children.length > 2) {
+        shortened.root.children = shortened.root.children.slice(0, 2);
       }
-      if (setIsContentLoaded) {
-        setIsContentLoaded(true);
-      }
-      // });
-    });
+      const jsonStr = JSON.stringify(shortened);
+      const modifiedEditorState = editor.parseEditorState(jsonStr);
+      editor.setEditorState(modifiedEditorState);
+    } else {
+      // If nothing
+      const editorState = editor.parseEditorState(editorStateStr);
+      editor.setEditorState(editorState);
+    }
+    if (setIsContentLoaded) {
+      setIsContentLoaded(true);
+    }
   }, []);
 
   return null;

@@ -8,6 +8,7 @@ import {
   CreateQuizQuestionType,
   QuizQuestionTopicEnum,
 } from '@acer-academy-learning/data-access';
+import { ErrorMessage } from '@hookform/error-message';
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
@@ -32,7 +33,11 @@ export const QuestionTopicsCombo = () => {
               badges={value}
               getDisplayValue={(badge) => screamingSnakeToTitleCase(badge)}
             />
-            <ErrorField message={errors.topics?.message} />
+            <ErrorMessage
+              errors={errors}
+              name="topics"
+              render={({ message }) => <ErrorField message={message} />}
+            />
             <GenericComboBox
               options={topicEnums}
               onChange={onChange}
