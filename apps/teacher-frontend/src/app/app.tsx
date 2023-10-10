@@ -38,12 +38,15 @@ import {
   UPDATE_QUESTION,
   WITHOUT_SIDEBARS,
   SUBJECT_MAIN,
+  VIEW_CLASSES,
+  BOOK_CLASSES,
 } from '../libs/routes';
 import { CreateQuestion } from '../pages/question-bank/CreateQuestion';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { UpdateQuestion } from '../pages/question-bank/UpdateQuestion';
 import { Subjects } from '../pages/subjects/Subjects';
 import { Subject } from '../pages/subjects/Subject';
+import ViewCalendar from '../pages/scheduling/ViewCalendar';
 
 export function App() {
   const queryClient = new QueryClient();
@@ -90,7 +93,10 @@ export function App() {
                 {/* Analytics routes */}
                 <Route path={ANALYTICS} />
                 {/* Scheduling routes */}
-                <Route path={SCHEDULING} />
+                <Route path={SCHEDULING}>
+                  <Route path={VIEW_CLASSES} element={<ViewCalendar />} />
+                  <Route path={BOOK_CLASSES} element={<div>Home</div>} />
+                </Route>
                 {/* Rewards routes */}
                 <Route path={REWARDS} />
                 <Route path={ACCOUNT}>

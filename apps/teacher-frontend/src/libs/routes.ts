@@ -14,7 +14,12 @@ export const CREATE_QUESTION = `${QUESTION_BANK}/create`;
 export const UPDATE_QUESTION = `${QUESTION_BANK}/:questionId`;
 
 export const ANALYTICS = '/analytics';
+
+//
 export const SCHEDULING = '/scheduling';
+export const VIEW_CLASSES = `${SCHEDULING}/view-classes`;
+export const BOOK_CLASSES = `${SCHEDULING}/book-classes`;
+
 export const REWARDS = '/rewards';
 
 // Acccount
