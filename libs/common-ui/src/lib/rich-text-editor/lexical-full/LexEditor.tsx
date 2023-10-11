@@ -31,14 +31,14 @@ import './index.css';
 export type LexEditorProps = {
   editorStateStr?: string;
   onChange: (val: string) => void;
-  errorMessage?: string;
+  hasError?: boolean;
   onBlur: () => void;
 };
 
 export const LexEditor = ({
   editorStateStr,
   onChange,
-  errorMessage,
+  hasError,
   onBlur,
 }: LexEditorProps): JSX.Element => {
   // States
@@ -74,7 +74,7 @@ export const LexEditor = ({
       value={{
         isFocused,
         setIsFocused,
-        errorMessage,
+        hasError,
         isContentLoaded,
         setIsContentLoaded,
       }}
@@ -90,7 +90,7 @@ export const LexEditor = ({
                 )}
                 <div
                   className={`editor-shell border-solid border-[1px] rounded-t-[10px] ${
-                    errorMessage
+                    hasError
                       ? 'border-red-500'
                       : isFocused
                       ? 'border-black'
