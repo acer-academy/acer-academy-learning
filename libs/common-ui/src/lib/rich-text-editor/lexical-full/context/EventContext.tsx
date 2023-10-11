@@ -4,7 +4,7 @@ type EditorEventContextState = {
   isFocused: boolean;
   isContentLoaded: boolean;
   setIsContentLoaded: (isContentLoaded: boolean) => void;
-  errorMessage?: string;
+  hasError?: boolean;
   setIsFocused: (isFocused: boolean) => void;
 };
 
