@@ -22,9 +22,9 @@ export const QuizRewardPointsField = () => {
         render={({ field: { onChange, value, onBlur } }) => (
           <div className="flex space-x-4 items-center">
             <GenericInput
-              onChange={onChange}
+              onChange={(e) => onChange(parseInt(e.target.value))}
               onBlur={onBlur}
-              value={value}
+              value={value ?? ''}
               type="number"
               id={rewardPointsId}
               name={rewardPointsId}
