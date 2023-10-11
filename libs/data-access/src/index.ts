@@ -27,6 +27,7 @@ export {
   StudentStatusEnum,
 } from './lib/types/CommonTypes';
 export * from './lib/types/question';
+export * from './lib/types/quiz';
 export * from './lib/schemas';
 export * from './lib/constants';
 export * from './lib/api/helper/price-conversion';
