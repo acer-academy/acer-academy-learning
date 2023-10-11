@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useState } from 'react';
 import {
   FieldValues,
   Path,
@@ -14,9 +14,6 @@ export type EditableFieldRowProps<T extends FieldValues> = {
   register: UseFormRegister<T>;
   registerKey: Path<T>;
   errorMessage?: string;
-  // handleSubmit: (
-  //   e?: React.BaseSyntheticEvent<object, any, any> | undefined,
-  // ) => Promise<void>;
   handleSubmit: UseFormHandleSubmit<T>;
   handleSubmitForm: (
     values: T,
@@ -40,7 +37,6 @@ export const EditableFieldRow = <T extends FieldValues>({
   handleSubmitForm,
 }: EditableFieldRowProps<T>) => {
   const [isEditMode, setIsEditMode] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
   return (
     <>
       <label
