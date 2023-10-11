@@ -14,7 +14,7 @@ export const QuizTabs = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const onTabClick = (path: string) => {
-    navigate('#' + path);
+    navigate('#' + path, { replace: true });
   };
   return (
     <div>
