@@ -5,9 +5,12 @@ import React, { useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
 export const QuizTimeAllowedField = () => {
-  const { control } = useFormContext<CreateQuizType>();
-  const [isChecked, setIsChecked] = useState(false);
+  const { control, getValues, setValue } = useFormContext<CreateQuizType>();
+  const [isChecked, setIsChecked] = useState(!!getValues('timeAllowed'));
   const onCheckboxClick = () => {
+    if (isChecked) {
+      setValue('timeAllowed', null);
+    }
     setIsChecked((prev) => !prev);
   };
   return (
@@ -35,7 +38,7 @@ export const QuizTimeAllowedField = () => {
               id="quiz-time-allowed"
               name="quiz-time-allowed"
               onChange={onChange}
-              value={value ?? undefined}
+              value={value ?? ''}
               onBlur={onBlur}
               disabled={!isChecked}
               inputClassName="w-20"

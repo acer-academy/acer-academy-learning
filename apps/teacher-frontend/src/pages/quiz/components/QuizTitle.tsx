@@ -27,6 +27,7 @@ export const QuizTitle = () => {
             placeholder="Ex: Trigonometry Quiz 1"
             onChange={onChange}
             onBlur={onBlur}
+            value={value}
             hasError={!!errors?.title?.message}
             inputClassName="w-full"
           />
