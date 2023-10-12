@@ -15,7 +15,6 @@ import { SharedHistoryContext } from './context/SharedHistoryContext';
 import Editor from './Editor';
 import PlaygroundNodes from './nodes/PlaygroundNodes';
 import { TableContext } from './plugins/TablePlugin';
-import Settings from './Settings';
 import PlaygroundEditorTheme from './themes/PlaygroundEditorTheme';
 import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin';
 import { EditorState, LexicalEditor } from 'lexical';
@@ -99,7 +98,6 @@ export const LexEditor = ({
                 >
                   {(isContentLoaded && <Editor />) || <Spinner />}
                 </div>
-                <Settings />
               </SharedAutocompleteContext>
             </TableContext>
           </SharedHistoryContext>

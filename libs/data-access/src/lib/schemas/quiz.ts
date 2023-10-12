@@ -18,8 +18,12 @@ export const quizSchema = z.object({
       }
     }),
   // subject: z.nativeEnum(SubjectEnum),
-  // levels: z.array(z.nativeEnum(LevelEnum)),
-  // topics: z.array(z.nativeEnum(QuizQuestionTopicEnum)),
+  topics: z
+    .array(z.nativeEnum(QuizQuestionTopicEnum))
+    .min(1, 'You must select at least one topic'),
+  // levels: z
+  //   .array(z.nativeEnum(LevelEnum))
+  //   .min(1, 'You must select at least one level'),
   totalMarks: z.number().positive('Total Marks must be a positive number'),
   rewardPoints: z.number().positive('Reward Points must be a positive number'),
   // in seconds

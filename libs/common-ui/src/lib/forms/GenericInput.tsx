@@ -29,13 +29,13 @@ export const GenericInput = ({
       )}
       <input
         {...props}
-        className={`${inputClassName} block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ${
+        className={`block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ${
           hasError ? 'ring-red-500' : 'ring-gray-300'
         } placeholder:text-gray-400 ${
           props.type !== 'radio' &&
           props.type !== 'checkbox' &&
           'focus:ring-inset'
-        } focus:ring-2 focus:ring-gray-600 sm:text-sm sm:leading-6`}
+        } focus:ring-2 focus:ring-gray-600 sm:leading-6 text-sm ${inputClassName}`}
         aria-describedby={descriptionDetails?.descriptionId}
       />
       {!hasError && (
