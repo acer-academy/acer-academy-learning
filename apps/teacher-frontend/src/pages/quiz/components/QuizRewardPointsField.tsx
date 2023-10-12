@@ -32,7 +32,7 @@ export const QuizRewardPointsField = () => {
               hasError={!!errors?.rewardPoints?.message}
             />
             <ErrorMessage
-              name="totalMarks"
+              name="rewardPoints"
               render={({ message }) => <ErrorField message={message} />}
             />
           </div>

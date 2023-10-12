@@ -5,6 +5,7 @@ import { QuizTimeAllowedField } from './QuizTimeAllowedField';
 import { QuizTotalMarksField } from './QuizTotalMarksField';
 import { QuizRewardPointsField } from './QuizRewardPointsField';
 import { GenericButton } from '@acer-academy-learning/common-ui';
+import { QuizTopicsField } from './QuizTopicsField';
 
 const DetailsSection = () => {
   return (
@@ -16,6 +17,7 @@ const DetailsSection = () => {
         <QuizTotalMarksField />
         <QuizRewardPointsField />
       </div>
+      <QuizTopicsField />
       <GenericButton type="submit" text="Create Quiz" />
     </>
   );
