@@ -9,6 +9,7 @@ export type GenericComboBoxProps<T> = {
   onChange: (option: T[]) => void;
   hasError?: boolean;
   placeholder?: string;
+  containerStyle?: string;
 };
 
 export const GenericComboBox = <T,>({
@@ -18,6 +19,7 @@ export const GenericComboBox = <T,>({
   displayValue,
   hasError,
   placeholder,
+  containerStyle,
 }: GenericComboBoxProps<T>) => {
   const [query, setQuery] = useState('');
 
@@ -36,7 +38,7 @@ export const GenericComboBox = <T,>({
 
   return (
     <Combobox value={selected} onChange={onChange} multiple>
-      <div className="relative mt-1">
+      <div className={`relative mt-1 ${containerStyle}`}>
         <div className="relative w-full cursor-default overflow-hidden rounded-lg bg-white text-left focus-visible:ring-inset focus-visible:ring-1 focus-visible:ring-gray-900 sm:text-sm">
           <Combobox.Button className={`w-full`}>
             <Combobox.Input<T[]>

@@ -14,7 +14,7 @@ export const QuizTitle = () => {
       control={control}
       name={'title'}
       render={({ field: { onChange, value, onBlur } }) => (
-        <section className="w-[70%] space-y-1">
+        <section className="w-[50%] space-y-1">
           <GenericInput
             label="Title: "
             id="quiz-title"
