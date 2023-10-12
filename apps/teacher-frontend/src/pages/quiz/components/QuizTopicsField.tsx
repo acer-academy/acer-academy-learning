@@ -20,9 +20,9 @@ export const QuizTopicsField = () => {
   } = useFormContext<CreateQuizType>();
   return (
     <>
-      <h3 className="text-base font-semibold leading-6 text-gray-900">
+      <span className="text-base font-semibold leading-6 text-gray-900">
         Topic(s):
-      </h3>
+      </span>
       <Controller
         control={control}
         name={'topics'}
@@ -45,6 +45,7 @@ export const QuizTopicsField = () => {
               displayValue={(topic) => screamingSnakeToTitleCase(topic)}
               hasError={!!errors.topics?.message}
               placeholder="Ex: Coordinate Geometry"
+              containerStyle="w-[50%]"
             />
           </>
         )}
