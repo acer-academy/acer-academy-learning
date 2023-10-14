@@ -18,6 +18,7 @@ import {
   validateBodyQuizQuestionTypeExists,
   validateBodyQuizQuestionTypesExist,
   validateParamsQuizQuestionExists,
+  validateParamsQuizQuestionIsLatest,
 } from '../middleware/validationMiddleware';
 import { QuizAnswerService } from '../services/QuizAnswerService';
 
@@ -93,6 +94,30 @@ quizQuestionRouter.get(
 );
 
 /**
+ * GET /versioning/:quizId
+ * Retrieves versioning lineage of a quiz question by ID
+ */
+quizQuestionRouter.get(
+  '/versioning/:questionId',
+  async (req: Request, res: Response) => {
+    const { questionId } = req.params;
+    try {
+      const questions =
+        await quizQuestionService.getQuizQuestionAllVersionsById(questionId);
+      if (questions) {
+        return res.status(200).json(questions);
+      } else {
+        return res.status(404).json({ error: 'Questions not found' });
+      }
+    } catch (error) {
+      return res.status(500).json({
+        error: error.message,
+      });
+    }
+  },
+);
+
+/**
  * POST /quiz-questions/filter
  * Retrieves a list of quiz questions based on filter criteria.
  */
@@ -128,6 +153,7 @@ quizQuestionRouter.post(
 quizQuestionRouter.put(
   '/:questionId',
   validateParamsQuizQuestionExists,
+  validateParamsQuizQuestionIsLatest,
   restrictBodyId,
   validateBodyQuizQuestionTopicsExist,
   validateBodyLevelsExist,
