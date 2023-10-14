@@ -23,15 +23,7 @@ class ClassService {
       endRecurringDate: endDate,
     });
     let sessions: Session[] = [];
-    // let daysArray: DaysEnum[];
 
-    // if (Array.isArray(classData.days)) {
-    //   daysArray = classData.days;
-    // } else {
-    //   if (Object.values(DaysEnum).includes(classData.days)) {
-    //     daysArray = [classData.days as DaysEnum];
-    //   }
-    // }
     try {
       while (currDate <= endDate) {
         const session = await SessionService.createSession({
@@ -56,7 +48,7 @@ class ClassService {
               currDate.setMonth(0);
               currDate.setFullYear(currDate.getFullYear() + 1);
               eventEndDate.setMonth(0);
-              eventEndDate.setFullYear(currDate.getFullYear() + 1);
+              eventEndDate.setFullYear(eventEndDate.getFullYear() + 1);
             } else if (currDate.getMonth() === 0) {
               const lastDayOfFeb = new Date(currDate.getFullYear(), 2, 0);
               if (
@@ -84,38 +76,66 @@ class ClassService {
       }
       throw new Error(error.message);
     }
-    // const next = await this.findNextDay(
-    //   'THURSDAY',
-    //   new Date('2023-10-13T10:30:00Z'),
-    // );
-    // console.log(next);
-    // return this.createClass(classData);
-    //
   }
 
-  private async findNextDay(day: string, refDate: Date) {
-    const dayOfWeek = [
-      'MONDAY',
-      'TUESDAY',
-      'WEDNESDAY',
-      'THURSDAY',
-      'FRIDAY',
-      'SATURDAY',
-      'SUNDAY',
-    ].indexOf(day);
-    refDate.setDate(
-      refDate.getDate() + ((dayOfWeek + 7 - refDate.getDay()) % 7),
-    );
-    return refDate;
-  }
-
-  //   public async updateRecurringClass(
-  //     sessionId: string,
-  //     // classData: Prisma.ClassUncheckedUpdateInput,
-  //     sessionData: Prisma.SessionUncheckedUpdateInput,
-  //   ): Promise<Session[]> {
-  //     //
+  //   private async findNextDay(day: string, refDate: Date) {
+  //     const dayOfWeek = [
+  //       'MONDAY',
+  //       'TUESDAY',
+  //       'WEDNESDAY',
+  //       'THURSDAY',
+  //       'FRIDAY',
+  //       'SATURDAY',
+  //       'SUNDAY',
+  //     ].indexOf(day);
+  //     refDate.setDate(
+  //       refDate.getDate() + ((dayOfWeek + 7 - refDate.getDay()) % 7),
+  //     );
+  //     return refDate;
   //   }
+
+  public async updateRecurringClass(
+    sessionId: string,
+    classData: Prisma.ClassUncheckedUpdateInput,
+    sessionData: Prisma.SessionUncheckedUpdateInput,
+  ): Promise<Session[]> {
+    const sessionBeforeUpdate = await SessionService.getSessionBySessionId(
+      sessionId,
+    );
+    const classId = sessionBeforeUpdate.classId;
+    const classBeforeUpdate = await this.getClassById(classId);
+    const newEndDate =
+      (sessionData.end as string) || sessionBeforeUpdate.end.toString();
+    const diffEndDate =
+      new Date(newEndDate).getTime() - sessionBeforeUpdate.end.getTime();
+    const newStartTime =
+      (sessionData.start as string) || sessionBeforeUpdate.start.toString();
+    const diffStartDate =
+      new Date(newStartTime).getTime() - sessionBeforeUpdate.start.getTime();
+    const sessions: Session[] = await SessionService.getFutureSessionsOfClass(
+      classId,
+    );
+    const updatedSessions = [];
+
+    console.log('diffEndDate', diffEndDate);
+    console.log('diffStartDate', diffStartDate);
+
+    if (
+      !classData.frequency ||
+      classData.frequency === classBeforeUpdate.frequency
+    ) {
+      for (let session of sessions) {
+        const updatedSession = await SessionService.updateSession(session.id, {
+          ...sessionData,
+          start: new Date(session.start.getTime() + diffStartDate),
+          end: new Date(session.end.getTime() + diffEndDate),
+        });
+        console.log('updated', updatedSession);
+        updatedSessions.push(updatedSession);
+      }
+    }
+    return updatedSessions;
+  }
 
   public async deleteRecurringClass(id: string): Promise<Class> {
     const classData = await SessionService.getFutureSessionsOfClass(id);

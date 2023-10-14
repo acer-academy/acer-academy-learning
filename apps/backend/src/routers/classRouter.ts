@@ -52,17 +52,23 @@ classRouter.post('/recurring/', async (req, res) => {
   }
 });
 
-// classRouter.put('/recurring/:id', async (req, res) => {
-//   try {
-//     const { id } = req.params;
-//     const input: Prisma.SessionUncheckedUpdateInput = req.body;
-//     const session = await SessionService.updateSession(id, input);
-//     return res.status(200).json(session);
-//   } catch (error) {
-//     console.log(error);
-//     return res.status(500).json({ error: error.message });
-//   }
-// });
+classRouter.put('/recurring/:sessionId', async (req, res) => {
+  try {
+    const { sessionId } = req.params;
+    const input = req.body;
+    const classInput: Prisma.ClassUncheckedUpdateInput = input[0];
+    const sessionInput: Prisma.SessionUncheckedUpdateInput = input[1];
+    const session = await ClassService.updateRecurringClass(
+      sessionId,
+      classInput,
+      sessionInput,
+    );
+    return res.status(200).json(session);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: error.message });
+  }
+});
 
 classRouter.put('/:id', async (req, res) => {
   try {

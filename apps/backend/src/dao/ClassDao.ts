@@ -18,7 +18,10 @@ class ClassDao {
   }
 
   public async getClassById(id: string): Promise<Class> {
-    return this.prisma.class.findUnique({ where: { id } });
+    return this.prisma.class.findUnique({
+      where: { id },
+      include: { sessions: true },
+    });
   }
 
   public async updateClass(

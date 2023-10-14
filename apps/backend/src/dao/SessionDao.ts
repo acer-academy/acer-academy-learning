@@ -27,7 +27,7 @@ class SessionDao {
     classroomId: string,
     startDateTime: Date,
     endDateTime: Date,
-  ): Promise<Boolean> {
+  ): Promise<String> {
     const classes = await this.prisma.session.findMany({
       where: {
         classroomId,
@@ -35,7 +35,7 @@ class SessionDao {
         end: { gte: endDateTime },
       },
     });
-    return classes.length === 0;
+    return classes.length > 0 ? classes[0].id : undefined;
   }
 
   public async getFutureSessions(): Promise<Session[]> {

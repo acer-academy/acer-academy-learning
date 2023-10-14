@@ -10,7 +10,7 @@ class SessionService {
       data.start.toString(),
       data.end.toString(),
     );
-    if (available) {
+    if (!available) {
       return SessionDao.createSession(data);
     } else {
       throw new Error(
@@ -31,14 +31,18 @@ class SessionService {
     id: string,
     data: Prisma.SessionUncheckedUpdateInput,
   ): Promise<Session> {
-    if (data.start && data.end) {
-      const session = await this.getSessionBySessionId(id);
+    const session = await this.getSessionBySessionId(id);
+    if (
+      data.start &&
+      data.end &&
+      (session.start !== data.start || data.end === data.end)
+    ) {
       const available = await this.checkClassroomAvailability(
         session.classroomId,
         data.start.toString(),
         data.end.toString(),
       );
-      if (available) {
+      if (!available || available === id) {
         return SessionDao.updateSession(id, data);
       }
       throw new Error(
