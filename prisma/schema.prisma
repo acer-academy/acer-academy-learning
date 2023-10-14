@@ -367,16 +367,6 @@ model Session {
   classId String? @db.Uuid
 }
 
-enum DaysEnum {
-  MONDAY
-  TUESDAY
-  WEDNESDAY
-  THURSDAY
-  FRIDAY 
-  SATURDAY 
-  SUNDAY
-}
-
 enum ClassFrequencyEnum {
   WEEKLY 
   DAILY 
@@ -387,7 +377,6 @@ model Class {
   id String @id @default(uuid()) @db.Uuid
   endRecurringDate DateTime
   frequency ClassFrequencyEnum
-  days DaysEnum[]
 
   sessions Session[]
 }

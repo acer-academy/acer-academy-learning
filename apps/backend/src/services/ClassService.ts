@@ -1,12 +1,6 @@
 import ClassDao from '../dao/ClassDao';
 import SessionService from './SessionService';
-import {
-  Class,
-  Session,
-  Prisma,
-  DaysEnum,
-  ClassFrequencyEnum,
-} from '@prisma/client';
+import { Class, Session, Prisma, ClassFrequencyEnum } from '@prisma/client';
 
 class ClassService {
   public async createClass(
