@@ -38,6 +38,8 @@ model Student {
   notificationPreference NotificationPreference?
 
   transaction Transaction[]
+
+  sessions Session[]
 }
 
 model Parent {
@@ -105,6 +107,8 @@ model Teacher {
 
   whitelistItem   WhitelistItem @relation(fields: [whitelistItemId], references: [id])
   whitelistItemId String        @unique @db.Uuid
+
+  sessions Session[]
 }
 
 model NotificationPreference {
@@ -133,9 +137,11 @@ model Classroom {
   name      String
   available Boolean @default(true)
   capacity  Int
+  
   centre    Centre  @relation(fields: [centreId], references: [id])
   centreId  String  @db.Uuid
-  // sessions Session[]
+  
+  sessions Session[]
 }
 
 enum PromotionStatus {
@@ -340,4 +346,48 @@ model QuizAnswer {
   question    QuizQuestion? @relation(fields: [questionId], references: [id])
   questionId  String?       @db.Uuid
   createdAt   DateTime      @default(now())
+}
+
+model Session {
+  id String @id @default(uuid()) @db.Uuid
+  start DateTime
+  end DateTime
+  subjects SubjectEnum[]
+  levels LevelEnum[]
+
+  teacher Teacher @relation(fields: [teacherId], references: [id])
+  teacherId String    @db.Uuid
+
+  students Student[]
+
+  classroom Classroom @relation(fields: [classroomId], references: [id])
+  classroomId String @db.Uuid
+
+  class Class? @relation(fields: [classId], references: [id])
+  classId String? @db.Uuid
+}
+
+enum DaysEnum {
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY 
+  SATURDAY 
+  SUNDAY
+}
+
+enum ClassFrequencyEnum {
+  WEEKLY 
+  DAILY 
+  MONTHLY
+}
+
+model Class {
+  id String @id @default(uuid()) @db.Uuid
+  endRecurringDate DateTime
+  frequency ClassFrequencyEnum
+  days DaysEnum[]
+
+  sessions Session[]
 }
