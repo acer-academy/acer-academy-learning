@@ -1463,7 +1463,7 @@ export async function validateBodyQuizFormatValid(
     };
     for (const key of Object.keys(validBody)) {
       if (
-        validBody[key] === undefined ||
+        (validBody[key] === undefined && key !== 'timeAllowed') ||
         (key === 'title' &&
           (typeof validBody[key] !== 'string' ||
             validBody[key].trim().length === 0)) ||
@@ -1482,6 +1482,7 @@ export async function validateBodyQuizFormatValid(
         (key === 'rewardMinimumMarks' &&
           (typeof validBody[key] !== 'number' || validBody[key] <= 0)) ||
         (key === 'timeAllowed' &&
+          timeAllowed !== undefined &&
           (typeof validBody[key] !== 'number' || validBody[key] <= 0)) ||
         (key === 'teacherCreated' &&
           (!validBody[key] || typeof validBody[key] !== 'string')) ||

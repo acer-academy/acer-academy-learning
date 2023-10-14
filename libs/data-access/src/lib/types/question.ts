@@ -26,6 +26,7 @@ export interface QuizQuestionData {
   questionType: QuizQuestionTypeEnum;
   answers: QuizAnswer[];
   createdAt: Date;
+  version: Number;
 }
 
 export interface QuizQuestionPaginationFilter {
@@ -34,6 +35,7 @@ export interface QuizQuestionPaginationFilter {
   topics?: QuizQuestionTopicEnum[];
   status?: QuizQuestionStatusEnum[];
   questionType?: QuizQuestionTypeEnum[];
+  showLatestOnly?: boolean;
 }
 
 export type CreateQuizAnswerType = z.infer<typeof createQuizAnswerSchema>;

@@ -362,7 +362,7 @@ model Quiz {
   totalMarks         Int
   rewardPoints       Int
   rewardMinimumMarks Int
-  timeAllowed        Int
+  timeAllowed        Int?
   teacherCreated     Teacher                    @relation(fields: [teacherCreatedId], references: [id])
   teacherCreatedId   String                     @db.Uuid
   createdAt          DateTime                   @default(now())
