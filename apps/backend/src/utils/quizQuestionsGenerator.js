@@ -79,7 +79,7 @@ const QuizQuestionTypeEnum = {
   OPEN_ENDED: 'OPEN_ENDED',
 };
 
-const numberOfQuestionsToCreate = 1000;
+const numberOfQuestionsToCreate = 5;
 
 const createRandomQuestions = async (count) => {
   try {
