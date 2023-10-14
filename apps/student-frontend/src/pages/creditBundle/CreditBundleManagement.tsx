@@ -164,6 +164,12 @@ export const CreditBundleManagement: React.FC = () => {
                         </th>
                         <th
                           scope="col"
+                          className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 max-w-sm"
+                        >
+                          Price Per Credit
+                        </th>
+                        <th
+                          scope="col"
                           className="relative py-3.5 pl-3 pr-4 sm:pr-6"
                         >
                           <span className="sr-only">Edit</span>
@@ -194,6 +200,13 @@ export const CreditBundleManagement: React.FC = () => {
                             </td>
                             <td className="whitespace-normal px-3 py-4 text-sm text-gray-500 max-w-sm">
                               {'$' + convertIntToFloat(creditBundle.basePrice)}
+                            </td>
+                            <td className="whitespace-normal px-3 py-4 text-sm text-gray-500 max-w-sm">
+                              {'$' +
+                                convertIntToFloat(
+                                  creditBundle.basePrice /
+                                    creditBundle.numCredits,
+                                )}
                             </td>
                             <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-center text-sm font-medium sm:pr-6">
                               <a

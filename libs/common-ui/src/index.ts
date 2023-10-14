@@ -26,7 +26,4 @@ export * from './lib/utils/';
 export * from './lib/modals/WarningModal';
 export * from './lib/buttons';
 export * from './lib/logo';
-export * from './lib/rich-text-editor/lexical-full/LexicEditor';
-export * from './lib/rich-text-editor/lexical-full/LexOutput';
-export * from './lib/rich-text-editor/lexical-full/LexFloatingEditor';
-export * from './lib/rich-text-editor/lexical-full/images';
+export * from './lib/rich-text-editor/lexical-full/';
