@@ -84,12 +84,12 @@ export const QuestionBank: React.FC = () => {
 
   const navToSelectedQuestion = (selectedQuestionId: string) => {
     // for now will push to url/question-bank/questionId, change as needed
-    navigate(`${location.pathname}/${selectedQuestionId}`);
+    navigate(`${selectedQuestionId}`);
   };
 
   const navToCreateQuestion = () => {
     // for now will push to url/question-bank/create, change as needed
-    navigate(`${location.pathname}/create`);
+    navigate(`create`);
   };
 
   useEffect(() => {
