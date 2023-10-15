@@ -17,17 +17,19 @@ import {
   updateSession,
 } from '@acer-academy-learning/data-access';
 
-// import {
-//   useCreateSession,
-//   useDeleteSession,
-//   useUpdateSession,
-// } from '../../requests';
+import './CalendarView.css';
 
 interface EventFormProps {
   session: SessionData;
+  fetchSessions: () => Promise<void>;
+  onClose: () => void;
 }
 
-export default function EventForm({ session }: EventFormProps) {
+export default function EventForm({
+  session,
+  fetchSessions,
+  onClose,
+}: EventFormProps) {
   const [sessionData, setSessionData] = useState({
     ...session,
   });
@@ -153,6 +155,8 @@ export default function EventForm({ session }: EventFormProps) {
       console.log(response);
       if (response.status === 200) {
         console.log('deleted successfully');
+        await fetchSessions();
+        onClose();
       }
     } catch (err) {
       // setError(err);
@@ -199,173 +203,195 @@ export default function EventForm({ session }: EventFormProps) {
       if (response) {
         console.log('created obj');
       }
+      await fetchSessions();
     } else {
       const response = await updateSession(session.id, createSessionData);
       if (response) {
         console.log('updated data');
       }
+      await fetchSessions();
     }
   };
 
   return (
-    <div className="shadow-2xl p-10 rounded-xl bg-white w-full">
-      <div className="flex justify-between items-center">
-        <div>
-          <h2 className="text-4xl mb-4">{label} a session</h2>
-        </div>
-        {session.id && (
-          <div>
-            <button
-              className="bg-red-500 text-white rounded-full p-2 hover:bg-red-600"
-              onClick={() => handleDeleteSession(session.id)}
-              aria-label="delete"
-            >
-              ×
-            </button>
+    <div className="modal">
+      <div>
+        <div className="p-10 rounded-xl bg-white w-full">
+          <div className="flex justify-between items-center">
+            <div>
+              <h2 className="text-4xl mb-4">{label} a session</h2>
+            </div>
+            <div>
+              <button
+                className="bg-red-500 text-white rounded-full p-2 hover:bg-red-600"
+                onClick={onClose}
+                aria-label="close"
+              >
+                ×
+              </button>
+            </div>
           </div>
-        )}
-      </div>
 
-      <div className="flex space-x-4">
-        <div className="w-1/2">
-          <label className="block w-1/4 text-sm font-medium leading-6 text-gray-900">
-            Start Time
-          </label>
-          <DatePicker
-            onChange={(date) => setSessionData({ ...sessionData, start: date })}
-            selected={new Date(sessionData.start)}
-            showTimeSelect
-            dateFormat="MMMM d, yyyy h:mm aa"
-            className="w-[300px] block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-          />
-        </div>
-        <div className="w-1/2">
-          <label className="block w-1/4 text-sm font-medium leading-6 text-gray-900">
-            End Time
-          </label>
-          <DatePicker
-            onChange={(date) => setSessionData({ ...sessionData, end: date })}
-            selected={new Date(sessionData.end)}
-            showTimeSelect
-            dateFormat="MMMM d, yyyy h:mm aa"
-            className="w-[300px] block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-          />
-        </div>
-      </div>
+          <div className="flex space-x-4">
+            <div className="w-1/2">
+              <label className="block w-1/4 text-sm font-medium leading-6 text-gray-900">
+                Start Time
+              </label>
+              <DatePicker
+                onChange={(date) =>
+                  setSessionData({ ...sessionData, start: date })
+                }
+                selected={new Date(sessionData.start)}
+                showTimeSelect
+                dateFormat="MMMM d, yyyy h:mm aa"
+                className="w-[300px] block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              />
+            </div>
+            <div className="w-1/2">
+              <label className="block w-1/4 text-sm font-medium leading-6 text-gray-900">
+                End Time
+              </label>
+              <DatePicker
+                onChange={(date) =>
+                  setSessionData({ ...sessionData, end: date })
+                }
+                selected={new Date(sessionData.end)}
+                showTimeSelect
+                dateFormat="MMMM d, yyyy h:mm aa"
+                className="w-[300px] block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              />
+            </div>
+          </div>
 
-      <div className="mt-4">
-        <div className="flex items-center space-x-4">
-          <label
-            htmlFor="location"
-            className="block w-1/4 text-sm font-medium leading-6 text-gray-900"
-          >
-            Location
-          </label>
-          <select
-            id="location"
-            name="location"
-            required
-            value={selectedCentre}
-            onChange={(e) => setSelectedCentre(e.target.value)}
-            className="mt-2 block w-3/4 space-y-2 rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
-          >
-            <option value="" disabled>
-              Select a centre
-            </option>
-            {centres.map((centre, index) => (
-              <option key={index} value={centre.id}>
-                {centre.name}
-              </option>
-            ))}
-          </select>
-        </div>
-      </div>
+          <div className="mt-4">
+            <div className="flex items-center space-x-4">
+              <label
+                htmlFor="location"
+                className="block w-1/4 text-sm font-medium leading-6 text-gray-900"
+              >
+                Location
+              </label>
+              <select
+                id="location"
+                name="location"
+                required
+                value={selectedCentre}
+                onChange={(e) => setSelectedCentre(e.target.value)}
+                className="mt-2 block w-3/4 space-y-2 rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              >
+                <option value="" disabled>
+                  Select a centre
+                </option>
+                {centres.map((centre, index) => (
+                  <option key={index} value={centre.id}>
+                    {centre.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
 
-      <div className="mt-4">
-        <div className="flex items-center space-x-4">
-          <label
-            htmlFor="classroom"
-            className="block w-1/4 text-sm font-medium leading-6 text-gray-900"
-          >
-            Classroom
-          </label>
-          <select
-            id="classroom"
-            name="classroom"
-            required
-            value={selectedClassroom}
-            onChange={(e) => setSelectedClassroom(e.target.value)}
-            className="mt-2 block w-3/4 space-y-2 rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
-          >
-            <option value="" disabled>
-              Select a classroom
-            </option>
-            {classrooms.map((classroom, index) => (
-              <option key={index} value={classroom.id}>
-                {classroom.name}
-              </option>
-            ))}
-          </select>
-        </div>
-      </div>
+          <div className="mt-4">
+            <div className="flex items-center space-x-4">
+              <label
+                htmlFor="classroom"
+                className="block w-1/4 text-sm font-medium leading-6 text-gray-900"
+              >
+                Classroom
+              </label>
+              <select
+                id="classroom"
+                name="classroom"
+                required
+                value={selectedClassroom}
+                onChange={(e) => setSelectedClassroom(e.target.value)}
+                className="mt-2 block w-3/4 space-y-2 rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              >
+                <option value="" disabled>
+                  Select a classroom
+                </option>
+                {classrooms.map((classroom, index) => (
+                  <option key={index} value={classroom.id}>
+                    {classroom.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
 
-      <div className="flex items-center mt-4">
-        <label
-          htmlFor="levels"
-          className="block w-1/4 mt-2 text-sm font-medium leading-6 text-gray-900"
-        >
-          Levels
-        </label>
-        <div className="w-3/4 mt-2 flex flex-col space-y-4 pl-3">
-          {levels.map((row, rowIndex) => (
-            <div key={rowIndex} className="flex space-x-4 justify-start">
-              {row.map((level) => (
-                <label key={level} className="flex items-center">
-                  <input
-                    type="checkbox"
-                    checked={selectedLevels.includes(level)}
-                    onChange={() => handleLevelChange(level)}
-                    className="h-5 w-5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
-                  />
-                  <span className="ml-2 text-gray-700">{level}</span>
-                </label>
+          <div className="flex items-center mt-4">
+            <label
+              htmlFor="levels"
+              className="block w-1/4 mt-2 text-sm font-medium leading-6 text-gray-900"
+            >
+              Levels
+            </label>
+            <div className="w-3/4 mt-2 flex flex-col space-y-4 pl-3">
+              {levels.map((row, rowIndex) => (
+                <div key={rowIndex} className="flex space-x-4 justify-start">
+                  {row.map((level) => (
+                    <label key={level} className="flex items-center">
+                      <input
+                        type="checkbox"
+                        checked={selectedLevels.includes(level)}
+                        onChange={() => handleLevelChange(level)}
+                        className="h-5 w-5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                      />
+                      <span className="ml-2 text-gray-700">{level}</span>
+                    </label>
+                  ))}
+                </div>
               ))}
             </div>
-          ))}
-        </div>
-      </div>
+          </div>
 
-      <div className="flex items-center mt-6">
-        <label
-          htmlFor="subjects"
-          className="block w-1/4 text-sm font-medium leading-6 text-gray-900"
-        >
-          Subjects
-        </label>
-        <div className="w-3/4 flex flex-col space-y-2 pl-3">
-          <div className="flex space-x-4">
-            {subjects.map((subject) => (
-              <label key={subject.id} className="flex items-center">
-                <input
-                  type="checkbox"
-                  checked={selectedSubjects.includes(subject.value)}
-                  onChange={() => handleSubjectChange(subject.value)}
-                  className="h-5 w-5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
-                />
-                <span className="ml-2 text-gray-700">{subject.label}</span>
-              </label>
-            ))}
+          <div className="flex items-center mt-6">
+            <label
+              htmlFor="subjects"
+              className="block w-1/4 text-sm font-medium leading-6 text-gray-900"
+            >
+              Subjects
+            </label>
+            <div className="w-3/4 flex flex-col space-y-2 pl-3">
+              <div className="flex space-x-4">
+                {subjects.map((subject) => (
+                  <label key={subject.id} className="flex items-center">
+                    <input
+                      type="checkbox"
+                      checked={selectedSubjects.includes(subject.value)}
+                      onChange={() => handleSubjectChange(subject.value)}
+                      className="h-5 w-5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                    />
+                    <span className="ml-2 text-gray-700">{subject.label}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="flex justify-center mt-4 space-x-4">
+            {session.id && (
+              <div>
+                <button
+                  className="bg-red-500 text-white rounded-md px-4 py-2 hover:bg-red-600"
+                  onClick={() => handleDeleteSession(session.id)}
+                >
+                  Delete
+                </button>
+              </div>
+            )}
+
+            <button
+              type="button"
+              className="bg-green-500 text-white rounded-md px-4 py-2 hover:bg-green-600"
+              onClick={handleSubmit}
+            >
+              {label}
+            </button>
           </div>
         </div>
+        <button onClick={onClose}>Close</button>
       </div>
-
-      <button
-        type="button"
-        className="mt-4 bg-green-500 text-white rounded-md px-4 py-2 hover:bg-green-600"
-        onClick={handleSubmit}
-      >
-        {label}
-      </button>
     </div>
   );
 }

@@ -9,9 +9,7 @@ import './index.css';
 import { EventItem } from './CustomCalendar.types';
 import './index.css';
 import SessionEvent from './SessionEvent';
-import { getAllSessions } from '@acer-academy-learning/data-access';
 import { SessionData } from 'libs/data-access/src/lib/types/session';
-import { useEffect, useState } from 'react';
 
 const localizer = momentLocalizer(moment);
 
@@ -26,11 +24,17 @@ const initProps = {
 const DndCalendar = withDragAndDrop<EventItem>(BigCalendar);
 interface CalendarProps {
   onShowSessionView: (session: SessionData) => void;
+  sessionsData: {
+    start: Date;
+    end: Date;
+    data: { session: SessionData };
+  }[];
 }
 
-export const TestCalendar = ({ onShowSessionView }: CalendarProps) => {
-  const [sessions, setSessions] = useState<SessionData[]>([]);
-
+export const TestCalendar = ({
+  onShowSessionView,
+  sessionsData,
+}: CalendarProps) => {
   const components = {
     event: ({ event }: { event: any }) => {
       const data = event?.data;
@@ -42,28 +46,6 @@ export const TestCalendar = ({ onShowSessionView }: CalendarProps) => {
       return null;
     },
   };
-
-  const fetchSessions = async () => {
-    try {
-      const response = await getAllSessions();
-      const allSessions: SessionData[] = response.data;
-      console.log(allSessions);
-      setSessions(allSessions);
-    } catch (error) {
-      console.error('Error retrieving transactions:', error);
-    }
-  };
-
-  // Use Effect Hook
-  useEffect(() => {
-    fetchSessions();
-  }, []);
-
-  const sessionsData = sessions?.map((session) => ({
-    start: new Date(session.start),
-    end: new Date(session.end),
-    data: { session },
-  }));
 
   return (
     <DndCalendar
