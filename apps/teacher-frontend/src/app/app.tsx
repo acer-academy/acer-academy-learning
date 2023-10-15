@@ -47,6 +47,8 @@ import { UpdateQuestion } from '../pages/question-bank/UpdateQuestion';
 import { Subjects } from '../pages/subjects/Subjects';
 import { Subject } from '../pages/subjects/Subject';
 import ViewCalendar from '../pages/scheduling/ViewCalendar';
+import Calendar from '../pages/scheduling/Calendar';
+import CalendarPage from '../pages/calendar/CalendarPage';
 
 export function App() {
   const queryClient = new QueryClient();
@@ -94,8 +96,8 @@ export function App() {
                 <Route path={ANALYTICS} />
                 {/* Scheduling routes */}
                 <Route path={SCHEDULING}>
-                  <Route path={VIEW_CLASSES} element={<ViewCalendar />} />
-                  <Route path={BOOK_CLASSES} element={<div>Home</div>} />
+                  <Route path={VIEW_CLASSES} element={<CalendarPage />} />
+                  <Route path={BOOK_CLASSES} element={<Calendar />} />
                 </Route>
                 {/* Rewards routes */}
                 <Route path={REWARDS} />
