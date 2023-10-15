@@ -28,19 +28,19 @@ import './index.css';
 //   'If you are profiling the playground app, please ensure you turn off the debug view. You can disable it by pressing on the settings control in the bottom-left of your screen and toggling the debug view setting.',
 // );
 
-export type LexicEditorProps = {
+export type LexEditorProps = {
   editorStateStr?: string;
   onChange: (val: string) => void;
   errorMessage?: string;
   onBlur: () => void;
 };
 
-export const LexicEditor = ({
+export const LexEditor = ({
   editorStateStr,
   onChange,
   errorMessage,
   onBlur,
-}: LexicEditorProps): JSX.Element => {
+}: LexEditorProps): JSX.Element => {
   // States
   const [isFocused, setIsFocused] = React.useState(false);
   const [isContentLoaded, setIsContentLoaded] = React.useState(

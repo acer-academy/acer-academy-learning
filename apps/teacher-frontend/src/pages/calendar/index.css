@@ -31,22 +31,22 @@
   min-height: 120px !important;
 }
 
-/* styles.css */
-
-/* .rbc-month-view .rbc-row-content {
+/* styles.css 
+rbc-month-view .rbc-row-content {
   overflow-y: auto;
-  /* max-height: 200px; */
 }
 
 .rbc-month-view .rbc-date-cell {
   overflow-y: auto;
   max-height: 200px;
-  position: relative; /* Set to relative so that child absolute elements are positioned relative to this */
+  position: relative;
 }
 
 .rbc-month-view .rbc-event {
   margin: 0;
   position: relative;
-  width: 100%; /* Ensure it takes the full width of the cell */
-  /* Additional styling as needed */
-} */
+  width: 100%;
+} 
+
+
+*/

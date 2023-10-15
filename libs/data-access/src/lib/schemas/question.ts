@@ -6,7 +6,6 @@ import {
   QuizQuestionTypeEnum,
 } from '../constants/question';
 import { LevelEnum } from '../types/CommonTypes';
-import { stripHtml } from 'string-strip-html';
 
 // FE schemas
 export const quizAnswerSchema = z.object({
@@ -16,7 +15,7 @@ export const quizAnswerSchema = z.object({
     .trim()
     .superRefine((answer, ctx) => {
       if (
-        answer &&
+        !answer ||
         answer ===
           '{"root":{"children":[{"children":[],"direction":null,"format":"","indent":0,"type":"paragraph","version":1}],"direction":null,"format":"","indent":0,"type":"root","version":1}}'
       ) {
@@ -54,7 +53,7 @@ export const quizQuestionSchema = z.object({
     .trim()
     .superRefine((questionText, ctx) => {
       if (
-        questionText &&
+        !questionText ||
         questionText ===
           '{"root":{"children":[{"children":[],"direction":null,"format":"","indent":0,"type":"paragraph","version":1}],"direction":null,"format":"","indent":0,"type":"root","version":1}}'
       ) {

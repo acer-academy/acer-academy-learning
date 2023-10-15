@@ -161,6 +161,12 @@ export const QuestionBank: React.FC = () => {
                         scope="col"
                         className="px-3 py-3.5 text-left text-lg font-bold text-gray-900"
                       >
+                        Version
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-3 py-3.5 text-left text-lg font-bold text-gray-900"
+                      >
                         Level(s)
                       </th>
                       <th
@@ -217,10 +223,23 @@ export const QuestionBank: React.FC = () => {
                           <td className="py-4 pl-3.5 pr-3 text-xs font-medium text-gray-900 max-w-0">
                             <div>
                               <span>
-                                {/* {question.questionText.length > 400
-                                  ? question.questionText.slice(0, 100) + '...'
-                                  : question.questionText} */}
-                                <LexOutput htmlString={question.questionText} shorten />
+                                <LexOutput
+                                  editorStateStr={question.questionText}
+                                  shorten
+                                />
+                              </span>
+                            </div>
+                          </td>
+                          <td className="whitespace-nowrap py-4 px-3 text-sm text-gray-900">
+                            <div className="flex flex-col">
+                              <span className="font-semibold text-sm">{`v${question.version}`}</span>
+                              <span className="text-xs text-gray-500">
+                                {question.version == 1
+                                  ? 'Created:'
+                                  : 'Updated:'}
+                              </span>
+                              <span className="text-xs text-gray-500">
+                                {String(question.createdAt).split('T')[0]}
                               </span>
                             </div>
                           </td>
@@ -259,7 +278,7 @@ export const QuestionBank: React.FC = () => {
                           <td className="whitespace-nowrap py-4 pl-3 pr-3 font-medium text-gray-900">
                             <TypeTag type={question.questionType} />
                           </td>
-                          <td className="whitespace-nowrap font-medium text-gray-900 space-x-1 w-max">
+                          <td className="whitespace-nowrap font-medium text-gray-900 space-x-1 w-max pr-3">
                             <button
                               type="button"
                               onClick={(e) => {

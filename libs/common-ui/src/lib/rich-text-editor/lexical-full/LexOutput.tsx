@@ -8,28 +8,25 @@ import React, { useEffect, useState } from 'react';
 import Placeholder from './ui/Placeholder';
 import LexicalErrorBoundary from '@lexical/react/LexicalErrorBoundary';
 import EquationsPlugin from './plugins/EquationsPlugin';
-import { EquationNode } from './nodes/EquationNode';
 import { EditorEventContextProvider } from './context/EventContext';
-import { HeadingNode, QuoteNode } from '@lexical/rich-text';
 import PlaygroundNodes from './nodes/PlaygroundNodes';
 import { LayoutPlugin } from './plugins/LayoutPlugin/LayoutPlugin';
 import { RenderInitialContentPlugin } from '../lexical-full/plugins/RenderInitialContentPlugin';
-import { Hmac } from 'crypto';
 
 export type LexOutputProps = {
-  htmlString: string;
+  editorStateStr: string;
   onChange?: (val: string) => void;
   shorten?: boolean;
 };
 
 export const LexOutput = ({
-  htmlString,
+  editorStateStr,
   onChange,
   shorten,
 }: LexOutputProps) => {
   useEffect(() => {
     if (onChange) {
-      onChange(htmlString);
+      onChange(editorStateStr);
     }
   }, []);
   const initialConfig: InitialConfigType = {
@@ -47,10 +44,10 @@ export const LexOutput = ({
       value={{ isContentLoaded, setIsContentLoaded, isFocused, setIsFocused }}
     >
       <LexicalComposer initialConfig={initialConfig}>
-        {htmlString && (
+        {editorStateStr && (
           <RenderInitialContentPlugin
             shorten={shorten}
-            editorStateStr={htmlString}
+            editorStateStr={editorStateStr}
           />
         )}
         <EquationsPlugin />

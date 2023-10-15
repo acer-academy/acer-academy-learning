@@ -24,6 +24,7 @@ export const Filter: React.FC<{ filterSubmitCallback: Function }> = (props) => {
   const [questionTypes, setQuestionTypes] = useState<QuizQuestionTypeEnum[]>(
     [],
   );
+  const [showAllVersions, setShowAllVersions] = useState<boolean>(false);
 
   // Used to bypass html select value no change
   const [selectedLevel, setSelectedLevel] = useState('');
@@ -41,10 +42,11 @@ export const Filter: React.FC<{ filterSubmitCallback: Function }> = (props) => {
       topics: topics,
       status: statuses,
       questionType: questionTypes,
+      showLatestOnly: !showAllVersions,
     };
     console.log(filterOptions);
     filterSubmitCallback(filterOptions);
-  }, [difficulties, levels, topics, statuses, questionTypes]);
+  }, [difficulties, levels, topics, statuses, questionTypes, showAllVersions]);
 
   const handleDifficultyPress = (difficulty: QuizQuestionDifficultyEnum) => {
     if (difficulties.includes(difficulty)) {
@@ -210,6 +212,17 @@ export const Filter: React.FC<{ filterSubmitCallback: Function }> = (props) => {
         >
           Reset
         </button>
+      </div>
+      <div className="flex gap-2 mt-2 items-center">
+        <input
+          type="checkbox"
+          id="showAllVersionsCheckbox"
+          checked={showAllVersions}
+          onChange={() => {
+            setShowAllVersions(!showAllVersions);
+          }}
+        />
+        <label htmlFor="showAllVersionsCheckbox">Show all versions</label>
       </div>
       <div className="mt-5 flex gap-5 flex-wrap items-center">
         {levels.map((level, index) => {

@@ -218,6 +218,12 @@ export const CreditBundleManagement: React.FC = () => {
                           scope="col"
                           className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 max-w-sm"
                         >
+                          Price Per Credit
+                        </th>
+                        <th
+                          scope="col"
+                          className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 max-w-sm"
+                        >
                           Status
                         </th>
                         <th
@@ -244,7 +250,7 @@ export const CreditBundleManagement: React.FC = () => {
                             <td className="whitespace-normal py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6 max-w-xs">
                               {creditBundle.name}
                             </td>
-                            <td className="whitespace-nowrap px-4 py-4 text-sm text-gray-500 image-column max-w-xs">
+                            <td className="whitespace-nowrap px-4 py-4 text-sm text-gray-500 max-w-xs">
                               {creditBundle.description}
                             </td>
                             <td className="whitespace-normal px-3 py-4 text-sm text-gray-500 max-w-sm">
@@ -252,6 +258,13 @@ export const CreditBundleManagement: React.FC = () => {
                             </td>
                             <td className="whitespace-normal px-3 py-4 text-sm text-gray-500 max-w-sm">
                               {'$' + convertIntToFloat(creditBundle.basePrice)}
+                            </td>
+                            <td className="whitespace-normal px-3 py-4 text-sm text-gray-500 max-w-sm">
+                              {'$' +
+                                convertIntToFloat(
+                                  creditBundle.basePrice /
+                                    creditBundle.numCredits,
+                                )}
                             </td>
                             <td className="whitespace-normal px-3 py-4 text-sm text-gray-500 max-w-sm">
                               <span

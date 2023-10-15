@@ -33,6 +33,7 @@ export class TeacherDao {
       where: { id: teacherId },
       include: {
         centre: true,
+        sessions: true,
       },
     });
   }

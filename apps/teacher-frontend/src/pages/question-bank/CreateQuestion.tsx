@@ -22,7 +22,7 @@ export const CreateQuestion = () => {
   const formMethods = useZodForm({
     schema: createQuizQuestionSchema,
     defaultValues: DEFAULT_QUESTION,
-    mode: 'onTouched',
+    mode: 'onSubmit',
     criteriaMode: 'all',
   });
   const { mutateAsync: createQuestionMutationAsync } = useMutation(

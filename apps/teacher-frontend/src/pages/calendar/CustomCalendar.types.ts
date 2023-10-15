@@ -1,3 +1,5 @@
+import { SessionData } from 'libs/data-access/src/lib/types/session';
+
 export type Session = {
   id: number;
   status: string;
@@ -9,6 +11,6 @@ export type Session = {
 export type EventItem = {
   start: Date;
   end: Date;
-  data?: { session?: Session };
+  data?: { session?: SessionData };
   isDraggable?: boolean;
 };

@@ -56,7 +56,7 @@ export const UpdateQuestion = () => {
   const formMethods = useZodForm({
     schema: createQuizQuestionSchema,
     defaultValues: wrangledData,
-    mode: 'onTouched',
+    mode: 'onSubmit',
     criteriaMode: 'all',
   });
 

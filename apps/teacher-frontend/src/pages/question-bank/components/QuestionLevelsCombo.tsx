@@ -8,6 +8,7 @@ import {
   CreateQuizQuestionType,
   LevelEnum,
 } from '@acer-academy-learning/data-access';
+import { ErrorMessage } from '@hookform/error-message';
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
@@ -32,7 +33,11 @@ export const QuestionLevelsCombo = () => {
               badges={value}
               getDisplayValue={(badge) => screamingSnakeToTitleCase(badge)}
             />
-            <ErrorField message={errors.levels?.message} />
+            <ErrorMessage
+              errors={errors}
+              name="levels"
+              render={({ message }) => <ErrorField message={message} />}
+            />
             <GenericComboBox
               options={levelsEnums}
               onChange={onChange}
