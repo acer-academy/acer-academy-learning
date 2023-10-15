@@ -40,6 +40,8 @@ model Student {
   transaction Transaction[]
 
   sessions Session[]
+  quizzes Quiz[]
+  takes   Take[]
 }
 
 model Parent {
@@ -103,7 +105,7 @@ model Teacher {
   // sessions Session[]
   // announcements Announcement[]
   // assignments Assignment[]
-  // quizzes Quiz[]
+  quizzes   Quiz[]
 
   whitelistItem   WhitelistItem @relation(fields: [whitelistItemId], references: [id])
   whitelistItemId String        @unique @db.Uuid
@@ -327,15 +329,21 @@ enum QuizQuestionTypeEnum {
 }
 
 model QuizQuestion {
-  id           String                     @id @default(uuid()) @db.Uuid
-  topics       QuizQuestionTopicEnum[]
-  levels       LevelEnum[]
-  difficulty   QuizQuestionDifficultyEnum
-  questionText String                     @db.Text
-  status       QuizQuestionStatusEnum
-  questionType QuizQuestionTypeEnum
-  answers      QuizAnswer[]
-  createdAt    DateTime                   @default(now())
+  id            String                     @id @default(uuid()) @db.Uuid
+  topics        QuizQuestionTopicEnum[]
+  levels        LevelEnum[]
+  difficulty    QuizQuestionDifficultyEnum
+  questionText  String                     @db.Text
+  status        QuizQuestionStatusEnum
+  questionType  QuizQuestionTypeEnum
+  answers       QuizAnswer[]
+  createdAt     DateTime                   @default(now())
+  nextVersion   QuizQuestion?              @relation("versioning", fields: [nextVersionId], references: [id])
+  nextVersionId String?                    @unique @db.Uuid
+  prevVersion   QuizQuestion?              @relation("versioning")
+  version       Int                        @default(1)
+  usedInQuizzes QuizOnQuizQuestions[]
+  usedInTakes   TakeAnswer[]
 }
 
 model QuizAnswer {
@@ -379,4 +387,60 @@ model Class {
   frequency ClassFrequencyEnum
 
   sessions Session[]
+}
+
+model Quiz {
+  id                 String                     @id @default(uuid()) @db.Uuid
+  title              String
+  description        String                     @db.Text
+  subject            SubjectEnum
+  levels             LevelEnum[]
+  difficulty         QuizQuestionDifficultyEnum
+  topics             QuizQuestionTopicEnum[]
+  totalMarks         Int
+  rewardPoints       Int
+  rewardMinimumMarks Int
+  timeAllowed        Int?
+  teacherCreated     Teacher                    @relation(fields: [teacherCreatedId], references: [id])
+  teacherCreatedId   String                     @db.Uuid
+  createdAt          DateTime                   @default(now())
+  allocatedTo        Student[]
+  quizQuestions      QuizOnQuizQuestions[]
+  takes              Take[]
+  nextVersion        Quiz?                      @relation("versioning", fields: [nextVersionId], references: [id])
+  nextVersionId      String?                    @unique @db.Uuid
+  prevVersion        Quiz?                      @relation("versioning")
+  version            Int                        @default(1)
+}
+
+model QuizOnQuizQuestions {
+  quizQuestion      QuizQuestion @relation(fields: [quizQuestionId], references: [id])
+  quizQuestionId    String       @db.Uuid
+  quiz              Quiz         @relation(fields: [quizId], references: [id])
+  quizId            String       @db.Uuid
+  quizQuestionIndex Int
+  quizQuestionMarks Int          @default(1)
+
+  @@id([quizId, quizQuestionId])
+}
+
+model Take {
+  id             String       @id @default(uuid()) @db.Uuid
+  marks          Int
+  attemptedAt    DateTime     @default(now())
+  timeTaken      Int
+  takenBy        Student      @relation(fields: [takenById], references: [id])
+  takenById      String       @db.Uuid
+  quiz           Quiz         @relation(fields: [quizId], references: [id])
+  quizId         String       @db.Uuid
+  studentAnswers TakeAnswer[]
+}
+
+model TakeAnswer {
+  id            String       @id @default(uuid()) @db.Uuid
+  question      QuizQuestion @relation(fields: [questionId], references: [id])
+  questionId    String       @db.Uuid
+  studentAnswer String
+  take          Take         @relation(fields: [takeId], references: [id])
+  takeId        String       @db.Uuid
 }

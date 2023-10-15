@@ -19,6 +19,7 @@ import transactionService from '../services/TransactionService';
 import { CreditBundleService } from '../services/CreditBundleService';
 import { QuizQuestionService } from '../services/QuizQuestionService';
 import { QuizAnswerService } from '../services/QuizAnswerService';
+import { QuizService } from '../services/QuizService';
 
 const teacherService = new TeacherService();
 const centreService = new CentreService();
@@ -29,6 +30,7 @@ const creditBundleService = new CreditBundleService();
 const quizQuestionService = new QuizQuestionService();
 const quizAnswerService = new QuizAnswerService();
 const promotionService = new PromotionService();
+const quizService = new QuizService();
 
 /*
  * Validators Naming Convention: (Expand on as we code)
@@ -652,6 +654,56 @@ export async function validateParamsQuizQuestionExists(
   }
 }
 
+/** Validates that a quiz question id passed in params is the latest version */
+export async function validateParamsQuizQuestionIsLatest(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { questionId } = req.params;
+    if (questionId) {
+      const question = await quizQuestionService.getQuizQuestionById(
+        questionId,
+      );
+      if (question.nextVersionId) {
+        return res.status(400).json({
+          error: 'Questions cannot be updated when a newer version exists.',
+        });
+      }
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+/** Validates that a quiz id passed in params is the latest version */
+export async function validateParamsQuizIsLatest(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { quizId } = req.params;
+    if (quizId) {
+      const quiz = await quizService.getQuizById(quizId);
+      if (quiz.nextVersionId) {
+        return res.status(400).json({
+          error: 'Quizzes cannot be updated when a newer version exists.',
+        });
+      }
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
 /** Validates if an array of subject enums passed in body all exist */
 export async function validateBodySubjectsExist(
   req: Request,
@@ -667,6 +719,30 @@ export async function validateBodySubjectsExist(
       if (!validSubjects) {
         return res.status(400).json({
           error: 'Invalid subjects provided.',
+        });
+      }
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+/** Validates if a single subject enum passed in body exists */
+export async function validateBodySubjectExists(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { subject } = req.body;
+    if (subject) {
+      const validSubject = Object.values(SubjectEnum).includes(subject);
+      if (!validSubject) {
+        return res.status(400).json({
+          error: 'Invalid subject provided.',
         });
       }
     }
@@ -1343,6 +1419,147 @@ export async function validateCreditBundleIsActive(
       });
     }
     next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+/** Validates if the format of a create quiz request is valid */
+export async function validateBodyQuizFormatValid(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const {
+      title,
+      description,
+      subject,
+      levels,
+      topics,
+      totalMarks,
+      rewardPoints,
+      rewardMinimumMarks,
+      timeAllowed,
+      teacherCreated,
+      allocatedTo,
+      quizQuestions,
+    } = req.body;
+    const validBody = {
+      title,
+      description,
+      subject,
+      levels,
+      topics,
+      totalMarks,
+      rewardPoints,
+      rewardMinimumMarks,
+      timeAllowed,
+      teacherCreated,
+      allocatedTo,
+      quizQuestions,
+    };
+    for (const key of Object.keys(validBody)) {
+      if (
+        (validBody[key] === undefined && key !== 'timeAllowed') ||
+        (key === 'title' &&
+          (typeof validBody[key] !== 'string' ||
+            validBody[key].trim().length === 0)) ||
+        (key === 'description' &&
+          (typeof validBody[key] !== 'string' ||
+            validBody[key].trim().length === 0)) ||
+        (key === 'subject' && typeof validBody[key] !== 'string') ||
+        (key === 'levels' &&
+          (!Array.isArray(validBody[key]) || validBody[key].length === 0)) ||
+        (key === 'topics' &&
+          (!Array.isArray(validBody[key]) || validBody[key].length === 0)) ||
+        (key === 'totalMarks' &&
+          (typeof validBody[key] !== 'number' || validBody[key] <= 0)) ||
+        (key === 'rewardPoints' &&
+          (typeof validBody[key] !== 'number' || validBody[key] < 0)) ||
+        (key === 'rewardMinimumMarks' &&
+          (typeof validBody[key] !== 'number' || validBody[key] <= 0)) ||
+        (key === 'timeAllowed' &&
+          timeAllowed !== undefined &&
+          (typeof validBody[key] !== 'number' || validBody[key] <= 0)) ||
+        (key === 'teacherCreated' &&
+          (!validBody[key] || typeof validBody[key] !== 'string')) ||
+        (key === 'allocatedTo' &&
+          (!Array.isArray(validBody[key]) || validBody[key].length === 0)) ||
+        (key === 'quizQuestions' &&
+          (!Array.isArray(validBody[key]) || validBody[key].length === 0))
+      ) {
+        throw Error(`${key} is missing or has an invalid format.`);
+      }
+    }
+    req.body = validBody;
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+export async function validateBodyQuizTeacherCreatedExists(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { teacherCreated } = req.body;
+    const teacherExists = await teacherService.getTeacherById(teacherCreated);
+    if (!teacherExists || !teacherCreated) {
+      return res.status(400).json({
+        error: 'Teacher does not exist.',
+      });
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+export async function validateBodyQuizOnQuizQuestionFormatValid(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { quizQuestions } = req.body;
+    if (Array.isArray(quizQuestions)) {
+      for (const quizQuestion of quizQuestions) {
+        const { quizQuestionId, quizQuestionIndex, quizQuestionMarks } =
+          quizQuestion;
+        if (
+          !quizQuestionId ||
+          typeof quizQuestionId !== 'string' ||
+          quizQuestionId.length !== 36
+        ) {
+          throw Error(
+            'Malformed request; a valid quizQuestionId is required per quizQuestions element.',
+          );
+        }
+        if (quizQuestionIndex == undefined || quizQuestionIndex < 0) {
+          console.log(!quizQuestionIndex);
+          throw Error(
+            'Malformed request; a valid quizQuestionIndex is required per quizQuestions element.',
+          );
+        }
+        if (quizQuestionMarks == undefined || quizQuestionMarks < 0) {
+          throw Error(
+            'Malformed request; a valid quizQuestionMarks is required per quizQuestions element.',
+          );
+        }
+      }
+      next();
+    } else {
+      throw Error('QuizQuestions is required and must be a non-empty array.');
+    }
   } catch (error) {
     return res.status(500).json({
       error: error.message,
