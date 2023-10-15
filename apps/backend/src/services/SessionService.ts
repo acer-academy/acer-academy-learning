@@ -35,7 +35,7 @@ class SessionService {
     if (
       data.start &&
       data.end &&
-      (session.start !== data.start || data.end === data.end)
+      (session.start !== data.start || data.end !== data.end)
     ) {
       const available = await this.checkClassroomAvailability(
         session.classroomId,
@@ -43,7 +43,7 @@ class SessionService {
         data.end.toString(),
       );
       if (!available || available === id) {
-        return SessionDao.updateSession(id, data);
+        return await SessionDao.updateSession(id, data);
       }
       throw new Error(
         'Unable to update session because another session is already using the classroom.',

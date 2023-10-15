@@ -52,14 +52,15 @@ classRouter.post('/recurring/', async (req, res) => {
   }
 });
 
-classRouter.put('/recurring/:sessionId', async (req, res) => {
+classRouter.put('/recurring/:sessionId/:classId', async (req, res) => {
   try {
-    const { sessionId } = req.params;
+    const { sessionId, classId } = req.params;
     const input = req.body;
     const classInput: Prisma.ClassUncheckedUpdateInput = input[0];
     const sessionInput: Prisma.SessionUncheckedUpdateInput = input[1];
     const session = await ClassService.updateRecurringClass(
       sessionId,
+      classId,
       classInput,
       sessionInput,
     );
@@ -86,7 +87,9 @@ classRouter.delete('/:id', async (req, res) => {
   try {
     const { id } = req.params;
     await ClassService.deleteRecurringClass(id);
-    return res.status(200).json('All Recurring Sessions Deleted Successfully');
+    return res
+      .status(200)
+      .json('All future recurring sessions deleted successfully');
   } catch (error) {
     console.log(error);
     return res.status(500).json({ error: error.message });
