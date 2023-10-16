@@ -43,20 +43,32 @@ export class QuizQuestionDao {
 
   public async getFilteredQuizQuestions(
     filterOptions: Prisma.QuizQuestionWhereInput,
-    offset: number,
-    pageSize: number,
+    offset: number | null,
+    pageSize: number | null,
   ): Promise<QuizQuestion[]> {
-    return this.prismaClient.quizQuestion.findMany({
-      where: filterOptions,
-      include: {
-        answers: true,
-      },
-      skip: offset,
-      take: pageSize,
-      orderBy: {
-        createdAt: 'desc',
-      },
-    });
+    if (offset != null && pageSize != null) {
+      return this.prismaClient.quizQuestion.findMany({
+        where: filterOptions,
+        include: {
+          answers: true,
+        },
+        skip: offset,
+        take: pageSize,
+        orderBy: {
+          createdAt: 'desc',
+        },
+      });
+    } else {
+      return this.prismaClient.quizQuestion.findMany({
+        where: filterOptions,
+        include: {
+          answers: true,
+        },
+        orderBy: {
+          createdAt: 'desc',
+        },
+      });
+    }
   }
 
   public async updateQuizQuestion(
