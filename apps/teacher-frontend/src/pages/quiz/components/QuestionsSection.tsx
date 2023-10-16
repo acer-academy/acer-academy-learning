@@ -37,6 +37,23 @@ export const QuestionsSection = () => {
     setSelectedQuestions(updatedSelectedQuestions);
   };
 
+  const removeQuizQuestion = (questionId: string) => {
+    const quizQuestionIndexToRemove = selectedQuestions.find(
+      (question) => question.quizQuestionId === questionId,
+    )?.quizQuestionIndex;
+    if (quizQuestionIndexToRemove) {
+      const updatedSelectedQuestions = selectedQuestions
+        .filter((question) => question.quizQuestionId !== questionId)
+        .map((question) => {
+          if (question.quizQuestionIndex > quizQuestionIndexToRemove) {
+            question.quizQuestionIndex--;
+          }
+          return question;
+        });
+      setSelectedQuestions(updatedSelectedQuestions);
+    }
+  };
+
   return (
     <>
       {questionSelectionMode === '' ? (
@@ -69,6 +86,7 @@ export const QuestionsSection = () => {
         <SelectedQuestionsTable
           selectedQuestions={selectedQuestions}
           editQuestionMarks={editQuestionMarks}
+          removeQuizQuestion={removeQuizQuestion}
         />
       )}
     </>

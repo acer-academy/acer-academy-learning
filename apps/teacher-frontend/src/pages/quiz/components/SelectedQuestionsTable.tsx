@@ -2,6 +2,7 @@ import {
   GenericButton,
   GenericInput,
   LexOutput,
+  WarningModal,
 } from '@acer-academy-learning/common-ui';
 import DifficultyTag from '../../question-bank/DifficultyTag';
 import { LevelTag } from '../../question-bank/LevelTag';
@@ -13,17 +14,18 @@ import {
   getQuizQuestionById,
 } from '@acer-academy-learning/data-access';
 import { useState, useEffect } from 'react';
-import { PencilSquareIcon } from '@heroicons/react/24/outline';
+import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline';
 
 interface SelectedQuestionsTableProps {
   selectedQuestions: QuizQuestionInQuizType[];
   editQuestionMarks: (questionId: string, marks: number) => void;
+  removeQuizQuestion: (questionId: string) => void;
 }
 
 export const SelectedQuestionsTable: React.FC<SelectedQuestionsTableProps> = (
   props: SelectedQuestionsTableProps,
 ) => {
-  const { selectedQuestions, editQuestionMarks } = props;
+  const { selectedQuestions, editQuestionMarks, removeQuizQuestion } = props;
   console.log('SelectedQuestionsTable: selectedQuestions', selectedQuestions);
 
   const [questionIdToObjectMap, setQuestionIdToObjectMap] = useState<{
@@ -33,6 +35,9 @@ export const SelectedQuestionsTable: React.FC<SelectedQuestionsTableProps> = (
   const [isEditing, setIsEditing] = useState(false);
   const [editMarksQuestionId, setEditMarksQuestionId] = useState<string>('');
   const [editedMarks, setEditedMarks] = useState(0);
+
+  const [deleteQuestionId, setDeleteQuestionId] = useState<string>('');
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const handleEditClick = () => {
     if (isEditing) {
@@ -140,6 +145,12 @@ export const SelectedQuestionsTable: React.FC<SelectedQuestionsTableProps> = (
                         className="px-3 py-3.5 text-left text-lg font-bold text-gray-900"
                       >
                         Marks
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-3 py-3.5 text-left text-lg font-bold text-gray-900"
+                      >
+                        Action
                       </th>
                     </tr>
                   </thead>
@@ -304,17 +315,19 @@ export const SelectedQuestionsTable: React.FC<SelectedQuestionsTableProps> = (
                                 )}
                               </div>
                             </div>
-                            {/* <button
+                          </td>
+                          <td className="whitespace-nowrap py-4 pl-3 pr-3 font-medium text-gray-900">
+                            <button
                               type="button"
                               onClick={(e) => {
                                 e.stopPropagation();
-                                setDeleteQuestionId(question.id);
-                                setDeleteModalOpen(true);
+                                setDeleteQuestionId(question.quizQuestionId);
+                                setIsDeleteModalOpen(true);
                               }}
                               className="inline-flex items-center rounded-md bg-red-500 px-3 py-2 text-sm font-semibold shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-red-600"
                             >
-                              <TrashIcon className="w-6 h-6 text-white" />
-                            </button> */}
+                              <TrashIcon className="w-4 h-4 text-white" />
+                            </button>
                           </td>
                         </tr>
                       ))
@@ -326,17 +339,17 @@ export const SelectedQuestionsTable: React.FC<SelectedQuestionsTableProps> = (
           </div>
         </div>
       </div>
-      {/* <WarningModal
-        open={deleteModalOpen}
-        setOpen={setDeleteModalOpen}
-        title={'Delete Question'}
+      <WarningModal
+        open={isDeleteModalOpen}
+        setOpen={setIsDeleteModalOpen}
+        title={'Remove Question'}
         description={
           'Are you sure you want to remove this question from the quiz?'
         }
-        confirmContent={'Delete'}
+        confirmContent={'Remove'}
         dismissContent={'Cancel'}
-        onConfirm={() => deleteQuizQuestionMutate(deleteQuestionId)}
-      /> */}
+        onConfirm={() => removeQuizQuestion(deleteQuestionId)}
+      />
     </div>
   );
 };
