@@ -88,10 +88,10 @@ class ClassService {
       classId: classBeforeUpdate.id,
     };
 
-    const newEndDate = sessionData.end
+    let eventEndDate = sessionData.end
       ? new Date(sessionData.end as string)
       : sessionBeforeUpdate.end;
-    const newStartTime = sessionData.start
+    let currDate = sessionData.start
       ? new Date(sessionData.start as string)
       : sessionBeforeUpdate.start;
     const endRecurringDate: Date = classData.endRecurringDate
@@ -111,78 +111,34 @@ class ClassService {
     let updatedSessions: Session[] = [];
     let endIndex: number = -1;
 
-    let currDate = newStartTime;
-    let eventEndDate = newEndDate;
+    for (let index in sessions) {
+      if (sessions[index].start < currDate) {
+        // console.log('delete')
+        await SessionService.deleteSession(sessions[index].id);
+      } else {
+        console.log('update');
+        const updatedSession = await SessionService.updateSession(
+          sessions[index].id,
+          {
+            ...data,
+            start: currDate,
+            end: eventEndDate,
+          },
+        );
+        updatedSessions.push(updatedSession);
+        if (updatedSession.start >= endRecurringDate) {
+          endIndex = parseInt(index);
+          break;
+        }
+        const newDates = this.getNextDates(newFrequncy, currDate, eventEndDate);
+        currDate = newDates[0];
+        eventEndDate = newDates[1];
+      }
+    }
 
-    //Scenario 1: Frequency didnt change - only need to update
-    if (newFrequncy === classBeforeUpdate.frequency) {
-      const diffEndDate =
-        newEndDate.getTime() - sessionBeforeUpdate.end.getTime();
-      const diffStartDate =
-        newStartTime.getTime() - sessionBeforeUpdate.start.getTime();
-      let start = false;
-      for (let index in sessions) {
-        if (sessions[index].id === sessionId) {
-          start = true;
-        }
-        if (start) {
-          //   console.log('session', sessions[index]);
-          currDate = new Date(sessions[index].start.getTime() + diffStartDate);
-          eventEndDate = new Date(sessions[index].end.getTime() + diffEndDate);
-          const updatedSession = await SessionService.updateSession(
-            sessions[index].id,
-            {
-              ...sessionData,
-              start: currDate,
-              end: eventEndDate,
-            },
-          );
-          updatedSessions.push(updatedSession);
-          if (updatedSession.start >= endRecurringDate) {
-            endIndex = parseInt(index);
-            break;
-          }
-        }
-      }
-      const newDates = this.getNextDates(newFrequncy, currDate, eventEndDate);
-      currDate = newDates[0];
-      eventEndDate = newDates[1];
-    }
-    //Scenario 2: Frequency changed - need to delete + update
-    else {
-      for (let index in sessions) {
-        if (sessions[index].start < currDate) {
-          //   console.log('delete');
-          await SessionService.deleteSession(sessions[index].id);
-        } else {
-          //   console.log('update');
-          const updatedSession = await SessionService.updateSession(
-            sessions[index].id,
-            {
-              ...data,
-              start: currDate,
-              end: eventEndDate,
-            },
-          );
-          updatedSessions.push(updatedSession);
-          if (updatedSession.start >= endRecurringDate) {
-            endIndex = parseInt(index);
-            break;
-          }
-          const newDates = this.getNextDates(
-            newFrequncy,
-            currDate,
-            eventEndDate,
-          );
-          currDate = newDates[0];
-          eventEndDate = newDates[1];
-        }
-      }
-    }
-    // console.log('currDate', currDate);
-    // console.log('endRecurringDate', endRecurringDate);
     //Check: Not enough existing sessions - either frequency increased or endRecurringDate increased
     while (currDate <= endRecurringDate) {
+      // console.log('create additional');
       const session = await SessionService.createSession({
         ...data,
         start: currDate,
@@ -194,8 +150,9 @@ class ClassService {
       eventEndDate = newDates[1];
     }
 
-    ////Check: Too many existing sessions - either frequency decreased or endRecurringDate brought forward
+    //Check: Too many existing sessions - either frequency decreased or endRecurringDate brought forward
     if (endIndex > -1) {
+      // console.log('delete remaining');
       for (let i = endIndex; i < sessions.length; i++) {
         await SessionService.deleteSession(sessions[i].id);
       }
