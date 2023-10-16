@@ -10,6 +10,7 @@ import { CentreData } from 'libs/data-access/src/lib/types/centre';
 import { ClassroomData } from 'libs/data-access/src/lib/types/classroom';
 import { Teacher } from 'libs/data-access/src/lib/types/teacher';
 import { useAuth } from '@acer-academy-learning/common-ui';
+import { useToast } from '@acer-academy-learning/common-ui';
 
 import {
   createSession,
@@ -71,6 +72,7 @@ export default function EventForm({
     // add more rows as needed
   ];
 
+  const { displayToast, ToastType } = useToast();
   const [centres, setCentres] = useState<CentreData[]>([]);
   const [classrooms, setClassrooms] = useState<ClassroomData[]>([]);
   const [selectedCentre, setSelectedCentre] = useState(
@@ -79,8 +81,7 @@ export default function EventForm({
   const [selectedClassroom, setSelectedClassroom] = useState(
     session.classroomId || '',
   );
-  //   const [selectedSubjects, setSelectedSubjects] = useState<string[]>([]);
-  //   const [selectedLevels, setSelectedLevels] = useState<string[]>([]);
+
   const [selectedSubjects, setSelectedSubjects] = useState<string[]>(
     session.subjects || [],
   );
@@ -91,10 +92,6 @@ export default function EventForm({
   const { user } = useAuth<Teacher>();
 
   const label = session?.id ? 'Update' : 'Create';
-
-  //   const { mutateAsync: createSession } = useCreateSession();
-  //   const { mutateAsync: updateSession } = useUpdateSession();
-  //   const { mutateAsync: deleteSession } = useDeleteSession();
 
   useEffect(() => {
     setSessionData({ ...session });
@@ -204,12 +201,14 @@ export default function EventForm({
         console.log('created obj');
       }
       await fetchSessions();
+      displayToast('Session created successfully!', ToastType.SUCCESS);
     } else {
       const response = await updateSession(session.id, createSessionData);
       if (response) {
         console.log('updated data');
       }
       await fetchSessions();
+      displayToast('Session updated successfully!', ToastType.SUCCESS);
     }
   };
 
