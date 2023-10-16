@@ -129,14 +129,21 @@ quizQuestionRouter.post(
   validateBodyQuizQuestionTypesExist,
   validateBodyQuizQuestionStatusesExist,
   async (req: Request, res: Response) => {
+    let filterOptions: QuizQuestionFilterOptions;
     try {
-      const { page = 1, pageSize = 10 } = req.query;
-      const offset = (+page - 1) * +pageSize;
-      const filterOptions: QuizQuestionFilterOptions = {
-        pageSize: +pageSize,
-        offset: offset,
-        ...req.body,
-      };
+      if (req.query.page != null && req.query.pageSize != null) {
+        const { page = 1, pageSize = 10 } = req.query;
+        const offset = (+page - 1) * +pageSize;
+        filterOptions = {
+          pageSize: +pageSize,
+          offset: offset,
+          ...req.body,
+        };
+      } else {
+        filterOptions = {
+          ...req.body,
+        };
+      }
       const filteredQuestions =
         await quizQuestionService.getFilteredQuizQuestions(filterOptions);
       return res.status(200).json(filteredQuestions);
