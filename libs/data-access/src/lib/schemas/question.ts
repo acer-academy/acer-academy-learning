@@ -111,3 +111,10 @@ export const createQuizQuestionSchema = z.intersection(
   quizQuestionSchema.omit({ questionType: true }),
   questionAnswerValidateSchema,
 );
+
+// Schema for quiz questions within the quiz schema
+export const quizQuestionInQuizSchema = z.object({
+  quizQuestionId: z.string(),
+  quizQuestionIndex: z.number().int().positive(),
+  quizQuestionMarks: z.number().int().positive(),
+});

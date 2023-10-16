@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { LevelEnum, SubjectEnum } from '../types/CommonTypes';
 import { LEX_DEFAULT_JSON_STRING } from '../constants';
 import { QuizQuestionTopicEnum } from '@prisma/client';
-import { createQuizQuestionSchema } from './question';
+import { quizQuestionInQuizSchema } from './question';
 export const quizSchema = z.object({
   id: z.string(),
   title: z.string().min(4, 'Title must be at least 4 characters long'),
@@ -17,13 +17,13 @@ export const quizSchema = z.object({
         });
       }
     }),
-  // subject: z.nativeEnum(SubjectEnum),
+  subject: z.nativeEnum(SubjectEnum),
   topics: z
     .array(z.nativeEnum(QuizQuestionTopicEnum))
     .min(1, 'You must select at least one topic'),
-  // levels: z
-  //   .array(z.nativeEnum(LevelEnum))
-  //   .min(1, 'You must select at least one level'),
+  levels: z
+    .array(z.nativeEnum(LevelEnum))
+    .min(1, 'You must select at least one level'),
   totalMarks: z.number().positive('Total Marks must be a positive number'),
   rewardPoints: z.number().positive('Reward Points must be a positive number'),
   // in seconds
@@ -32,7 +32,9 @@ export const quizSchema = z.object({
     .int('Time allowed (in seconds must be an Integer')
     .optional()
     .nullable(),
-  // questions: z.array(createQuizQuestionSchema),
+  questions: z
+    .array(quizQuestionInQuizSchema)
+    .min(1, 'You must add at least one question'),
 });
 
 export const createQuizSchema = quizSchema.omit({ id: true });
