@@ -21,13 +21,13 @@ function classNames(...classes: string[]) {
 }
 
 interface QuestionSelectionModeRadioProps {
-  setQuestionSelectionMode: (selectedModeId: string) => void;
+  handleSelectMode: (selectedModeId: string) => void;
 }
 
 export const QuestionSelectionModeRadio: React.FC<
   QuestionSelectionModeRadioProps
 > = (props: QuestionSelectionModeRadioProps) => {
-  const { setQuestionSelectionMode } = props;
+  const { handleSelectMode } = props;
   const [selected, setSelected] = useState(options[0]);
 
   return (
@@ -97,9 +97,7 @@ export const QuestionSelectionModeRadio: React.FC<
         </div>
       </RadioGroup>
       <div className="flex justify-center">
-        <GenericButton
-          onClick={() => setQuestionSelectionMode(selected.modeId)}
-        />
+        <GenericButton onClick={() => handleSelectMode(selected.modeId)} />
       </div>
     </>
   );
