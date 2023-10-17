@@ -5,13 +5,22 @@ import QuestionBankModal from './QuestionBankModal';
 import { FindQuestionsButton } from './FindQuestionsButton';
 import { QuestionSelectionModeRadio } from './QuestionSelectionModeRadio';
 import { AutoGenerateInputParametersForm } from './AutoGenerateInputParametersForm';
+interface QuestionsSectionProps {
+  selectedQuestions: QuizQuestionInQuizType[];
+  setSelectedQuestions: (selectedQuestions: QuizQuestionInQuizType[]) => void;
+  questionSelectionMode: string;
+  setQuestionSelectionMode: (questionSelectionMode: string) => void;
+}
 
-export const QuestionsSection = () => {
-  const [questionSelectionMode, setQuestionSelectionMode] =
-    useState<string>('');
-  const [selectedQuestions, setSelectedQuestions] = useState<
-    QuizQuestionInQuizType[]
-  >([]);
+export const QuestionsSection: React.FC<QuestionsSectionProps> = (
+  props: QuestionsSectionProps,
+) => {
+  const {
+    selectedQuestions,
+    setSelectedQuestions,
+    questionSelectionMode,
+    setQuestionSelectionMode,
+  } = props;
 
   // For manual selection
   const [isQuestionBankModalOpen, setIsQuestionBankModalOpen] = useState(false);
