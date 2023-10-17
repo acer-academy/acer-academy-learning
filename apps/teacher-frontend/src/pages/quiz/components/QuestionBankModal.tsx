@@ -4,12 +4,12 @@ import {
   getPaginatedFilteredQuestions as apiGetPaginatedFilteredQuestions,
 } from '@acer-academy-learning/data-access';
 import { Dialog, Transition } from '@headlessui/react';
-import { QuestionMarkCircleIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { XMarkIcon } from '@heroicons/react/24/outline';
 import {
   QuizQuestionData,
   QuizQuestionPaginationFilter,
 } from 'libs/data-access/src/lib/types/question';
-import { Fragment, useEffect, useState, useRef } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import DifficultyTag from '../../question-bank/DifficultyTag';
 import { Filter } from '../../question-bank/Filter';
@@ -17,27 +17,22 @@ import { LevelTag } from '../../question-bank/LevelTag';
 import TypeTag from '../../question-bank/QuestionTypeTag';
 import { QuizStatusTag } from '../../question-bank/QuizStatusTag';
 import { TopicTag } from '../../question-bank/TopicTag';
-import { last } from 'lodash';
 
 interface QuestionBankModalProps {
   selectedQuestions: QuizQuestionInQuizType[];
+  setSelectedQuestions: (selectedQuestions: QuizQuestionInQuizType[]) => void;
   setOpen: (open: boolean) => void;
   open: boolean;
-  onClick: (newSelectedQuestions: QuizQuestionInQuizType[]) => void;
 }
 
 export const QuestionBankModal: React.FC<QuestionBankModalProps> = (
   props: QuestionBankModalProps,
 ) => {
-  const { selectedQuestions, setOpen, open, onClick } = props;
+  const { selectedQuestions, setSelectedQuestions, setOpen, open } = props;
   const [newSelectedQuestionsId, setNewSelectedQuestionsId] = useState<
     string[]
   >([]);
-  console.log('QuestionBankModal: selectedQuestions', selectedQuestions);
-  console.log(
-    'QuestionBankModal: newSelectedQuestionsId',
-    newSelectedQuestionsId,
-  );
+
   const [toggleAllChecked, setToggleAllChecked] = useState(false);
 
   const location = useLocation();
@@ -63,7 +58,6 @@ export const QuestionBankModal: React.FC<QuestionBankModalProps> = (
         questions: QuizQuestionData[];
         totalCount: number;
       } = response.data;
-      console.log(questionData);
       setCurrentQuestions(questionData.questions);
       setTotalCount(questionData.totalCount);
     } catch (error) {
@@ -111,12 +105,11 @@ export const QuestionBankModal: React.FC<QuestionBankModalProps> = (
           };
         });
 
-    console.log(
-      'QuestionBankModal: newSelectedQuestions',
-      newSelectedQuestions,
+    setSelectedQuestions([...selectedQuestions, ...newSelectedQuestions]);
+    displayToast(
+      `Successfully added ${newSelectedQuestions.length} questions.`,
+      ToastType.SUCCESS,
     );
-
-    onClick(newSelectedQuestions);
     setOpen(false);
   };
 

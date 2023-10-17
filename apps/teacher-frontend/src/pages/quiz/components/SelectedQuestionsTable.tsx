@@ -3,6 +3,7 @@ import {
   GenericInput,
   LexOutput,
   WarningModal,
+  useToast,
 } from '@acer-academy-learning/common-ui';
 import DifficultyTag from '../../question-bank/DifficultyTag';
 import { LevelTag } from '../../question-bank/LevelTag';
@@ -18,21 +19,15 @@ import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline';
 
 interface SelectedQuestionsTableProps {
   selectedQuestions: QuizQuestionInQuizType[];
-  editQuestionMarks: (questionId: string, marks: number) => void;
-  removeQuizQuestion: (questionId: string) => void;
-  editQuestionOrder: (newOrder: number[]) => void;
+  setSelectedQuestions: (selectedQuestions: QuizQuestionInQuizType[]) => void;
 }
 
 export const SelectedQuestionsTable: React.FC<SelectedQuestionsTableProps> = (
   props: SelectedQuestionsTableProps,
 ) => {
-  const {
-    selectedQuestions,
-    editQuestionMarks,
-    removeQuizQuestion,
-    editQuestionOrder,
-  } = props;
-  console.log('SelectedQuestionsTable: selectedQuestions', selectedQuestions);
+  const { selectedQuestions, setSelectedQuestions } = props;
+
+  const { displayToast, ToastType } = useToast();
 
   const [questionIdToObjectMap, setQuestionIdToObjectMap] = useState<{
     [questionId: string]: QuizQuestionData;
@@ -65,6 +60,56 @@ export const SelectedQuestionsTable: React.FC<SelectedQuestionsTableProps> = (
         setEditedMarks(selectedQuestion.quizQuestionMarks || 0);
         setIsEditingMarks(true);
       }
+    }
+  };
+
+  const editQuestionMarks = (questionId: string, marks: number) => {
+    const updatedSelectedQuestions = [...selectedQuestions];
+    const questionIndex = updatedSelectedQuestions.findIndex(
+      (question) => question.quizQuestionId === questionId,
+    );
+    updatedSelectedQuestions[questionIndex].quizQuestionMarks = marks;
+    setSelectedQuestions(updatedSelectedQuestions);
+  };
+
+  const editQuestionOrder = (newOrder: number[]) => {
+    if (validateUniqueIndices(newOrder)) {
+      // All indices are unique; update the quizQuestionIndex
+      const updatedSelectedQuestions = selectedQuestions
+        .map((question, index) => ({
+          ...question,
+          quizQuestionIndex: newOrder[index],
+        }))
+        .sort((a, b) => a.quizQuestionIndex - b.quizQuestionIndex);
+      setSelectedQuestions(updatedSelectedQuestions);
+      displayToast('Question order successfully updated.', ToastType.SUCCESS);
+    } else {
+      displayToast(
+        'Question indices must be unique. Please check the question order and try again.',
+        ToastType.ERROR,
+      );
+    }
+  };
+
+  const validateUniqueIndices = (indices: number[]) => {
+    const uniqueIndices = [...new Set(indices)];
+    return uniqueIndices.length === indices.length;
+  };
+
+  const removeQuizQuestion = () => {
+    const quizQuestionIndexToRemove = selectedQuestions.find(
+      (question) => question.quizQuestionId === deleteQuestionId,
+    )?.quizQuestionIndex;
+    if (quizQuestionIndexToRemove) {
+      const updatedSelectedQuestions = selectedQuestions
+        .filter((question) => question.quizQuestionId !== deleteQuestionId)
+        .map((question) => {
+          if (question.quizQuestionIndex > quizQuestionIndexToRemove) {
+            question.quizQuestionIndex--;
+          }
+          return question;
+        });
+      setSelectedQuestions(updatedSelectedQuestions);
     }
   };
 
@@ -410,7 +455,7 @@ export const SelectedQuestionsTable: React.FC<SelectedQuestionsTableProps> = (
         }
         confirmContent={'Remove'}
         dismissContent={'Cancel'}
-        onConfirm={() => removeQuizQuestion(deleteQuestionId)}
+        onConfirm={() => removeQuizQuestion()}
       />
     </div>
   );
