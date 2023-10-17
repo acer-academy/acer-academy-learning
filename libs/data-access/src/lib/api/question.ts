@@ -10,6 +10,14 @@ import { Axios, AxiosResponse } from 'axios';
 
 const URL = '/quiz-questions';
 
+export async function getFilteredQuestions(
+  filterOptions: QuizQuestionPaginationFilter,
+): Promise<
+  AxiosResponse<{ questions: QuizQuestionData[]; totalCount: number }>
+> {
+  return client.post(`${URL}/filter`, filterOptions);
+}
+
 export async function getPaginatedFilteredQuestions(
   page: Number,
   pageSize: Number,
