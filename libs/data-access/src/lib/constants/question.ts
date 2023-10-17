@@ -69,7 +69,7 @@ export enum QuizQuestionTypeEnum {
   MCQ = 'MCQ',
   MRQ = 'MRQ',
   TFQ = 'TFQ',
-  OPEN_ENDED = 'OPEN_ENDED',
+  SHORT_ANSWER = 'SHORT_ANSWER',
 }
 
 export enum QuizQuestionTopicEnum {
