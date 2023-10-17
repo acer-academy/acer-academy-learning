@@ -110,55 +110,91 @@ class ClassService {
 
     let updatedSessions: Session[] = [];
     let endIndex: number = -1;
+    let start = false;
 
-    for (let index in sessions) {
-      if (sessions[index].start < currDate) {
-        // console.log('delete')
-        await SessionService.deleteSession(sessions[index].id);
-      } else {
-        console.log('update');
-        const updatedSession = await SessionService.updateSession(
-          sessions[index].id,
-          {
-            ...data,
-            start: currDate,
-            end: eventEndDate,
-          },
-        );
-        updatedSessions.push(updatedSession);
-        if (updatedSession.start >= endRecurringDate) {
-          endIndex = parseInt(index);
-          break;
+    try {
+      for (let index in sessions) {
+        if (sessions[index].id === sessionId) {
+          start = true;
         }
+        if (start) {
+          if (sessions[index].start < currDate) {
+            await SessionService.deleteSession(sessions[index].id);
+          } else {
+            const updatedSession = await SessionService.updateSession(
+              sessions[index].id,
+              {
+                ...data,
+                start: currDate,
+                end: eventEndDate,
+              },
+            );
+            updatedSessions.push(updatedSession);
+            if (updatedSession.start >= endRecurringDate) {
+              endIndex = parseInt(index);
+              break;
+            }
+            const newDates = this.getNextDates(
+              newFrequncy,
+              currDate,
+              eventEndDate,
+            );
+            currDate = newDates[0];
+            eventEndDate = newDates[1];
+          }
+        }
+      }
+
+      //Check: Not enough existing sessions - either frequency increased or endRecurringDate increased
+      while (currDate <= endRecurringDate) {
+        const session = await SessionService.createSession({
+          ...data,
+          start: currDate,
+          end: eventEndDate,
+        });
+        updatedSessions.push(session);
         const newDates = this.getNextDates(newFrequncy, currDate, eventEndDate);
         currDate = newDates[0];
         eventEndDate = newDates[1];
       }
-    }
 
-    //Check: Not enough existing sessions - either frequency increased or endRecurringDate increased
-    while (currDate <= endRecurringDate) {
-      // console.log('create additional');
-      const session = await SessionService.createSession({
-        ...data,
-        start: currDate,
-        end: eventEndDate,
-      });
-      updatedSessions.push(session);
-      const newDates = this.getNextDates(newFrequncy, currDate, eventEndDate);
-      currDate = newDates[0];
-      eventEndDate = newDates[1];
-    }
-
-    //Check: Too many existing sessions - either frequency decreased or endRecurringDate brought forward
-    if (endIndex > -1) {
-      // console.log('delete remaining');
-      for (let i = endIndex; i < sessions.length; i++) {
-        await SessionService.deleteSession(sessions[i].id);
+      //Check: Too many existing sessions - either frequency decreased or endRecurringDate brought forward
+      if (endIndex > -1) {
+        for (let i = endIndex; i < sessions.length; i++) {
+          await SessionService.deleteSession(sessions[i].id);
+        }
+        updatedSessions = updatedSessions.splice(0, endIndex);
       }
-      updatedSessions = updatedSessions.splice(0, endIndex);
+      return updatedSessions;
+    } catch (error) {
+      await this.updateClass(classId, {
+        endRecurringDate: classBeforeUpdate.endRecurringDate,
+        frequency: classBeforeUpdate.frequency,
+      });
+      const updatedList = await SessionService.getFutureSessionsOfClass(
+        classId,
+      );
+      for (let index in sessions) {
+        const oldData = {
+          levels: sessions[index].levels,
+          subjects: sessions[index].subjects,
+          teacherId: sessions[index].teacherId,
+          classroomId: sessions[index].classroomId,
+          classId: classId,
+          start: sessions[index].start,
+          end: sessions[index].end,
+        };
+        if (updatedList[index] && updatedList[index] !== sessions[index]) {
+          await SessionService.updateSession(updatedList[index].id, oldData);
+        } else if (!updatedList[index]) {
+          await SessionService.createSession(oldData);
+        }
+      }
+      for (let i = sessions.length - 1; i < updatedList.length; i++) {
+        await SessionService.deleteSession(updatedList[i].id);
+      }
+      throw new Error(error.message);
     }
-    return updatedSessions;
   }
 
   private getNextDates(
