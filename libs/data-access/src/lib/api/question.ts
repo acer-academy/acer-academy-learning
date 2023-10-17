@@ -31,14 +31,6 @@ export async function getPaginatedFilteredQuestions(
   );
 }
 
-export const getFilteredQuestions = async (
-  filterOptions: QuizQuestionPaginationFilter,
-): Promise<
-  AxiosResponse<{ questions: QuizQuestionData[]; totalCount: number }>
-> => {
-  return client.post(`${URL}/filter`, filterOptions);
-};
-
 export const createQuestion = async (
   data: CreateQuizQuestionType,
 ): Promise<AxiosResponse<QuizQuestionData>> => {
