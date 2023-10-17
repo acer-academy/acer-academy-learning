@@ -84,6 +84,30 @@ export const QuestionsSection = () => {
     }
   };
 
+  const editQuestionOrder = (newOrder: number[]) => {
+    if (validateUniqueIndices(newOrder)) {
+      // All indices are unique; update the quizQuestionIndex
+      const updatedSelectedQuestions = selectedQuestions
+        .map((question, index) => ({
+          ...question,
+          quizQuestionIndex: newOrder[index],
+        }))
+        .sort((a, b) => a.quizQuestionIndex - b.quizQuestionIndex);
+      setSelectedQuestions(updatedSelectedQuestions);
+      displayToast('Question order successfully updated.', ToastType.SUCCESS);
+    } else {
+      displayToast(
+        'Question indices must be unique. Please check the question order and try again.',
+        ToastType.ERROR,
+      );
+    }
+  };
+
+  const validateUniqueIndices = (indices: number[]) => {
+    const uniqueIndices = [...new Set(indices)];
+    return uniqueIndices.length === indices.length;
+  };
+
   const autoGenerateQuizQuestions = async (
     filterOptions: QuizQuestionPaginationFilter,
     numberOfQuestions: number,
@@ -199,6 +223,7 @@ export const QuestionsSection = () => {
           selectedQuestions={selectedQuestions}
           editQuestionMarks={editQuestionMarks}
           removeQuizQuestion={removeQuizQuestion}
+          editQuestionOrder={editQuestionOrder}
         />
       )}
     </>

@@ -20,30 +20,41 @@ interface SelectedQuestionsTableProps {
   selectedQuestions: QuizQuestionInQuizType[];
   editQuestionMarks: (questionId: string, marks: number) => void;
   removeQuizQuestion: (questionId: string) => void;
+  editQuestionOrder: (newOrder: number[]) => void;
 }
 
 export const SelectedQuestionsTable: React.FC<SelectedQuestionsTableProps> = (
   props: SelectedQuestionsTableProps,
 ) => {
-  const { selectedQuestions, editQuestionMarks, removeQuizQuestion } = props;
+  const {
+    selectedQuestions,
+    editQuestionMarks,
+    removeQuizQuestion,
+    editQuestionOrder,
+  } = props;
   console.log('SelectedQuestionsTable: selectedQuestions', selectedQuestions);
 
   const [questionIdToObjectMap, setQuestionIdToObjectMap] = useState<{
     [questionId: string]: QuizQuestionData;
   }>({});
 
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditingMarks, setIsEditingMarks] = useState(false);
   const [editMarksQuestionId, setEditMarksQuestionId] = useState<string>('');
   const [editedMarks, setEditedMarks] = useState(0);
 
   const [deleteQuestionId, setDeleteQuestionId] = useState<string>('');
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
+  const [isEditingOrder, setIsEditingOrder] = useState(false);
+  const [newOrder, setNewOrder] = useState<number[]>(
+    selectedQuestions.map((q) => q.quizQuestionIndex),
+  );
+
   const handleEditClick = () => {
-    if (isEditing) {
+    if (isEditingMarks) {
       // User clicked the edit button
       editQuestionMarks(editMarksQuestionId, editedMarks);
-      setIsEditing(false);
+      setIsEditingMarks(false);
       setEditMarksQuestionId('');
     } else {
       // User clicked the PencilSquareIcon to start editing
@@ -52,7 +63,7 @@ export const SelectedQuestionsTable: React.FC<SelectedQuestionsTableProps> = (
       );
       if (selectedQuestion) {
         setEditedMarks(selectedQuestion.quizQuestionMarks || 0);
-        setIsEditing(true);
+        setIsEditingMarks(true);
       }
     }
   };
@@ -80,12 +91,41 @@ export const SelectedQuestionsTable: React.FC<SelectedQuestionsTableProps> = (
 
   return (
     <div className="h-full">
-      <div className="flex min-h-full flex-col gap-7 align-middle">
+      <div className="flex min-h-full flex-col gap-4 align-middle">
         <div className="flex align-middle justify-between">
-          <div className="flex flex-col align-middle gap-2">
-            <div className="text-2xl py-1 font-bold tracking-tight mb-4">
-              Selected Questions
-            </div>
+          <div className="text-2xl py-1 font-bold tracking-tight">
+            Selected Questions
+          </div>
+        </div>
+        <div className="flex align-middle justify-between">
+          <div className="flex flex-col align-middle gap-2 pt-3">
+            {isEditingOrder ? (
+              <div>
+                <GenericButton
+                  type="button"
+                  text="Save Changes"
+                  onClick={() => {
+                    editQuestionOrder(newOrder);
+                    setIsEditingOrder(false);
+                  }}
+                />
+              </div>
+            ) : (
+              <div>
+                <GenericButton
+                  type="button"
+                  text="Edit Question Order"
+                  onClick={() => {
+                    setIsEditingOrder(true);
+                    setNewOrder(
+                      selectedQuestions.map((q) => q.quizQuestionIndex),
+                    );
+                  }}
+                />
+              </div>
+            )}
+          </div>
+          <div className="flex flex-col text-right gap-2 pr-6">
             <div>Number of Questions: {selectedQuestions.length}</div>
             <div>Total Marks: {calculateTotalMarks()} </div>
           </div>
@@ -161,21 +201,43 @@ export const SelectedQuestionsTable: React.FC<SelectedQuestionsTableProps> = (
                           colSpan={8}
                           className="whitespace-nowrap py-4 px-4 font-light italic text-gray-400 text-center"
                         >
-                          No questions selected. <br />
-                          Use the "Find Questions" button to search for
-                          questions to add to the quiz.
+                          No questions selected.
                         </td>
                       </tr>
                     ) : (
-                      selectedQuestions.map((question) => (
+                      selectedQuestions.map((question, index) => (
                         <tr
                           key={question.quizQuestionId}
                           className="hover:bg-slate-50 hover:cursor-pointer"
                         >
                           <td className="whitespace-nowrap py-4 px-3 font-medium text-gray-900">
-                            <div className="pl-3.5 pr-3 text-left">
-                              {question.quizQuestionIndex}
-                            </div>
+                            {isEditingOrder ? (
+                              <div className="pl-3.5 pr-3 text-left">
+                                <select
+                                  value={newOrder[index]}
+                                  onChange={(e) => {
+                                    const updatedOrder = [...newOrder];
+                                    updatedOrder[index] = parseInt(
+                                      e.target.value,
+                                    );
+                                    setNewOrder(updatedOrder);
+                                  }}
+                                >
+                                  {Array.from(
+                                    { length: selectedQuestions.length },
+                                    (_, index) => index + 1,
+                                  ).map((order) => (
+                                    <option key={order} value={order}>
+                                      {order}
+                                    </option>
+                                  ))}
+                                </select>
+                              </div>
+                            ) : (
+                              <div className="pl-3.5 pr-3 text-left">
+                                {question.quizQuestionIndex}
+                              </div>
+                            )}
                           </td>
                           <td className="py-4 pl-3.5 pr-3 text-xs font-medium text-gray-900 max-w-0">
                             <div>
@@ -263,7 +325,7 @@ export const SelectedQuestionsTable: React.FC<SelectedQuestionsTableProps> = (
                           <td className="whitespace-nowrap font-medium text-gray-900 space-x-1 w-max pr-3">
                             <div className="pl-3.5 pr-3 text-left">
                               <div className="inline-flex items-center">
-                                {isEditing &&
+                                {isEditingMarks &&
                                 editMarksQuestionId ===
                                   question.quizQuestionId ? (
                                   <div className="flex flex-col mt-2">
@@ -292,7 +354,7 @@ export const SelectedQuestionsTable: React.FC<SelectedQuestionsTableProps> = (
                                 ) : (
                                   question.quizQuestionMarks
                                 )}
-                                {isEditing &&
+                                {isEditingMarks &&
                                 editMarksQuestionId ===
                                   question.quizQuestionId ? (
                                   <button
