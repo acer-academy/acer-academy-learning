@@ -26,6 +26,9 @@ export const quizSchema = z.object({
     .min(1, 'You must select at least one level'),
   totalMarks: z.number().positive('Total Marks must be a positive number'),
   rewardPoints: z.number().positive('Reward Points must be a positive number'),
+  rewardMinimumMarks: z
+    .number()
+    .positive('Reward minimum marks must be a positive number'),
   // in seconds
   timeAllowed: z
     .number()

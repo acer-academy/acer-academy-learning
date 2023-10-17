@@ -1,24 +1,26 @@
 import { ErrorField, GenericInput } from '@acer-academy-learning/common-ui';
 import { CreateQuizType } from '@acer-academy-learning/data-access';
 import { ErrorMessage } from '@hookform/error-message';
-import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
-const totalMarksId = 'total-marks';
+const rewardMinimumMarksId = 'reward-minimum-marks';
 
-export const QuizTotalMarksField = () => {
+export const QuizRewardMinimumMarksField = () => {
   const {
     control,
     formState: { errors },
   } = useFormContext<CreateQuizType>();
   return (
     <>
-      <label htmlFor={totalMarksId} className="text-base flex items-center">
-        Total Marks
+      <label
+        htmlFor={rewardMinimumMarksId}
+        className="text-base flex items-center"
+      >
+        Reward Minimum Marks
       </label>
       <Controller
         control={control}
-        name="totalMarks"
+        name="rewardMinimumMarks"
         render={({ field: { onChange, value, onBlur } }) => (
           <div className="flex space-x-4 items-center">
             <GenericInput
@@ -26,13 +28,13 @@ export const QuizTotalMarksField = () => {
               onBlur={onBlur}
               value={value ?? ''}
               type="number"
-              id={totalMarksId}
-              name={totalMarksId}
+              id={rewardMinimumMarksId}
+              name={rewardMinimumMarksId}
               inputClassName="w-20"
-              hasError={!!errors?.totalMarks?.message}
+              hasError={!!errors?.rewardMinimumMarks?.message}
             />
             <ErrorMessage
-              name="totalMarks"
+              name="rewardMinimumMarks"
               render={({ message }) => <ErrorField message={message} />}
             />
           </div>
