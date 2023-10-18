@@ -8,6 +8,20 @@ const createQuizURL = 'http://localhost:8000/api/v1/quiz';
 const createStudentURL = 'http://localhost:8000/api/v1/students/create';
 const createTakeURL = 'http://localhost:8000/api/v1/take';
 
+const args = process.argv.slice(2);
+
+const setArgumentValue = (arg, defaultValue) => {
+  const index = args.indexOf(arg);
+  if (index !== -1 && index + 1 < args.length) {
+    return parseInt(args[index + 1]);
+  }
+  return defaultValue;
+};
+
+const numberOfQuestionsToCreate = setArgumentValue('--questions', 1000);
+const numberOfQuizzesToCreate = setArgumentValue('--quizzes', 100);
+const numberOfTakesToCreate = setArgumentValue('--takes', 500);
+
 let placeholderTeacherId = '';
 let questionIndexesArray = [];
 let quizDataArray = [];
@@ -89,10 +103,6 @@ const QuizQuestionTypeEnum = {
   TFQ: 'TFQ',
   SHORT_ANSWER: 'SHORT_ANSWER',
 };
-
-const numberOfQuestionsToCreate = 500;
-const numberOfQuizzesToCreate = 50;
-const numberOfTakesToCreate = 100;
 
 const setupPrerequisites = async () => {
   try {

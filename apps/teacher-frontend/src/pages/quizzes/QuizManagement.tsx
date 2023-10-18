@@ -16,7 +16,15 @@ import { LevelTag } from '../question-bank/LevelTag';
 import { TopicTag } from '../question-bank/TopicTag';
 import DifficultyTag from '../question-bank/DifficultyTag';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline';
+import {
+  ClockIcon,
+  DocumentCheckIcon,
+  DocumentDuplicateIcon,
+  GiftIcon,
+  PencilSquareIcon,
+  TrashIcon,
+  UserGroupIcon,
+} from '@heroicons/react/24/outline';
 import { useMutation } from 'react-query';
 
 export const QuizManagement: React.FC = () => {
@@ -75,7 +83,7 @@ export const QuizManagement: React.FC = () => {
   };
 
   const navToSelectedQuiz = (selectedQuizId: string) => {
-    // for now will push to url/quizzes/questionId, change as needed
+    // for now will push to url/quizzes/quizId, change as needed
     navigate(`${location.pathname}/${selectedQuizId}`);
   };
   const navToCreateQuiz = () => {
@@ -159,7 +167,7 @@ export const QuizManagement: React.FC = () => {
                       </th>
                       <th
                         scope="col"
-                        className="px-3 py-3.5 text-left text-lg font-bold text-gray-900"
+                        className="px-3 py-3.5 text-left text-lg font-bold text-gray-900 min-w-0"
                       >
                         Details
                       </th>
@@ -220,7 +228,7 @@ export const QuizManagement: React.FC = () => {
                             navToSelectedQuiz(quiz.id);
                           }}
                         >
-                          <td className="py-4 pl-3.5 pr-3 text-xs font-medium text-gray-900 max-w-0">
+                          <td className="py-4 pl-3.5 pr-3 text-xs font-medium text-gray-900">
                             <div>
                               <span className="font-bold text-sm">
                                 {quiz.title}
@@ -235,56 +243,44 @@ export const QuizManagement: React.FC = () => {
                           </td>
                           <td className="whitespace-nowrap py-4 px-3 text-sm text-gray-900">
                             <div className="flex flex-col">
-                              <div className="flex flex-col">
-                                <span className="text-xs text-gray-500">
-                                  Questions:
-                                </span>
-                                <span className="font-semibold text-sm relative bottom-1">
-                                  {quiz.quizQuestions.length}
+                              <div className="flex items-center gap-1">
+                                <DocumentDuplicateIcon className="w-4 h-4 text-teacherBlue-700" />
+                                <span className="font-semibold text-sm">
+                                  {`${quiz.quizQuestions.length} questions`}
                                 </span>
                               </div>
-                              <div className="flex flex-col">
-                                <span className="text-xs text-gray-500 mt-1">
-                                  Marks:
-                                </span>
-                                <span className="font-semibold text-sm relative bottom-1">
-                                  {String(quiz.totalMarks)}
+                              <div className="flex items-center gap-1">
+                                <DocumentCheckIcon className="w-4 h-4 text-teacherBlue-700" />
+                                <span className="font-semibold text-sm">
+                                  {`${String(quiz.totalMarks)} marks`}
                                 </span>
                               </div>
-                              <div className="flex flex-col">
-                                <span className="text-xs text-gray-500 mt-1">
-                                  Time Limit:
-                                </span>
-                                <span className="font-semibold text-sm relative bottom-1">
+                              <div className="flex items-center gap-1">
+                                <ClockIcon className="w-4 h-4 text-teacherBlue-700" />
+                                <span className="font-semibold text-sm">
                                   {getTimeAllowedString(quiz.timeAllowed)}
                                 </span>
                               </div>
-                              <div className="flex flex-col">
-                                <span className="text-xs text-gray-500 mt-1">
-                                  Students Attempted:
-                                </span>
-                                <span className="font-semibold text-sm relative bottom-1">
-                                  {quiz.takes.length}
+                              <div className="flex items-center gap-1">
+                                <UserGroupIcon className="w-4 h-4 text-teacherBlue-700" />
+                                <span className="font-semibold text-sm">
+                                  {`${quiz.takes.length} taken`}
                                 </span>
                               </div>
                             </div>
                           </td>
                           <td className="whitespace-nowrap py-4 px-3 text-sm text-gray-900">
                             <div className="flex flex-col">
-                              <div className="flex flex-col">
-                                <span className="text-xs text-gray-500">
-                                  Reward Points:
-                                </span>
-                                <span className="font-semibold text-sm relative bottom-1">
-                                  {String(quiz.rewardPoints)}
+                              <div className="flex items-center gap-1">
+                                <GiftIcon className="w-4 h-4 text-teacherBlue-700" />
+                                <span className="font-semibold text-sm">
+                                  {`${quiz.rewardPoints} points`}
                                 </span>
                               </div>
-                              <div className="flex flex-col">
-                                <span className="text-xs text-gray-500 mt-1">
-                                  Minimum Marks for Reward:
-                                </span>
-                                <span className="font-semibold text-sm relative bottom-1">
-                                  {String(quiz.rewardMinimumMarks)}
+                              <div className="flex items-center gap-1">
+                                <DocumentCheckIcon className="w-4 h-4 text-teacherBlue-700" />
+                                <span className="font-semibold text-sm">
+                                  {`${quiz.rewardMinimumMarks} marks`}
                                 </span>
                               </div>
                             </div>
