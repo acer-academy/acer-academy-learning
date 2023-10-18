@@ -1463,7 +1463,9 @@ export async function validateBodyQuizFormatValid(
     };
     for (const key of Object.keys(validBody)) {
       if (
-        (validBody[key] === undefined && key !== 'timeAllowed') ||
+        (validBody[key] === undefined &&
+          key !== 'timeAllowed' &&
+          key !== 'allocatedTo') ||
         (key === 'title' &&
           (typeof validBody[key] !== 'string' ||
             validBody[key].trim().length === 0)) ||
@@ -1482,12 +1484,15 @@ export async function validateBodyQuizFormatValid(
         (key === 'rewardMinimumMarks' &&
           (typeof validBody[key] !== 'number' || validBody[key] <= 0)) ||
         (key === 'timeAllowed' &&
+          timeAllowed !== null &&
           timeAllowed !== undefined &&
           (typeof validBody[key] !== 'number' || validBody[key] <= 0)) ||
         (key === 'teacherCreated' &&
           (!validBody[key] || typeof validBody[key] !== 'string')) ||
         (key === 'allocatedTo' &&
-          (!Array.isArray(validBody[key]) || validBody[key].length === 0)) ||
+          allocatedTo !== null &&
+          allocatedTo !== undefined &&
+          !Array.isArray(validBody[key])) ||
         (key === 'quizQuestions' &&
           (!Array.isArray(validBody[key]) || validBody[key].length === 0))
       ) {
