@@ -16,6 +16,9 @@ export const CREATE_QUIZ = `/create-quiz`;
 export const CREATE_QUIZ_DETAILS_HASH = '';
 export const CREATE_QUIZ_QUESTIONS_HASH = 'questions';
 
+// Quizzes
+export const QUIZZES = `${SUBJECTS}/:subject/quizzes`;
+
 export const ANALYTICS = '/analytics';
 export const SCHEDULING = '/scheduling';
 export const REWARDS = '/rewards';

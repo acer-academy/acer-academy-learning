@@ -1,14 +1,17 @@
+import { useAuth, useToast } from '@acer-academy-learning/common-ui';
 import {
-  CreditBundleData,
-  CreditBundleCartItem,
-} from 'libs/data-access/src/lib/types/creditBundle';
-import { useEffect, useState } from 'react';
-import { useToast } from '@acer-academy-learning/common-ui';
-import { getAllCreditBundles as apiGetAllCreditBundles } from '@acer-academy-learning/data-access';
-import CartComponent from './CartComponent';
+  getAllCreditBundles as apiGetAllCreditBundles,
+  convertIntToFloat,
+} from '@acer-academy-learning/data-access';
 import { ShoppingCartIcon } from '@heroicons/react/24/solid';
+import {
+  CreditBundleCartItem,
+  CreditBundleData,
+} from 'libs/data-access/src/lib/types/creditBundle';
+import { Student } from 'libs/data-access/src/lib/types/student';
+import { useEffect, useState } from 'react';
 import CreditsBar from '../../components/CreditsBar';
-import { convertIntToFloat } from '@acer-academy-learning/data-access';
+import CartComponent from './CartComponent';
 
 export const CreditBundleManagement: React.FC = () => {
   //Cart
@@ -49,17 +52,10 @@ export const CreditBundleManagement: React.FC = () => {
   };
 
   //CreditBundle
+  const { user: authUser } = useAuth<Student>();
 
   const [creditBundles, setCreditBundles] = useState<CreditBundleData[]>([]);
   const [searchbarText, setSearchbarText] = useState('');
-  useState<CreditBundleData>({
-    id: '',
-    name: '',
-    description: '',
-    numCredits: 1,
-    basePrice: 1,
-    isActive: true,
-  });
 
   const { displayToast, ToastType } = useToast();
 
@@ -67,10 +63,10 @@ export const CreditBundleManagement: React.FC = () => {
     try {
       const response = await apiGetAllCreditBundles();
       const allCreditBundles: CreditBundleData[] = response.data;
-      // Filtering allCreditBundles to only include items where isActive is true
-      const activeCreditBundles: CreditBundleData[] = allCreditBundles.filter(
-        (bundle) => bundle.isActive,
-      );
+      // Filtering allCreditBundles to only include items where isActive is true and bundle level is same as student's level.
+      const activeCreditBundles: CreditBundleData[] = allCreditBundles
+        .filter((bundle) => bundle.isActive)
+        .filter((bundle) => authUser && authUser?.level.includes(bundle.level));
 
       setCreditBundles(activeCreditBundles);
     } catch (error) {
@@ -160,6 +156,12 @@ export const CreditBundleManagement: React.FC = () => {
                           scope="col"
                           className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 max-w-sm"
                         >
+                          Level
+                        </th>
+                        <th
+                          scope="col"
+                          className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 max-w-sm"
+                        >
                           Base Price
                         </th>
                         <th
@@ -197,6 +199,9 @@ export const CreditBundleManagement: React.FC = () => {
                             </td>
                             <td className="whitespace-normal px-3 py-4 text-sm text-gray-500 max-w-sm">
                               {creditBundle.numCredits}
+                            </td>
+                            <td className="whitespace-normal px-3 py-4 text-sm text-gray-500 max-w-sm">
+                              {creditBundle.level}
                             </td>
                             <td className="whitespace-normal px-3 py-4 text-sm text-gray-500 max-w-sm">
                               {'$' + convertIntToFloat(creditBundle.basePrice)}

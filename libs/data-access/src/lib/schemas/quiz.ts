@@ -3,6 +3,7 @@ import { LevelEnum, SubjectEnum } from '../types/CommonTypes';
 import { LEX_DEFAULT_JSON_STRING } from '../constants';
 import { QuizQuestionTopicEnum } from '@prisma/client';
 import { quizQuestionInQuizSchema } from './question';
+import { createQuizQuestionSchema } from './question';
 export const quizSchema = z.object({
   id: z.string(),
   title: z.string().min(4, 'Title must be at least 4 characters long'),

@@ -39,6 +39,7 @@ import {
   WITHOUT_SIDEBARS,
   SUBJECT_MAIN,
   CREATE_QUIZ,
+  QUIZZES,
 } from '../libs/routes';
 import { CreateQuestion } from '../pages/question-bank/CreateQuestion';
 import { QueryClient, QueryClientProvider } from 'react-query';
@@ -46,6 +47,7 @@ import { UpdateQuestion } from '../pages/question-bank/UpdateQuestion';
 import { Subjects } from '../pages/subjects/Subjects';
 import { Subject } from '../pages/subjects/Subject';
 import { CreateQuiz } from '../pages/quiz/CreateQuiz';
+import { QuizManagement } from '../pages/quizzes/QuizManagement';
 
 export function App() {
   const queryClient = new QueryClient();
@@ -87,6 +89,10 @@ export function App() {
                       path={UPDATE_QUESTION}
                       element={<UpdateQuestion />}
                     />
+                  </Route>
+                  {/* Quizzes routes */}
+                  <Route path={QUIZZES}>
+                    <Route path={QUIZZES} element={<QuizManagement />} />
                   </Route>
                 </Route>
                 <Route path={CREATE_QUIZ} element={<CreateQuiz />} />

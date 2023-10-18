@@ -40,8 +40,8 @@ model Student {
   transaction Transaction[]
 
   sessions Session[]
-  quizzes Quiz[]
-  takes   Take[]
+  quizzes  Quiz[]
+  takes    Take[]
 }
 
 model Parent {
@@ -139,10 +139,10 @@ model Classroom {
   name      String
   available Boolean @default(true)
   capacity  Int
-  
-  centre    Centre  @relation(fields: [centreId], references: [id])
-  centreId  String  @db.Uuid
-  
+
+  centre   Centre @relation(fields: [centreId], references: [id])
+  centreId String @db.Uuid
+
   sessions Session[]
 }
 
@@ -264,12 +264,13 @@ model StripeTransaction {
 }
 
 model CreditBundle {
-  id          String  @id @default(uuid()) @db.Uuid
-  name        String  @unique
+  id          String    @id @default(uuid()) @db.Uuid
+  name        String    @unique
   description String?
   numCredits  Int
   basePrice   Int
-  isActive    Boolean @default(true)
+  isActive    Boolean   @default(true)
+  level       LevelEnum
 }
 
 enum QuizQuestionDifficultyEnum {
@@ -325,7 +326,7 @@ enum QuizQuestionTypeEnum {
   MCQ
   MRQ
   TFQ
-  OPEN_ENDED
+  SHORT_ANSWER
 }
 
 model QuizQuestion {
@@ -357,34 +358,34 @@ model QuizAnswer {
 }
 
 model Session {
-  id String @id @default(uuid()) @db.Uuid
-  start DateTime
-  end DateTime
+  id       String        @id @default(uuid()) @db.Uuid
+  start    DateTime
+  end      DateTime
   subjects SubjectEnum[]
-  levels LevelEnum[]
+  levels   LevelEnum[]
 
-  teacher Teacher @relation(fields: [teacherId], references: [id])
-  teacherId String    @db.Uuid
+  teacher   Teacher @relation(fields: [teacherId], references: [id])
+  teacherId String  @db.Uuid
 
   students Student[]
 
-  classroom Classroom @relation(fields: [classroomId], references: [id])
-  classroomId String @db.Uuid
+  classroom   Classroom @relation(fields: [classroomId], references: [id])
+  classroomId String    @db.Uuid
 
-  class Class? @relation(fields: [classId], references: [id])
+  class   Class?  @relation(fields: [classId], references: [id])
   classId String? @db.Uuid
 }
 
 enum ClassFrequencyEnum {
-  WEEKLY 
-  DAILY 
+  WEEKLY
+  DAILY
   MONTHLY
 }
 
 model Class {
-  id String @id @default(uuid()) @db.Uuid
+  id               String             @id @default(uuid()) @db.Uuid
   endRecurringDate DateTime
-  frequency ClassFrequencyEnum
+  frequency        ClassFrequencyEnum
 
   sessions Session[]
 }
@@ -441,6 +442,8 @@ model TakeAnswer {
   question      QuizQuestion @relation(fields: [questionId], references: [id])
   questionId    String       @db.Uuid
   studentAnswer String
+  isCorrect     Boolean
+  timeTaken     Int
   take          Take         @relation(fields: [takeId], references: [id])
   takeId        String       @db.Uuid
 }

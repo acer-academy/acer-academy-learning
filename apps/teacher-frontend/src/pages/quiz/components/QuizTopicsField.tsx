@@ -5,6 +5,7 @@ import {
   screamingSnakeToTitleCase,
 } from '@acer-academy-learning/common-ui';
 import {
+  CreateQuizQuestionType,
   CreateQuizType,
   QuizQuestionTopicEnum,
 } from '@acer-academy-learning/data-access';
