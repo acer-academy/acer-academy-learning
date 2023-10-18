@@ -1,4 +1,5 @@
 import {
+  ClassFrequencyEnum,
   LevelEnum,
   QuizQuestion,
   QuizQuestionDifficultyEnum,
@@ -20,6 +21,8 @@ import { CreditBundleService } from '../services/CreditBundleService';
 import { QuizQuestionService } from '../services/QuizQuestionService';
 import { QuizAnswerService } from '../services/QuizAnswerService';
 import { QuizService } from '../services/QuizService';
+import ClassService from '../services/ClassService';
+import SessionService from '../services/SessionService';
 
 const teacherService = new TeacherService();
 const centreService = new CentreService();
@@ -1592,6 +1595,188 @@ export async function validateBodyQuizOnQuizQuestionFormatValid(
     } else {
       throw Error('QuizQuestions is required and must be a non-empty array.');
     }
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+/** Validates that inputted date in correct format */
+export async function validateSessionDate(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const postgresDatetimeRegex =
+      /^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[+-]\d{2}:\d{2}))$/;
+    const { start, end } = req.body.length > 1 ? req.body[1] : req.body;
+    const { endRecurringDate } = req.body.length > 1 ? req.body[0] : req.body;
+
+    const isValidStartDate = start ? postgresDatetimeRegex.test(start) : true;
+    const isValidEndDate = end ? postgresDatetimeRegex.test(end) : true;
+
+    const isValidRecurringDate = endRecurringDate
+      ? postgresDatetimeRegex.test(endRecurringDate)
+      : true;
+
+    if (!isValidStartDate || !isValidEndDate || !isValidRecurringDate) {
+      return res.status(500).json({
+        error: 'Inputed date(s) does not comply with Postgres DateTime format',
+      });
+    }
+
+    if (start >= end) {
+      return res.status(500).json({
+        error: 'Start Date must be a date earlier than End Date',
+      });
+    }
+
+    if (start < new Date() || endRecurringDate < new Date()) {
+      return res.status(500).json({
+        error: 'Date must be a future date',
+      });
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+/** Validates if class frequency passed in body exists */
+export async function validateClassFrequencyEnumExists(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { frequency } = req.body.length > 1 ? req.body[0] : req.body;
+    const validFrequency = Object.values(ClassFrequencyEnum).includes(
+      frequency as ClassFrequencyEnum,
+    );
+    if (!validFrequency) {
+      return res.status(400).json({
+        error: 'Invalid frequency provided.',
+      });
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+/** Validates if subjects and levels passed in body exists */
+export async function validateSubjectsAndLevelsExist(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { levels, subjects } = req.body.length > 1 ? req.body[1] : req.body;
+    let validLevels = true;
+    let validSubjects = true;
+    if (levels) {
+      validLevels = levels.every((level) =>
+        Object.values(LevelEnum).includes(level),
+      );
+      if (!validLevels) {
+        return res.status(400).json({
+          error: 'Invalid levels provided.',
+        });
+      }
+    }
+    if (subjects) {
+      validSubjects = subjects.every((subject) =>
+        Object.values(SubjectEnum).includes(subject),
+      );
+      if (!validSubjects) {
+        return res.status(400).json({
+          error: 'Invalid levels or subjects provided.',
+        });
+      }
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+/** Validates if class, teacher and classroom exists */
+export async function validateClassTeacherClassroomExist(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { classId, teacherId, classroomId } =
+      req.body.length > 1 ? req.body[1] : req.body;
+    if (classId) {
+      const validClass = await ClassService.getClassById(classId);
+      if (!validClass) {
+        return res.status(400).json({
+          error: 'Invalid class provided.',
+        });
+      }
+    }
+    if (classroomId) {
+      const validClassroom = await classroomService.getClassroomById(
+        classroomId,
+      );
+      if (!validClassroom) {
+        return res.status(400).json({
+          error: 'Invalid classroom provided.',
+        });
+      }
+    }
+    if (teacherId) {
+      const validTeacher = await teacherService.getTeacherById(teacherId);
+      if (!validTeacher) {
+        return res.status(400).json({
+          error: 'Invalid teacher provided.',
+        });
+      }
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+/** Validates if class and session in params exists */
+export async function validateClassAndSessionExist(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { classId, sessionId } = req.params;
+    if (classId) {
+      const validClass = await ClassService.getClassById(classId);
+      if (!validClass) {
+        return res.status(400).json({
+          error: 'Invalid class provided.',
+        });
+      }
+    }
+    if (sessionId) {
+      const validSession = await SessionService.getSessionBySessionId(
+        sessionId,
+      );
+      if (!validSession) {
+        return res.status(400).json({
+          error: 'Invalid session provided.',
+        });
+      }
+    }
+    next();
   } catch (error) {
     return res.status(500).json({
       error: error.message,

@@ -1,6 +1,11 @@
 import SessionService from '../services/SessionService';
 import { Prisma } from '@prisma/client';
 import { Router } from 'express';
+import {
+  validateClassTeacherClassroomExist,
+  validateSubjectsAndLevelsExist,
+  validateSessionDate,
+} from '../middleware/validationMiddleware';
 
 const sessionRouter = Router();
 
@@ -25,28 +30,40 @@ sessionRouter.get('/:id', async (req, res) => {
   }
 });
 
-sessionRouter.post('/', async (req, res) => {
-  try {
-    const input: Prisma.SessionUncheckedCreateInput = req.body;
-    const session = await SessionService.createSession(input);
-    return res.status(200).json(session);
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({ error: error.message });
-  }
-});
+sessionRouter.post(
+  '/',
+  validateClassTeacherClassroomExist,
+  validateSubjectsAndLevelsExist,
+  validateSessionDate,
+  async (req, res) => {
+    try {
+      const input: Prisma.SessionUncheckedCreateInput = req.body;
+      const session = await SessionService.createSession(input);
+      return res.status(200).json(session);
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({ error: error.message });
+    }
+  },
+);
 
-sessionRouter.put('/:id', async (req, res) => {
-  try {
-    const { id } = req.params;
-    const input: Prisma.SessionUncheckedUpdateInput = req.body;
-    const session = await SessionService.updateSession(id, input);
-    return res.status(200).json(session);
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({ error: error.message });
-  }
-});
+sessionRouter.put(
+  '/:id',
+  validateClassTeacherClassroomExist,
+  validateSubjectsAndLevelsExist,
+  validateSessionDate,
+  async (req, res) => {
+    try {
+      const { id } = req.params;
+      const input: Prisma.SessionUncheckedUpdateInput = req.body;
+      const session = await SessionService.updateSession(id, input);
+      return res.status(200).json(session);
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({ error: error.message });
+    }
+  },
+);
 
 sessionRouter.delete('/:id', async (req, res) => {
   try {
