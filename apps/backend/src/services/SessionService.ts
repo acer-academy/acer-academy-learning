@@ -35,7 +35,7 @@ class SessionService {
     if (
       data.start &&
       data.end &&
-      (session.start !== data.start || data.end !== data.end)
+      (session.start !== data.start || session.end !== data.end)
     ) {
       const available = await this.checkClassroomAvailability(
         session.classroomId,
