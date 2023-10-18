@@ -1,41 +1,63 @@
-import { Prisma, PrismaClient, Take } from '@prisma/client';
+import { Prisma, Take } from '@prisma/client';
 import { TakeDao } from '../dao/TakeDao';
 import { Request } from 'express';
 import { QuizQuestionService } from './QuizQuestionService';
 import { QuizAnswerService } from './QuizAnswerService';
+import { QuizOnQuizQuestionDao } from '../dao/QuizOnQuizQuestionDao';
 
 export class TakeService {
-  constructor(private takeDao: TakeDao = new TakeDao()) {}
+  constructor(
+    private takeDao: TakeDao = new TakeDao(),
+    private quizOnQuizQuestionDao: QuizOnQuizQuestionDao = new QuizOnQuizQuestionDao(),
+  ) {}
   private quizAnswerService = new QuizAnswerService();
+  private quizQuestionService = new QuizQuestionService();
 
   public async createTake(req: Request): Promise<Take> {
-    const prismaClient = new PrismaClient();
     const takeData = req.body;
     const { timeTaken, takenById, quizId, studentAnswers } = takeData;
     let totalMarks = 0;
+    const studentAnswersMap = {};
+    let formattedStudentAnswers = [];
     for (const answer of studentAnswers) {
-      answer.isCorrect = false;
-      const correctAnswer = (
-        await this.quizAnswerService.getAnswersByQuestion(answer.questionId)
-      ).filter((x) => x.isCorrect)[0];
-      if (answer.studentAnswer == correctAnswer.answer) {
-        answer.isCorrect = true;
-        const joinTableRelation =
-          await prismaClient.quizOnQuizQuestions.findUnique({
-            where: {
-              quizId_quizQuestionId: {
-                quizId: quizId,
-                quizQuestionId: answer.questionId,
-              },
-            },
-          });
-        if (!joinTableRelation) {
-          throw Error(
-            `Error occured while retrieving marks for question ID: ${answer.questionId}`,
-          );
-        }
-        totalMarks += joinTableRelation.quizQuestionMarks;
+      if (!Object.keys(studentAnswersMap).includes(answer.questionId)) {
+        studentAnswersMap[answer.questionId] = [answer];
+      } else studentAnswersMap[answer.questionId].push(answer);
+    }
+    for (const quizQuestionId in studentAnswersMap) {
+      const correctAnswers = (
+        await this.quizAnswerService.getAnswersByQuestion(quizQuestionId)
+      )
+        .filter((x) => x.isCorrect)
+        .map((x) => x.answer);
+      const { quizQuestionMarks } =
+        await this.quizOnQuizQuestionDao.getQuizOnQuizQuestionByCompoundId(
+          quizId,
+          quizQuestionId,
+        );
+      for (const answer of studentAnswersMap[quizQuestionId]) {
+        answer.isCorrect = correctAnswers.includes(answer.studentAnswer)
+          ? true
+          : false;
+        formattedStudentAnswers.push(answer);
       }
+      const currQuestionType = (
+        await this.quizQuestionService.getQuizQuestionById(quizQuestionId)
+      ).questionType;
+      totalMarks +=
+        (currQuestionType == 'MRQ' &&
+          studentAnswersMap[quizQuestionId].reduce(
+            (x, y) => x.isCorrect !== false && y.isCorrect !== false,
+            true,
+          ) &&
+          studentAnswersMap[quizQuestionId].length == correctAnswers.length) ||
+        (currQuestionType !== 'MRQ' &&
+          studentAnswersMap[quizQuestionId].reduce(
+            (x, y) => x.isCorrect !== false && y.isCorrect !== false,
+            true,
+          ))
+          ? quizQuestionMarks
+          : 0;
     }
     const formattedTakeData = {
       marks: totalMarks,
@@ -48,7 +70,7 @@ export class TakeService {
       },
       studentAnswers: {
         createMany: {
-          data: studentAnswers,
+          data: formattedStudentAnswers,
         },
       },
     };
@@ -79,18 +101,6 @@ export class TakeService {
   }
 
   public async deleteTake(takeId: string): Promise<Take | null> {
-    const prismaClient = new PrismaClient();
-    return prismaClient.$transaction(async (prismaClient) => {
-      await prismaClient.takeAnswer.deleteMany({
-        where: {
-          takeId,
-        },
-      });
-      return prismaClient.take.delete({
-        where: {
-          id: takeId,
-        },
-      });
-    });
+    return this.takeDao.deleteTakeAndAssociatedTakeAnswers(takeId);
   }
 }

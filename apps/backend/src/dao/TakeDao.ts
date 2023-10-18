@@ -85,4 +85,21 @@ export class TakeDao {
       },
     });
   }
+
+  public async deleteTakeAndAssociatedTakeAnswers(
+    takeId: string,
+  ): Promise<Take | null> {
+    return this.prismaClient.$transaction(async (prismaClient) => {
+      await prismaClient.takeAnswer.deleteMany({
+        where: {
+          takeId,
+        },
+      });
+      return prismaClient.take.delete({
+        where: {
+          id: takeId,
+        },
+      });
+    });
+  }
 }
