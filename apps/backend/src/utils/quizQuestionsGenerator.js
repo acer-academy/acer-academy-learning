@@ -218,6 +218,21 @@ const generateRandomQuestion = () => {
     },
   ];
 
+  const answers2 = [
+    {
+      answer:
+        '{"root":{"children":[{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"Option C","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1}],"direction":"ltr","format":"","indent":0,"type":"root","version":1}}',
+      explanation: '',
+      isCorrect: true,
+    },
+    {
+      answer:
+        '{"root":{"children":[{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"Option D","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1}],"direction":"ltr","format":"","indent":0,"type":"root","version":1}}',
+      explanation: '',
+      isCorrect: false,
+    },
+  ];
+
   switch (questionType) {
     case QuizQuestionTypeEnum.TFQ:
       return {
@@ -250,7 +265,7 @@ const generateRandomQuestion = () => {
           '{"root":{"children":[{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"This is a MRQ sample","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1}],"direction":"ltr","format":"","indent":0,"type":"root","version":1}}',
         status: getRandomItem(QuizQuestionStatusEnum),
         questionType: QuizQuestionTypeEnum.MRQ,
-        answers,
+        answers: [...answers, ...answers2],
       };
     case QuizQuestionTypeEnum.SHORT_ANSWER:
       return {
@@ -261,7 +276,7 @@ const generateRandomQuestion = () => {
           '{"root":{"children":[{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"This is a short answer sample","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1}],"direction":"ltr","format":"","indent":0,"type":"root","version":1}}',
         status: getRandomItem(QuizQuestionStatusEnum),
         questionType: QuizQuestionTypeEnum.SHORT_ANSWER,
-        answers,
+        answers: [...answers, ...answers2],
       };
     default:
       return generateTFQ();
