@@ -14,7 +14,7 @@ export const quizSchema = z.object({
       if (!description || description === LEX_DEFAULT_JSON_STRING) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: 'Description cannot be left empty',
+          message: 'Quiz instructions cannot be left empty',
         });
       }
     }),
