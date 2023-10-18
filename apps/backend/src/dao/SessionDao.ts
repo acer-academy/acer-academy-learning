@@ -19,7 +19,9 @@ class SessionDao {
         students: true,
         teacher: true,
         classroom: true,
+        class: true,
       },
+      orderBy: [{ start: 'asc' }],
     });
   }
 
@@ -27,7 +29,7 @@ class SessionDao {
     classroomId: string,
     startDateTime: Date,
     endDateTime: Date,
-  ): Promise<String> {
+  ): Promise<string> {
     const classes = await this.prisma.session.findMany({
       where: {
         classroomId,
@@ -44,6 +46,7 @@ class SessionDao {
       where: {
         start: { gte: currentDate },
       },
+      orderBy: [{ start: 'asc' }],
     });
   }
 
@@ -54,6 +57,7 @@ class SessionDao {
         start: { gte: currentDate },
         classId,
       },
+      orderBy: [{ start: 'asc' }],
     });
   }
 
@@ -82,23 +86,6 @@ class SessionDao {
       data: input,
     });
   }
-
-  // public async resetRelationshipBeforeDeleteSession(
-  //   id: string,
-  // ): Promise<Session> {
-  //   console.log('id', id);
-  //   return this.prisma.session.update({
-  //     where: { id: id },
-  //     data: {
-  //       classId: null,
-  //       // teacher: undefined,
-  //       // classroomId: null,
-  //       students: { set: [] },
-  //       // teacherId: '',
-  //       // teacher: null,
-  //     },
-  //   });
-  // }
 
   //when an individual class instance is deleted
   public async deleteSession(id: string): Promise<Session> {
