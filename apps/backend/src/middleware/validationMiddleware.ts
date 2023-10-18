@@ -1405,6 +1405,33 @@ export async function validateBodyCreditBundleBasePricePositive(
   }
 }
 
+/** Validates if level of credit bundle is empty*/
+export async function validateBodyCreditBundleLevelNotEmpty(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { level } = req.body;
+    if (level && level.trim() === '') {
+      return res.status(400).json({
+        error: 'Level cannot be empty or contain only whitespace.',
+      });
+    }
+    const validLevel = Object.values(LevelEnum).includes(level as LevelEnum);
+    if (!validLevel) {
+      return res.status(400).json({
+        error: 'Invalid level provided.',
+      });
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
 /** Validates if credit bundle is active */
 export async function validateCreditBundleIsActive(
   req: Request,

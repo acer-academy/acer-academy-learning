@@ -6,6 +6,7 @@ import { useState } from 'react';
 import {
   convertIntToFloat,
   convertFloatToInt,
+  LevelEnum,
 } from '@acer-academy-learning/data-access';
 
 interface CreditBundleUpdateModalProps {
@@ -167,6 +168,31 @@ export const CreditBundleUpdateModal: React.FC<
                   Number of credits must be at least 1.
                 </p>
               )}
+            </div>
+            <div className="w-full mb-3">
+              <label
+                htmlFor="level"
+                className="block text-sm font-medium leading-6 text-gray-900"
+              >
+                Level
+              </label>
+              <div className="relative rounded-md shadow-sm">
+                <select
+                  id="level"
+                  name="level"
+                  className="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  value={creditBundleData.level}
+                  onChange={(e) => {
+                    creditBundleData.level = e.target.value as LevelEnum;
+                  }}
+                >
+                  {Object.values(LevelEnum).map((level, index) => (
+                    <option key={index} value={level}>
+                      {level}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
             <div className="w-full mb-3">
               <label
