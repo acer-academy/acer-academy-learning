@@ -1,4 +1,4 @@
-import { Prisma, Take } from '@prisma/client';
+import { Prisma, Take, TakeAnswer } from '@prisma/client';
 import { TakeDao } from '../dao/TakeDao';
 import { Request } from 'express';
 import { QuizQuestionService } from './QuizQuestionService';
@@ -15,10 +15,20 @@ export class TakeService {
 
   public async createTake(req: Request): Promise<Take> {
     const takeData = req.body;
-    const { timeTaken, takenById, quizId, studentAnswers } = takeData;
+    const {
+      timeTaken,
+      takenById,
+      quizId,
+      studentAnswers,
+    }: {
+      timeTaken: number;
+      takenById: string;
+      quizId: string;
+      studentAnswers: TakeAnswer[];
+    } = takeData;
     let totalMarks = 0;
-    const studentAnswersMap = {};
-    let formattedStudentAnswers = [];
+    const studentAnswersMap: Map<string, TakeAnswer[]> = new Map();
+    let formattedStudentAnswers: TakeAnswer[] = [];
     for (const answer of studentAnswers) {
       if (!Object.keys(studentAnswersMap).includes(answer.questionId)) {
         studentAnswersMap[answer.questionId] = [answer];
@@ -47,13 +57,15 @@ export class TakeService {
       totalMarks +=
         (currQuestionType == 'MRQ' &&
           studentAnswersMap[quizQuestionId].reduce(
-            (x, y) => x.isCorrect !== false && y.isCorrect !== false,
+            (x: TakeAnswer, y: TakeAnswer) =>
+              x.isCorrect !== false && y.isCorrect !== false,
             true,
           ) &&
           studentAnswersMap[quizQuestionId].length == correctAnswers.length) ||
         (currQuestionType !== 'MRQ' &&
           studentAnswersMap[quizQuestionId].reduce(
-            (x, y) => x.isCorrect !== false && y.isCorrect !== false,
+            (x: TakeAnswer, y: TakeAnswer) =>
+              x.isCorrect !== false && y.isCorrect !== false,
             true,
           ))
           ? quizQuestionMarks
