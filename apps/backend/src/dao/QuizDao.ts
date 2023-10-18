@@ -144,6 +144,9 @@ export class QuizDao {
           },
         },
         takes: true,
+        teacherCreated: {
+          select: { id: true, email: true, firstName: true, lastName: true },
+        },
         quizQuestions: {
           include: {
             quizQuestion: {

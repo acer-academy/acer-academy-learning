@@ -1,4 +1,7 @@
-import { LevelEnum } from '@acer-academy-learning/data-access';
+import {
+  LevelEnum,
+  QuizPaginationFilter,
+} from '@acer-academy-learning/data-access';
 import {
   QuizQuestionDifficultyEnum,
   QuizQuestionStatusEnum,
@@ -14,7 +17,10 @@ import { QuizStatusTag } from './QuizStatusTag';
 import DifficultyTag from './DifficultyTag';
 import TypeTag from './QuestionTypeTag';
 
-export const Filter: React.FC<{ filterSubmitCallback: Function }> = (props) => {
+export const Filter: React.FC<{
+  filterSubmitCallback: Function;
+  isQuizFilter?: boolean;
+}> = (props) => {
   const [difficulties, setDifficulties] = useState<
     QuizQuestionDifficultyEnum[]
   >([]);
@@ -34,16 +40,25 @@ export const Filter: React.FC<{ filterSubmitCallback: Function }> = (props) => {
   const [selectedQuestionType, setSelectedQuestionType] = useState('');
 
   const { filterSubmitCallback } = props;
+  const { isQuizFilter } = props;
 
   useEffect(() => {
-    const filterOptions: QuizQuestionPaginationFilter = {
-      difficulty: difficulties,
-      levels: levels,
-      topics: topics,
-      status: statuses,
-      questionType: questionTypes,
-      showLatestOnly: !showAllVersions,
-    };
+    const filterOptions: QuizQuestionPaginationFilter | QuizPaginationFilter =
+      isQuizFilter
+        ? {
+            difficulty: difficulties,
+            levels: levels,
+            topics: topics,
+            showLatestOnly: !showAllVersions,
+          }
+        : {
+            difficulty: difficulties,
+            levels: levels,
+            topics: topics,
+            status: statuses,
+            questionType: questionTypes,
+            showLatestOnly: !showAllVersions,
+          };
     console.log(filterOptions);
     filterSubmitCallback(filterOptions);
   }, [difficulties, levels, topics, statuses, questionTypes, showAllVersions]);
@@ -175,6 +190,7 @@ export const Filter: React.FC<{ filterSubmitCallback: Function }> = (props) => {
           )}
         </select>
         <select
+          hidden={isQuizFilter}
           className="rounded-md"
           value={selectedStatus}
           onChange={(e) =>
@@ -191,6 +207,7 @@ export const Filter: React.FC<{ filterSubmitCallback: Function }> = (props) => {
           ))}
         </select>
         <select
+          hidden={isQuizFilter}
           className="rounded-md"
           value={selectedQuestionType}
           onChange={(e) =>
