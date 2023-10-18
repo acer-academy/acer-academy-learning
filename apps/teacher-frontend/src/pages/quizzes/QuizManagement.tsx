@@ -1,78 +1,78 @@
 import {
-  getPaginatedFilteredQuestions as apiGetPaginatedFilteredQuestions,
-  deleteQuizQuestion,
+  QuizData,
+  QuizPaginationFilter,
+  getPaginatedFilteredQuizzes as apiGetPaginatedFilteredQuizzes,
+  deleteQuiz,
 } from '@acer-academy-learning/data-access';
-import {
-  QuizQuestionData,
-  QuizQuestionPaginationFilter,
-} from 'libs/data-access/src/lib/types/question';
+import { QuizQuestionPaginationFilter } from 'libs/data-access/src/lib/types/question';
 import { useEffect, useState } from 'react';
 import {
   LexOutput,
   WarningModal,
   useToast,
 } from '@acer-academy-learning/common-ui';
-import { Filter } from './Filter';
-import { LevelTag } from './LevelTag';
-import { TopicTag } from './TopicTag';
-import { QuizStatusTag } from './QuizStatusTag';
-import DifficultyTag from './DifficultyTag';
-import TypeTag from './QuestionTypeTag';
-import katex from 'katex';
+import { Filter } from '../question-bank/Filter';
+import { LevelTag } from '../question-bank/LevelTag';
+import { TopicTag } from '../question-bank/TopicTag';
+import DifficultyTag from '../question-bank/DifficultyTag';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline';
+import {
+  ClockIcon,
+  DocumentCheckIcon,
+  DocumentDuplicateIcon,
+  GiftIcon,
+  PencilSquareIcon,
+  TrashIcon,
+  UserGroupIcon,
+} from '@heroicons/react/24/outline';
 import { useMutation } from 'react-query';
 
-export const QuestionBank: React.FC = () => {
+export const QuizManagement: React.FC = () => {
+  const navigate = useNavigate();
   const location = useLocation();
   const { displayToast, ToastType } = useToast();
-  const { mutate: deleteQuizQuestionMutate } = useMutation(deleteQuizQuestion, {
-    onSuccess: async () => {
-      await getPaginatedFilteredQuestions();
-      displayToast('Successfully deleted question', ToastType.SUCCESS);
-    },
-    onError: (error: any) => {
-      displayToast(
-        'Error deleting question: ' + error.message,
-        ToastType.ERROR,
-      );
-    },
-  });
-  const navigate = useNavigate();
-  const [filterOptions, setFilterOptions] =
-    useState<QuizQuestionPaginationFilter>({});
+  const [filterOptions, setFilterOptions] = useState<QuizPaginationFilter>({});
+  useState<QuizQuestionPaginationFilter>({});
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-  const [currentQuestions, setCurrentQuestions] = useState<QuizQuestionData[]>(
-    [],
-  );
+  const [currentQuizzes, setCurrentQuizzes] = useState<QuizData[]>([]);
   const [totalCount, setTotalCount] = useState(0);
   const [isFilterVisible, setIsFilterVisible] = useState(true);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
-  const [deleteQuestionId, setDeleteQuestionId] = useState('');
+  const [deleteQuestionId, setDeleteQuizId] = useState('');
 
-  const getPaginatedFilteredQuestions = async () => {
+  const getPaginatedFilteredQuizzes = async () => {
     try {
-      const response = await apiGetPaginatedFilteredQuestions(
+      const response = await apiGetPaginatedFilteredQuizzes(
         currentPage,
         pageSize,
         filterOptions,
       );
-      const questionData: {
-        questions: QuizQuestionData[];
+      const quizzesData: {
+        quizzes: QuizData[];
         totalCount: number;
       } = response.data;
-      console.log(questionData);
-      setCurrentQuestions(questionData.questions);
-      setTotalCount(questionData.totalCount);
+      console.log(quizzesData);
+      setCurrentQuizzes(quizzesData.quizzes);
+      setTotalCount(quizzesData.totalCount);
     } catch (error) {
       displayToast(
-        'Questions could not be retrieved from the server.',
+        'Quizzes could not be retrieved from the server.',
         ToastType.ERROR,
       );
       console.log(error);
     }
   };
+
+  const { mutate: deleteQuizMutate } = useMutation(deleteQuiz, {
+    onSuccess: async () => {
+      await getPaginatedFilteredQuizzes();
+      displayToast('Successfully deleted quiz', ToastType.SUCCESS);
+    },
+    onError: (error: any) => {
+      displayToast('Error deleting quiz: ' + error.message, ToastType.ERROR);
+    },
+  });
 
   const isNextPageDisabled = () => {
     return currentPage * pageSize >= totalCount;
@@ -82,18 +82,27 @@ export const QuestionBank: React.FC = () => {
     return currentPage === 1;
   };
 
-  const navToSelectedQuestion = (selectedQuestionId: string) => {
-    // for now will push to url/question-bank/questionId, change as needed
-    navigate(`${location.pathname}/${selectedQuestionId}`);
+  const navToSelectedQuiz = (selectedQuizId: string) => {
+    // for now will push to url/quizzes/quizId, change as needed
+    navigate(`${location.pathname}/${selectedQuizId}`);
   };
-
-  const navToCreateQuestion = () => {
-    // for now will push to url/question-bank/create, change as needed
+  const navToCreateQuiz = () => {
+    // for now will push to url/quizzes/create, change as needed
     navigate(`${location.pathname}/create`);
   };
 
+  const getTimeAllowedString = (timeAllowedInSeconds: number | undefined) => {
+    if (!timeAllowedInSeconds) return 'None';
+    let numMins = Math.floor(timeAllowedInSeconds / 60);
+    const numHrs = Math.floor(numMins / 60);
+    numMins %= 60;
+    return `${numHrs > 0 ? `${numHrs} hour` : ''} ${
+      numMins > 0 ? `${numMins} minutes` : ''
+    }`;
+  };
+
   useEffect(() => {
-    getPaginatedFilteredQuestions();
+    getPaginatedFilteredQuizzes();
   }, [currentPage, pageSize, filterOptions]);
 
   return (
@@ -102,7 +111,7 @@ export const QuestionBank: React.FC = () => {
         <div className="flex align-middle justify-between">
           <div className="flex align-middle gap-4">
             <span className="text-2xl py-1 font-bold tracking-tight">
-              Question Bank
+              Quizzes
             </span>
             <button
               className="text-blue-500 hover:text-blue-600"
@@ -120,7 +129,7 @@ export const QuestionBank: React.FC = () => {
           <button
             className="inline-flex justify-center px-4 py-2 text-white bg-teacherBlue-500 border border-transparent rounded-md hover:bg-teacherBlue-700"
             onClick={() => {
-              navToCreateQuestion();
+              navToCreateQuiz();
             }}
           >
             <svg
@@ -130,17 +139,16 @@ export const QuestionBank: React.FC = () => {
             >
               <path d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z" />
             </svg>
-            Add Question
+            Create Quiz
           </button>
         </div>
 
         <div className={isFilterVisible ? '' : ' hidden'}>
           <Filter
-            filterSubmitCallback={(
-              newFilterOptions: QuizQuestionPaginationFilter,
-            ) => {
+            filterSubmitCallback={(newFilterOptions: QuizPaginationFilter) => {
               setFilterOptions(newFilterOptions);
             }}
+            isQuizFilter={true}
           ></Filter>
         </div>
 
@@ -155,7 +163,19 @@ export const QuestionBank: React.FC = () => {
                         scope="col"
                         className="py-3.5 pl-3.5 pr-3 text-left text-lg font-bold text-gray-900 sm:pl-6"
                       >
-                        Question
+                        Quiz
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-3 py-3.5 text-left text-lg font-bold text-gray-900 min-w-0"
+                      >
+                        Details
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-3 py-3.5 text-left text-lg font-bold text-gray-900"
+                      >
+                        Rewards
                       </th>
                       <th
                         scope="col"
@@ -185,46 +205,37 @@ export const QuestionBank: React.FC = () => {
                         scope="col"
                         className="px-3 py-3.5 text-left text-lg font-bold text-gray-900"
                       >
-                        Status
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-3 py-3.5 text-left text-lg font-bold text-gray-900"
-                      >
-                        Type
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-3 py-3.5 text-left text-lg font-bold text-gray-900"
-                      >
                         Actions
                       </th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200 bg-white">
-                    {currentQuestions.length === 0 ? (
+                    {currentQuizzes.length === 0 ? (
                       <tr>
                         <td
-                          colSpan={7}
+                          colSpan={8}
                           className="whitespace-nowrap py-4 px-4 font-light italic text-gray-400 text-center"
                         >
-                          No questions found.
+                          No quizzes found.
                         </td>
                       </tr>
                     ) : (
-                      currentQuestions.map((question) => (
+                      currentQuizzes.map((quiz) => (
                         <tr
-                          key={question.id}
+                          key={quiz.id}
                           className="hover:bg-slate-50 hover:cursor-pointer"
                           onClick={() => {
-                            navToSelectedQuestion(question.id);
+                            navToSelectedQuiz(quiz.id);
                           }}
                         >
-                          <td className="py-4 pl-3.5 pr-3 text-xs font-medium text-gray-900 max-w-0">
+                          <td className="py-4 pl-3.5 pr-3 text-xs font-medium text-gray-900">
                             <div>
+                              <span className="font-bold text-sm">
+                                {quiz.title}
+                              </span>
                               <span>
                                 <LexOutput
-                                  editorStateStr={question.questionText}
+                                  editorStateStr={quiz.description}
                                   shorten
                                 />
                               </span>
@@ -232,20 +243,65 @@ export const QuestionBank: React.FC = () => {
                           </td>
                           <td className="whitespace-nowrap py-4 px-3 text-sm text-gray-900">
                             <div className="flex flex-col">
-                              <span className="font-semibold text-sm">{`v${question.version}`}</span>
+                              <div className="flex items-center gap-1">
+                                <DocumentDuplicateIcon className="w-4 h-4 text-teacherBlue-700" />
+                                <span className="font-semibold text-sm">
+                                  {`${quiz.quizQuestions.length} questions`}
+                                </span>
+                              </div>
+                              <div className="flex items-center gap-1">
+                                <DocumentCheckIcon className="w-4 h-4 text-teacherBlue-700" />
+                                <span className="font-semibold text-sm">
+                                  {`${String(quiz.totalMarks)} marks`}
+                                </span>
+                              </div>
+                              <div className="flex items-center gap-1">
+                                <ClockIcon className="w-4 h-4 text-teacherBlue-700" />
+                                <span className="font-semibold text-sm">
+                                  {getTimeAllowedString(quiz.timeAllowed)}
+                                </span>
+                              </div>
+                              <div className="flex items-center gap-1">
+                                <UserGroupIcon className="w-4 h-4 text-teacherBlue-700" />
+                                <span className="font-semibold text-sm">
+                                  {`${quiz.takes.length} taken`}
+                                </span>
+                              </div>
+                            </div>
+                          </td>
+                          <td className="whitespace-nowrap py-4 px-3 text-sm text-gray-900">
+                            <div className="flex flex-col">
+                              <div className="flex items-center gap-1">
+                                <GiftIcon className="w-4 h-4 text-teacherBlue-700" />
+                                <span className="font-semibold text-sm">
+                                  {`${quiz.rewardPoints} points`}
+                                </span>
+                              </div>
+                              <div className="flex items-center gap-1">
+                                <DocumentCheckIcon className="w-4 h-4 text-teacherBlue-700" />
+                                <span className="font-semibold text-sm">
+                                  {`${quiz.rewardMinimumMarks} marks`}
+                                </span>
+                              </div>
+                            </div>
+                          </td>
+                          <td className="whitespace-nowrap py-4 px-3 text-sm text-gray-900">
+                            <div className="flex flex-col">
+                              <span className="font-semibold text-sm">{`v${quiz.version}`}</span>
                               <span className="text-xs text-gray-500">
-                                {question.version == 1
-                                  ? 'Created:'
-                                  : 'Updated:'}
+                                {quiz.version == 1 ? 'Created:' : 'Updated:'}
                               </span>
                               <span className="text-xs text-gray-500">
-                                {String(question.createdAt).split('T')[0]}
+                                {String(quiz.createdAt).split('T')[0]}
+                              </span>
+                              <span className="text-xs text-gray-500">
+                                {`${quiz.teacherCreated.firstName} ${quiz.teacherCreated.lastName}`}
                               </span>
                             </div>
                           </td>
                           <td className="whitespace-nowrap py-4 px-3 font-medium text-gray-900">
                             <div className="flex flex-col gap-1">
-                              {question.levels.map((level, index) => {
+                              {quiz.levels.map((level, index) => {
                                 return (
                                   <LevelTag
                                     key={index}
@@ -258,7 +314,7 @@ export const QuestionBank: React.FC = () => {
                           </td>
                           <td className="whitespace-nowrap py-4 pl-3 pr-3 font-medium text-gray-900">
                             <div className="flex flex-col gap-1 max-w-min">
-                              {question.topics.map((topic, index) => {
+                              {quiz.topics.map((topic, index) => {
                                 return (
                                   <TopicTag
                                     key={index}
@@ -270,20 +326,14 @@ export const QuestionBank: React.FC = () => {
                             </div>
                           </td>
                           <td className="whitespace-nowrap py-4 pl-3 pr-3 font-medium text-gray-900">
-                            <DifficultyTag difficulty={question.difficulty} />
-                          </td>
-                          <td className="whitespace-nowrap py-4 pl-3 pr-3 font-medium text-gray-900">
-                            <QuizStatusTag status={question.status} />
-                          </td>
-                          <td className="whitespace-nowrap py-4 pl-3 pr-3 font-medium text-gray-900">
-                            <TypeTag type={question.questionType} />
+                            <DifficultyTag difficulty={quiz.difficulty} />
                           </td>
                           <td className="whitespace-nowrap font-medium text-gray-900 space-x-1 w-max pr-3">
                             <button
                               type="button"
                               onClick={(e) => {
                                 e.stopPropagation();
-                                navToSelectedQuestion(question.id);
+                                navToSelectedQuiz(quiz.id);
                               }}
                               className="inline-flex items-center rounded-md bg-green-500 px-3 py-2 text-sm font-semibold shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-green-600"
                             >
@@ -293,7 +343,7 @@ export const QuestionBank: React.FC = () => {
                               type="button"
                               onClick={(e) => {
                                 e.stopPropagation();
-                                setDeleteQuestionId(question.id);
+                                setDeleteQuizId(quiz.id);
                                 setDeleteModalOpen(true);
                               }}
                               className="inline-flex items-center rounded-md bg-red-500 px-3 py-2 text-sm font-semibold shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-red-600"
@@ -348,7 +398,7 @@ export const QuestionBank: React.FC = () => {
               totalCount == 0
                 ? `0 of 0`
                 : `${(currentPage - 1) * pageSize + 1}-${
-                    (currentPage - 1) * pageSize + currentQuestions.length
+                    (currentPage - 1) * pageSize + currentQuizzes.length
                   } of ${totalCount}`
             }`}
           </span>
@@ -376,13 +426,13 @@ export const QuestionBank: React.FC = () => {
       <WarningModal
         open={deleteModalOpen}
         setOpen={setDeleteModalOpen}
-        title={'Delete Question'}
+        title={'Delete Quiz'}
         description={
-          'Are you sure you want to delete this question? The question and answers for this question data will be removed and cannot be undone.'
+          'Are you sure you want to delete this quiz? All student attempts for this quiz will also be removed and cannot be undone.'
         }
         confirmContent={'Delete'}
         dismissContent={'Cancel'}
-        onConfirm={() => deleteQuizQuestionMutate(deleteQuestionId)}
+        onConfirm={() => deleteQuizMutate(deleteQuestionId)}
       />
     </div>
   );

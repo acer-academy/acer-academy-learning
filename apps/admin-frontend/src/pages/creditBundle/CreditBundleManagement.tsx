@@ -15,6 +15,7 @@ import {
   deleteCreditBundle as apiDeleteCreditBundle,
   convertIntToFloat,
   convertFloatToInt,
+  LevelEnum,
 } from '@acer-academy-learning/data-access';
 
 export const CreditBundleManagement: React.FC = () => {
@@ -33,6 +34,7 @@ export const CreditBundleManagement: React.FC = () => {
       numCredits: 1,
       basePrice: 1,
       isActive: true,
+      level: LevelEnum.P1,
     });
 
   const { displayToast, ToastType } = useToast();
@@ -212,6 +214,12 @@ export const CreditBundleManagement: React.FC = () => {
                           scope="col"
                           className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 max-w-sm"
                         >
+                          Level
+                        </th>
+                        <th
+                          scope="col"
+                          className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 max-w-sm"
+                        >
                           Base Price
                         </th>
                         <th
@@ -255,6 +263,9 @@ export const CreditBundleManagement: React.FC = () => {
                             </td>
                             <td className="whitespace-normal px-3 py-4 text-sm text-gray-500 max-w-sm">
                               {creditBundle.numCredits}
+                            </td>
+                            <td className="whitespace-normal px-3 py-4 text-sm text-gray-500 max-w-sm">
+                              {creditBundle.level}
                             </td>
                             <td className="whitespace-normal px-3 py-4 text-sm text-gray-500 max-w-sm">
                               {'$' + convertIntToFloat(creditBundle.basePrice)}

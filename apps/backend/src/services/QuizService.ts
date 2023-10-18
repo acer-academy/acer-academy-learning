@@ -298,6 +298,14 @@ export class QuizService {
       where: { quizId: quizId },
     });
 
+    for (const take of await prismaClient.take.findMany({
+      where: { quizId: quizId },
+      include: { studentAnswers: true },
+    })) {
+      await prismaClient.takeAnswer.deleteMany({ where: { takeId: take.id } });
+      await prismaClient.take.delete({ where: { id: take.id } });
+    }
+
     return this.quizDao.deleteQuiz(quizId);
   }
 }

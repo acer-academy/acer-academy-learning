@@ -15,7 +15,10 @@ export class TakeDao {
   public async getAllTakes(): Promise<Take[]> {
     return this.prismaClient.take.findMany({
       include: {
-        studentAnswers: true,
+        studentAnswers: {
+          include: { question: { include: { answers: true } } },
+        },
+        quiz: { select: { totalMarks: true } },
       },
     });
   }
@@ -24,7 +27,10 @@ export class TakeDao {
     return this.prismaClient.take.findUnique({
       where: { id: takeId },
       include: {
-        studentAnswers: true,
+        studentAnswers: {
+          include: { question: { include: { answers: true } } },
+        },
+        quiz: { include: { quizQuestions: true } },
       },
     });
   }
@@ -35,7 +41,24 @@ export class TakeDao {
         takenById: studentId,
       },
       include: {
-        studentAnswers: true,
+        studentAnswers: {
+          include: { question: { include: { answers: true } } },
+        },
+        quiz: { select: { totalMarks: true } },
+      },
+    });
+  }
+
+  public async getTakesByQuiz(quizId: string): Promise<Take[]> {
+    return this.prismaClient.take.findMany({
+      where: {
+        quizId: quizId,
+      },
+      include: {
+        studentAnswers: {
+          include: { question: { include: { answers: true } } },
+        },
+        quiz: { select: { totalMarks: true } },
       },
     });
   }
@@ -49,6 +72,7 @@ export class TakeDao {
       data: takeData,
       include: {
         studentAnswers: true,
+        quiz: { select: { totalMarks: true } },
       },
     });
   }
@@ -59,6 +83,23 @@ export class TakeDao {
       include: {
         studentAnswers: true,
       },
+    });
+  }
+
+  public async deleteTakeAndAssociatedTakeAnswers(
+    takeId: string,
+  ): Promise<Take | null> {
+    return this.prismaClient.$transaction(async (prismaClient) => {
+      await prismaClient.takeAnswer.deleteMany({
+        where: {
+          takeId,
+        },
+      });
+      return prismaClient.take.delete({
+        where: {
+          id: takeId,
+        },
+      });
     });
   }
 }

@@ -9,6 +9,7 @@ import {
   validateCreditBundleIsActive,
   validateParamsCreditBundleExists,
   restrictBodyId,
+  validateBodyCreditBundleLevelNotEmpty,
 } from '../middleware/validationMiddleware';
 
 const creditBundleRouter = Router();
@@ -24,6 +25,7 @@ creditBundleRouter.post(
   validateBodyCreditBundleNameNotEmpty,
   validateBodyCreditBundleNumCreditsPositive,
   validateBodyCreditBundleBasePricePositive,
+  validateBodyCreditBundleLevelNotEmpty,
   async (req, res) => {
     try {
       const creditBundleData: Prisma.CreditBundleCreateInput = req.body;
@@ -100,7 +102,7 @@ creditBundleRouter.put(
 
 /**
  * DELETE /credit-bundles/{creditBundleId}
- * Deletes an FAQ article by its unique ID.
+ * Deletes a credit bundle by its unique ID.
  */
 creditBundleRouter.delete(
   '/:creditBundleId',

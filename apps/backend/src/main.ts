@@ -28,6 +28,7 @@ import classRouter from './routers/classRouter';
 import sessionRouter from './routers/sessionRouter';
 import bodyParser from 'body-parser';
 import quizRouter from './routers/quizRouter';
+import takeRouter from './routers/takeRouter';
 
 dotenv.config();
 
@@ -102,6 +103,7 @@ app.use('/api/v1/stripe-webhook', stripeWebhookRouter);
 app.use('/api/v1/classes', classRouter);
 app.use('/api/v1/sessions', sessionRouter);
 app.use('/api/v1/quiz', quizRouter);
+app.use('/api/v1/take', takeRouter);
 
 // Start the server
 const server = app.listen(port, () => {

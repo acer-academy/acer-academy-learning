@@ -17,6 +17,7 @@ import {
   InboxStackIcon,
   PaperClipIcon,
   CalculatorIcon,
+  DocumentTextIcon,
 } from '@heroicons/react/24/outline';
 
 export const NAV_SECTIONS: NavigationMenuItem[] = [
@@ -32,6 +33,11 @@ export const NAV_SECTIONS: NavigationMenuItem[] = [
         name: 'Question Bank',
         path: `${SUBJECTS}/math/question-bank`,
         icon: InboxStackIcon,
+      },
+      {
+        name: 'Quizzes',
+        path: `${SUBJECTS}/math/quizzes`,
+        icon: DocumentTextIcon,
       },
     ],
     noSideBar: true,

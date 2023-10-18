@@ -13,6 +13,9 @@ export const QUESTION_BANK = `${SUBJECTS}/:subject/question-bank`;
 export const CREATE_QUESTION = `${QUESTION_BANK}/create`;
 export const UPDATE_QUESTION = `${QUESTION_BANK}/:questionId`;
 
+// Quizzes
+export const QUIZZES = `${SUBJECTS}/:subject/quizzes`;
+
 export const ANALYTICS = '/analytics';
 
 //
