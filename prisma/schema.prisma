@@ -264,12 +264,13 @@ model StripeTransaction {
 }
 
 model CreditBundle {
-  id          String  @id @default(uuid()) @db.Uuid
-  name        String  @unique
+  id          String    @id @default(uuid()) @db.Uuid
+  name        String    @unique
   description String?
   numCredits  Int
   basePrice   Int
-  isActive    Boolean @default(true)
+  isActive    Boolean   @default(true)
+  level       LevelEnum
 }
 
 enum QuizQuestionDifficultyEnum {
