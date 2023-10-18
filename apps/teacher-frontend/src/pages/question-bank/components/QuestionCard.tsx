@@ -90,7 +90,7 @@ export const QuestionCard = ({
         render={({ field: { onChange, value, onBlur }, fieldState }) => (
           <>
             <LexEditor
-              errorMessage={errors.questionText?.message}
+              hasError={!!errors.questionText?.message}
               onChange={onChange}
               editorStateStr={getValues('questionText')}
               onBlur={onBlur}
