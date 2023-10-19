@@ -24,7 +24,7 @@ export default function SessionEvent({ session }: { session: SessionData }) {
         <p className="text-xs">Subjects: {subjects}</p>
       </div>
       <div className="flex">
-        <p className="text-xs">CentreId: {classroom.centreId}</p>
+        <p className="text-xs">CentreId: {classroom.centre.name}</p>
       </div>
       <div className="mt-4">
         {/* {address.split('\n').map((add) => (

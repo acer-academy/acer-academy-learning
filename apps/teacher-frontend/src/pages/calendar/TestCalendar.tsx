@@ -10,8 +10,9 @@ import { EventItem } from './CustomCalendar.types';
 import './index.css';
 import SessionEvent from './SessionEvent';
 import { SessionData } from 'libs/data-access/src/lib/types/session';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import YearView from './YearView/YearView';
+import { EventModal } from './EventModal';
 
 const localizer = momentLocalizer(moment);
 
@@ -33,23 +34,15 @@ interface CalendarProps {
   }[];
 }
 
-// const getComponents = (currentView: string) => ({
-//   event: ({ event }: { event: any }) => {
-//     console.log(currentView);
 
-//     const data = event?.data;
-//     if (currentView === 'month') {
-//       return <p>hello</p>;
-//     }
-
-//     return <SessionEvent session={data?.session} onDoubleClick={() => {}} />;
-//   },
-// });
 
 export const TestCalendar = ({
   onShowSessionView,
   sessionsData,
 }: CalendarProps) => {
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState(null);
   const [view, setView] = useState('week');
   const [date, setDate] = useState(new Date());
 
@@ -60,15 +53,30 @@ export const TestCalendar = ({
     viewRef.current = view;
   }, [view]);
 
+
+  const onSelectEvent = useCallback((calEvent) => {
+    setSelectedEvent(calEvent);
+    setIsModalOpen(true);
+  }, []);
+
+
+
   const components = {
     event: ({ event }: { event: any }) => {
-      console.log(viewRef.current); // log the current value from the ref
+
+      console.log(viewRef.current); // log the current value from the ref\
+      console.log(view)
 
       const data = event?.data;
-      // if (viewRef.current === 'month') {
-      //   // use the ref value here
-      //   return <p>hello</p>;
-      // }
+      if (viewRef.current === 'month') {
+
+        // use the ref value here
+        return <p className="text-xs">{data?.session.teacher.firstName} {data?.session.teacher.lastName}</p>;
+      }
+
+      
+
+      console.log(viewRef.current)
 
       return <SessionEvent session={data?.session} onDoubleClick={() => {}} />;
     },
@@ -76,11 +84,13 @@ export const TestCalendar = ({
 
   return (
     <>
-      View: {view}
+      {/* View: {view} */}
+      <EventModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} event={selectedEvent} />
       <DndCalendar
         onSelectSlot={({ start, end }) => {
           onShowSessionView({ start, end });
         }}
+        onSelectEvent={onSelectEvent}
         onDoubleClickEvent={(event) => {
           const session = event?.data?.session;
           session && onShowSessionView(session);
