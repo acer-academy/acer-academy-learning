@@ -1,5 +1,6 @@
 import {
   BackButton,
+  FullscreenSpinner,
   getSubjectEnumFromPathParam,
   useAuth,
   useToast,
@@ -8,23 +9,30 @@ import {
 import {
   CreateQuizType,
   Teacher,
-  createQuiz,
   createQuizSchema,
+  getQuizByQuizId,
+  updateQuiz,
 } from '@acer-academy-learning/data-access';
+import React, { useEffect, useMemo } from 'react';
 import { FormProvider } from 'react-hook-form';
 import { QuizCard } from './components/QuizCard';
 import { DEFAULT_CREATE_QUIZ_VALUES } from './constants';
-import { useMutation } from 'react-query';
+import { useMutation, useQuery } from 'react-query';
 import { isAxiosError } from 'axios';
 import { useParams } from 'react-router-dom';
+import omitDeep from 'omit-deep-lodash';
 
-export const CreateQuiz = () => {
-  const { subject } = useParams();
+export const UpdateQuiz = () => {
+  const { subject, quizId } = useParams();
+  const memoedQuizId = useMemo(() => quizId ?? '', [quizId]);
   const { user } = useAuth<Teacher>();
   const { displayToast, ToastType } = useToast();
-  const { mutateAsync: createQuizAsync } = useMutation(createQuiz, {
+  const { data: quiz, isSuccess } = useQuery(['quiz', memoedQuizId], () =>
+    getQuizByQuizId(memoedQuizId),
+  );
+  const { mutateAsync: updateQuizAsync } = useMutation(updateQuiz, {
     onSuccess: () => {
-      displayToast('Successfully created quiz!', ToastType.SUCCESS);
+      displayToast('Successfully updated quiz!', ToastType.SUCCESS);
     },
     onError: (error) => {
       const errorMsg = isAxiosError<{ error: string }>(error)
@@ -34,21 +42,32 @@ export const CreateQuiz = () => {
       console.error(error);
     },
   });
+  const wrangledQuizData = useMemo(
+    () => omitDeep(quiz ?? DEFAULT_CREATE_QUIZ_VALUES, 'id'),
+    [quiz],
+  );
   const formMethods = useZodForm({
     schema: createQuizSchema,
     mode: 'onSubmit',
     criteriaMode: 'all',
-    defaultValues: DEFAULT_CREATE_QUIZ_VALUES,
+    defaultValues: wrangledQuizData,
   });
+
+  useEffect(() => {
+    if (quiz) {
+      console.log(quiz);
+      formMethods.reset(omitDeep(quiz, 'id'));
+    }
+  }, [quiz, formMethods]);
 
   const onSubmit = async (values: CreateQuizType) => {
     if (!!subject && !!user) {
-      const createValues = {
+      const updateValues = {
         ...values,
         subject: getSubjectEnumFromPathParam(subject),
         teacherCreated: user.id,
       };
-      await createQuizAsync(createValues);
+      await updateQuizAsync({ quizId: memoedQuizId, data: updateValues });
     } else {
       displayToast(
         'Error: Not logged in or subject not found',
@@ -57,11 +76,15 @@ export const CreateQuiz = () => {
     }
   };
 
+  if (!isSuccess || Object.keys(wrangledQuizData).length === 0) {
+    return <FullscreenSpinner />;
+  }
+
   return (
     <FormProvider {...formMethods}>
       <section className="space-y-4">
         <BackButton />
-        <QuizCard onSubmitForm={onSubmit} submitText="Create Quiz" />
+        <QuizCard onSubmitForm={onSubmit} submitText="Update Quiz" />
       </section>
     </FormProvider>
   );

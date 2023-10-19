@@ -17,14 +17,12 @@ export const quizSchema = z.object({
         });
       }
     }),
-  subject: z.nativeEnum(SubjectEnum),
   topics: z
     .array(z.nativeEnum(QuizQuestionTopicEnum))
     .min(1, 'You must select at least one topic'),
   levels: z
     .array(z.nativeEnum(LevelEnum))
     .min(1, 'You must select at least one level'),
-  teacherCreated: z.string(),
   rewardPoints: z.number().positive('Reward Points must be a positive number'),
   // in seconds
   timeAllowed: z

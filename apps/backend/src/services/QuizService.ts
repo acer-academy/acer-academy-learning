@@ -242,7 +242,7 @@ export class QuizService {
         connect: { id: quizData.teacherCreated },
       },
       allocatedTo: {
-        connect: quizData.allocatedTo.map((studentId: string) => ({
+        connect: quizData.allocatedTo?.map((studentId: string) => ({
           id: studentId,
         })),
       },

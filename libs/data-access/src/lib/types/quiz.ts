@@ -40,3 +40,7 @@ export interface QuizData {
 
 export type CreateQuizType = z.infer<typeof createQuizSchema>;
 export type QuizQuestionInQuizType = z.infer<typeof quizQuestionInQuizSchema>;
+export type UpdateQuizParams = {
+  quizId: string;
+  data: CreateQuizType & { subject: SubjectEnum; teacherCreated: string };
+};

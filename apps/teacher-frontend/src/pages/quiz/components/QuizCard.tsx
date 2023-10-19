@@ -19,7 +19,7 @@ export type QuizCardProps = {
 export const QuizCard = ({ onSubmitForm, submitText }: QuizCardProps) => {
   const { displayToast, ToastType } = useToast();
   const location = useLocation();
-  const { handleSubmit, getValues } = useFormContext<CreateQuizType>();
+  const { handleSubmit } = useFormContext<CreateQuizType>();
 
   const [selectedQuestions, setSelectedQuestions] = useState<
     QuizQuestionInQuizType[]
@@ -63,7 +63,7 @@ export const QuizCard = ({ onSubmitForm, submitText }: QuizCardProps) => {
     >
       <QuizTabs />
       {currentTabComponent}
-      <GenericButton className="mt-4" type="submit" text="Create Quiz" />
+      <GenericButton type="submit" text={submitText ?? 'Submit'} />
     </form>
   );
 };
