@@ -6,7 +6,7 @@ import {
   UpdateQuizParams,
 } from '../types/quiz';
 import client from './client';
-import { Axios, AxiosResponse } from 'axios';
+import { AxiosResponse } from 'axios';
 
 const URL = '/quiz';
 

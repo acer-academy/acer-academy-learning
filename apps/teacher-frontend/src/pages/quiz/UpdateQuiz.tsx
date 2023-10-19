@@ -13,26 +13,24 @@ import {
   getQuizByQuizId,
   updateQuiz,
 } from '@acer-academy-learning/data-access';
-import React, { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import { FormProvider } from 'react-hook-form';
 import { QuizCard } from './components/QuizCard';
-import { DEFAULT_CREATE_QUIZ_VALUES } from './constants';
-import { useMutation, useQuery } from 'react-query';
+import { useMutation } from 'react-query';
 import { isAxiosError } from 'axios';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import omitDeep from 'omit-deep-lodash';
 
 export const UpdateQuiz = () => {
+  const navigate = useNavigate();
   const { subject, quizId } = useParams();
   const memoedQuizId = useMemo(() => quizId ?? '', [quizId]);
   const { user } = useAuth<Teacher>();
   const { displayToast, ToastType } = useToast();
-  const { data: quiz, isSuccess } = useQuery(['quiz', memoedQuizId], () =>
-    getQuizByQuizId(memoedQuizId),
-  );
   const { mutateAsync: updateQuizAsync } = useMutation(updateQuiz, {
     onSuccess: () => {
       displayToast('Successfully updated quiz!', ToastType.SUCCESS);
+      navigate(-1);
     },
     onError: (error) => {
       const errorMsg = isAxiosError<{ error: string }>(error)
@@ -42,23 +40,15 @@ export const UpdateQuiz = () => {
       console.error(error);
     },
   });
-  const wrangledQuizData = useMemo(
-    () => omitDeep(quiz ?? DEFAULT_CREATE_QUIZ_VALUES, 'id'),
-    [quiz],
-  );
   const formMethods = useZodForm({
     schema: createQuizSchema,
     mode: 'onSubmit',
     criteriaMode: 'all',
-    defaultValues: wrangledQuizData,
+    defaultValues: async () => {
+      const quizData = await getQuizByQuizId(memoedQuizId);
+      return omitDeep(quizData, 'id') as CreateQuizType;
+    },
   });
-
-  useEffect(() => {
-    if (quiz) {
-      console.log(quiz);
-      formMethods.reset(omitDeep(quiz, 'id'));
-    }
-  }, [quiz, formMethods]);
 
   const onSubmit = async (values: CreateQuizType) => {
     if (!!subject && !!user) {
@@ -76,7 +66,7 @@ export const UpdateQuiz = () => {
     }
   };
 
-  if (!isSuccess || Object.keys(wrangledQuizData).length === 0) {
+  if (formMethods.formState.isLoading) {
     return <FullscreenSpinner />;
   }
 

@@ -16,15 +16,17 @@ import { QuizCard } from './components/QuizCard';
 import { DEFAULT_CREATE_QUIZ_VALUES } from './constants';
 import { useMutation } from 'react-query';
 import { isAxiosError } from 'axios';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 export const CreateQuiz = () => {
+  const navigate = useNavigate();
   const { subject } = useParams();
   const { user } = useAuth<Teacher>();
   const { displayToast, ToastType } = useToast();
   const { mutateAsync: createQuizAsync } = useMutation(createQuiz, {
     onSuccess: () => {
       displayToast('Successfully created quiz!', ToastType.SUCCESS);
+      navigate(-1);
     },
     onError: (error) => {
       const errorMsg = isAxiosError<{ error: string }>(error)

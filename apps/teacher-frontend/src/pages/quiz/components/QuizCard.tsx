@@ -5,7 +5,7 @@ import {
 } from '@acer-academy-learning/data-access';
 import { FieldErrors, useFormContext } from 'react-hook-form';
 import { QuizTabs } from './QuizTab';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import { CREATE_QUIZ_QUESTIONS_HASH } from '../../../libs/routes';
 import DetailsSection from './DetailsSection';
 import { QuestionsSection } from './QuestionsSection';
@@ -17,15 +17,17 @@ export type QuizCardProps = {
 };
 
 export const QuizCard = ({ onSubmitForm, submitText }: QuizCardProps) => {
+  const { quizId } = useParams();
   const { displayToast, ToastType } = useToast();
   const location = useLocation();
-  const { handleSubmit } = useFormContext<CreateQuizType>();
+  const { handleSubmit, getValues } = useFormContext<CreateQuizType>();
 
   const [selectedQuestions, setSelectedQuestions] = useState<
     QuizQuestionInQuizType[]
-  >([]);
-  const [questionSelectionMode, setQuestionSelectionMode] =
-    useState<string>('');
+  >(getValues('quizQuestions') ?? []);
+  const [questionSelectionMode, setQuestionSelectionMode] = useState<string>(
+    quizId ?? '',
+  );
 
   const currentTabComponent = useMemo(() => {
     switch (location.hash.slice(1)) {
@@ -47,7 +49,12 @@ export const QuizCard = ({ onSubmitForm, submitText }: QuizCardProps) => {
     const msg = Object.entries(errors).map(([type, errorObj]) => (
       <p key={type} className="space-y-1">
         <strong>
-          {type.charAt(0).toLocaleUpperCase() + type.substring(1)} Error:{' '}
+          {type.charAt(0).toLocaleUpperCase() +
+            type
+              .substring(1)
+              .split(/(?=[A-Z])/)
+              .join(' ')}{' '}
+          Error:{' '}
         </strong>
         {errorObj.message ?? errorObj.root?.message}
       </p>

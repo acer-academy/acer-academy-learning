@@ -82,7 +82,7 @@ export const RenderInitialContentPlugin = ({
         clearTimeout(timerId);
       }
     };
-  }, [editorStateStr]);
+  }, []);
 
   return null;
 };
