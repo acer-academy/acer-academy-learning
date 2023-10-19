@@ -17,6 +17,21 @@ export class TakeAnswerService {
   public async getTakeAnswerById(answerId: string): Promise<TakeAnswer | null> {
     return this.takeAnswerDao.getTakeAnswerById(answerId);
   }
+  public async getTakeAnswersByStudent(
+    studentId: string,
+  ): Promise<TakeAnswer[]> {
+    return this.takeAnswerDao.getTakeAnswersByStudent(studentId);
+  }
+
+  public async getTakeAnswersByTake(takeId: string): Promise<TakeAnswer[]> {
+    return this.takeAnswerDao.getTakeAnswersByTake(takeId);
+  }
+
+  public async getTakeAnswersByQuizQuestion(
+    quizQuestionId: string,
+  ): Promise<TakeAnswer[]> {
+    return this.takeAnswerDao.getTakeAnswersByQuizQuestion(quizQuestionId);
+  }
 
   public async updateTakeAnswer(
     answerId: string,
