@@ -9,6 +9,7 @@ import { useLocation } from 'react-router-dom';
 import { CREATE_QUIZ_QUESTIONS_HASH } from '../../../libs/routes';
 import DetailsSection from './DetailsSection';
 import { QuestionsSection } from './QuestionsSection';
+import { GenericButton, useToast } from '@acer-academy-learning/common-ui';
 
 export type QuizCardProps = {
   onSubmitForm: (values: CreateQuizType) => Promise<void>;
@@ -16,8 +17,9 @@ export type QuizCardProps = {
 };
 
 export const QuizCard = ({ onSubmitForm, submitText }: QuizCardProps) => {
+  const { displayToast, ToastType } = useToast();
   const location = useLocation();
-  const { handleSubmit } = useFormContext<CreateQuizType>();
+  const { handleSubmit, getValues } = useFormContext<CreateQuizType>();
 
   const [selectedQuestions, setSelectedQuestions] = useState<
     QuizQuestionInQuizType[]
@@ -42,7 +44,16 @@ export const QuizCard = ({ onSubmitForm, submitText }: QuizCardProps) => {
   }, [location, selectedQuestions, questionSelectionMode]);
 
   const onError = (errors: FieldErrors<CreateQuizType>) => {
+    const msg = Object.entries(errors).map(([type, errorObj]) => (
+      <p key={type} className="space-y-1">
+        <strong>
+          {type.charAt(0).toLocaleUpperCase() + type.substring(1)} Error:{' '}
+        </strong>
+        {errorObj.message ?? errorObj.root?.message}
+      </p>
+    ));
     console.error(errors);
+    displayToast(<div key={'quiz-error-msg'}>{msg}</div>, ToastType.ERROR);
   };
 
   return (
@@ -52,6 +63,7 @@ export const QuizCard = ({ onSubmitForm, submitText }: QuizCardProps) => {
     >
       <QuizTabs />
       {currentTabComponent}
+      <GenericButton className="mt-4" type="submit" text="Create Quiz" />
     </form>
   );
 };

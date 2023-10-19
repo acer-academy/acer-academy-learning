@@ -93,9 +93,9 @@ export function App() {
                   {/* Quizzes routes */}
                   <Route path={QUIZZES}>
                     <Route path={QUIZZES} element={<QuizManagement />} />
+                    <Route path={CREATE_QUIZ} element={<CreateQuiz />} />
                   </Route>
                 </Route>
-                <Route path={CREATE_QUIZ} element={<CreateQuiz />} />
                 {/* Analytics routes */}
                 <Route path={ANALYTICS} />
                 {/* Scheduling routes */}

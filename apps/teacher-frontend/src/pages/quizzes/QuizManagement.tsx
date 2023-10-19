@@ -88,7 +88,7 @@ export const QuizManagement: React.FC = () => {
   };
   const navToCreateQuiz = () => {
     // for now will push to url/quizzes/create, change as needed
-    navigate(`${location.pathname}/create`);
+    navigate(`${location.pathname}/create-quiz`);
   };
 
   const getTimeAllowedString = (timeAllowedInSeconds: number | undefined) => {

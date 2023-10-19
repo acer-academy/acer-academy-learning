@@ -1,4 +1,4 @@
-import { QuizData, QuizPaginationFilter } from '../types/quiz';
+import { CreateQuizType, QuizData, QuizPaginationFilter } from '../types/quiz';
 import client from './client';
 import { Axios, AxiosResponse } from 'axios';
 
@@ -17,4 +17,8 @@ export async function getPaginatedFilteredQuizzes(
 
 export async function deleteQuiz(quizId: string): Promise<void> {
   return client.delete(`${URL}/${quizId}`);
+}
+
+export async function createQuiz(data: CreateQuizType) {
+  return client.post(`${URL}`, data);
 }

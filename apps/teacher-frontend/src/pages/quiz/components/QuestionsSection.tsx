@@ -5,6 +5,9 @@ import QuestionBankModal from './QuestionBankModal';
 import { FindQuestionsButton } from './FindQuestionsButton';
 import { QuestionSelectionModeRadio } from './QuestionSelectionModeRadio';
 import { AutoGenerateInputParametersForm } from './AutoGenerateInputParametersForm';
+import { QuizRewardMinimumMarksField } from './QuizRewardMinimumMarksField';
+import { QuizRewardPointsField } from './QuizRewardPointsField';
+import { QuizTimeAllowedField } from './QuizTimeAllowedField';
 interface QuestionsSectionProps {
   selectedQuestions: QuizQuestionInQuizType[];
   setSelectedQuestions: (selectedQuestions: QuizQuestionInQuizType[]) => void;
@@ -60,10 +63,17 @@ export const QuestionsSection: React.FC<QuestionsSectionProps> = (
           />
         )}
       {questionSelectionMode !== '' && (
-        <SelectedQuestionsTable
-          selectedQuestions={selectedQuestions}
-          setSelectedQuestions={setSelectedQuestions}
-        />
+        <>
+          <SelectedQuestionsTable
+            selectedQuestions={selectedQuestions}
+            setSelectedQuestions={setSelectedQuestions}
+          />
+          <div className="grid grid-cols-2 gap-4 w-[70%]">
+            <QuizTimeAllowedField />
+            <QuizRewardMinimumMarksField />
+            <QuizRewardPointsField />
+          </div>
+        </>
       )}
     </>
   );
