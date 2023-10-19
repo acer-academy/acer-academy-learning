@@ -20,6 +20,8 @@ import {
   DocumentTextIcon,
 } from '@heroicons/react/24/outline';
 
+
+
 export const NAV_SECTIONS: NavigationMenuItem[] = [
   {
     name: 'DASHBOARD',

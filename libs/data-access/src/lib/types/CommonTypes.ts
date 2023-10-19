@@ -65,4 +65,10 @@ export enum StripeTransactionStatus {
   REFUNDED = 'REFUNDED',
 }
 
+export enum ClassFrequencyEnum {
+  WEEKLY = 'WEEKLY',
+  DAILY = 'DAILY',
+  MONTHLY = 'MONTHLY',
+}
+
 // Other shared types and enums...

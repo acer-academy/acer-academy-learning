@@ -24,6 +24,7 @@ export async function createSession(
   return client.post(`${URL}`, input);
 }
 
+
 export async function updateSession(
   id: string,
   input: SessionUpdateData,

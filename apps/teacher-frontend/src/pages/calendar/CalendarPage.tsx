@@ -4,7 +4,7 @@ import { TestCalendar } from './TestCalendar';
 
 function CalendarPage() {
   return (
-    <div style={{ height: '95vh' }}>
+    <div style={{ height: '100vh' }}>
       {/* <BasicCalendar /> */}
       {/* <TestCalendar /> */}
       <CalendarView />

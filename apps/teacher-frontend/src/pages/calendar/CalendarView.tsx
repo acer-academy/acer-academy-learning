@@ -116,7 +116,7 @@ export default function CalendarView() {
   }));
 
   return (
-    <div className="flex space-x-10 m-4 h-full">
+    <div className="flex space-x-2 h-full">
       {/* Calendar */}
 
       <div className="bg-white p-2">

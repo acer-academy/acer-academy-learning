@@ -3,8 +3,11 @@ import { SessionData } from 'libs/data-access/src/lib/types/session';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import {
+  createRecurringClass,
+  deleteRecurringClass,
   getAllCentres,
   getClassroomsByCentre,
+  updateRecurringClass,
 } from '@acer-academy-learning/data-access';
 import { CentreData } from 'libs/data-access/src/lib/types/centre';
 import { ClassroomData } from 'libs/data-access/src/lib/types/classroom';
@@ -19,6 +22,8 @@ import {
 } from '@acer-academy-learning/data-access';
 
 import './CalendarView.css';
+import { ClassFrequencyEnum } from '@prisma/client';
+import { XMarkIcon } from '@heroicons/react/24/solid';
 
 interface EventFormProps {
   session: SessionData;
@@ -95,6 +100,7 @@ export default function EventForm({
 
   useEffect(() => {
     setSessionData({ ...session });
+    console.log(session);
   }, [session]);
 
   useEffect(() => {
@@ -148,12 +154,32 @@ export default function EventForm({
   const handleDeleteSession = async (sessionId: string) => {
     try {
       const response = await deleteSession(sessionId);
-
       console.log(response);
       if (response.status === 200) {
-        console.log('deleted successfully');
         await fetchSessions();
+        setShowDeleteModal(false);
         onClose();
+        displayToast('Session deleted successfully!', ToastType.SUCCESS);
+      }
+    } catch (err) {
+      // setError(err);
+    } finally {
+      // setLoading(false);
+    }
+  };
+
+  const handleDeleteFutureSessions = async (classId: string) => {
+    try {
+      const response = await deleteRecurringClass(classId);
+      console.log(response);
+      if (response.status === 200) {
+        await fetchSessions();
+        setShowDeleteModal(false);
+        onClose();
+        displayToast(
+          'Future sessions deleted successfully!',
+          ToastType.SUCCESS,
+        );
       }
     } catch (err) {
       // setError(err);
@@ -192,24 +218,83 @@ export default function EventForm({
       classId: null,
     };
 
+    const recurringData = {
+      endRecurringDate: recurringEndDate,
+      frequency: recurringType as ClassFrequencyEnum,
+    };
+
     console.log('createSessionData');
     console.log(createSessionData);
 
     if (!session.id) {
-      const response = await createSession(createSessionData);
-      if (response) {
-        console.log('created obj');
+      if (!isRecurring) {
+        const response = await createSession(createSessionData);
+        if (response) {
+          console.log('created obj');
+          onClose();
+          await fetchSessions();
+          displayToast('Session created successfully!', ToastType.SUCCESS);
+        }
+      } else {
+        const response = await createRecurringClass([
+          recurringData,
+          createSessionData,
+        ]);
+        if (response) {
+          console.log('created recurring');
+          onClose();
+          await fetchSessions();
+          displayToast('Session created successfully!', ToastType.SUCCESS);
+        }
       }
-      await fetchSessions();
-      displayToast('Session created successfully!', ToastType.SUCCESS);
     } else {
-      const response = await updateSession(session.id, createSessionData);
-      if (response) {
-        console.log('updated data');
+      if (!isRecurring) {
+        const response = await updateSession(session.id, createSessionData);
+        if (response) {
+          console.log('updated data');
+          onClose();
+          await fetchSessions();
+          displayToast('Session updated successfully!', ToastType.SUCCESS);
+        }
+      } else {
+        if (session.class) {
+          //is recurring
+          const response = await updateRecurringClass(
+            session.id,
+            session.class?.id,
+            [recurringData, createSessionData],
+          );
+          if (response) {
+            console.log('updated data');
+            onClose();
+            await fetchSessions();
+            displayToast('Session updated successfully!', ToastType.SUCCESS);
+          }
+        }
       }
-      await fetchSessions();
-      displayToast('Session updated successfully!', ToastType.SUCCESS);
     }
+  };
+
+  const [isRecurring, setIsRecurring] = useState(
+    sessionData.class ? true : false,
+  );
+  const [recurringType, setRecurringType] = useState<ClassFrequencyEnum>(
+    sessionData.class ? sessionData.class.frequency : ClassFrequencyEnum.DAILY,
+  );
+  const [recurringEndDate, setRecurringEndDate] = useState(
+    sessionData.class
+      ? new Date(sessionData.class?.endRecurringDate)
+      : new Date(sessionData.end),
+  );
+
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+  const openDeleteModal = () => {
+    setShowDeleteModal(true);
+  };
+
+  const closeDeleteModal = () => {
+    setShowDeleteModal(false);
   };
 
   return (
@@ -221,12 +306,8 @@ export default function EventForm({
               <h2 className="text-4xl mb-4">{label} a session</h2>
             </div>
             <div>
-              <button
-                className="bg-red-500 text-white rounded-full p-2 hover:bg-red-600"
-                onClick={onClose}
-                aria-label="close"
-              >
-                ×
+              <button onClick={onClose} className="ml-auto">
+                <XMarkIcon className="h-6 w-6 text-gray-500 hover:text-gray-700" />
               </button>
             </div>
           </div>
@@ -260,6 +341,59 @@ export default function EventForm({
                 className="w-[300px] block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               />
             </div>
+          </div>
+
+          <div className="mt-2">
+            <label className="flex items-center">
+              <input
+                type="checkbox"
+                checked={isRecurring}
+                onChange={(e) => setIsRecurring(e.target.checked)}
+                className="h-5 w-5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+              />
+              <span className="ml-2">Recurring Event</span>
+            </label>
+
+            {isRecurring && (
+              <div className="mt-4">
+                <div className="flex items-center space-x-4">
+                  <label
+                    htmlFor="recurringType"
+                    className="block w-1/4 text-sm font-medium leading-6 text-gray-900"
+                  >
+                    Recurring Type
+                  </label>
+                  <select
+                    value={recurringType}
+                    onChange={(e) => setRecurringType(e.target.value)}
+                    className="mt-2 block w-3/4 space-y-2 rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  >
+                    <option value="DAILY">Daily</option>
+                    <option value="WEEKLY">Weekly</option>
+                    <option value="MONTHLY">Monthly</option>
+                  </select>
+                </div>
+              </div>
+            )}
+
+            {isRecurring && (
+              <div className="mt-4">
+                <div className="flex items-center space-x-4">
+                  <label
+                    htmlFor="recurringEndDate"
+                    className="block w-1/4 text-sm font-medium leading-6 text-gray-900"
+                  >
+                    Recurring End Date
+                  </label>
+                  <DatePicker
+                    onChange={(date) => setRecurringEndDate(date)}
+                    selected={recurringEndDate}
+                    dateFormat="MMMM d, yyyy"
+                    className="w-[450px] block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  />
+                </div>
+              </div>
+            )}
           </div>
 
           <div className="mt-4">
@@ -373,10 +507,63 @@ export default function EventForm({
               <div>
                 <button
                   className="bg-red-500 text-white rounded-md px-4 py-2 hover:bg-red-600"
-                  onClick={() => handleDeleteSession(session.id)}
+                  onClick={openDeleteModal}
                 >
                   Delete
                 </button>
+              </div>
+            )}
+
+            {showDeleteModal && (
+              <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
+                <div className="bg-white p-4 rounded-md w-1/3 flex flex-col items-center">
+                  <button onClick={closeDeleteModal} className="ml-auto">
+                    <XMarkIcon className="h-6 w-6 text-gray-500 hover:text-gray-700" />
+                  </button>
+                  {isRecurring ? (
+                    <>
+                      <p className="mb-4 text-center">
+                        Do you want to delete the session or future sessions?
+                      </p>
+                      <div className="flex justify-center items-center space-x-2">
+                        <button
+                          onClick={() => handleDeleteSession(session.id)}
+                          className="bg-red-500 text-white rounded-md px-4 py-2 hover:bg-red-600"
+                        >
+                          Delete session
+                        </button>
+                        <button
+                          onClick={() =>
+                            handleDeleteFutureSessions(session.class?.id)
+                          }
+                          className="bg-red-500 text-white rounded-md px-4 py-2 hover:bg-red-600"
+                        >
+                          Delete future sessions
+                        </button>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <p className="mb-4 text-center">
+                        Confirm you want to delete session?
+                      </p>
+                      <div className="flex justify-center items-center space-x-2">
+                        <button
+                          onClick={() => handleDeleteSession(session.id)}
+                          className="bg-green-500 text-white rounded-md px-4 py-2 hover:bg-green-600"
+                        >
+                          Yes
+                        </button>
+                        <button
+                          onClick={closeDeleteModal}
+                          className="bg-red-500 text-white rounded-md px-4 py-2 hover:bg-red-600"
+                        >
+                          No
+                        </button>
+                      </div>
+                    </>
+                  )}
+                </div>
               </div>
             )}
 

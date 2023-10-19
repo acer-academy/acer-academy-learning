@@ -18,7 +18,7 @@ const localizer = momentLocalizer(moment);
 const initProps = {
   localizer: localizer,
   defaultView: Views.MONTH,
-  min: moment('2023-10-13T08:00:00').toDate(),
+  // min: moment('2023-10-13T08:00:00').toDate(),
   step: 15,
   timeslots: 4,
 };
@@ -65,10 +65,10 @@ export const TestCalendar = ({
       console.log(viewRef.current); // log the current value from the ref
 
       const data = event?.data;
-      if (viewRef.current === 'month') {
-        // use the ref value here
-        return <p>hello</p>;
-      }
+      // if (viewRef.current === 'month') {
+      //   // use the ref value here
+      //   return <p>hello</p>;
+      // }
 
       return <SessionEvent session={data?.session} onDoubleClick={() => {}} />;
     },

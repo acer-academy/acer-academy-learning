@@ -18,6 +18,7 @@ export * from './lib/api/question';
 export * from './lib/api/term';
 export * from './lib/api/session';
 export * from './lib/api/quiz';
+export * from './lib/api/class';
 
 // Object.freeze(api);
 
