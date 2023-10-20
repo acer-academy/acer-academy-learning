@@ -27,6 +27,8 @@ export const ViewQuizDetailsSection = ({
         return `${minutes} minutes`;
       }
     }
+
+    return 'No Time Limit';
   }, [quiz.timeAllowed]);
   return (
     <>
