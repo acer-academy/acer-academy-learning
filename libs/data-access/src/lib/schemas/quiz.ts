@@ -40,7 +40,7 @@ const quizMarksSchema = z
     totalMarks: z.number().positive('Total Marks must be a positive number'),
     rewardMinimumMarks: z
       .number()
-      .positive('Reward minimum marks must be a positive number'),
+      .min(0, 'Reward minimum marks must be a non-negative number'),
   })
   .superRefine(({ totalMarks, rewardMinimumMarks }, ctx) => {
     if (rewardMinimumMarks > totalMarks) {
