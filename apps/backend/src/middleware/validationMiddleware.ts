@@ -1887,3 +1887,97 @@ export async function validateBodyStudentExists(
     });
   }
 }
+
+/** Validates if the format of a create take request is valid */
+export async function validateBodyTakeFormatValid(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { timeTaken, takenById, quizId, studentAnswers } = req.body;
+    const validBody = {
+      timeTaken,
+      takenById,
+      quizId,
+      studentAnswers,
+    };
+    for (const key of Object.keys(validBody)) {
+      if (
+        validBody[key] === undefined ||
+        (key === 'timeTaken' &&
+          (typeof validBody[key] !== 'number' || validBody[key] <= 0)) ||
+        (key === 'takenById' &&
+          (!validBody[key] || typeof validBody[key] !== 'string')) ||
+        (key === 'quizId' &&
+          (!validBody[key] || typeof validBody[key] !== 'string')) ||
+        // studentAnswers array can be empty, if student submits no answers
+        (key === 'studentAnswers' && !Array.isArray(validBody[key]))
+      ) {
+        throw Error(`${key} is missing or has an invalid format.`);
+      }
+    }
+    req.body = validBody;
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+export async function validateBodyTakeStudentExists(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { takenById } = req.body;
+    if (takenById) {
+      if (takenById.length !== 36) {
+        return res.status(400).json({
+          error: 'Malformed request; takenById is not of valid length.',
+        });
+      }
+      const studentExists = await studentService.getStudentById(takenById);
+      if (!studentExists) {
+        return res.status(400).json({
+          error: 'Student does not exist.',
+        });
+      }
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+export async function validateBodyQuizExists(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { quizId } = req.body;
+    if (quizId) {
+      if (quizId.length !== 36) {
+        return res.status(400).json({
+          error: 'Malformed request; quizId is not of valid length.',
+        });
+      }
+      const quizExists = await quizService.getQuizById(quizId);
+      if (!quizExists) {
+        return res.status(400).json({
+          error: 'Quiz does not exist.',
+        });
+      }
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}

@@ -1,12 +1,13 @@
-import { Prisma } from '@prisma/client';
 import { Request, Response, Router } from 'express';
 import {
-  restrictBodyId,
   validateBodyDifficultiesExist,
   validateBodyLevelsExist,
+  validateBodyQuizExists,
   validateBodyQuizQuestionTopicsExist,
   validateBodyStudentExists,
   validateBodySubjectsExist,
+  validateBodyTakeFormatValid,
+  validateBodyTakeStudentExists,
 } from '../middleware/validationMiddleware';
 import { TakeFilterOptions, TakeService } from '../services/TakeService';
 
@@ -17,16 +18,22 @@ const takeService = new TakeService();
  * POST /take/
  * Creates a new take.
  */
-takeRouter.post('/', async (req: Request, res: Response) => {
-  try {
-    const newTake = await takeService.createTake(req);
-    return res.status(201).json(newTake);
-  } catch (error) {
-    return res.status(500).json({
-      error: error.message,
-    });
-  }
-});
+takeRouter.post(
+  '/',
+  validateBodyTakeFormatValid,
+  validateBodyTakeStudentExists,
+  validateBodyQuizExists,
+  async (req: Request, res: Response) => {
+    try {
+      const newTake = await takeService.createTake(req);
+      return res.status(201).json(newTake);
+    } catch (error) {
+      return res.status(500).json({
+        error: error.message,
+      });
+    }
+  },
+);
 
 /**
  * GET /take/
@@ -125,31 +132,6 @@ takeRouter.post(
       };
       const filteredTakes = await takeService.getFilteredTakes(filterOptions);
       return res.status(200).json(filteredTakes);
-    } catch (error) {
-      return res.status(500).json({ error: error.message });
-    }
-  },
-);
-
-/**
- * PUT /take/:takeId
- * Updates a take's information by its unique ID.
- */
-takeRouter.put(
-  '/:takeId',
-  restrictBodyId,
-  async (req: Request, res: Response) => {
-    try {
-      const { takeId } = req.params;
-      const takeData: Prisma.TakeUpdateInput = req.body;
-
-      const updatedTake = await takeService.updateTake(takeId, takeData);
-
-      if (!updatedTake) {
-        return res.status(404).json({ error: 'Take not found' });
-      }
-
-      return res.status(200).json(updatedTake);
     } catch (error) {
       return res.status(500).json({ error: error.message });
     }
