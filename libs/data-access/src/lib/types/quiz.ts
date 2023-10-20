@@ -7,6 +7,7 @@ import { QuizQuestionData } from './question';
 import { TakeData } from './take';
 import { z } from 'zod';
 import { createQuizSchema, quizQuestionInQuizSchema } from '../schemas';
+import { Teacher } from './teacher';
 
 export interface QuizPaginationFilter {
   subjects?: SubjectEnum[];
@@ -16,6 +17,11 @@ export interface QuizPaginationFilter {
   showLatestOnly?: boolean;
 }
 
+export type QuizDataQuizQuestion = {
+  quizId: string;
+  quizQuestion: QuizQuestionData;
+};
+
 export interface QuizData {
   id: string;
   title: string;
@@ -24,18 +30,18 @@ export interface QuizData {
   levels: LevelEnum[];
   difficulty: QuizQuestionDifficultyEnum;
   topics: QuizQuestionTopicEnum[];
-  totalMarks: Number;
-  rewardPoints: Number;
-  rewardMinimumMarks: Number;
+  totalMarks: number;
+  rewardPoints: number;
+  rewardMinimumMarks: number;
   timeAllowed?: number;
   teacherCreatedId: string;
-  teacherCreated: any;
+  teacherCreated: Partial<Teacher>;
   createdAt: string;
   nextVersionId: string;
-  version: Number;
+  version: number;
   allocatedTo: any;
   takes: TakeData[];
-  quizQuestions: any;
+  quizQuestions: QuizDataQuizQuestion[];
 }
 
 export type CreateQuizType = z.infer<typeof createQuizSchema>;

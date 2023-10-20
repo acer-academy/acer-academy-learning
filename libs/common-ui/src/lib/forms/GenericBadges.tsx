@@ -4,7 +4,7 @@ import { GenericBadge } from './GenericBadge';
 export type GenericBadgesProps<T> = {
   badges?: T[];
   getDisplayValue: (item: T) => string;
-  onChange: (badges: T[]) => void;
+  onChange?: (badges: T[]) => void;
   allowRemove?: boolean;
 };
 
@@ -18,7 +18,9 @@ export const GenericBadges = <T,>({
     if (badges) {
       const newBadges = [...badges];
       newBadges.splice(idx, 1);
-      onChange(newBadges);
+      if (onChange) {
+        onChange(newBadges);
+      }
     }
   };
   return (

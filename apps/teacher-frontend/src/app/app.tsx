@@ -49,7 +49,7 @@ import { Subjects } from '../pages/subjects/Subjects';
 import { Subject } from '../pages/subjects/Subject';
 import { CreateQuiz } from '../pages/quiz/CreateQuiz';
 import { QuizManagement } from '../pages/quiz/QuizManagement';
-import { UpdateQuiz } from '../pages/quiz/UpdateQuiz';
+import { ModifyQuizWrapper } from '../pages/quiz/ModifyQuizWrapper';
 
 export function App() {
   const queryClient = new QueryClient();
@@ -96,7 +96,7 @@ export function App() {
                   <Route path={QUIZZES}>
                     <Route path={QUIZZES} element={<QuizManagement />} />
                     <Route path={CREATE_QUIZ} element={<CreateQuiz />} />
-                    <Route path={UPDATE_QUIZ} element={<UpdateQuiz />} />
+                    <Route path={UPDATE_QUIZ} element={<ModifyQuizWrapper />} />
                   </Route>
                 </Route>
                 {/* Analytics routes */}

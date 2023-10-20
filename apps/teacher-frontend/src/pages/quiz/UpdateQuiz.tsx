@@ -8,9 +8,9 @@ import {
 } from '@acer-academy-learning/common-ui';
 import {
   CreateQuizType,
+  QuizData,
   Teacher,
   createQuizSchema,
-  getQuizByQuizId,
   updateQuiz,
 } from '@acer-academy-learning/data-access';
 import { useMemo } from 'react';
@@ -21,7 +21,11 @@ import { isAxiosError } from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import omitDeep from 'omit-deep-lodash';
 
-export const UpdateQuiz = () => {
+export type UpdateQuizProps = {
+  quiz: QuizData;
+};
+
+export const UpdateQuiz = ({ quiz }: UpdateQuizProps) => {
   const navigate = useNavigate();
   const { subject, quizId } = useParams();
   const memoedQuizId = useMemo(() => quizId ?? '', [quizId]);
@@ -44,10 +48,7 @@ export const UpdateQuiz = () => {
     schema: createQuizSchema,
     mode: 'onSubmit',
     criteriaMode: 'all',
-    defaultValues: async () => {
-      const quizData = await getQuizByQuizId(memoedQuizId);
-      return omitDeep(quizData, 'id') as CreateQuizType;
-    },
+    defaultValues: omitDeep(quiz, 'id') as CreateQuizType,
   });
 
   const onSubmit = async (values: CreateQuizType) => {
