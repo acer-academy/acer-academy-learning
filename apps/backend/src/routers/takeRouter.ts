@@ -1,6 +1,14 @@
-import { Request, Response, Router } from 'express';
-import { TakeService } from '../services/TakeService';
 import { Prisma } from '@prisma/client';
+import { Request, Response, Router } from 'express';
+import {
+  restrictBodyId,
+  validateBodyDifficultiesExist,
+  validateBodyLevelsExist,
+  validateBodyQuizQuestionTopicsExist,
+  validateBodyStudentExists,
+  validateBodySubjectsExist,
+} from '../middleware/validationMiddleware';
+import { TakeFilterOptions, TakeService } from '../services/TakeService';
 
 const takeRouter = Router();
 const takeService = new TakeService();
@@ -94,6 +102,59 @@ takeRouter.get('/quiz/:quizId', async (req: Request, res: Response) => {
     });
   }
 });
+
+/**
+ * POST /take/filter
+ * Retrieves a list of takes based on studentId and filter criteria.
+ */
+takeRouter.post(
+  '/filter/',
+  validateBodyStudentExists,
+  validateBodyQuizQuestionTopicsExist,
+  validateBodySubjectsExist,
+  validateBodyLevelsExist,
+  validateBodyDifficultiesExist,
+  async (req: Request, res: Response) => {
+    try {
+      const { page = 1, pageSize = 10 } = req.query;
+      const offset = (+page - 1) * +pageSize;
+      const filterOptions: TakeFilterOptions = {
+        pageSize: +pageSize,
+        offset,
+        ...req.body,
+      };
+      const filteredTakes = await takeService.getFilteredTakes(filterOptions);
+      return res.status(200).json(filteredTakes);
+    } catch (error) {
+      return res.status(500).json({ error: error.message });
+    }
+  },
+);
+
+/**
+ * PUT /take/:takeId
+ * Updates a take's information by its unique ID.
+ */
+takeRouter.put(
+  '/:takeId',
+  restrictBodyId,
+  async (req: Request, res: Response) => {
+    try {
+      const { takeId } = req.params;
+      const takeData: Prisma.TakeUpdateInput = req.body;
+
+      const updatedTake = await takeService.updateTake(takeId, takeData);
+
+      if (!updatedTake) {
+        return res.status(404).json({ error: 'Take not found' });
+      }
+
+      return res.status(200).json(updatedTake);
+    } catch (error) {
+      return res.status(500).json({ error: error.message });
+    }
+  },
+);
 
 /**
  * DELETE /take/:takeId

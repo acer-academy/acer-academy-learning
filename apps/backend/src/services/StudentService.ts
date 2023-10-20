@@ -7,7 +7,7 @@ import { JWT_SECRET_KEY } from '../config/config';
 import EmailUtility from './EmailUtility';
 import { WhitelistService } from './WhitelistService';
 
-class StudentService {
+export class StudentService {
   constructor(
     private whitelistService: WhitelistService = new WhitelistService(),
   ) {}

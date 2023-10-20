@@ -1,7 +1,6 @@
 import {
   ClassFrequencyEnum,
   LevelEnum,
-  QuizQuestion,
   QuizQuestionDifficultyEnum,
   QuizQuestionStatusEnum,
   QuizQuestionTopicEnum,
@@ -11,18 +10,20 @@ import {
 } from '@prisma/client';
 import { NextFunction, Request, Response } from 'express';
 import { CentreService } from '../services/CentreService';
+import ClassService from '../services/ClassService';
 import { ClassroomService } from '../services/ClassroomService';
+import { CreditBundleService } from '../services/CreditBundleService';
 import { FaqArticleService } from '../services/FaqArticleService';
 import { FaqTopicService } from '../services/FaqTopicService';
-import { TeacherService } from '../services/TeacherService';
 import { PromotionService } from '../services/PromotionService';
-import transactionService from '../services/TransactionService';
-import { CreditBundleService } from '../services/CreditBundleService';
-import { QuizQuestionService } from '../services/QuizQuestionService';
 import { QuizAnswerService } from '../services/QuizAnswerService';
+import { QuizQuestionService } from '../services/QuizQuestionService';
 import { QuizService } from '../services/QuizService';
-import ClassService from '../services/ClassService';
 import SessionService from '../services/SessionService';
+import { StudentService } from '../services/StudentService';
+import { TakeService } from '../services/TakeService';
+import { TeacherService } from '../services/TeacherService';
+import transactionService from '../services/TransactionService';
 
 const teacherService = new TeacherService();
 const centreService = new CentreService();
@@ -34,6 +35,8 @@ const quizQuestionService = new QuizQuestionService();
 const quizAnswerService = new QuizAnswerService();
 const promotionService = new PromotionService();
 const quizService = new QuizService();
+const takeService = new TakeService();
+const studentService = new StudentService();
 
 /*
  * Validators Naming Convention: (Expand on as we code)
@@ -1773,6 +1776,107 @@ export async function validateClassAndSessionExist(
       if (!validSession) {
         return res.status(400).json({
           error: 'Invalid session provided.',
+        });
+      }
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+/** Validates if the format of a create TakeAnswer request is valid. */
+export async function validateBodyTakeAnswerFormatValid(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { studentAnswer, isCorrect, timeTaken, questionId, takeId } =
+      req.body;
+    if (!studentAnswer || studentAnswer.trim().length == 0) {
+      throw Error(
+        'Malformed request; studentAnswer is required but none were specified.',
+      );
+    }
+    if (!isCorrect) {
+      throw Error(
+        'Malformed request; isCorrect is required but none were specified.',
+      );
+    }
+    if (!timeTaken) {
+      throw Error(
+        'Malformed request; timeTaken is required but none were specified.',
+      );
+    }
+    if (timeTaken < 0) {
+      throw Error('Malformed request; timeTaken cannot be less than zero.');
+    }
+    if (!questionId || questionId.trim().length == 0) {
+      throw Error(
+        'Malformed request; questionId is required but none were specified.',
+      );
+    }
+    if (!takeId || takeId.trim().length == 0) {
+      throw Error(
+        'Malformed request; takeId is required but none were specified.',
+      );
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+export async function validateBodyTakeExists(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { takeId } = req.body;
+    if (takeId) {
+      if (takeId.length !== 36) {
+        return res.status(400).json({
+          error: 'Malformed request; takeId is not of valid length.',
+        });
+      }
+      const takeExists = await takeService.getTakeById(takeId);
+      if (!takeExists) {
+        return res.status(400).json({
+          error: 'Take does not exist.',
+        });
+      }
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+export async function validateBodyStudentExists(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { studentId } = req.body;
+    if (studentId) {
+      if (studentId.length !== 36) {
+        return res.status(400).json({
+          error: 'Malformed request; studentId is not of valid length.',
+        });
+      }
+      const studentExists = await studentService.getStudentById(studentId);
+      if (!studentExists) {
+        return res.status(400).json({
+          error: 'Student does not exist.',
         });
       }
     }

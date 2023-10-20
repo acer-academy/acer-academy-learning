@@ -1,6 +1,12 @@
 import { Request, Response, Router } from 'express';
 import { TakeAnswerService } from '../services/TakeAnswerService';
 import { Prisma } from '@prisma/client';
+import {
+  restrictBodyId,
+  validateBodyTakeAnswerFormatValid,
+  validateBodyQuizQuestionExists,
+  validateBodyTakeExists,
+} from '../middleware/validationMiddleware';
 
 const takeAnswerRouter = Router();
 const takeAnswerService = new TakeAnswerService();
@@ -9,19 +15,24 @@ const takeAnswerService = new TakeAnswerService();
  * POST /take-answers/
  * Creates a new take answer.
  */
-takeAnswerRouter.post('/', async (req: Request, res: Response) => {
-  try {
-    const takeAnswerData: Prisma.TakeAnswerCreateInput = req.body;
-    const newTakeAnswer = await takeAnswerService.createTakeAnswer(
-      takeAnswerData,
-    );
-    return res.status(201).json(newTakeAnswer);
-  } catch (error) {
-    return res.status(500).json({
-      error: error.message,
-    });
-  }
-});
+takeAnswerRouter.post(
+  '/',
+  validateBodyTakeAnswerFormatValid,
+  validateBodyQuizQuestionExists,
+  async (req: Request, res: Response) => {
+    try {
+      const takeAnswerData: Prisma.TakeAnswerCreateInput = req.body;
+      const newTakeAnswer = await takeAnswerService.createTakeAnswer(
+        takeAnswerData,
+      );
+      return res.status(201).json(newTakeAnswer);
+    } catch (error) {
+      return res.status(500).json({
+        error: error.message,
+      });
+    }
+  },
+);
 
 /**
  * GET /take-answers/
@@ -132,25 +143,31 @@ takeAnswerRouter.get(
  * PUT /take-answers/:takeAnswerId
  * Updates a take answer's information by its unique ID.
  */
-takeAnswerRouter.put('/:takeAnswerId', async (req: Request, res: Response) => {
-  try {
-    const { takeAnswerId } = req.params;
-    const takeAnswerData: Prisma.TakeAnswerUpdateInput = req.body;
+takeAnswerRouter.put(
+  '/:takeAnswerId',
+  restrictBodyId,
+  validateBodyQuizQuestionExists,
+  validateBodyTakeExists,
+  async (req: Request, res: Response) => {
+    try {
+      const { takeAnswerId } = req.params;
+      const takeAnswerData: Prisma.TakeAnswerUpdateInput = req.body;
 
-    const updatedTakeAnswer = await takeAnswerService.updateTakeAnswer(
-      takeAnswerId,
-      takeAnswerData,
-    );
+      const updatedTakeAnswer = await takeAnswerService.updateTakeAnswer(
+        takeAnswerId,
+        takeAnswerData,
+      );
 
-    if (!updatedTakeAnswer) {
-      return res.status(404).json({ error: 'Take answer not found' });
+      if (!updatedTakeAnswer) {
+        return res.status(404).json({ error: 'Take answer not found' });
+      }
+
+      return res.status(200).json(updatedTakeAnswer);
+    } catch (error) {
+      return res.status(500).json({ error: error.message });
     }
-
-    return res.status(200).json(updatedTakeAnswer);
-  } catch (error) {
-    return res.status(500).json({ error: error.message });
-  }
-});
+  },
+);
 
 /**
  * DELETE /take-answers/:takeAnswerId

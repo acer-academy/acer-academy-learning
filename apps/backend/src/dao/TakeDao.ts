@@ -63,6 +63,27 @@ export class TakeDao {
     });
   }
 
+  public async getFilteredTakes(
+    filterOptions: Prisma.TakeWhereInput,
+    offset: number,
+    pageSize: number,
+  ): Promise<Take[]> {
+    return this.prismaClient.take.findMany({
+      where: filterOptions,
+      skip: offset,
+      take: pageSize,
+      orderBy: { attemptedAt: 'desc' },
+    });
+  }
+
+  public async getTotalCountOfFilteredTakes(
+    filterOptions: Prisma.TakeWhereInput,
+  ): Promise<number> {
+    return this.prismaClient.take.count({
+      where: filterOptions,
+    });
+  }
+
   public async updateTake(
     takeId: string,
     takeData: Prisma.TakeUpdateInput,

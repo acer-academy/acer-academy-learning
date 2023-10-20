@@ -35,7 +35,7 @@ export class TakeAnswerService {
 
   public async updateTakeAnswer(
     answerId: string,
-    answerData: Prisma.TakeAnswerUpdateInput,
+    answerData: Prisma.TakeAnswerUncheckedUpdateInput,
   ): Promise<TakeAnswer | null> {
     return this.takeAnswerDao.updateTakeAnswer(answerId, answerData);
   }
