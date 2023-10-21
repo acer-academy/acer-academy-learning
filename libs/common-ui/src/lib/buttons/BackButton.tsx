@@ -5,9 +5,10 @@ import { ArrowUturnLeftIcon } from '@heroicons/react/24/outline';
 
 export type BackButtonProps = {
   path?: string;
+  className?: string;
 };
 
-export const BackButton = ({ path }: BackButtonProps) => {
+export const BackButton = ({ path, className }: BackButtonProps) => {
   const navigate = useNavigate();
 
   const handleOnClick = () => {
@@ -24,6 +25,7 @@ export const BackButton = ({ path }: BackButtonProps) => {
       type="button"
       icon={<ArrowUturnLeftIcon className="h-4 w-4" />}
       onClick={handleOnClick}
+      className={className}
     />
   );
 };
