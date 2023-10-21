@@ -15,7 +15,8 @@ export const ASSIGNMENTS = `${SUBJECT_MAIN}/assignments`;
 
 // Quizzes
 export const QUIZZES = `${SUBJECT_MAIN}/quizzes`;
-export const ATTEMPT_QUIZ = `${QUIZZES}/take`
+export const VIEW_QUIZ = `${QUIZZES}/:quizId`;
+export const ATTEMPT_QUIZ = `${QUIZZES}/:quizId/take`;
 
 export const RECORDINGS = `${SUBJECT_MAIN}/recordings`;
 export const ZOOM_LINK = `${SUBJECT_MAIN}/zoom-link`;

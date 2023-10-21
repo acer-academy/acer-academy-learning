@@ -1,4 +1,5 @@
 import {
+  Divider,
   GenericBadges,
   LexOutput,
   formatDate,
@@ -46,11 +47,7 @@ export const ViewQuizDetailsSection = ({
           <strong>Time Limit:</strong> {timeAllowed}
         </span>
       </div>
-      <div className="relative">
-        <div className="absolute inset-0 flex items-center" aria-hidden="true">
-          <div className="w-full border-t border-gray-300" />
-        </div>
-      </div>
+      <Divider />
       <h1 className="text-3xl font-bold tracking-tight ">Description</h1>
       <LexOutput editorStateStr={quiz.description} />
       <p className="font-bold" style={{ marginTop: 'auto' }}>
