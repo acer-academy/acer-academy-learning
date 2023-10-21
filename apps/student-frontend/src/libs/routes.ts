@@ -9,11 +9,12 @@ export const DASHBOARD = '/';
 
 // Subject routes
 export const SUBJECTS = '/subjects';
-export const ASSIGNMENTS = `${SUBJECTS}/assignments`;
-export const QUIZZES = `${SUBJECTS}/:subject/quizzes`;
 export const TAKES = `${SUBJECTS}/:subject/takes`;
-export const RECORDINGS = `${SUBJECTS}/recordings`;
-export const ZOOM_LINK = `${SUBJECTS}/zoom-link`;
+export const SUBJECT_MAIN = `${SUBJECTS}/:subject`;
+export const ASSIGNMENTS = `${SUBJECT_MAIN}/assignments`;
+export const QUIZZES = `${SUBJECT_MAIN}/quizzes`;
+export const RECORDINGS = `${SUBJECT_MAIN}/recordings`;
+export const ZOOM_LINK = `${SUBJECT_MAIN}/zoom-link`;
 
 // Booking routes
 export const BOOKING = '/booking';

@@ -80,3 +80,5 @@ export const ACCOUNT_NAV: NavigationMenuItem = {
     { name: 'FAQ', path: FAQ, icon: QuestionMarkCircleIcon },
   ],
 };
+
+export const ROUTES_WITHOUT_SIDEBAR = [SUBJECTS];

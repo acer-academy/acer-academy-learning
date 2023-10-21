@@ -15,7 +15,11 @@ import { StudentAuthWrapper } from '@acer-academy-learning/common-ui';
 import StudentForgotPassword from '../pages/entry/StudentForgotPassword';
 import StudentResetPassword from '../pages/entry/StudentResetPassword';
 import 'react-toastify/dist/ReactToastify.css'; //
-import { ACCOUNT_NAV, NAV_SECTIONS } from '../libs/layout';
+import {
+  ACCOUNT_NAV,
+  NAV_SECTIONS,
+  ROUTES_WITHOUT_SIDEBAR,
+} from '../libs/layout';
 import {
   ACCOUNT,
   ASSIGNMENTS,
@@ -39,6 +43,7 @@ import {
   ZOOM_LINK,
   FAQ,
   TAKES,
+  SUBJECT_MAIN,
 } from '../libs/routes';
 import { ToastContainer } from 'react-toastify';
 import { StudentNotificationPreference } from '../pages/profile/StudentNotificationPreference';
@@ -48,6 +53,8 @@ import { StudentProfile } from '../pages/profile/StudentProfile';
 import TransactionManagement from '../pages/transaction/TransactionManagement';
 import { CreditBundleManagement } from '../pages/creditBundle/CreditBundleManagement';
 import { TakeViewAll } from '../pages/take/TakeViewAll';
+import { Subjects } from '../pages/subjects/Subjects';
+import { Subject } from '../pages/subjects/Subject';
 
 export function App() {
   const queryClient = new QueryClient();
@@ -72,6 +79,7 @@ export function App() {
                       navigationMenu={NAV_SECTIONS}
                       accountNavigation={ACCOUNT_NAV}
                       role={LayoutRole.Student}
+                      routesWithoutSidebar={ROUTES_WITHOUT_SIDEBAR}
                     />
                   </EnforceLoginStatePageWrapper>
                 }
@@ -81,6 +89,8 @@ export function App() {
                   element={<div>Welcome to AcerTech!</div>}
                 />
                 <Route path={SUBJECTS}>
+                  <Route path={SUBJECTS} element={<Subjects />} />
+                  <Route path={SUBJECT_MAIN} element={<Subject />} />
                   <Route path={ASSIGNMENTS} element={<div>Home</div>} />
                   <Route path={QUIZZES} element={<div>Home</div>} />
                   <Route path={TAKES} element={<TakeViewAll />} />

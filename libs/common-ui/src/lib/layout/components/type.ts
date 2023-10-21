@@ -9,7 +9,6 @@ export type NavigationMenuItem = {
   >;
   children?: NavigationMenuItem[];
   defaultChild?: string;
-  noSideBar?: boolean;
   dynamicRoute?: boolean;
 };
 

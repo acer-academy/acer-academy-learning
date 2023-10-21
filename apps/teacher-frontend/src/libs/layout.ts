@@ -36,7 +36,6 @@ export const NAV_SECTIONS: NavigationMenuItem[] = [
         icon: DocumentTextIcon,
       },
     ],
-    noSideBar: true,
   },
   {
     name: 'ANALYTICS',
@@ -60,3 +59,5 @@ export const ACCOUNT_NAV: NavigationMenuItem = {
     { name: 'Settings', path: SETTINGS, icon: Cog6ToothIcon },
   ],
 };
+
+export const ROUTES_WITHOUT_SIDEBAR = [SUBJECTS];

@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import mathLogo from '../assets/subjects-math-image.jpg';
+import englishLogo from '../assets/subjects-english-image.jpg';
 import { SubjectEnum } from '@acer-academy-learning/data-access';
 
 export type SubjectImageProps = {
@@ -9,6 +10,8 @@ export type SubjectImageProps = {
 
 const getImgSrc = (subject: SubjectEnum) => {
   switch (subject) {
+    case SubjectEnum.ENGLISH:
+      return englishLogo;
     default:
       // Default is math
       return mathLogo;
