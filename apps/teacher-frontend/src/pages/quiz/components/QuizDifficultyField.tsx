@@ -27,6 +27,7 @@ export const QuizDifficultyField: React.FC<QuizDifficultyFieldProps> = (
           onChange={onChange}
           badges={difficulties}
           getDisplayValue={(badge) => screamingSnakeToTitleCase(badge)}
+          allowRemove
         />
         <GenericComboBox
           options={difficultyEnums}

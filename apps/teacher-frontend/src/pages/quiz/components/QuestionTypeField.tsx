@@ -29,6 +29,7 @@ export const QuestionTypeField: React.FC<QuestionTypeFieldProps> = (
           getDisplayValue={(badge) =>
             screamingSnakeToTitleCase(badge).toUpperCase()
           }
+          allowRemove
         />
         <GenericComboBox
           options={typesEnums}

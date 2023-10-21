@@ -32,6 +32,7 @@ export const QuestionLevelsCombo = () => {
               onChange={onChange}
               badges={value}
               getDisplayValue={(badge) => screamingSnakeToTitleCase(badge)}
+              allowRemove
             />
             <ErrorMessage
               errors={errors}

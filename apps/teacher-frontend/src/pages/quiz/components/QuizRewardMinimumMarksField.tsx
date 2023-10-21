@@ -1,4 +1,8 @@
-import { ErrorField, GenericInput } from '@acer-academy-learning/common-ui';
+import {
+  ErrorField,
+  GenericInput,
+  containsOnlyNumbers,
+} from '@acer-academy-learning/common-ui';
 import { CreateQuizType } from '@acer-academy-learning/data-access';
 import { ErrorMessage } from '@hookform/error-message';
 import { Controller, useFormContext } from 'react-hook-form';
@@ -24,7 +28,11 @@ export const QuizRewardMinimumMarksField = () => {
         render={({ field: { onChange, value, onBlur } }) => (
           <div className="flex space-x-4 items-center">
             <GenericInput
-              onChange={(e) => onChange(parseInt(e.target.value))}
+              onChange={(e) =>
+                (containsOnlyNumbers(e.target.value) &&
+                  onChange(parseInt(e.target.value))) ||
+                onChange(undefined)
+              }
               onBlur={onBlur}
               value={value ?? ''}
               type="number"

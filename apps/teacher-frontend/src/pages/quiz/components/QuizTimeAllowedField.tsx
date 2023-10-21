@@ -37,8 +37,11 @@ export const QuizTimeAllowedField = () => {
               type="number"
               id="quiz-time-allowed"
               name="quiz-time-allowed"
-              onChange={onChange}
-              value={value ?? ''}
+              onChange={(e) => {
+                const val = e.target.value;
+                onChange(parseInt(val) * 60);
+              }}
+              value={value ? value / 60 : ''}
               onBlur={onBlur}
               disabled={!isChecked}
               inputClassName="w-20"

@@ -26,7 +26,7 @@ export interface QuizQuestionData {
   questionType: QuizQuestionTypeEnum;
   answers: QuizAnswer[];
   createdAt: Date;
-  version: Number;
+  version: number;
 }
 
 export interface QuizQuestionPaginationFilter {

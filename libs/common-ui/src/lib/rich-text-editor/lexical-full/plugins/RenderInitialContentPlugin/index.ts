@@ -50,7 +50,8 @@ export const RenderInitialContentPlugin = ({
   const { setIsContentLoaded } = useEditorEventContext();
   const [editor] = useLexicalComposerContext();
   useLayoutEffectImpl(() => {
-    setTimeout(() => {
+    let timerId: NodeJS.Timeout | null = null;
+    timerId = setTimeout(() => {
       // Shorten the structure if to long
       const shortened: SerializedEditorState<SerializedLexicalNode> =
         JSON.parse(editorStateStr);
@@ -75,6 +76,12 @@ export const RenderInitialContentPlugin = ({
         setIsContentLoaded(true);
       }
     });
+
+    return () => {
+      if (timerId) {
+        clearTimeout(timerId);
+      }
+    };
   }, []);
 
   return null;

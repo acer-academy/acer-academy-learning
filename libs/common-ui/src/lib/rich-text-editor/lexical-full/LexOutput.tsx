@@ -51,11 +51,14 @@ export const LexOutput = ({
           />
         )}
         <EquationsPlugin />
-        <RichTextPlugin
-          contentEditable={<ContentEditable />}
-          placeholder={<Placeholder>No content to render</Placeholder>}
-          ErrorBoundary={LexicalErrorBoundary}
-        />
+        {(isContentLoaded && (
+          <RichTextPlugin
+            contentEditable={<ContentEditable />}
+            placeholder={<Placeholder>No content to render</Placeholder>}
+            ErrorBoundary={LexicalErrorBoundary}
+          />
+        )) ||
+          ''}
         <LayoutPlugin />
       </LexicalComposer>
     </EditorEventContextProvider>
