@@ -10,12 +10,17 @@ import { LevelTag } from '../../question-bank/LevelTag';
 import TypeTag from '../../question-bank/QuestionTypeTag';
 import { TopicTag } from '../../question-bank/TopicTag';
 import {
+  CreateQuizType,
+  LevelEnum,
   QuizQuestionData,
   QuizQuestionInQuizType,
+  QuizQuestionTopicEnum,
   getQuizQuestionById,
 } from '@acer-academy-learning/data-access';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline';
+import { useFormContext } from 'react-hook-form';
+import { union } from 'lodash';
 
 interface SelectedQuestionsTableProps {
   selectedQuestions: QuizQuestionInQuizType[];
@@ -28,6 +33,8 @@ export const SelectedQuestionsTable: React.FC<SelectedQuestionsTableProps> = (
   const { selectedQuestions, setSelectedQuestions } = props;
 
   const { displayToast, ToastType } = useToast();
+
+  const { setValue } = useFormContext<CreateQuizType>();
 
   const [questionIdToObjectMap, setQuestionIdToObjectMap] = useState<{
     [questionId: string]: QuizQuestionData;
@@ -113,26 +120,61 @@ export const SelectedQuestionsTable: React.FC<SelectedQuestionsTableProps> = (
     }
   };
 
-  const calculateTotalMarks = () =>
-    selectedQuestions
-      .map((question) => question.quizQuestionMarks)
-      .reduce((a, b) => a + b, 0);
+  const totalMarks = useMemo(
+    () =>
+      selectedQuestions
+        .map((question) => question.quizQuestionMarks)
+        .reduce((a, b) => a + b, 0),
+    [selectedQuestions],
+  );
 
   const fetchQuizQuestionData = async () => {
-    selectedQuestions.map(async (question) => {
-      const quizQuestionData = await getQuizQuestionById(
-        question.quizQuestionId,
-      );
-      setQuestionIdToObjectMap((prev) => ({
-        ...prev,
-        [question.quizQuestionId]: quizQuestionData,
-      }));
-    });
+    // To reset from previous state to current state entirely without keeping prev state
+    const quizQuestions = await Promise.all(
+      selectedQuestions.map(async (question) => {
+        const quizQuestionData = await getQuizQuestionById(
+          question.quizQuestionId,
+        );
+        return quizQuestionData;
+      }),
+    );
+    const newQuestionIdToObjMap = quizQuestions.reduce(
+      (currObjMap, question) => ({
+        ...currObjMap,
+        [question.id]: question,
+      }),
+      {},
+    );
+    setQuestionIdToObjectMap(newQuestionIdToObjMap);
   };
 
+  // Side Effects
   useEffect(() => {
     fetchQuizQuestionData();
   }, [selectedQuestions]);
+
+  // Source of truth for questions, topics and levels (which should be based on questions)
+  useEffect(() => {
+    // Programatically set the questions, topics and levels (based on questions selected)
+    if (Object.keys(questionIdToObjectMap).length > 0) {
+      setValue('quizQuestions', selectedQuestions);
+      const topics: QuizQuestionTopicEnum[] = Object.entries(
+        questionIdToObjectMap,
+      ).reduce(
+        (currTopics, [questionId, questionData]) =>
+          union(currTopics, questionData.topics),
+        [] as QuizQuestionTopicEnum[],
+      );
+      setValue('topics', topics);
+      const levels: LevelEnum[] = Object.entries(questionIdToObjectMap).reduce(
+        (currLevels, [questionId, questionData]) =>
+          union(currLevels, questionData.levels),
+        [] as LevelEnum[],
+      );
+      setValue('levels', levels);
+      setValue('totalMarks', totalMarks);
+    }
+  }, [selectedQuestions, questionIdToObjectMap, setValue, totalMarks]);
 
   return (
     <div className="h-full">
@@ -172,7 +214,7 @@ export const SelectedQuestionsTable: React.FC<SelectedQuestionsTableProps> = (
           </div>
           <div className="flex flex-col text-right gap-2 pr-6">
             <div>Number of Questions: {selectedQuestions.length}</div>
-            <div>Total Marks: {calculateTotalMarks()} </div>
+            <div>Total Marks: {totalMarks} </div>
           </div>
         </div>
 

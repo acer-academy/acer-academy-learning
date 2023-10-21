@@ -33,7 +33,6 @@ export const retrieveQuizQuestionSchema = quizAnswerSchema.extend({
 });
 
 export const quizQuestionSchema = z.object({
-  // options: z.array(z.string().trim().min(1, 'Option cannot be empty.')).min(2, 'You must have at least 2 options.'),
   topics: z
     .array(z.nativeEnum(QuizQuestionTopicEnum))
     .min(1, 'You must select at least one topic'),

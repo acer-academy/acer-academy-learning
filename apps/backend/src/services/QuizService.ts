@@ -8,8 +8,8 @@ import {
   SubjectEnum,
 } from '@prisma/client';
 import { QuizDao } from '../dao/QuizDao';
-import { Request } from 'express';
 import { QuizQuestionDao } from '../dao/QuizQuestionDao';
+import { Request } from 'express';
 
 export interface QuizFilterOptions {
   subjects?: SubjectEnum[];
@@ -75,7 +75,7 @@ export class QuizService {
         connect: { id: quizData.teacherCreated },
       },
       allocatedTo: {
-        connect: quizData.allocatedTo.map((studentId: string) => ({
+        connect: quizData.allocatedTo?.map((studentId: string) => ({
           id: studentId,
         })),
       },
@@ -242,7 +242,7 @@ export class QuizService {
         connect: { id: quizData.teacherCreated },
       },
       allocatedTo: {
-        connect: quizData.allocatedTo.map((studentId: string) => ({
+        connect: quizData.allocatedTo?.map((studentId: string) => ({
           id: studentId,
         })),
       },

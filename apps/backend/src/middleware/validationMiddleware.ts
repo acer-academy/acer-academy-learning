@@ -1512,7 +1512,7 @@ export async function validateBodyQuizFormatValid(
         (key === 'rewardPoints' &&
           (typeof validBody[key] !== 'number' || validBody[key] < 0)) ||
         (key === 'rewardMinimumMarks' &&
-          (typeof validBody[key] !== 'number' || validBody[key] <= 0)) ||
+          (typeof validBody[key] !== 'number' || validBody[key] < 0)) ||
         (key === 'timeAllowed' &&
           timeAllowed !== null &&
           timeAllowed !== undefined &&
