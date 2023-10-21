@@ -4,12 +4,16 @@ import { Prisma } from '@prisma/client';
 import {
   validateBodyDifficultiesExist,
   validateBodyLevelsExist,
+  validateBodyNewQuestionIdExists,
+  validateBodyNewQuestionIdIsLaterVersionOfOldQuestionId,
+  validateBodyOldQuestionIdExists,
   validateBodyQuizFormatValid,
   validateBodyQuizOnQuizQuestionFormatValid,
   validateBodyQuizQuestionTopicsExist,
   validateBodyQuizTeacherCreatedExists,
   validateBodySubjectExists,
   validateBodySubjectsExist,
+  validateParamsQuizHasNoTakes,
   validateParamsQuizIsLatest,
 } from '../middleware/validationMiddleware';
 
@@ -166,7 +170,7 @@ quizRouter.post(
 
 /**
  * PUT /quiz/:quizId
- * Update a quiz by ID.
+ * Update an unpublished quiz by ID.
  */
 quizRouter.put(
   '/:quizId',
@@ -177,10 +181,43 @@ quizRouter.put(
   validateBodyQuizTeacherCreatedExists,
   validateBodyQuizOnQuizQuestionFormatValid,
   validateParamsQuizIsLatest,
+  validateParamsQuizHasNoTakes,
   async (req: Request, res: Response) => {
     const { quizId } = req.params;
     try {
       const quiz = await quizService.updateQuiz(quizId, req);
+      if (quiz) {
+        return res.status(200).json(quiz);
+      } else {
+        return res.status(404).json({ error: 'Quiz not found' });
+      }
+    } catch (error) {
+      return res.status(500).json({
+        error: error.message,
+      });
+    }
+  },
+);
+
+/**
+ * PUT /quiz/published/:quizId
+ * Update the version of a quiz question in a published quiz by quiz ID and triggers re-marking process.
+ */
+quizRouter.put(
+  '/published/:quizId',
+  validateBodyQuizFormatValid,
+  validateBodyOldQuestionIdExists,
+  validateBodyNewQuestionIdExists,
+  validateBodyNewQuestionIdIsLaterVersionOfOldQuestionId,
+  validateBodySubjectExists,
+  validateBodyLevelsExist,
+  validateBodyQuizQuestionTopicsExist,
+  validateBodyQuizTeacherCreatedExists,
+  validateParamsQuizIsLatest,
+  async (req: Request, res: Response) => {
+    const { quizId } = req.params;
+    try {
+      const quiz = await quizService.updatePublishedQuiz(quizId, req);
       if (quiz) {
         return res.status(200).json(quiz);
       } else {

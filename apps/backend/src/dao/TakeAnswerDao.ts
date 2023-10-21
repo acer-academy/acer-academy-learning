@@ -49,6 +49,15 @@ export class TakeAnswerDao {
     });
   }
 
+  public async getTakeAnswersByTakeAndQuizQuestion(
+    takeId: string,
+    quizQuestionId: string,
+  ): Promise<TakeAnswer[]> {
+    return this.prismaClient.takeAnswer.findMany({
+      where: { takeId: takeId, questionId: quizQuestionId },
+    });
+  }
+
   public async updateTakeAnswer(
     answerId: string,
     answerData: Prisma.TakeAnswerUpdateInput,

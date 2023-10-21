@@ -710,6 +710,31 @@ export async function validateParamsQuizIsLatest(
   }
 }
 
+/** Validates that a quiz id passed in params is unpublished (i.e. has no takes) */
+export async function validateParamsQuizHasNoTakes(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { quizId } = req.params;
+    if (quizId) {
+      const takes = await takeService.getTakesByQuiz(quizId);
+      if (takes.length > 0) {
+        return res.status(400).json({
+          error:
+            'Quizzes cannot be updated when students have already taken the quiz. Please use the "published" endpoint to update the quiz.',
+        });
+      }
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
 /** Validates if an array of subject enums passed in body all exist */
 export async function validateBodySubjectsExist(
   req: Request,
@@ -1971,6 +1996,102 @@ export async function validateBodyQuizExists(
       if (!quizExists) {
         return res.status(400).json({
           error: 'Quiz does not exist.',
+        });
+      }
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+export async function validateBodyOldQuestionIdExists(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { oldQuestionId } = req.body;
+    if (oldQuestionId) {
+      if (oldQuestionId.length !== 36) {
+        return res.status(400).json({
+          error: 'Malformed request; oldQuestionId is not of valid length.',
+        });
+      }
+      const questionExists = await quizQuestionService.getQuizQuestionById(
+        oldQuestionId,
+      );
+      if (!questionExists) {
+        return res.status(400).json({
+          error: 'Old question does not exist.',
+        });
+      }
+    } else {
+      throw Error('Malformed request; oldQuestionId is required.');
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+export async function validateBodyNewQuestionIdExists(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { newQuestionId } = req.body;
+    if (newQuestionId) {
+      if (newQuestionId.length !== 36) {
+        return res.status(400).json({
+          error: 'Malformed request; newQuestionId is not of valid length.',
+        });
+      }
+      const questionExists = await quizQuestionService.getQuizQuestionById(
+        newQuestionId,
+      );
+      if (!questionExists) {
+        return res.status(400).json({
+          error: 'New question does not exist.',
+        });
+      }
+    } else {
+      throw Error('Malformed request; newQuestionId is required.');
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+export async function validateBodyNewQuestionIdIsLaterVersionOfOldQuestionId(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { oldQuestionId, newQuestionId } = req.body;
+    if (oldQuestionId && newQuestionId) {
+      const versionLineage =
+        await quizQuestionService.getQuizQuestionAllVersionsById(oldQuestionId);
+      let isNewQuestionFound = false;
+      for (const question of versionLineage) {
+        if (question.id === newQuestionId) {
+          isNewQuestionFound = true;
+          break;
+        }
+      }
+      if (!isNewQuestionFound) {
+        return res.status(400).json({
+          error:
+            'New question is not a later version of the old question. Changing a quiz question of a published quiz to a completely new question is not allowed.',
         });
       }
     }
