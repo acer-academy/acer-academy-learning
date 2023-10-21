@@ -28,3 +28,4 @@ export * from './lib/buttons';
 export * from './lib/logo';
 export * from './lib/rich-text-editor/lexical-full/';
 export * from './lib/utils/subjects';
+export * from './lib/components/';

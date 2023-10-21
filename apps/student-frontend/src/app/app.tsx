@@ -53,8 +53,9 @@ import { StudentProfile } from '../pages/profile/StudentProfile';
 import TransactionManagement from '../pages/transaction/TransactionManagement';
 import { CreditBundleManagement } from '../pages/creditBundle/CreditBundleManagement';
 import { TakeViewAll } from '../pages/take/TakeViewAll';
-import { Subjects } from '../pages/subjects/Subjects';
-import { Subject } from '../pages/subjects/Subject';
+import { Subjects } from '../pages/subject/Subjects';
+import { Subject } from '../pages/subject/Subject';
+import { ViewAllQuizzes } from '../pages/subject/quiz/ViewAllQuizzes';
 
 export function App() {
   const queryClient = new QueryClient();
@@ -92,8 +93,8 @@ export function App() {
                   <Route path={SUBJECTS} element={<Subjects />} />
                   <Route path={SUBJECT_MAIN} element={<Subject />} />
                   <Route path={ASSIGNMENTS} element={<div>Home</div>} />
-                  <Route path={QUIZZES} element={<div>Home</div>} />
                   <Route path={TAKES} element={<TakeViewAll />} />
+                  <Route path={QUIZZES} element={<ViewAllQuizzes />} />
                   <Route path={RECORDINGS} element={<div>Home</div>} />
                   <Route path={ZOOM_LINK} element={<div>Home</div>} />
                 </Route>

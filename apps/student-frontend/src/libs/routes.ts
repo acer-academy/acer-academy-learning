@@ -12,7 +12,11 @@ export const SUBJECTS = '/subjects';
 export const TAKES = `${SUBJECTS}/:subject/takes`;
 export const SUBJECT_MAIN = `${SUBJECTS}/:subject`;
 export const ASSIGNMENTS = `${SUBJECT_MAIN}/assignments`;
+
+// Quizzes
 export const QUIZZES = `${SUBJECT_MAIN}/quizzes`;
+export const ATTEMPT_QUIZ = `${QUIZZES}/take`
+
 export const RECORDINGS = `${SUBJECT_MAIN}/recordings`;
 export const ZOOM_LINK = `${SUBJECT_MAIN}/zoom-link`;
 

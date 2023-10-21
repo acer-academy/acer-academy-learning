@@ -8,11 +8,10 @@ export type SubjectWithMetaData = {
 
 export const getSubjectPathFrom = (
   subject: SubjectEnum,
-  subjectPrefixPath: string,
 ): SubjectWithMetaData => ({
   title:
     subject.slice(0, 1).toLocaleUpperCase() +
     subject.substring(1).toLocaleLowerCase(),
   subject: subject,
-  path: subjectPrefixPath + '/' + subject.toLocaleLowerCase(),
+  path: subject.toLocaleLowerCase(),
 });

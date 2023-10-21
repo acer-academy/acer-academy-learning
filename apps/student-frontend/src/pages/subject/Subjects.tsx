@@ -3,9 +3,7 @@ import {
   getSubjectPathFrom,
   useAuth,
 } from '@acer-academy-learning/common-ui';
-import { SubjectEnum } from '@acer-academy-learning/data-access';
 import { useNavigate } from 'react-router-dom';
-import { SUBJECTS } from '../../libs/routes';
 import { Student } from 'libs/data-access/src/lib/types/student';
 import { useMemo } from 'react';
 
@@ -13,8 +11,7 @@ export const Subjects = () => {
   const navigate = useNavigate();
   const { user } = useAuth<Student>();
   const subjects = useMemo(
-    () =>
-      user?.subjects?.map((subject) => getSubjectPathFrom(subject, SUBJECTS)),
+    () => user?.subjects?.map((subject) => getSubjectPathFrom(subject)),
     [user],
   );
   return (
