@@ -1,7 +1,15 @@
-import { Divider, LexOutput } from '@acer-academy-learning/common-ui';
-import { QuizQuestionData } from '@acer-academy-learning/data-access';
-import React from 'react';
-import MCQAnswerOptions from './MCQAnswerOptions';
+import {
+  Divider,
+  LexFloatingEditor,
+  LexOutput,
+} from '@acer-academy-learning/common-ui';
+import {
+  QuizQuestionData,
+  QuizQuestionTypeEnum,
+} from '@acer-academy-learning/data-access';
+import React, { useMemo } from 'react';
+import { QuizSelectAnswerOptions } from './QuizSelectAnswerOptions';
+import { Controller } from 'react-hook-form';
 
 export type QuizQuestionCardProps = {
   question: QuizQuestionData;
@@ -20,6 +28,35 @@ export const QuizQuestionCard = ({
   marks,
   className,
 }: QuizQuestionCardProps) => {
+  const answerOptions = useMemo(() => {
+    switch (question.questionType) {
+      case QuizQuestionTypeEnum.MCQ:
+        return (
+          <QuizSelectAnswerOptions
+            type="radio"
+            answers={question.answers}
+            questionNumber={questionNumber}
+          />
+        );
+      case QuizQuestionTypeEnum.MRQ:
+        return (
+          <QuizSelectAnswerOptions
+            type="checkbox"
+            answers={question.answers}
+            questionNumber={questionNumber}
+          />
+        );
+      default:
+        return (
+          <Controller
+            name={`studentAnswers.${questionNumber - 1}.studentAnswer.0`}
+            render={({ field: { onChange, onBlur } }) => (
+              <LexFloatingEditor onChange={onChange} onBlur={onBlur} />
+            )}
+          />
+        );
+    }
+  }, [question, questionNumber]);
   return (
     <div>
       <div
@@ -33,10 +70,7 @@ export const QuizQuestionCard = ({
       <div className="border-b border-x border-gray-400 bg-white px-4 py-5 sm:px-6 shadow space-y-4 flex flex-col">
         <LexOutput editorStateStr={question.questionText} />
         <Divider lineClassName="border-student-primary-600" />
-        <MCQAnswerOptions
-          answers={question.answers}
-          questionNumber={questionNumber}
-        />
+        {answerOptions}
       </div>
     </div>
   );
