@@ -13,6 +13,7 @@ import {
   validateBodyQuizTeacherCreatedExists,
   validateBodySubjectExists,
   validateBodySubjectsExist,
+  validateBodyUpdatePublishedQuizFormatValid,
   validateParamsQuizHasNoTakes,
   validateParamsQuizIsLatest,
 } from '../middleware/validationMiddleware';
@@ -205,7 +206,7 @@ quizRouter.put(
  */
 quizRouter.put(
   '/published/:quizId',
-  validateBodyQuizFormatValid,
+  validateBodyUpdatePublishedQuizFormatValid,
   validateBodyOldQuestionIdExists,
   validateBodyNewQuestionIdExists,
   validateBodyNewQuestionIdIsLaterVersionOfOldQuestionId,

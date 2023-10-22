@@ -234,16 +234,21 @@ export class QuizService {
     const oldQuizQuestions =
       await this.quizOnQuizQuestionDao.getQuizOnQuizQuestionsByQuizId(quizId);
     const quizData = req.body;
-    const oldQuestionId = quizData.oldQuestionId;
-    const newQuestionId = quizData.newQuestionId;
+    const oldQuestionId: string = quizData.oldQuestionId;
+    const newQuestionId: string = quizData.newQuestionId;
     const updatedQuizQuestions = oldQuizQuestions.map((quizQuestion) => {
       if (quizQuestion.quizQuestionId === oldQuestionId) {
         return {
           quizQuestionId: newQuestionId,
-          ...quizQuestion,
+          quizQuestionIndex: quizQuestion.quizQuestionIndex,
+          quizQuestionMarks: quizQuestion.quizQuestionMarks,
         };
       }
-      return quizQuestion;
+      return {
+        quizQuestionId: quizQuestion.quizQuestionId,
+        quizQuestionIndex: quizQuestion.quizQuestionIndex,
+        quizQuestionMarks: quizQuestion.quizQuestionMarks,
+      };
     });
 
     const oldQuiz = await this.getQuizById(quizId);
@@ -310,25 +315,28 @@ export class QuizService {
       }
 
       // 5. Re-mark all affected TakeAnswers
+      const oldIsCorrect = takeAnswers
+        .map((takeAnswer) => takeAnswer.isCorrect)
+        .reduce((x: boolean, y: boolean) => x !== false && y !== false, true);
+
       const correctAnswers = (
         await this.quizAnswerService.getAnswersByQuestion(newQuestionId)
       )
         .filter((x) => x.isCorrect)
         .map((x) => x.answer);
+      for (const takeAnswer of takeAnswers) {
+        const newIsCorrect = correctAnswers.includes(takeAnswer.studentAnswer);
+        await this.takeAnswerDao.updateTakeAnswer(takeAnswer.id, {
+          isCorrect: newIsCorrect,
+        });
+      }
       let updatedIsCorrect = takeAnswers
-        .map(
-          (takeAnswer) =>
-            (takeAnswer.isCorrect = correctAnswers.includes(
-              takeAnswer.studentAnswer,
-            )
-              ? true
-              : false),
-        )
+        .map((takeAnswer) => takeAnswer.isCorrect)
         .reduce((x: boolean, y: boolean) => x !== false && y !== false, true);
       if (newQuestion.questionType === 'MRQ') {
         updatedIsCorrect = takeAnswers.length == correctAnswers.length;
       }
-      const oldIsCorrect = takeAnswers[0].isCorrect;
+
       if (updatedIsCorrect !== oldIsCorrect) {
         // Need to change totalMarks
         const quizQuestionMarks = oldQuizQuestions.find(

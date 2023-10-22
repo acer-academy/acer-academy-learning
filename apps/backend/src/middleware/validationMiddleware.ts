@@ -2007,6 +2007,96 @@ export async function validateBodyQuizExists(
   }
 }
 
+/** Validates if the format of a update published quiz request is valid */
+export async function validateBodyUpdatePublishedQuizFormatValid(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const {
+      oldQuestionId,
+      newQuestionId,
+      title,
+      description,
+      subject,
+      levels,
+      topics,
+      totalMarks,
+      rewardPoints,
+      rewardMinimumMarks,
+      timeAllowed,
+      teacherCreated,
+      allocatedTo,
+      quizQuestions,
+    } = req.body;
+    const validBody = {
+      oldQuestionId,
+      newQuestionId,
+      title,
+      description,
+      subject,
+      levels,
+      topics,
+      totalMarks,
+      rewardPoints,
+      rewardMinimumMarks,
+      timeAllowed,
+      teacherCreated,
+      allocatedTo,
+      quizQuestions,
+    };
+    for (const key of Object.keys(validBody)) {
+      if (
+        (validBody[key] === undefined &&
+          key !== 'timeAllowed' &&
+          key !== 'allocatedTo') ||
+        (key === 'oldQuestionId' &&
+          (!validBody[key] || typeof validBody[key] !== 'string')) ||
+        (key === 'newQuestionId' &&
+          (!validBody[key] || typeof validBody[key] !== 'string')) ||
+        (key === 'title' &&
+          (typeof validBody[key] !== 'string' ||
+            validBody[key].trim().length === 0)) ||
+        (key === 'description' &&
+          (typeof validBody[key] !== 'string' ||
+            validBody[key].trim().length === 0)) ||
+        (key === 'subject' && typeof validBody[key] !== 'string') ||
+        (key === 'levels' &&
+          (!Array.isArray(validBody[key]) || validBody[key].length === 0)) ||
+        (key === 'topics' &&
+          (!Array.isArray(validBody[key]) || validBody[key].length === 0)) ||
+        (key === 'totalMarks' &&
+          (typeof validBody[key] !== 'number' || validBody[key] <= 0)) ||
+        (key === 'rewardPoints' &&
+          (typeof validBody[key] !== 'number' || validBody[key] < 0)) ||
+        (key === 'rewardMinimumMarks' &&
+          (typeof validBody[key] !== 'number' || validBody[key] < 0)) ||
+        (key === 'timeAllowed' &&
+          timeAllowed !== null &&
+          timeAllowed !== undefined &&
+          (typeof validBody[key] !== 'number' || validBody[key] <= 0)) ||
+        (key === 'teacherCreated' &&
+          (!validBody[key] || typeof validBody[key] !== 'string')) ||
+        (key === 'allocatedTo' &&
+          allocatedTo !== null &&
+          allocatedTo !== undefined &&
+          !Array.isArray(validBody[key])) ||
+        (key === 'quizQuestions' &&
+          (!Array.isArray(validBody[key]) || validBody[key].length === 0))
+      ) {
+        throw Error(`${key} is missing or has an invalid format.`);
+      }
+    }
+    req.body = validBody;
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
 export async function validateBodyOldQuestionIdExists(
   req: Request,
   res: Response,
