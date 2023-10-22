@@ -11,12 +11,6 @@ const DetailsSection = () => {
     <>
       <QuizTitle />
       <QuizDescription />
-      <div className="grid grid-cols-2 gap-4 w-[50%]">
-        <QuizTimeAllowedField />
-        <QuizRewardMinimumMarksField />
-        <QuizRewardPointsField />
-      </div>
-      <GenericButton type="submit" text="Create Quiz" />
     </>
   );
 };

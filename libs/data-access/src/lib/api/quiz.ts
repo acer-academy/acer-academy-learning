@@ -1,6 +1,12 @@
-import { QuizData, QuizPaginationFilter } from '../types/quiz';
+import { SubjectEnum } from '@prisma/client';
+import {
+  CreateQuizType,
+  QuizData,
+  QuizPaginationFilter,
+  UpdateQuizParams,
+} from '../types/quiz';
 import client from './client';
-import { Axios, AxiosResponse } from 'axios';
+import { AxiosResponse } from 'axios';
 
 const URL = '/quiz';
 
@@ -17,4 +23,19 @@ export async function getPaginatedFilteredQuizzes(
 
 export async function deleteQuiz(quizId: string): Promise<void> {
   return client.delete(`${URL}/${quizId}`);
+}
+
+export async function createQuiz(
+  data: CreateQuizType & { subject: SubjectEnum; teacherCreated: string },
+) {
+  return client.post(`${URL}`, data);
+}
+
+export async function updateQuiz({ quizId, data }: UpdateQuizParams) {
+  return client.put(`${URL}/${quizId}`, data);
+}
+
+export async function getQuizByQuizId(quizId: string): Promise<QuizData> {
+  const res = await client.get(`${URL}/${quizId}`);
+  return res.data;
 }

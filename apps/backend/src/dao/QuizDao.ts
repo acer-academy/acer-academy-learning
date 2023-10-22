@@ -57,6 +57,14 @@ export class QuizDao {
             id: true,
           },
         },
+        teacherCreated: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            email: true,
+          },
+        },
         takes: true,
         quizQuestions: {
           include: {
