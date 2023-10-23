@@ -6,11 +6,7 @@ import { LevelEnum, SubjectEnum } from './CommonTypes';
 import { QuizQuestionData } from './question';
 import { TakeData } from './take';
 import { z } from 'zod';
-import {
-  createQuizSchema,
-  createTakeSchema,
-  quizQuestionInQuizSchema,
-} from '../schemas';
+import { createQuizSchema, quizQuestionInQuizSchema } from '../schemas';
 import { Teacher } from './teacher';
 
 export interface QuizPaginationFilter {
@@ -59,5 +55,3 @@ export type UpdateQuizParams = {
   quizId: string;
   data: CreateQuizType & { subject: SubjectEnum; teacherCreated: string };
 };
-
-export type CreateTakeSchema = z.infer<typeof createTakeSchema>;

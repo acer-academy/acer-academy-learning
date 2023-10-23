@@ -1,7 +1,7 @@
 import { CreateTakeSchema } from '@acer-academy-learning/data-access';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { FieldPath, useFormContext } from 'react-hook-form';
-const MS_IN_SECOND = 1000;
+export const MS_IN_SECOND = 1000;
 const SECONDS_IN_MINUTE = 60;
 const MINUTES_IN_HOUR = 60;
 const MS_IN_HOUR = MINUTES_IN_HOUR * SECONDS_IN_MINUTE * MS_IN_SECOND;
@@ -56,11 +56,11 @@ export const QuizTimer = ({
   totalDurationInMiliseconds,
   name,
 }: QuizTimerProps) => {
-  const { setValue } = useFormContext<CreateTakeSchema>();
+  const { setValue, getValues } = useFormContext<CreateTakeSchema>();
   // useRef to prevent unnecessary re-render
   const lastTickTiming = useRef<number | null>(null);
+  const timerIdRef = useRef<NodeJS.Timer | null>(null);
   const [currentDuration, setCurrentDuration] = useState(0);
-  const [timerId, setTimerId] = useState<NodeJS.Timer | null>(null);
 
   const formattedTimeToShow: HMSMTimeFormat = useMemo(() => {
     if (!totalDurationInMiliseconds) {
@@ -71,29 +71,25 @@ export const QuizTimer = ({
 
   useEffect(() => {
     lastTickTiming.current = Date.now();
-    setTimerId(
-      setInterval(() => {
-        const now = Date.now();
-        const prev = lastTickTiming.current ?? now;
-        const timePassed = now - prev;
-        setCurrentDuration((curr) => curr + timePassed);
-        lastTickTiming.current = now;
-      }, 1),
-    );
+    timerIdRef.current = setInterval(() => {
+      const now = Date.now();
+      const prev = lastTickTiming.current ?? now;
+      const timePassed = now - prev;
+      setCurrentDuration((curr) => curr + timePassed);
+      if (name) {
+        const currentStored = getValues(name) as number;
+        const updatedTimeInSeconds = currentStored + timePassed;
+        setValue(name, updatedTimeInSeconds);
+      }
+      lastTickTiming.current = now;
+    }, 1);
 
     return () => {
-      if (timerId) {
-        clearInterval(timerId);
+      if (timerIdRef.current) {
+        clearInterval(timerIdRef.current);
       }
     };
   }, []);
-
-  useEffect(() => {
-    if (name) {
-      // Set timer value whenever changed
-      setValue(name, Math.floor(currentDuration / MS_IN_SECOND));
-    }
-  }, [currentDuration, name, setValue]);
 
   return (
     <div className="space-x-1">

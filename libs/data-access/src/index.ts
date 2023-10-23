@@ -35,3 +35,5 @@ export * from './lib/schemas';
 export * from './lib/constants';
 export * from './lib/api/helper/price-conversion';
 export * from './lib/types/teacher';
+export * from './lib/api/take';
+export * from './lib/types/take';

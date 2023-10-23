@@ -1,4 +1,4 @@
-import { StudentTakeData } from '../types/take';
+import { StudentTakeData, CreateTakeApiSchema, TakeData } from '../types/take';
 import client from './client';
 import { AxiosResponse } from 'axios';
 
@@ -9,3 +9,8 @@ export async function getTakesByStudent(
 ): Promise<AxiosResponse<StudentTakeData[]>> {
   return client.get(`${URL}/student/${studentId}`);
 }
+export const createTake = async (
+  data: CreateTakeApiSchema,
+): Promise<AxiosResponse<TakeData>> => {
+  return client.post(`${URL}`, data);
+};

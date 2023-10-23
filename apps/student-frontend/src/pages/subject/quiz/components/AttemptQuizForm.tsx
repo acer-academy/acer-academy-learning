@@ -1,19 +1,29 @@
-import { GenericButton, useZodForm } from '@acer-academy-learning/common-ui';
+import {
+  GenericButton,
+  useToast,
+  useZodForm,
+} from '@acer-academy-learning/common-ui';
 import { QuizData, createTakeSchema } from '@acer-academy-learning/data-access';
-import React, { useMemo, useState } from 'react';
-import { FormProvider } from 'react-hook-form';
+import { useMemo, useState } from 'react';
+import { FieldErrors, FormProvider } from 'react-hook-form';
 import { QuizQuestionCard } from './QuizQuestionCard';
 import { AttemptQuizSideNav } from './AttemptQuizSideNav';
 import { AttemptQuizContextProvider } from '../context/AttemptQuizContext';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { CreateTakeSchema } from 'libs/data-access/src/lib/types/take';
 
 export type AttemptQuizFormProps = {
   quiz: QuizData;
+  onSubmitForm: (values: CreateTakeSchema) => Promise<void>;
 };
 
-export const AttemptQuizForm = ({ quiz }: AttemptQuizFormProps) => {
+export const AttemptQuizForm = ({
+  quiz,
+  onSubmitForm,
+}: AttemptQuizFormProps) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { displayToast, ToastType } = useToast();
   const formMethods = useZodForm({
     schema: createTakeSchema,
     mode: 'onSubmit',
@@ -44,6 +54,14 @@ export const AttemptQuizForm = ({ quiz }: AttemptQuizFormProps) => {
     }),
     [quiz],
   );
+  const canNavigatePrevious = useMemo(
+    () => currentQuestionIndex !== 1,
+    [currentQuestionIndex],
+  );
+  const canNavigateNext = useMemo(
+    () => currentQuestionIndex !== quiz.quizQuestions.length,
+    [currentQuestionIndex, quiz],
+  );
 
   const {
     quizQuestion: currentQuestion,
@@ -56,7 +74,7 @@ export const AttemptQuizForm = ({ quiz }: AttemptQuizFormProps) => {
   }, [currentQuestionIndex, quiz]);
 
   const handlePrevPage = () => {
-    if (currentQuestionIndex === 1) {
+    if (!canNavigatePrevious) {
       return;
     }
     const newIndex = currentQuestionIndex - 1;
@@ -64,21 +82,36 @@ export const AttemptQuizForm = ({ quiz }: AttemptQuizFormProps) => {
   };
 
   const handleNextPage = () => {
-    if (currentQuestionIndex === quiz.quizQuestions.length) {
+    if (!canNavigateNext) {
       return;
     }
     const newIndex = currentQuestionIndex + 1;
     navigate('#' + newIndex);
   };
 
+  const onError = (errors: FieldErrors<CreateTakeSchema>) => {
+    const msg = Object.entries(errors).map(([type, errorObj]) => (
+      <p key={type} className="space-y-1">
+        <strong>
+          {type.charAt(0).toLocaleUpperCase() +
+            type
+              .substring(1)
+              .split(/(?=[A-Z])/)
+              .join(' ')}{' '}
+          Error:{' '}
+        </strong>
+        {errorObj.message ?? errorObj.root?.message}
+      </p>
+    ));
+    console.error(errors);
+    displayToast(<div key={'quiz-error-msg'}>{msg}</div>, ToastType.ERROR);
+  };
+
   return (
     <AttemptQuizContextProvider value={contextState}>
       <FormProvider {...formMethods}>
         <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            console.log(formMethods.getValues());
-          }}
+          onSubmit={formMethods.handleSubmit(onSubmitForm, onError)}
           className="flex space-x-1 h-full"
         >
           <section className="relative w-full flex flex-col flex-[4] justify-center">
@@ -92,22 +125,28 @@ export const AttemptQuizForm = ({ quiz }: AttemptQuizFormProps) => {
               } transition-opacity duration-300`}
               bannerClassName={`bg-student-primary-600 text-white `}
             />
-            <nav className="absolute bottom-0 space-x-4">
-              <GenericButton
-                text="prev"
-                onClick={handlePrevPage}
-                type="button"
-                className="bg-student-primary-600 text-white self-center"
-              />
-              <GenericButton
-                text="next"
-                type="button"
-                onClick={handleNextPage}
-                className="bg-student-primary-600 text-white self-center"
-              />
+            <nav className="flex space-x-4 justify-end">
+              {canNavigatePrevious && (
+                <GenericButton
+                  text="Previous"
+                  onClick={handlePrevPage}
+                  type="button"
+                  className="bg-student-primary-600 text-white self-center w-24"
+                />
+              )}
+              {canNavigateNext && (
+                <GenericButton
+                  text="Next"
+                  type="button"
+                  onClick={handleNextPage}
+                  className="bg-student-primary-600 text-white self-center w-24"
+                />
+              )}
+            </nav>
+            <nav className="rounded bg-white border border-gray-200 absolute bottom-0 space-x-4 w-full p-2 flex justify-end">
               <GenericButton
                 type="submit"
-                className="bg-student-primary-600 text-white self-center"
+                className="bg-student-primary-600 text-white self-center w-24"
               />
             </nav>
           </section>

@@ -11,11 +11,9 @@ const registerNameForStudentAnswers = (
   index: number,
   type?: React.HTMLInputTypeAttribute,
 ): FieldPath<CreateTakeSchema> => {
-  if (type === 'checkbox') {
-    return `studentAnswers.${questionNumber - 1}.studentAnswer.${index}`;
-  } else {
-    return `studentAnswers.${questionNumber - 1}`;
-  }
+  return `studentAnswers.${questionNumber - 1}.studentAnswer.${
+    type === 'checkbox' ? index : 0
+  }`;
 };
 
 export type MCQAnswerOptions = {

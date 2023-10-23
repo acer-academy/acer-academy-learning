@@ -11,6 +11,7 @@ import {
 import { useMemo } from 'react';
 import { QuizSelectAnswerOptions } from './QuizSelectAnswerOptions';
 import { Controller } from 'react-hook-form';
+import { QuizTimer } from './QuizTimer';
 
 export type QuizQuestionCardProps = {
   question: QuizQuestionData;
@@ -34,6 +35,7 @@ export const QuizQuestionCard = ({
   const answerOptions = useMemo(() => {
     switch (question.questionType) {
       case QuizQuestionTypeEnum.MCQ:
+      case QuizQuestionTypeEnum.TFQ:
         return (
           <QuizSelectAnswerOptions
             type="radio"
@@ -67,20 +69,28 @@ export const QuizQuestionCard = ({
     }
   }, [question, questionNumber]);
   return (
-    <div className={`${className}`}>
-      <div
-        className={`bg-gray-200 px-4 py-2 text-left font-bold text-gray-900 focus:outline-none focus-visible:ring focus-visible:ring-gray-500 focus-visible:ring-opacity-75 text-base border border-gray-400 rounded-t flex justify-between ${bannerClassName}`}
-      >
-        <span>Question {questionNumber}</span>
-        <span>
-          {marks} mark{marks > 1 ? 's' : ''}
-        </span>
+    <>
+      <div className={`${className}`}>
+        <div
+          className={`bg-gray-200 px-4 py-2 text-left font-bold text-gray-900 focus:outline-none focus-visible:ring focus-visible:ring-gray-500 focus-visible:ring-opacity-75 text-base border border-gray-400 rounded-t flex justify-between ${bannerClassName}`}
+        >
+          <span>Question {questionNumber}</span>
+          <span>
+            {marks} mark{marks > 1 ? 's' : ''}
+          </span>
+        </div>
+        <div className="rounded-b border-b border-x border-gray-200 bg-white px-4 py-5 sm:px-6 shadow space-y-4 flex flex-col">
+          <LexOutput editorStateStr={question.questionText} />
+          <Divider lineClassName="border-student-primary-600" />
+          {answerOptions}
+        </div>
       </div>
-      <div className="border-b border-x border-gray-400 bg-white px-4 py-5 sm:px-6 shadow space-y-4 flex flex-col">
-        <LexOutput editorStateStr={question.questionText} />
-        <Divider lineClassName="border-student-primary-600" />
-        {answerOptions}
+      <div className="invisible">
+        <QuizTimer
+          key={`studentAnswer.${questionNumber - 1}`}
+          name={`studentAnswers.${questionNumber - 1}.timeTaken`}
+        />
       </div>
-    </div>
+    </>
   );
 };
