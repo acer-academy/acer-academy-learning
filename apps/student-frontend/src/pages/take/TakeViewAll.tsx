@@ -61,14 +61,11 @@ export const TakeViewAll: React.FC = () => {
             <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
               <div className="flex flex-col gap-4">
                 {Array.from(quizTakeMap.keys()).length == 0 ? (
-                  <tr className="shadow ring-1 ring-black ring-opacity-5 bg-white sm:rounded-lg">
-                    <td
-                      colSpan={8}
-                      className="whitespace-nowrap py-4 px-4 font-light italic text-gray-400 text-center"
-                    >
+                  <div className="shadow ring-1 ring-black ring-opacity-5 bg-white sm:rounded-lg">
+                    <div className="whitespace-nowrap py-4 px-4 font-light italic text-gray-400 text-center">
                       No quiz attempts found.
-                    </td>
-                  </tr>
+                    </div>
+                  </div>
                 ) : (
                   Array.from(quizTakeMap.values())
                     .sort((a, b) =>
