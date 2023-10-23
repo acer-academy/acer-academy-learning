@@ -23,6 +23,7 @@ import { QuizAnswerService } from '../services/QuizAnswerService';
 import { QuizService } from '../services/QuizService';
 import ClassService from '../services/ClassService';
 import SessionService from '../services/SessionService';
+import { TakeService } from '../services/TakeService';
 
 const teacherService = new TeacherService();
 const centreService = new CentreService();
@@ -34,6 +35,7 @@ const quizQuestionService = new QuizQuestionService();
 const quizAnswerService = new QuizAnswerService();
 const promotionService = new PromotionService();
 const quizService = new QuizService();
+const takeService = new TakeService();
 
 /*
  * Validators Naming Convention: (Expand on as we code)
@@ -1773,6 +1775,48 @@ export async function validateClassAndSessionExist(
       if (!validSession) {
         return res.status(400).json({
           error: 'Invalid session provided.',
+        });
+      }
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+/** Validates if question, quiz and take in params exists */
+export async function validateQuestionQuizTakeExist(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { questionId, quizId, takeId } = req.params;
+    if (questionId) {
+      const validQuestion = await quizQuestionService.getQuizQuestionById(
+        questionId,
+      );
+      if (!validQuestion) {
+        return res.status(400).json({
+          error: 'Invalid question provided.',
+        });
+      }
+    }
+    if (quizId) {
+      const validQuiz = await quizService.getQuizById(quizId);
+      if (!validQuiz) {
+        return res.status(400).json({
+          error: 'Invalid quiz provided.',
+        });
+      }
+    }
+    if (takeId) {
+      const validTake = await takeService.getTakeById(takeId);
+      if (!validTake) {
+        return res.status(400).json({
+          error: 'Invalid take attempt provided.',
         });
       }
     }
