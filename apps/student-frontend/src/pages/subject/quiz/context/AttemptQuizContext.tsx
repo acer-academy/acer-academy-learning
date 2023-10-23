@@ -3,6 +3,7 @@ import { PropsWithChildren, createContext, useContext } from 'react';
 
 export type AttemptQuizContextState = {
   quiz: QuizData;
+  timeAllowedInMS?: number;
 };
 
 const AttemptQuizContext = createContext({} as AttemptQuizContextState);

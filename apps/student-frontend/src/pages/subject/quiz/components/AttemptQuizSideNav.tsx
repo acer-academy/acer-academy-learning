@@ -9,19 +9,13 @@ export type AttemptQuizSideNavProps = {
 };
 
 export const AttemptQuizSideNav = ({ className }: AttemptQuizSideNavProps) => {
-  const { quiz } = useAttemptQuizContext();
-  const timeAllowed = useMemo(() => {
-    const timeAllowed = quiz.timeAllowed;
-    if (timeAllowed) {
-      return timeAllowed * 1000;
-    }
-  }, [quiz.timeAllowed]);
+  const { timeAllowedInMS } = useAttemptQuizContext();
   const [showTimer, setShowTimer] = useState(true);
   return (
     <nav className={`flex flex-col px-4 ${className}`}>
       <AttemptQuizQuestionList />
       <p>
-        {timeAllowed ? 'Time remaining: ' : 'Time elapsed: '}{' '}
+        {timeAllowedInMS ? 'Time remaining: ' : 'Time elapsed: '}{' '}
         <GenericButton
           className="w-16 bg-student-primary-600"
           text={showTimer ? 'Hide' : 'Show'}
@@ -36,7 +30,7 @@ export const AttemptQuizSideNav = ({ className }: AttemptQuizSideNavProps) => {
       >
         <QuizTimer
           name={`timeTaken`}
-          totalDurationInMiliseconds={timeAllowed}
+          totalDurationInMiliseconds={timeAllowedInMS}
         />
       </div>
     </nav>

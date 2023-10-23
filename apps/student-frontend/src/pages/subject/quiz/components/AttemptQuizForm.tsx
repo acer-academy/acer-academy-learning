@@ -8,7 +8,10 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { FieldErrors, FormProvider } from 'react-hook-form';
 import { QuizQuestionCard } from './QuizQuestionCard';
 import { AttemptQuizSideNav } from './AttemptQuizSideNav';
-import { AttemptQuizContextProvider } from '../context/AttemptQuizContext';
+import {
+  AttemptQuizContextProvider,
+  AttemptQuizContextState,
+} from '../context/AttemptQuizContext';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { CreateTakeSchema } from 'libs/data-access/src/lib/types/take';
 import { GenericModal } from '../../../profile/components/GenericModal';
@@ -48,21 +51,24 @@ export const AttemptQuizForm = ({
     ),
   });
 
+  // Countdown timer states
   const [isCardShowing, setIsCardShowing] = useState(false);
   const [isTimeUp, setIsTimeUp] = useState(false);
   const lastTickTiming = useRef<number | null>(null);
   const timerIdRef = useRef<NodeJS.Timer | null>(null);
   const [currentCountDownDuration, setCurrentCountDownDuration] =
     useState(COUNTDOWN_DURATION);
+  const timeAllowedInMS = useMemo(() => {
+    const timeAllowedInSec = quiz.timeAllowed;
+    if (timeAllowedInSec) {
+      return timeAllowedInSec * MS_IN_SECOND;
+    }
+  }, [quiz.timeAllowed]);
+
+  // Question number states
   const currentQuestionIndex = useMemo(
     () => parseInt(location.hash.slice(1)),
     [location],
-  );
-  const contextState = useMemo(
-    () => ({
-      quiz: quiz,
-    }),
-    [quiz],
   );
   const canNavigatePrevious = useMemo(
     () => currentQuestionIndex !== 1,
@@ -71,6 +77,15 @@ export const AttemptQuizForm = ({
   const canNavigateNext = useMemo(
     () => currentQuestionIndex !== quiz.quizQuestions.length,
     [currentQuestionIndex, quiz],
+  );
+
+  // Context
+  const contextState: AttemptQuizContextState = useMemo(
+    () => ({
+      quiz: quiz,
+      timeAllowedInMS: timeAllowedInMS,
+    }),
+    [quiz, timeAllowedInMS],
   );
 
   const {
@@ -106,9 +121,8 @@ export const AttemptQuizForm = ({
   const watchTimeTaken = formMethods.watch('timeTaken');
 
   useEffect(() => {
-    const timeAllowed = quiz.timeAllowed;
-    if (!timeAllowed) return;
-    if (watchTimeTaken >= timeAllowed && !isTimeUp) {
+    if (!timeAllowedInMS) return;
+    if (watchTimeTaken >= timeAllowedInMS && !isTimeUp) {
       setIsTimeUp(true);
       lastTickTiming.current = Date.now();
       timerIdRef.current = setInterval(() => {
@@ -133,7 +147,7 @@ export const AttemptQuizForm = ({
     watchTimeTaken,
     setIsTimeUp,
     isTimeUp,
-    quiz.timeAllowed,
+    timeAllowedInMS,
     currentCountDownDuration,
   ]);
 
@@ -141,7 +155,7 @@ export const AttemptQuizForm = ({
     if (currentCountDownDuration === 0) {
       formMethods.handleSubmit(onSubmitForm, onError)();
     }
-    // Can't include deps because it will infinitely render 
+    // Can't include deps because it will infinitely render
   }, [currentCountDownDuration]);
 
   const handlePrevPage = () => {
