@@ -1,6 +1,15 @@
 import { Request, Response, Router } from 'express';
-import { TakeService } from '../services/TakeService';
-import { Prisma } from '@prisma/client';
+import {
+  validateBodyDifficultiesExist,
+  validateBodyLevelsExist,
+  validateBodyQuizExists,
+  validateBodyQuizQuestionTopicsExist,
+  validateBodyStudentExists,
+  validateBodySubjectsExist,
+  validateBodyTakeFormatValid,
+  validateBodyTakeStudentExists,
+} from '../middleware/validationMiddleware';
+import { TakeFilterOptions, TakeService } from '../services/TakeService';
 
 const takeRouter = Router();
 const takeService = new TakeService();
@@ -9,16 +18,22 @@ const takeService = new TakeService();
  * POST /take/
  * Creates a new take.
  */
-takeRouter.post('/', async (req: Request, res: Response) => {
-  try {
-    const newTake = await takeService.createTake(req);
-    return res.status(201).json(newTake);
-  } catch (error) {
-    return res.status(500).json({
-      error: error.message,
-    });
-  }
-});
+takeRouter.post(
+  '/',
+  validateBodyTakeFormatValid,
+  validateBodyTakeStudentExists,
+  validateBodyQuizExists,
+  async (req: Request, res: Response) => {
+    try {
+      const newTake = await takeService.createTake(req);
+      return res.status(201).json(newTake);
+    } catch (error) {
+      return res.status(500).json({
+        error: error.message,
+      });
+    }
+  },
+);
 
 /**
  * GET /take/
@@ -94,6 +109,34 @@ takeRouter.get('/quiz/:quizId', async (req: Request, res: Response) => {
     });
   }
 });
+
+/**
+ * POST /take/filter
+ * Retrieves a list of takes based on studentId and filter criteria.
+ */
+takeRouter.post(
+  '/filter/',
+  validateBodyStudentExists,
+  validateBodyQuizQuestionTopicsExist,
+  validateBodySubjectsExist,
+  validateBodyLevelsExist,
+  validateBodyDifficultiesExist,
+  async (req: Request, res: Response) => {
+    try {
+      const { page = 1, pageSize = 10 } = req.query;
+      const offset = (+page - 1) * +pageSize;
+      const filterOptions: TakeFilterOptions = {
+        pageSize: +pageSize,
+        offset,
+        ...req.body,
+      };
+      const filteredTakes = await takeService.getFilteredTakes(filterOptions);
+      return res.status(200).json(filteredTakes);
+    } catch (error) {
+      return res.status(500).json({ error: error.message });
+    }
+  },
+);
 
 /**
  * DELETE /take/:takeId

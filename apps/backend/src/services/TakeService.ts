@@ -1,10 +1,29 @@
-import { Prisma, Take, TakeAnswer } from '@prisma/client';
+import {
+  Prisma,
+  Take,
+  TakeAnswer,
+  LevelEnum,
+  QuizQuestionDifficultyEnum,
+  QuizQuestionTopicEnum,
+  SubjectEnum,
+} from '@prisma/client';
 import { TakeDao } from '../dao/TakeDao';
 import { Request } from 'express';
 import { QuizQuestionService } from './QuizQuestionService';
 import { QuizAnswerService } from './QuizAnswerService';
 import { QuizOnQuizQuestionDao } from '../dao/QuizOnQuizQuestionDao';
+import { QuizFilterOptions } from './QuizService';
 
+export interface TakeFilterOptions {
+  studentId: string;
+  subjects?: SubjectEnum[];
+  levels?: LevelEnum[];
+  difficulty?: QuizQuestionDifficultyEnum[];
+  topics?: QuizQuestionTopicEnum[];
+  offset: number;
+  pageSize: number;
+  showLatestOnly?: boolean;
+}
 export class TakeService {
   constructor(
     private takeDao: TakeDao = new TakeDao(),
@@ -28,7 +47,7 @@ export class TakeService {
     } = takeData;
     let totalMarks = 0;
     const studentAnswersMap: Map<string, TakeAnswer[]> = new Map();
-    let formattedStudentAnswers: TakeAnswer[] = [];
+    const formattedStudentAnswers: TakeAnswer[] = [];
     for (const answer of studentAnswers) {
       if (!Object.keys(studentAnswersMap).includes(answer.questionId)) {
         studentAnswersMap[answer.questionId] = [answer];
@@ -103,6 +122,43 @@ export class TakeService {
 
   public async getTakesByQuiz(quizId: string): Promise<Take[]> {
     return this.takeDao.getTakesByQuiz(quizId);
+  }
+
+  public async getFilteredTakes(
+    filterOptions: TakeFilterOptions,
+  ): Promise<{ takes: Take[]; totalCount: number }> {
+    const where: Prisma.TakeWhereInput = {};
+    const quizWhere: Prisma.QuizWhereInput = {};
+    const { studentId, subjects, levels, difficulty, topics, showLatestOnly } =
+      filterOptions;
+    if (subjects && subjects.length > 0) {
+      quizWhere.subject = { in: filterOptions.subjects };
+    }
+    if (levels && levels.length > 0) {
+      quizWhere.levels = { hasEvery: filterOptions.levels };
+    }
+    if (difficulty && difficulty.length > 0) {
+      quizWhere.difficulty = { in: filterOptions.difficulty };
+    }
+    if (topics && topics.length > 0) {
+      quizWhere.topics = { hasEvery: filterOptions.topics };
+    }
+    if (showLatestOnly == true) {
+      quizWhere.nextVersionId = null;
+    }
+    where.quiz = quizWhere;
+
+    if (studentId) {
+      where.takenById = studentId;
+    }
+
+    const takes = await this.takeDao.getFilteredTakes(
+      where,
+      filterOptions.offset,
+      filterOptions.pageSize,
+    );
+    const totalCount = await this.takeDao.getTotalCountOfFilteredTakes(where);
+    return { takes, totalCount };
   }
 
   public async updateTake(
