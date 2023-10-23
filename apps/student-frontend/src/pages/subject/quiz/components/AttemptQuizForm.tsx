@@ -1,9 +1,15 @@
 import {
   GenericButton,
+  WarningModal,
   useToast,
   useZodForm,
 } from '@acer-academy-learning/common-ui';
-import { QuizData, createTakeSchema } from '@acer-academy-learning/data-access';
+import {
+  LEX_DEFAULT_JSON_STRING,
+  QuizData,
+  QuizQuestionTypeEnum,
+  createTakeSchema,
+} from '@acer-academy-learning/data-access';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { FieldErrors, FormProvider } from 'react-hook-form';
 import { QuizQuestionCard } from './QuizQuestionCard';
@@ -43,13 +49,20 @@ export const AttemptQuizForm = ({
         attemptedAt: new Date(),
         studentAnswers: quiz.quizQuestions.map((question) => ({
           questionId: question.quizQuestionId,
-          studentAnswer: [],
+          studentAnswer:
+            question.quizQuestion.questionType ===
+            QuizQuestionTypeEnum.SHORT_ANSWER
+              ? [LEX_DEFAULT_JSON_STRING]
+              : [],
           timeTaken: 0,
         })),
       }),
       [quiz],
     ),
   });
+
+  // Pre-mature submit states
+  const [showSubmitWarning, setShowSubmitWarning] = useState(false);
 
   // Countdown timer states
   const [isCardShowing, setIsCardShowing] = useState(false);
@@ -174,11 +187,28 @@ export const AttemptQuizForm = ({
     navigate('#' + newIndex);
   };
 
+  const validateSubmitForm = async (values: CreateTakeSchema) => {
+    const allHasBeenFilled = values.studentAnswers.reduce((curr, answer) => {
+      const ans = answer.studentAnswer.reduce(
+        (currVal, ans) =>
+          (typeof ans === 'string' && ans !== LEX_DEFAULT_JSON_STRING) ||
+          currVal,
+        false,
+      );
+      return curr && typeof ans === 'boolean' && ans;
+    }, true);
+    if (!allHasBeenFilled) {
+      setShowSubmitWarning(true);
+      return;
+    }
+    onSubmitForm(values);
+  };
+
   return (
     <AttemptQuizContextProvider value={contextState}>
       <FormProvider {...formMethods}>
         <form
-          onSubmit={formMethods.handleSubmit(onSubmitForm, onError)}
+          onSubmit={formMethods.handleSubmit(validateSubmitForm, onError)}
           className="flex space-x-1 h-full"
         >
           <section className="relative w-full flex flex-col flex-[4] justify-center">
@@ -249,6 +279,15 @@ export const AttemptQuizForm = ({
               className={`bg-student-primary-600 w-24 self-center mt-4`}
             />
           </GenericModal>
+          <WarningModal
+            open={showSubmitWarning}
+            setOpen={setShowSubmitWarning}
+            title="Submit Quiz Confirmation"
+            description="You have questions which are not answered. Are you sure you want to submit?"
+            confirmContent={'Submit'}
+            dismissContent={'Cancel'}
+            onConfirm={formMethods.handleSubmit(onSubmitForm, onError)}
+          />
         </form>
       </FormProvider>
     </AttemptQuizContextProvider>

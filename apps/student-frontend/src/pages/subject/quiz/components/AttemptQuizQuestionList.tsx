@@ -1,39 +1,46 @@
-import React from 'react';
-import { FieldArrayWithId, useFieldArray } from 'react-hook-form';
-import { CreateTakeSchema } from '@acer-academy-learning/data-access';
+import { useMemo } from 'react';
+import { useFormContext, useWatch } from 'react-hook-form';
+import {
+  CreateTakeSchema,
+  LEX_DEFAULT_JSON_STRING,
+} from '@acer-academy-learning/data-access';
 import { Link } from 'react-router-dom';
 
 type QuestionRowProps = {
-  answer: FieldArrayWithId<
-    {
-      attemptedAt: Date;
-      timeTaken: number;
-      studentAnswers: {
-        timeTaken: number;
-        questionId: string;
-        studentAnswer: string[];
-      }[];
-      quizId: string;
-    },
-    'studentAnswers',
-    'id'
-  >;
+  answer: {
+    timeTaken: number;
+    questionId: string;
+  } & {
+    studentAnswer: (string | boolean)[];
+  };
   questionNumber: number;
 };
 
 const QuestionRow = ({ answer, questionNumber }: QuestionRowProps) => {
+  const hasFilledInAnswer = useMemo(
+    () =>
+      answer.studentAnswer.reduce(
+        (curr, ans) =>
+          (typeof ans === 'string' && ans !== LEX_DEFAULT_JSON_STRING) || curr,
+        false,
+      ),
+    [answer],
+  );
   return (
     <Link
       to={`#${questionNumber}`}
       className="underline text-student-primary-600 hover:no-underline"
     >
+      {hasFilledInAnswer ? '✅ ' : '❌ '}
       Question {questionNumber}
     </Link>
   );
 };
 
 export const AttemptQuizQuestionList = () => {
-  const { fields: answers } = useFieldArray<CreateTakeSchema>({
+  const { control } = useFormContext<CreateTakeSchema>();
+  const answers = useWatch({
+    control: control,
     name: 'studentAnswers',
   });
   return (
