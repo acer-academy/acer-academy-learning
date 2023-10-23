@@ -51,7 +51,11 @@ export const NAV_SECTIONS: NavigationMenuItem[] = [
         icon: BookOpenIcon,
       },
       { name: 'Recordings', path: RECORDINGS, icon: VideoCameraIcon },
-      { name: 'Zoom Link', path: ZOOM_LINK, icon: LinkIcon },
+      {
+        name: 'Zoom Link',
+        path: ZOOM_LINK,
+        icon: LinkIcon,
+      },
     ],
   },
   {

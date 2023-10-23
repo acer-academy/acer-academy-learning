@@ -15,3 +15,11 @@ export const getSubjectPathFrom = (
   subject: subject,
   path: subject.toLocaleLowerCase(),
 });
+
+export const getSubjectEnumFromPathParam = (
+  subjectString: string,
+): SubjectEnum | undefined => {
+  return Object.values(SubjectEnum).find(
+    (val) => val.toLocaleLowerCase() === subjectString,
+  );
+};

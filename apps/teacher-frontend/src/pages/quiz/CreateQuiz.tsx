@@ -44,10 +44,11 @@ export const CreateQuiz = () => {
   });
 
   const onSubmit = async (values: CreateQuizType) => {
-    if (!!subject && !!user) {
+    const subjectEnum = getSubjectEnumFromPathParam(subject ?? '');
+    if (!!subjectEnum && !!user) {
       const createValues = {
         ...values,
-        subject: getSubjectEnumFromPathParam(subject),
+        subject: subjectEnum,
         teacherCreated: user.id,
       };
       await createQuizAsync(createValues);

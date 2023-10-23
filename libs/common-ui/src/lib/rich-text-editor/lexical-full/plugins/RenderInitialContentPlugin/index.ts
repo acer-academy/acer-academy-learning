@@ -58,7 +58,7 @@ const recursiveReplaceImage = (
 
 const recursiveShortenText = (nodes: SerializedLexicalNodeWithChildren[]) => {
   return nodes.map((node) => {
-    if (isTextSerializedNode(node)) {
+    if (isTextSerializedNode(node) && node.text.length > 20) {
       node.text = node.text.substring(0, 20) + '...';
     }
 
@@ -82,8 +82,6 @@ export const RenderInitialContentPlugin = ({
       const shortened: SerializedEditorState<SerializedLexicalNode> =
         JSON.parse(editorStateStr);
       if (shorten) {
-        console.log('SHAPE');
-        console.log(shortened);
         const formattedChildren = recursiveReplaceImage(
           cloneDeep(shortened.root.children),
         );

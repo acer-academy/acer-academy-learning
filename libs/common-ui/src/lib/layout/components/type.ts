@@ -8,8 +8,6 @@ export type NavigationMenuItem = {
     } & React.RefAttributes<SVGSVGElement>
   >;
   children?: NavigationMenuItem[];
-  defaultChild?: string;
-  dynamicRoute?: boolean;
 };
 
 export type NavigationSection = {
