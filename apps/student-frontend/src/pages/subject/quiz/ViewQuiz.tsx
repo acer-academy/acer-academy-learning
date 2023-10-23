@@ -73,7 +73,7 @@ export const ViewQuiz = () => {
         <GenericButton
           type="button"
           text={'Start Quiz'}
-          onClick={() => navigate('take')}
+          onClick={() => navigate('take#1')}
           className="bg-student-primary-600 hover:bg-student-primary-700 self-center"
         />
       </div>

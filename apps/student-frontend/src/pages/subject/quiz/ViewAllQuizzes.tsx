@@ -41,10 +41,6 @@ export const ViewAllQuizzes = () => {
     () => getPaginatedFilteredQuizzes(currentPage, pageSize, quizFilterOptions),
   );
 
-  useEffect(() => {
-    console.log(quizzes);
-  }, [quizzes]);
-
   if (isLoading) {
     return <FullscreenSpinner />;
   }

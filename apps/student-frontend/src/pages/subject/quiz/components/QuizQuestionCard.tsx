@@ -2,12 +2,13 @@ import {
   Divider,
   LexFloatingEditor,
   LexOutput,
+  classNames,
 } from '@acer-academy-learning/common-ui';
 import {
   QuizQuestionData,
   QuizQuestionTypeEnum,
 } from '@acer-academy-learning/data-access';
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { QuizSelectAnswerOptions } from './QuizSelectAnswerOptions';
 import { Controller } from 'react-hook-form';
 
@@ -15,6 +16,7 @@ export type QuizQuestionCardProps = {
   question: QuizQuestionData;
   questionNumber: number;
   marks: number;
+  bannerClassName?: string;
   className?: string;
 };
 
@@ -26,6 +28,7 @@ export const QuizQuestionCard = ({
   question,
   questionNumber,
   marks,
+  bannerClassName,
   className,
 }: QuizQuestionCardProps) => {
   const answerOptions = useMemo(() => {
@@ -50,17 +53,23 @@ export const QuizQuestionCard = ({
         return (
           <Controller
             name={`studentAnswers.${questionNumber - 1}.studentAnswer.0`}
-            render={({ field: { onChange, onBlur } }) => (
-              <LexFloatingEditor onChange={onChange} onBlur={onBlur} />
-            )}
+            render={({ field: { value, onChange, onBlur } }) => {
+              return (
+                <LexFloatingEditor
+                  editorStateStr={value}
+                  onChange={onChange}
+                  onBlur={onBlur}
+                />
+              );
+            }}
           />
         );
     }
   }, [question, questionNumber]);
   return (
-    <div>
+    <div className={`${className}`}>
       <div
-        className={`bg-gray-200 px-4 py-2 text-left font-bold text-gray-900 focus:outline-none focus-visible:ring focus-visible:ring-gray-500 focus-visible:ring-opacity-75 text-base border border-gray-400 rounded-t flex justify-between ${className}`}
+        className={`bg-gray-200 px-4 py-2 text-left font-bold text-gray-900 focus:outline-none focus-visible:ring focus-visible:ring-gray-500 focus-visible:ring-opacity-75 text-base border border-gray-400 rounded-t flex justify-between ${bannerClassName}`}
       >
         <span>Question {questionNumber}</span>
         <span>
