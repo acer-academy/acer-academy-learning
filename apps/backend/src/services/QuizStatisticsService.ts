@@ -11,7 +11,9 @@ class QuizStatisticsService {
   ) {}
 
   // View correct/incorrect statistics per question
-  public async correctRateByQestionId(quizQuestionId: string): Promise<string> {
+  public async correctRateByQuestionId(
+    quizQuestionId: string,
+  ): Promise<string> {
     const correctTakeAnswers =
       await this.takeAnswerService.getCorrectTakeAnswersByQuestionId(
         quizQuestionId,
@@ -24,7 +26,7 @@ class QuizStatisticsService {
   }
 
   // View time taken statistics per question
-  public async averageTimeTakenByQestionId(
+  public async averageTimeTakenByQuestionId(
     quizQuestionId: string,
   ): Promise<string> {
     const takeAnswers = await this.takeAnswerService.getTakeAnswersByQuestionId(
@@ -43,13 +45,13 @@ class QuizStatisticsService {
   public async spiderChartAnalysis(
     quizId: string,
     takeId: string,
-  ): Promise<Map<string, number>> {
+  ): Promise<{ subjArr: string[]; averageScoreArr: number[] }> {
     const quiz = await this.quizService.getQuizById(quizId);
     const topics = quiz.topics;
     const attempts = await this.takeAnswerService.getTakeAnswersByTakeId(
       takeId,
     );
-    let map = new Map();
+    const map = new Map();
     for (let attempt of attempts) {
       const quizQuestion = await this.quizQuestionService.getQuizQuestionById(
         attempt.questionId,
@@ -63,6 +65,8 @@ class QuizStatisticsService {
         }
       }
     }
+    const subjArr = [];
+    const averageScoreArr = [];
     map.forEach((values, key) => {
       let sum = 0;
       const average = values.forEach((bool) => {
@@ -70,10 +74,10 @@ class QuizStatisticsService {
           sum++;
         }
       });
-      map.set(key, (sum / values.length) * 10);
+      averageScoreArr.push((sum / values.length) * 10);
+      subjArr.push(key);
     });
-    console.log(map);
-    return map;
+    return { subjArr, averageScoreArr };
   }
 }
 

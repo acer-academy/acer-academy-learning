@@ -8,7 +8,7 @@ const takeAnswerService = new TakeAnswerService();
 quizStatisticsRouter.get('/correctRate/:questionId', async (req, res) => {
   try {
     const { questionId } = req.params;
-    const correctRate = await QuizStatisticsService.correctRateByQestionId(
+    const correctRate = await QuizStatisticsService.correctRateByQuestionId(
       questionId,
     );
     return res.status(200).json(correctRate);
@@ -20,9 +20,8 @@ quizStatisticsRouter.get('/correctRate/:questionId', async (req, res) => {
 quizStatisticsRouter.get('/averageTime/:questionId', async (req, res) => {
   try {
     const { questionId } = req.params;
-    const averageTime = await QuizStatisticsService.averageTimeTakenByQestionId(
-      questionId,
-    );
+    const averageTime =
+      await QuizStatisticsService.averageTimeTakenByQuestionId(questionId);
     return res.status(200).json(averageTime);
   } catch (error) {
     return res.status(500).json({ error: error.message });
