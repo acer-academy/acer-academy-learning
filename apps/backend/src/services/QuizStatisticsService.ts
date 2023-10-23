@@ -1,4 +1,3 @@
-import { Prisma, PrismaClient, QuizQuestion } from '@prisma/client';
 import { TakeAnswerService } from './TakeAnswerService';
 import { QuizService } from './QuizService';
 import { QuizQuestionService } from './QuizQuestionService';
