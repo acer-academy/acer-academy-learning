@@ -40,7 +40,7 @@ export const AttemptQuizQuestionList = () => {
     <>
       <p className="text-xl font-bold">Questions: </p>
       {answers.map((answer, index) => (
-        <QuestionRow answer={answer} questionNumber={index + 1} />
+        <QuestionRow key={index} answer={answer} questionNumber={index + 1} />
       ))}
     </>
   );

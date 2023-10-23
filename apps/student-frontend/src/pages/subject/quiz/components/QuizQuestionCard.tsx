@@ -2,13 +2,13 @@ import {
   Divider,
   LexFloatingEditor,
   LexOutput,
-  classNames,
 } from '@acer-academy-learning/common-ui';
 import {
+  LEX_DEFAULT_JSON_STRING,
   QuizQuestionData,
   QuizQuestionTypeEnum,
 } from '@acer-academy-learning/data-access';
-import React, { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import { QuizSelectAnswerOptions } from './QuizSelectAnswerOptions';
 import { Controller } from 'react-hook-form';
 
@@ -56,7 +56,7 @@ export const QuizQuestionCard = ({
             render={({ field: { value, onChange, onBlur } }) => {
               return (
                 <LexFloatingEditor
-                  editorStateStr={value}
+                  editorStateStr={value ?? LEX_DEFAULT_JSON_STRING}
                   onChange={onChange}
                   onBlur={onBlur}
                 />
