@@ -44,7 +44,9 @@ export class TakeDao {
         studentAnswers: {
           include: { question: { include: { answers: true } } },
         },
-        quiz: { select: { totalMarks: true } },
+        quiz: {
+          include: { quizQuestions: true },
+        },
       },
     });
   }
