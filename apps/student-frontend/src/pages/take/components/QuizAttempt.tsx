@@ -23,7 +23,7 @@ export const QuizAttempt: React.FC<{
 
   const displayRewardPoints = () => {
     const { rewardMinimumMarks, rewardPoints } = quizAttempt.quiz;
-    if (quizAttempt.marks > rewardMinimumMarks)
+    if (quizAttempt.marks >= rewardMinimumMarks)
       return `${rewardPoints}/${rewardPoints} pts`;
     return `0/${rewardPoints} pts`;
   };
