@@ -121,7 +121,7 @@ export const AttemptQuizForm = ({
                 .substring(1)
                 .split(/(?=[A-Z])/)
                 .join(' ')}{' '}
-            Error:{' '}
+            Error{' '}
           </strong>
           {errorObj.message ?? errorObj.root?.message}
         </p>
@@ -197,6 +197,7 @@ export const AttemptQuizForm = ({
       );
       return curr && typeof ans === 'boolean' && ans;
     }, true);
+    console.log(allHasBeenFilled);
     if (!allHasBeenFilled) {
       setShowSubmitWarning(true);
       return;

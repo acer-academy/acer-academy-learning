@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 export const createTakeAnswerApiSchema = z.object({
   questionId: z.string(),
-  studentAnswer: z.string(),
+  studentAnswer: z.string().nullable(),
   timeTaken: z.number().min(0, 'Time taken cannot be less than 0 seconds'),
 });
 
@@ -17,7 +17,7 @@ export const createTakeApiSchema = z.object({
 export const createTakeAnswerSchema = z.intersection(
   createTakeAnswerApiSchema.omit({ studentAnswer: true }),
   z.object({
-    studentAnswer: z.array(z.string().or(z.boolean())),
+    studentAnswer: z.array(z.string().or(z.boolean()).nullable()),
   }),
 );
 
