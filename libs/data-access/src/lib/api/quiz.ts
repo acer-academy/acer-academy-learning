@@ -3,6 +3,7 @@ import {
   CreateQuizType,
   QuizData,
   QuizPaginationFilter,
+  UpdatePublishedQuizParams,
   UpdateQuizParams,
 } from '../types/quiz';
 import client from './client';
@@ -33,6 +34,13 @@ export async function createQuiz(
 
 export async function updateQuiz({ quizId, data }: UpdateQuizParams) {
   return client.put(`${URL}/${quizId}`, data);
+}
+
+export async function updatePublishedQuiz({
+  quizId,
+  data,
+}: UpdatePublishedQuizParams) {
+  return client.put(`${URL}/published/${quizId}`, data);
 }
 
 export async function getQuizByQuizId(quizId: string): Promise<QuizData> {
