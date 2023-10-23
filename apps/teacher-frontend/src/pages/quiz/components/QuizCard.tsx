@@ -73,7 +73,7 @@ export const QuizCard = ({ onSubmitForm, submitText }: QuizCardProps) => {
       <GenericButton
         type="submit"
         text={submitText ?? 'Submit'}
-        className="self-center"
+        className="self-center hover:bg-gray-700"
       />
     </form>
   );

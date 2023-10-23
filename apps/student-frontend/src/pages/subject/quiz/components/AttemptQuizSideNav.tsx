@@ -17,7 +17,7 @@ export const AttemptQuizSideNav = ({ className }: AttemptQuizSideNavProps) => {
       <p>
         {timeAllowedInMS ? 'Time remaining: ' : 'Time elapsed: '}{' '}
         <GenericButton
-          className="w-16 bg-student-primary-600"
+          className="w-16 bg-student-primary-600 hover:bg-student-primary-700"
           text={showTimer ? 'Hide' : 'Show'}
           type="button"
           onClick={() => setShowTimer((curr) => !curr)}

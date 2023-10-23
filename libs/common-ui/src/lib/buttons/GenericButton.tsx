@@ -45,9 +45,7 @@ export const GenericButton = ({
     <button
       className={`inline-flex items-center gap-x-1.5 rounded-md ${
         isLoading ? 'bg-gray-400' : 'bg-gray-600'
-      } px-3 py-2 text-sm font-semibold text-white shadow-sm ${
-        isLoading ? 'hover:bg-gray-400' : 'hover:bg-gray-700'
-      } focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600 justify-center ${className}`}
+      } px-3 py-2 text-sm font-semibold text-white shadow-sm  focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600 justify-center ${className}`}
       type={type}
       onClick={onClick}
       onBlur={onBlur}

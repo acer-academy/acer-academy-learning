@@ -114,6 +114,7 @@ export const AutoGenerateInputParametersForm: React.FC<
       />
       <div className="flex justify-center">
         <GenericButton
+          className="hover:bg-gray-700"
           type="button"
           text="Auto-select Questions"
           onClick={() => handleAutoGenerateQuizQuestions()}

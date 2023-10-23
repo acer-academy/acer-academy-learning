@@ -97,7 +97,10 @@ export const QuestionSelectionModeRadio: React.FC<
         </div>
       </RadioGroup>
       <div className="flex justify-center">
-        <GenericButton onClick={() => handleSelectMode(selected.modeId)} />
+        <GenericButton
+          className="hover:bg-gray-700"
+          onClick={() => handleSelectMode(selected.modeId)}
+        />
       </div>
     </>
   );

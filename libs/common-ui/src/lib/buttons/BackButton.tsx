@@ -25,7 +25,7 @@ export const BackButton = ({ path, className }: BackButtonProps) => {
       type="button"
       icon={<ArrowUturnLeftIcon className="h-4 w-4" />}
       onClick={handleOnClick}
-      className={className}
+      className={className ?? 'hover:bg-gray-700'}
     />
   );
 };
