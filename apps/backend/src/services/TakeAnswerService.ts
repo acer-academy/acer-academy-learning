@@ -18,6 +18,22 @@ export class TakeAnswerService {
     return this.takeAnswerDao.getTakeAnswerById(answerId);
   }
 
+  public async getTakeAnswersByQuestionId(
+    questionId: string,
+  ): Promise<TakeAnswer[]> {
+    return this.takeAnswerDao.getTakeAnswersByQuestionId(questionId);
+  }
+
+  public async getTakeAnswersByTakeId(takeId: string): Promise<TakeAnswer[]> {
+    return this.takeAnswerDao.getTakeAnswersByTakeId(takeId);
+  }
+
+  public async getCorrectTakeAnswersByQuestionId(
+    questionId: string,
+  ): Promise<TakeAnswer[]> {
+    return this.takeAnswerDao.getCorrectTakeAnswersByQuestionId(questionId);
+  }
+
   public async updateTakeAnswer(
     answerId: string,
     answerData: Prisma.TakeAnswerUpdateInput,

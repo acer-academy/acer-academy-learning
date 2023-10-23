@@ -21,6 +21,31 @@ export class TakeAnswerDao {
     });
   }
 
+  public async getTakeAnswersByQuestionId(
+    questionId: string,
+  ): Promise<TakeAnswer[]> {
+    return this.prismaClient.takeAnswer.findMany({
+      where: { questionId: questionId },
+    });
+  }
+
+  public async getTakeAnswersByTakeId(takeId: string): Promise<TakeAnswer[]> {
+    return this.prismaClient.takeAnswer.findMany({
+      where: { takeId },
+      include: {
+        question: true,
+      },
+    });
+  }
+
+  public async getCorrectTakeAnswersByQuestionId(
+    questionId: string,
+  ): Promise<TakeAnswer[]> {
+    return this.prismaClient.takeAnswer.findMany({
+      where: { questionId: questionId, isCorrect: true },
+    });
+  }
+
   public async updateTakeAnswer(
     answerId: string,
     answerData: Prisma.TakeAnswerUpdateInput,
