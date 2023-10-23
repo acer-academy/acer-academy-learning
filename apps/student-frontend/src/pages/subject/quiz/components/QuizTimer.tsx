@@ -78,8 +78,15 @@ export const QuizTimer = ({
       setCurrentDuration((curr) => curr + timePassed);
       if (name) {
         const currentStored = getValues(name) as number;
-        const updatedTimeInSeconds = currentStored + timePassed;
-        setValue(name, updatedTimeInSeconds);
+        const updatedTimeInMS = currentStored + timePassed;
+        if (
+          !totalDurationInMiliseconds ||
+          updatedTimeInMS <= totalDurationInMiliseconds
+        ) {
+          setValue(name, updatedTimeInMS);
+        } else {
+          setValue(name, totalDurationInMiliseconds);
+        }
       }
       lastTickTiming.current = now;
     }, 1);

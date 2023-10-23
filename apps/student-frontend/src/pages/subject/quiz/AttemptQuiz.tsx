@@ -18,6 +18,7 @@ import {
 } from 'libs/data-access/src/lib/types/take';
 import { Student } from 'libs/data-access/src/lib/types/student';
 import { MS_IN_SECOND } from './components/QuizTimer';
+import { QUIZZES } from '../../../libs/routes';
 
 export const AttemptQuiz = () => {
   const navigate = useNavigate();
@@ -30,7 +31,7 @@ export const AttemptQuiz = () => {
   const { mutateAsync: createTakeAsync } = useMutation(createTake, {
     onSuccess: () => {
       displayToast('Quiz successfully submitted!', ToastType.SUCCESS);
-      // navigate();
+      navigate(`${QUIZZES}/${quizId}`);
     },
     onError: (error) => {
       const errorMsg = isAxiosError<{ error: string }>(error)
@@ -38,6 +39,7 @@ export const AttemptQuiz = () => {
         : 'Unknown error';
       displayToast('Error: ' + errorMsg, ToastType.ERROR);
       console.error(error);
+      navigate(`${QUIZZES}/${quizId}`);
     },
   });
 

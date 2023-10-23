@@ -10,7 +10,12 @@ export type AttemptQuizSideNavProps = {
 
 export const AttemptQuizSideNav = ({ className }: AttemptQuizSideNavProps) => {
   const { quiz } = useAttemptQuizContext();
-  const timeAllowed = useMemo(() => quiz.timeAllowed, [quiz]);
+  const timeAllowed = useMemo(() => {
+    const timeAllowed = quiz.timeAllowed;
+    if (timeAllowed) {
+      return timeAllowed * 1000;
+    }
+  }, [quiz.timeAllowed]);
   const [showTimer, setShowTimer] = useState(true);
   return (
     <nav className={`flex flex-col px-4 ${className}`}>
@@ -31,9 +36,7 @@ export const AttemptQuizSideNav = ({ className }: AttemptQuizSideNavProps) => {
       >
         <QuizTimer
           name={`timeTaken`}
-          totalDurationInMiliseconds={
-            timeAllowed ? timeAllowed * 1000 : undefined
-          }
+          totalDurationInMiliseconds={timeAllowed}
         />
       </div>
     </nav>

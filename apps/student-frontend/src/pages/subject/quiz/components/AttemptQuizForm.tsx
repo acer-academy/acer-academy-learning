@@ -4,13 +4,18 @@ import {
   useZodForm,
 } from '@acer-academy-learning/common-ui';
 import { QuizData, createTakeSchema } from '@acer-academy-learning/data-access';
-import { useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { FieldErrors, FormProvider } from 'react-hook-form';
 import { QuizQuestionCard } from './QuizQuestionCard';
 import { AttemptQuizSideNav } from './AttemptQuizSideNav';
 import { AttemptQuizContextProvider } from '../context/AttemptQuizContext';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { CreateTakeSchema } from 'libs/data-access/src/lib/types/take';
+import { GenericModal } from '../../../profile/components/GenericModal';
+import { XMarkIcon } from '@heroicons/react/24/outline';
+import { MS_IN_SECOND } from './QuizTimer';
+
+const COUNTDOWN_DURATION = 5000;
 
 export type AttemptQuizFormProps = {
   quiz: QuizData;
@@ -43,7 +48,12 @@ export const AttemptQuizForm = ({
     ),
   });
 
-  const [isShowing, setIsShowing] = useState(false);
+  const [isCardShowing, setIsCardShowing] = useState(false);
+  const [isTimeUp, setIsTimeUp] = useState(false);
+  const lastTickTiming = useRef<number | null>(null);
+  const timerIdRef = useRef<NodeJS.Timer | null>(null);
+  const [currentCountDownDuration, setCurrentCountDownDuration] =
+    useState(COUNTDOWN_DURATION);
   const currentQuestionIndex = useMemo(
     () => parseInt(location.hash.slice(1)),
     [location],
@@ -68,10 +78,71 @@ export const AttemptQuizForm = ({
     quizQuestionIndex: questionNumber,
     quizQuestionMarks,
   } = useMemo(() => {
-    setIsShowing(false);
-    setTimeout(() => setIsShowing(true), 100);
+    setIsCardShowing(false);
+    setTimeout(() => setIsCardShowing(true), 100);
     return quiz.quizQuestions[currentQuestionIndex - 1];
   }, [currentQuestionIndex, quiz]);
+
+  const onError = useCallback(
+    (errors: FieldErrors<CreateTakeSchema>) => {
+      const msg = Object.entries(errors).map(([type, errorObj]) => (
+        <p key={type} className="space-y-1">
+          <strong>
+            {type.charAt(0).toLocaleUpperCase() +
+              type
+                .substring(1)
+                .split(/(?=[A-Z])/)
+                .join(' ')}{' '}
+            Error:{' '}
+          </strong>
+          {errorObj.message ?? errorObj.root?.message}
+        </p>
+      ));
+      console.error(errors);
+      displayToast(<div key={'quiz-error-msg'}>{msg}</div>, ToastType.ERROR);
+    },
+    [ToastType.ERROR, displayToast],
+  );
+  const watchTimeTaken = formMethods.watch('timeTaken');
+
+  useEffect(() => {
+    const timeAllowed = quiz.timeAllowed;
+    if (!timeAllowed) return;
+    if (watchTimeTaken >= timeAllowed && !isTimeUp) {
+      setIsTimeUp(true);
+      lastTickTiming.current = Date.now();
+      timerIdRef.current = setInterval(() => {
+        const now = Date.now();
+        const prev = lastTickTiming.current ?? now;
+        const timePassed = now - prev;
+        setCurrentCountDownDuration((curr) => {
+          const newCurr = curr - timePassed;
+          if (newCurr <= 0) {
+            if (timerIdRef.current) {
+              clearInterval(timerIdRef.current);
+            }
+            return 0;
+          } else {
+            return newCurr;
+          }
+        });
+        lastTickTiming.current = now;
+      }, 1);
+    }
+  }, [
+    watchTimeTaken,
+    setIsTimeUp,
+    isTimeUp,
+    quiz.timeAllowed,
+    currentCountDownDuration,
+  ]);
+
+  useEffect(() => {
+    if (currentCountDownDuration === 0) {
+      formMethods.handleSubmit(onSubmitForm, onError)();
+    }
+    // Can't include deps because it will infinitely render 
+  }, [currentCountDownDuration]);
 
   const handlePrevPage = () => {
     if (!canNavigatePrevious) {
@@ -89,24 +160,6 @@ export const AttemptQuizForm = ({
     navigate('#' + newIndex);
   };
 
-  const onError = (errors: FieldErrors<CreateTakeSchema>) => {
-    const msg = Object.entries(errors).map(([type, errorObj]) => (
-      <p key={type} className="space-y-1">
-        <strong>
-          {type.charAt(0).toLocaleUpperCase() +
-            type
-              .substring(1)
-              .split(/(?=[A-Z])/)
-              .join(' ')}{' '}
-          Error:{' '}
-        </strong>
-        {errorObj.message ?? errorObj.root?.message}
-      </p>
-    ));
-    console.error(errors);
-    displayToast(<div key={'quiz-error-msg'}>{msg}</div>, ToastType.ERROR);
-  };
-
   return (
     <AttemptQuizContextProvider value={contextState}>
       <FormProvider {...formMethods}>
@@ -121,7 +174,7 @@ export const AttemptQuizForm = ({
               questionNumber={questionNumber}
               marks={quizQuestionMarks}
               className={`${
-                isShowing ? 'opacity-100' : 'opacity-0'
+                isCardShowing ? 'opacity-100' : 'opacity-0'
               } transition-opacity duration-300`}
               bannerClassName={`bg-student-primary-600 text-white `}
             />
@@ -151,6 +204,37 @@ export const AttemptQuizForm = ({
             </nav>
           </section>
           <AttemptQuizSideNav className="flex-1" />
+          <GenericModal
+            title="Quiz Over"
+            isOpen={isTimeUp}
+            setIsOpen={setIsTimeUp}
+          >
+            <div className="absolute right-0 top-0 hidden pr-4 pt-4 sm:block">
+              <button
+                type="button"
+                className="rounded-md bg-white text-student-primary-500 hover:text-student-primary-600 focus:outline-none focus:ring-2 focus:ring-student-primary-600 focus:ring-offset-2"
+                onClick={() => setIsTimeUp(false)}
+              >
+                <span className="sr-only">Close</span>
+                <XMarkIcon className="h-6 w-6" aria-hidden="true" />
+              </button>
+            </div>
+            <p>Time's Up! Submitting your answer in ...</p>
+            <p className="text-3xl text-center">
+              {Math.floor(currentCountDownDuration / MS_IN_SECOND)}
+            </p>
+            <GenericButton
+              onClick={() => {
+                if (timerIdRef.current) {
+                  clearInterval(timerIdRef.current);
+                }
+                formMethods.handleSubmit(onSubmitForm, onError)();
+              }}
+              type="submit"
+              text="Ok"
+              className={`bg-student-primary-600 w-24 self-center mt-4`}
+            />
+          </GenericModal>
         </form>
       </FormProvider>
     </AttemptQuizContextProvider>
