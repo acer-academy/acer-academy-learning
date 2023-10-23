@@ -17,15 +17,20 @@ export class TakeAnswerService {
   public async getTakeAnswerById(answerId: string): Promise<TakeAnswer | null> {
     return this.takeAnswerDao.getTakeAnswerById(answerId);
   }
-
-  public async getTakeAnswersByQuestionId(
-    questionId: string,
+  public async getTakeAnswersByStudent(
+    studentId: string,
   ): Promise<TakeAnswer[]> {
-    return this.takeAnswerDao.getTakeAnswersByQuestionId(questionId);
+    return this.takeAnswerDao.getTakeAnswersByStudent(studentId);
   }
 
-  public async getTakeAnswersByTakeId(takeId: string): Promise<TakeAnswer[]> {
-    return this.takeAnswerDao.getTakeAnswersByTakeId(takeId);
+  public async getTakeAnswersByTake(takeId: string): Promise<TakeAnswer[]> {
+    return this.takeAnswerDao.getTakeAnswersByTake(takeId);
+  }
+
+  public async getTakeAnswersByQuizQuestion(
+    quizQuestionId: string,
+  ): Promise<TakeAnswer[]> {
+    return this.takeAnswerDao.getTakeAnswersByQuizQuestion(quizQuestionId);
   }
 
   public async getCorrectTakeAnswersByQuestionId(
@@ -36,7 +41,7 @@ export class TakeAnswerService {
 
   public async updateTakeAnswer(
     answerId: string,
-    answerData: Prisma.TakeAnswerUpdateInput,
+    answerData: Prisma.TakeAnswerUncheckedUpdateInput,
   ): Promise<TakeAnswer | null> {
     return this.takeAnswerDao.updateTakeAnswer(answerId, answerData);
   }

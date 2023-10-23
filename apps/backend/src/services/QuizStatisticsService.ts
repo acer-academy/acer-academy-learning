@@ -17,9 +17,8 @@ class QuizStatisticsService {
       await this.takeAnswerService.getCorrectTakeAnswersByQuestionId(
         quizQuestionId,
       );
-    const takeAnswers = await this.takeAnswerService.getTakeAnswersByQuestionId(
-      quizQuestionId,
-    );
+    const takeAnswers =
+      await this.takeAnswerService.getTakeAnswersByQuizQuestion(quizQuestionId);
 
     return ((correctTakeAnswers.length / takeAnswers.length) * 100).toFixed(2);
   }
@@ -28,9 +27,8 @@ class QuizStatisticsService {
   public async averageTimeTakenByQuestionId(
     quizQuestionId: string,
   ): Promise<string> {
-    const takeAnswers = await this.takeAnswerService.getTakeAnswersByQuestionId(
-      quizQuestionId,
-    );
+    const takeAnswers =
+      await this.takeAnswerService.getTakeAnswersByQuizQuestion(quizQuestionId);
     let totalTime = 0;
     for (let take of takeAnswers) {
       totalTime += take.timeTaken;
@@ -47,9 +45,7 @@ class QuizStatisticsService {
   ): Promise<{ subjArr: string[]; averageScoreArr: number[] }> {
     const quiz = await this.quizService.getQuizById(quizId);
     const topics = quiz.topics;
-    const attempts = await this.takeAnswerService.getTakeAnswersByTakeId(
-      takeId,
-    );
+    const attempts = await this.takeAnswerService.getTakeAnswersByTake(takeId);
     const map = new Map();
     for (let attempt of attempts) {
       const quizQuestion = await this.quizQuestionService.getQuizQuestionById(

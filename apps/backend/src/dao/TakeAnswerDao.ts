@@ -21,19 +21,16 @@ export class TakeAnswerDao {
     });
   }
 
-  public async getTakeAnswersByQuestionId(
-    questionId: string,
+  public async getTakeAnswersByStudent(
+    studentId: string,
   ): Promise<TakeAnswer[]> {
     return this.prismaClient.takeAnswer.findMany({
-      where: { questionId: questionId },
-    });
-  }
-
-  public async getTakeAnswersByTakeId(takeId: string): Promise<TakeAnswer[]> {
-    return this.prismaClient.takeAnswer.findMany({
-      where: { takeId },
-      include: {
-        question: true,
+      where: {
+        take: {
+          is: {
+            takenById: studentId,
+          },
+        },
       },
     });
   }
@@ -43,6 +40,29 @@ export class TakeAnswerDao {
   ): Promise<TakeAnswer[]> {
     return this.prismaClient.takeAnswer.findMany({
       where: { questionId: questionId, isCorrect: true },
+    });
+  }
+
+  public async getTakeAnswersByTake(takeId: string): Promise<TakeAnswer[]> {
+    return this.prismaClient.takeAnswer.findMany({
+      where: { takeId: takeId },
+    });
+  }
+
+  public async getTakeAnswersByQuizQuestion(
+    quizQuestionId: string,
+  ): Promise<TakeAnswer[]> {
+    return this.prismaClient.takeAnswer.findMany({
+      where: { questionId: quizQuestionId },
+    });
+  }
+
+  public async getTakeAnswersByTakeAndQuizQuestion(
+    takeId: string,
+    quizQuestionId: string,
+  ): Promise<TakeAnswer[]> {
+    return this.prismaClient.takeAnswer.findMany({
+      where: { takeId: takeId, questionId: quizQuestionId },
     });
   }
 
