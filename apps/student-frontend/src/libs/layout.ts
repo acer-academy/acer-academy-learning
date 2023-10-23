@@ -40,8 +40,16 @@ export const NAV_SECTIONS: NavigationMenuItem[] = [
     path: SUBJECTS,
     children: [
       { name: 'Assignments', path: ASSIGNMENTS, icon: PaperClipIcon },
-      { name: 'Quizzes', path: QUIZZES, icon: CalculatorIcon },
-      { name: 'Quiz Attempts', path: TAKES, icon: BookOpenIcon },
+      {
+        name: 'Quizzes',
+        path: `${SUBJECTS}/math/quizzes`,
+        icon: CalculatorIcon,
+      },
+      {
+        name: 'Quiz Attempts',
+        path: `${SUBJECTS}/math/takes`,
+        icon: BookOpenIcon,
+      },
       { name: 'Recordings', path: RECORDINGS, icon: VideoCameraIcon },
       { name: 'Zoom Link', path: ZOOM_LINK, icon: LinkIcon },
     ],

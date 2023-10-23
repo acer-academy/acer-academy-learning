@@ -10,8 +10,8 @@ export const DASHBOARD = '/';
 // Subject routes
 export const SUBJECTS = '/subjects';
 export const ASSIGNMENTS = `${SUBJECTS}/assignments`;
-export const QUIZZES = `${SUBJECTS}/quizzes`;
-export const TAKES = `${SUBJECTS}/takes`;
+export const QUIZZES = `${SUBJECTS}/:subject/quizzes`;
+export const TAKES = `${SUBJECTS}/:subject/takes`;
 export const RECORDINGS = `${SUBJECTS}/recordings`;
 export const ZOOM_LINK = `${SUBJECTS}/zoom-link`;
 
