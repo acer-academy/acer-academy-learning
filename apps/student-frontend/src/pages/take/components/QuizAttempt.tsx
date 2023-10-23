@@ -33,7 +33,7 @@ export const QuizAttempt: React.FC<{
     const numHrs = Math.floor(numMins / 60);
     numMins %= 60;
     return `${numHrs > 0 ? `${numHrs} hour` : ''} ${
-      numMins > 0 ? `${numMins} minutes` : ''
+      numMins > 0 ? `${numMins} minutes` : '0 minutes'
     } spent`;
   };
 
