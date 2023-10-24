@@ -43,15 +43,6 @@ export class TakeAnswerDao {
     });
   }
 
-  public async getTakeAnswersByQuizQuestionAndTakeId(
-    questionId: string,
-    takeId: string,
-  ) {
-    return this.prismaClient.takeAnswer.findMany({
-      where: { questionId: questionId, takeId: takeId },
-    });
-  }
-
   public async getTakeAnswersByTake(takeId: string): Promise<TakeAnswer[]> {
     return this.prismaClient.takeAnswer.findMany({
       where: { takeId: takeId },

@@ -91,7 +91,7 @@ class QuizStatisticsService {
     /* Get take answer for the question -> check whether take answer is right or wrong -> consolidate it in map based on topics */
     for (const ques of quizQuestions) {
       const takeAns =
-        await this.takeAnswerService.getTakeAnswersByQuizQuestionAndTakeId(
+        await this.takeAnswerService.getTakeAnswersByTakeAndQuizQuestion(
           ques.id,
           takeId,
         );
