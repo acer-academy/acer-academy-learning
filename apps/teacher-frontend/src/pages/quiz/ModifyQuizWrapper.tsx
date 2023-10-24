@@ -2,9 +2,10 @@ import { FullscreenSpinner, useAuth } from '@acer-academy-learning/common-ui';
 import { Teacher, getQuizByQuizId } from '@acer-academy-learning/data-access';
 import React, { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
-import { UpdateQuiz } from './UpdateQuiz';
+import { UpdateUnpublishedQuiz } from './UpdateUnpublishedQuiz';
 import { ViewQuiz } from './ViewQuiz';
 import { useQuery } from 'react-query';
+import { UpdatePublishedQuiz } from './UpdatePublishedQuiz';
 
 /**
  * Used to conditionally render ViewQuiz or UpdateQuiz depending on whether the quiz is created by the account teacher account used
@@ -24,7 +25,10 @@ export const ModifyQuizWrapper = () => {
   }
 
   if (user?.id === quiz?.teacherCreatedId) {
-    return <UpdateQuiz quiz={quiz} />;
+    if (quiz.takes.length === 0) {
+      return <UpdateUnpublishedQuiz quiz={quiz} />;
+    }
+    return <UpdatePublishedQuiz quiz={quiz} />;
   }
 
   if (isSuccess && quiz) {

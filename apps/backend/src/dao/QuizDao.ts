@@ -67,6 +67,7 @@ export class QuizDao {
         },
         takes: true,
         quizQuestions: {
+          orderBy: { quizQuestionIndex: 'asc' },
           include: {
             quizQuestion: {
               include: {

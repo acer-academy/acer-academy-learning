@@ -21,11 +21,11 @@ import { isAxiosError } from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import omitDeep from 'omit-deep-lodash';
 
-export type UpdateQuizProps = {
+export type UpdateUnpublishedQuizProps = {
   quiz: QuizData;
 };
 
-export const UpdateQuiz = ({ quiz }: UpdateQuizProps) => {
+export const UpdateUnpublishedQuiz = ({ quiz }: UpdateUnpublishedQuizProps) => {
   const navigate = useNavigate();
   const { subject, quizId } = useParams();
   const memoedQuizId = useMemo(() => quizId ?? '', [quizId]);

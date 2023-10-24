@@ -44,6 +44,13 @@ export const getQuizQuestionById = async (
   return res.data;
 };
 
+export const getQuizQuestionAllVersionsById = async (
+  questionId: string,
+): Promise<QuizQuestionData[]> => {
+  const res = await client.get(`${URL}/versioning/${questionId}`);
+  return res.data;
+};
+
 export const updateQuizQuestion = async ({
   questionId,
   data,

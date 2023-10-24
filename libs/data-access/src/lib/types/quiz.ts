@@ -56,3 +56,12 @@ export type UpdateQuizParams = {
   quizId: string;
   data: CreateQuizType & { subject: SubjectEnum; teacherCreated: string };
 };
+export type UpdatePublishedQuizParams = {
+  quizId: string;
+  data: CreateQuizType & {
+    subject: SubjectEnum;
+    teacherCreated: string;
+    oldQuestionId: string;
+    newQuestionId: string;
+  };
+};
