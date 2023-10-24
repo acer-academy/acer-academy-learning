@@ -2,8 +2,6 @@
 import {
   EnforceLoginStatePageWrapper,
   LayoutRole,
-  LexEditor,
-  LexOutput,
   PrimaryLayout,
   ToastProvider,
 } from '@acer-academy-learning/common-ui';
@@ -20,7 +18,11 @@ import ChangePassword from '../pages/profile/ChangePassword';
 import TeacherForgotPassword from '../pages/entry/TeacherForgotPassword';
 import TeacherResetPassword from '../pages/entry/TeacherResetPassword';
 import { QuestionBank } from '../pages/question-bank/QuestionBank';
-import { ACCOUNT_NAV, NAV_SECTIONS } from '../libs/layout';
+import {
+  ACCOUNT_NAV,
+  NAV_SECTIONS,
+  ROUTES_WITHOUT_SIDEBAR,
+} from '../libs/layout';
 import {
   ACCOUNT,
   ANALYTICS,
@@ -36,7 +38,6 @@ import {
   QUESTION_BANK,
   CREATE_QUESTION,
   UPDATE_QUESTION,
-  WITHOUT_SIDEBARS,
   SUBJECT_MAIN,
   CREATE_QUIZ,
   QUIZZES,
@@ -67,7 +68,7 @@ export function App() {
                       role={LayoutRole.Teacher}
                       navigationMenu={NAV_SECTIONS}
                       accountNavigation={ACCOUNT_NAV}
-                      routesWithoutSidebar={WITHOUT_SIDEBARS}
+                      routesWithoutSidebar={ROUTES_WITHOUT_SIDEBAR}
                     />
                   </EnforceLoginStatePageWrapper>
                 }

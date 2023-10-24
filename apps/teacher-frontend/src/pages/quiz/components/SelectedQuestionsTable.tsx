@@ -190,6 +190,7 @@ export const SelectedQuestionsTable: React.FC<SelectedQuestionsTableProps> = (
               <div>
                 <GenericButton
                   type="button"
+                  className="hover:bg-gray-700"
                   text="Save Changes"
                   onClick={() => {
                     editQuestionOrder(newOrder);
@@ -200,6 +201,7 @@ export const SelectedQuestionsTable: React.FC<SelectedQuestionsTableProps> = (
             ) : (
               <div>
                 <GenericButton
+                  className="hover:bg-gray-700"
                   type="button"
                   text="Edit Question Order"
                   onClick={() => {

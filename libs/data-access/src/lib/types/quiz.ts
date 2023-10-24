@@ -20,6 +20,9 @@ export interface QuizPaginationFilter {
 export type QuizDataQuizQuestion = {
   quizId: string;
   quizQuestion: QuizQuestionData;
+  quizQuestionId: string;
+  quizQuestionIndex: number;
+  quizQuestionMarks: number;
 };
 
 export interface QuizData {
@@ -45,7 +48,9 @@ export interface QuizData {
 }
 
 export type CreateQuizType = z.infer<typeof createQuizSchema>;
+
 export type QuizQuestionInQuizType = z.infer<typeof quizQuestionInQuizSchema>;
+
 export type UpdateQuizParams = {
   quizId: string;
   data: CreateQuizType & { subject: SubjectEnum; teacherCreated: string };
