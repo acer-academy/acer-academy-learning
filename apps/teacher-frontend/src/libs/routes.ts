@@ -18,6 +18,7 @@ export const QUIZZES = `${SUBJECTS}/:subject/quizzes`;
 export const CREATE_QUIZ = `${QUIZZES}/create-quiz`;
 export const CREATE_QUIZ_DETAILS_HASH = '';
 export const CREATE_QUIZ_QUESTIONS_HASH = 'questions';
+export const CREATE_QUIZ_STUDENTS_HASH = 'students';
 export const UPDATE_QUIZ = `${QUIZZES}/:quizId`;
 
 export const ANALYTICS = '/analytics';

@@ -26,6 +26,8 @@ import {
   PencilSquareIcon,
   TrashIcon,
   UserGroupIcon,
+  LockOpenIcon,
+  LockClosedIcon,
 } from '@heroicons/react/24/outline';
 import { useMutation } from 'react-query';
 
@@ -262,6 +264,20 @@ export const QuizManagement: React.FC = () => {
                                 <ClockIcon className="w-4 h-4 text-teacherBlue-700" />
                                 <span className="font-semibold text-sm">
                                   {getTimeAllowedString(quiz.timeAllowed)}
+                                </span>
+                              </div>
+                              <div className="flex items-center gap-1">
+                                {quiz.isPublic ? (
+                                  <LockOpenIcon className="w-4 h-4 text-teacherBlue-700" />
+                                ) : (
+                                  <LockClosedIcon className="w-4 h-4 text-teacherBlue-700" />
+                                )}
+                                <span className="font-semibold text-sm">
+                                  {`${
+                                    quiz.isPublic
+                                      ? 'Public'
+                                      : `${quiz.allocatedTo.length} students`
+                                  }`}
                                 </span>
                               </div>
                               <div className="flex items-center gap-1">

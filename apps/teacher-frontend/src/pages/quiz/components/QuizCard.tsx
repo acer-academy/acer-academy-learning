@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   CreateQuizType,
   QuizQuestionInQuizType,
@@ -6,10 +6,14 @@ import {
 import { FieldErrors, useFormContext } from 'react-hook-form';
 import { QuizTabs } from './QuizTab';
 import { useLocation, useParams } from 'react-router-dom';
-import { CREATE_QUIZ_QUESTIONS_HASH } from '../../../libs/routes';
+import {
+  CREATE_QUIZ_QUESTIONS_HASH,
+  CREATE_QUIZ_STUDENTS_HASH,
+} from '../../../libs/routes';
 import DetailsSection from './DetailsSection';
 import { QuestionsSection } from './QuestionsSection';
 import { GenericButton, useToast } from '@acer-academy-learning/common-ui';
+import { StudentsSection } from './StudentsSection';
 
 export type QuizCardProps = {
   onSubmitForm: (values: CreateQuizType) => Promise<void>;
@@ -20,7 +24,8 @@ export const QuizCard = ({ onSubmitForm, submitText }: QuizCardProps) => {
   const { quizId } = useParams();
   const { displayToast, ToastType } = useToast();
   const location = useLocation();
-  const { handleSubmit, getValues } = useFormContext<CreateQuizType>();
+  const { handleSubmit, getValues, setValue } =
+    useFormContext<CreateQuizType>();
 
   const [selectedQuestions, setSelectedQuestions] = useState<
     QuizQuestionInQuizType[]
@@ -28,6 +33,14 @@ export const QuizCard = ({ onSubmitForm, submitText }: QuizCardProps) => {
   const [questionSelectionMode, setQuestionSelectionMode] = useState<string>(
     quizId ?? '',
   );
+
+  const [isPublic, setIsPublic] = useState<boolean>(true);
+  const [allocatedTo, setAllocatedTo] = useState<string[]>([]);
+
+  useEffect(() => {
+    setValue('allocatedTo', allocatedTo);
+    setValue('isPublic', isPublic);
+  }, [allocatedTo, isPublic]);
 
   const currentTabComponent = useMemo(() => {
     switch (location.hash.slice(1)) {
@@ -40,10 +53,25 @@ export const QuizCard = ({ onSubmitForm, submitText }: QuizCardProps) => {
             setQuestionSelectionMode={setQuestionSelectionMode}
           />
         );
+      case CREATE_QUIZ_STUDENTS_HASH:
+        return (
+          <StudentsSection
+            isPublic={isPublic}
+            setIsPublic={setIsPublic}
+            allocatedTo={allocatedTo}
+            setAllocatedTo={setAllocatedTo}
+          />
+        );
       default:
         return <DetailsSection />;
     }
-  }, [location, selectedQuestions, questionSelectionMode]);
+  }, [
+    location,
+    selectedQuestions,
+    questionSelectionMode,
+    isPublic,
+    allocatedTo,
+  ]);
 
   const onError = (errors: FieldErrors<CreateQuizType>) => {
     const msg = Object.entries(errors).map(([type, errorObj]) => (

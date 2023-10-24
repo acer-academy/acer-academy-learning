@@ -40,6 +40,7 @@ export interface QuizData {
   nextVersionId: string;
   version: number;
   allocatedTo: any;
+  isPublic: boolean;
   takes: TakeData[];
   quizQuestions: QuizDataQuizQuestion[];
 }

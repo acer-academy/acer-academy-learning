@@ -33,6 +33,8 @@ export const quizSchema = z.object({
   quizQuestions: z
     .array(quizQuestionInQuizSchema)
     .min(1, 'You must add at least one question'),
+  allocatedTo: z.array(z.string()),
+  isPublic: z.boolean(),
 });
 
 const quizMarksSchema = z

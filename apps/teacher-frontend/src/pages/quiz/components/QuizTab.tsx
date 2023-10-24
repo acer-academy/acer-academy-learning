@@ -2,12 +2,14 @@ import { classNames } from '@acer-academy-learning/common-ui';
 import {
   CREATE_QUIZ_DETAILS_HASH,
   CREATE_QUIZ_QUESTIONS_HASH,
+  CREATE_QUIZ_STUDENTS_HASH,
 } from '../../../libs/routes';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const tabs = [
   { name: 'Details', path: CREATE_QUIZ_DETAILS_HASH, current: false },
   { name: 'Questions', path: CREATE_QUIZ_QUESTIONS_HASH, current: false },
+  { name: 'Students', path: CREATE_QUIZ_STUDENTS_HASH, current: false },
 ];
 
 export const QuizTabs = () => {
