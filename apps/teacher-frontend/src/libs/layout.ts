@@ -4,6 +4,8 @@ import {
   ANALYTICS,
   DASHBOARD,
   PROFILE,
+  QUESTION_BANK,
+  QUIZZES,
   REWARDS,
   SCHEDULING,
   SETTINGS,
@@ -27,16 +29,15 @@ export const NAV_SECTIONS: NavigationMenuItem[] = [
     children: [
       {
         name: 'Question Bank',
-        path: `${SUBJECTS}/math/question-bank`,
+        path: `${QUESTION_BANK}`,
         icon: InboxStackIcon,
       },
       {
         name: 'Quizzes',
-        path: `${SUBJECTS}/math/quizzes`,
+        path: `${QUIZZES}`,
         icon: DocumentTextIcon,
       },
     ],
-    noSideBar: true,
   },
   {
     name: 'ANALYTICS',
@@ -60,3 +61,5 @@ export const ACCOUNT_NAV: NavigationMenuItem = {
     { name: 'Settings', path: SETTINGS, icon: Cog6ToothIcon },
   ],
 };
+
+export const ROUTES_WITHOUT_SIDEBAR = [SUBJECTS];

@@ -22,6 +22,12 @@ export class QuizAnswerService {
     return this.quizAnswerDao.getAnswersByQuestionId(questionId);
   }
 
+  public async getCorrectAnswersByQuestion(
+    questionId: string,
+  ): Promise<QuizAnswer[]> {
+    return this.quizAnswerDao.getCorrectAnswersByQuestionId(questionId);
+  }
+
   public async updateQuizAnswer(
     answerId: string,
     answerData: Prisma.QuizAnswerUpdateInput,

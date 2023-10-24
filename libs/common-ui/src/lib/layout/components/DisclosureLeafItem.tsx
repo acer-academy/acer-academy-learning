@@ -33,10 +33,31 @@ export const DisclosureLeafItem = ({
         : 'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold',
     [isChild],
   );
+  const path = useMemo(() => {
+    const subpaths = item.path?.split('/');
+    if (!subpaths) {
+      return item.path;
+    }
+
+    let finalPath = '';
+    subpaths.forEach((path) => {
+      if (!path) {
+        return;
+      }
+      if (path.charAt(0) === ':') {
+        const param = path.substring(1);
+        finalPath += '/' + params[param];
+      } else {
+        finalPath += '/' + path;
+      }
+    });
+
+    return finalPath;
+  }, [params, item]);
 
   return (
     <NavLink
-      to={`${item.dynamicRoute ? location.pathname + item.path : item.path}`}
+      to={`${path}`}
       className={classNames(
         // Needs to be fixed later on
         isActive

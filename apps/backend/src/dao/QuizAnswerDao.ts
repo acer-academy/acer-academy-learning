@@ -31,6 +31,17 @@ export class QuizAnswerDao {
     });
   }
 
+  public async getCorrectAnswersByQuestionId(
+    questionId: string,
+  ): Promise<QuizAnswer[]> {
+    return this.prismaClient.quizAnswer.findMany({
+      where: {
+        questionId,
+        isCorrect: true,
+      },
+    });
+  }
+
   public async updateQuizAnswer(
     answerId: string,
     answerData: Prisma.QuizAnswerUpdateInput,

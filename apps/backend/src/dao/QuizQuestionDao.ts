@@ -29,6 +29,7 @@ export class QuizQuestionDao {
       where: { id: questionId },
       include: {
         answers: true,
+        usedInTakes: true,
       },
     });
   }

@@ -102,7 +102,11 @@ export const QuizCard = ({ onSubmitForm, submitText }: QuizCardProps) => {
     >
       <QuizTabs />
       {currentTabComponent}
-      <GenericButton type="submit" text={submitText ?? 'Submit'} />
+      <GenericButton
+        type="submit"
+        text={submitText ?? 'Submit'}
+        className="self-center hover:bg-gray-700"
+      />
     </form>
   );
 };

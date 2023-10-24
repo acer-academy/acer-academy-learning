@@ -24,7 +24,7 @@ export const GenericBadges = <T,>({
     }
   };
   return (
-    <section className="space-x-1">
+    <section>
       {badges?.map((badge, idx) => (
         <GenericBadge
           key={idx}

@@ -51,7 +51,11 @@ export const NAV_SECTIONS: NavigationMenuItem[] = [
         icon: BookOpenIcon,
       },
       { name: 'Recordings', path: RECORDINGS, icon: VideoCameraIcon },
-      { name: 'Zoom Link', path: ZOOM_LINK, icon: LinkIcon },
+      {
+        name: 'Zoom Link',
+        path: ZOOM_LINK,
+        icon: LinkIcon,
+      },
     ],
   },
   {
@@ -80,3 +84,5 @@ export const ACCOUNT_NAV: NavigationMenuItem = {
     { name: 'FAQ', path: FAQ, icon: QuestionMarkCircleIcon },
   ],
 };
+
+export const ROUTES_WITHOUT_SIDEBAR = [SUBJECTS];

@@ -1,5 +1,11 @@
 import { QuizQuestionData } from './question';
 import { QuizData } from './quiz';
+import { z } from 'zod';
+import {
+  createTakeAnswerApiSchema,
+  createTakeApiSchema,
+  createTakeSchema,
+} from '../schemas';
 
 export interface TakeData {
   id: string;
@@ -28,3 +34,9 @@ export interface StudentTakeData {
   };
   quiz: QuizData;
 }
+export type CreateTakeSchema = z.infer<typeof createTakeSchema>;
+
+export type CreateTakeApiSchema = z.infer<typeof createTakeApiSchema>;
+export type CreateTakeAnswerApiSchema = z.infer<
+  typeof createTakeAnswerApiSchema
+>;
