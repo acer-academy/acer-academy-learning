@@ -38,6 +38,7 @@ import {
   VIEW_CLASSES,
   ZOOM_LINK,
   FAQ,
+  TAKES,
 } from '../libs/routes';
 import { ToastContainer } from 'react-toastify';
 import { StudentNotificationPreference } from '../pages/profile/StudentNotificationPreference';
@@ -46,6 +47,7 @@ import { FaqPage } from '../pages/faq/FaqPage';
 import { StudentProfile } from '../pages/profile/StudentProfile';
 import TransactionManagement from '../pages/transaction/TransactionManagement';
 import { CreditBundleManagement } from '../pages/creditBundle/CreditBundleManagement';
+import { TakeViewAll } from '../pages/take/TakeViewAll';
 
 export function App() {
   const queryClient = new QueryClient();
@@ -78,9 +80,10 @@ export function App() {
                   path={DASHBOARD}
                   element={<div>Welcome to AcerTech!</div>}
                 />
-                <Route path={SUBJECTS} element={<div>Home</div>}>
+                <Route path={SUBJECTS}>
                   <Route path={ASSIGNMENTS} element={<div>Home</div>} />
                   <Route path={QUIZZES} element={<div>Home</div>} />
+                  <Route path={TAKES} element={<TakeViewAll />} />
                   <Route path={RECORDINGS} element={<div>Home</div>} />
                   <Route path={ZOOM_LINK} element={<div>Home</div>} />
                 </Route>

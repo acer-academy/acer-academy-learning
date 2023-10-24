@@ -15,6 +15,7 @@ import {
   REWARDS,
   SETTINGS,
   SUBJECTS,
+  TAKES,
   VIEW_CLASSES,
   ZOOM_LINK,
 } from './routes';
@@ -27,6 +28,7 @@ import {
   BellIcon,
   Cog6ToothIcon,
   QuestionMarkCircleIcon,
+  BookOpenIcon,
 } from '@heroicons/react/24/outline';
 export const NAV_SECTIONS: NavigationMenuItem[] = [
   {
@@ -38,7 +40,16 @@ export const NAV_SECTIONS: NavigationMenuItem[] = [
     path: SUBJECTS,
     children: [
       { name: 'Assignments', path: ASSIGNMENTS, icon: PaperClipIcon },
-      { name: 'Quizzes', path: QUIZZES, icon: CalculatorIcon },
+      {
+        name: 'Quizzes',
+        path: `${SUBJECTS}/math/quizzes`,
+        icon: CalculatorIcon,
+      },
+      {
+        name: 'Quiz Attempts',
+        path: `${SUBJECTS}/math/takes`,
+        icon: BookOpenIcon,
+      },
       { name: 'Recordings', path: RECORDINGS, icon: VideoCameraIcon },
       { name: 'Zoom Link', path: ZOOM_LINK, icon: LinkIcon },
     ],

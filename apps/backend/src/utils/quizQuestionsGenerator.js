@@ -324,7 +324,13 @@ const generateRandomQuiz = (titleIdx) => {
     totalMarks += qsMarks;
   }
   const quizData = {
-    title: `Sample Quiz ${titleIdx + 1}`,
+    title: `${randomLevels[0]} ${randomTopics[0]
+      .split('_')
+      .map((x) => {
+        x = x.toLowerCase();
+        return x.charAt(0).toUpperCase() + x.slice(1);
+      })
+      .reduce((x, y) => `${x} ${y}`)} Quiz ${titleIdx + 1}`,
     description:
       '{"root":{"children":[{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"This is a sample quiz.","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1}],"direction":"ltr","format":"","indent":0,"type":"root","version":1}}',
     subject: 'MATHEMATICS',
@@ -351,14 +357,26 @@ const generateRandomTake = () => {
   for (const quizQuestion of quizToTake.quizQuestions) {
     const wrongAnswer =
       '{"root":{"children":[{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"Sample incorrect answer","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1}],"direction":"ltr","format":"","indent":0,"type":"root","version":1}}';
-    const correctAnswer = quizQuestion.quizQuestion.answers.filter(
+    const correctAnswers = quizQuestion.quizQuestion.answers.filter(
       (x) => x.isCorrect,
-    )[0].answer;
-    studentAnswers.push({
-      questionId: quizQuestion.quizQuestionId,
-      timeTaken: Math.round(Math.random() * 30) + 30,
-      studentAnswer: Math.random() > 0.3 ? correctAnswer : wrongAnswer,
-    });
+    ); //[0].answer;
+    if (correctAnswers.length > 1) {
+      for (const correctAnswer of correctAnswers) {
+        studentAnswers.push({
+          questionId: quizQuestion.quizQuestionId,
+          timeTaken: Math.round(Math.random() * 30) + 30,
+          studentAnswer:
+            Math.random() > 0.1 ? correctAnswer.answer : wrongAnswer,
+        });
+      }
+    } else {
+      studentAnswers.push({
+        questionId: quizQuestion.quizQuestionId,
+        timeTaken: Math.round(Math.random() * 30) + 30,
+        studentAnswer:
+          Math.random() > 0.3 ? correctAnswers[0].answer : wrongAnswer,
+      });
+    }
   }
   const takeData = {
     timeTaken: quizToTake.timeAllowed
