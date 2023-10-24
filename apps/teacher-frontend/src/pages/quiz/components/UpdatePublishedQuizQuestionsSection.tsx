@@ -13,8 +13,8 @@ import {
   updatePublishedQuiz,
 } from '@acer-academy-learning/data-access';
 import { isAxiosError } from 'axios';
-import { useEffect, useState } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import DifficultyTag from '../../question-bank/DifficultyTag';
 import { LevelTag } from '../../question-bank/LevelTag';
 import TypeTag from '../../question-bank/QuestionTypeTag';
@@ -30,7 +30,6 @@ export const UpdatePublishedQuizQuestionsSection = ({
   quiz,
 }: UpdatePublishedQuizQuestionsSectionProps) => {
   const navigate = useNavigate();
-  const location = useLocation();
   const { subject } = useParams();
   const { user } = useAuth<Teacher>();
   const { displayToast, ToastType } = useToast();
@@ -100,7 +99,7 @@ export const UpdatePublishedQuizQuestionsSection = ({
           ToastType.SUCCESS,
         );
         // Navigate to new quiz ID (new version of the quiz that is created)
-        navigate(`/subjects/math/quizzes/${newQuiz.data.id}#questions`);
+        navigate(`/subjects/${subject}/quizzes/${newQuiz.data.id}#questions`);
       } else {
         displayToast(
           'Error: Not logged in or subject not found',
@@ -203,7 +202,7 @@ export const UpdatePublishedQuizQuestionsSection = ({
                             <div className="flex flex-col">
                               <span className="font-semibold text-sm">{`v${question.version}`}</span>
                               <span className="text-xs text-gray-500">
-                                {question.version == 1
+                                {question.version === 1
                                   ? 'Created:'
                                   : 'Updated:'}
                               </span>
