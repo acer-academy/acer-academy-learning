@@ -33,6 +33,16 @@ export class TakeAnswerService {
     return this.takeAnswerDao.getTakeAnswersByQuizQuestion(quizQuestionId);
   }
 
+  public async getTakeAnswersByQuizQuestionAndTakeId(
+    quizQuestionId: string,
+    takeId: string,
+  ): Promise<TakeAnswer[]> {
+    return this.takeAnswerDao.getTakeAnswersByQuizQuestionAndTakeId(
+      quizQuestionId,
+      takeId,
+    );
+  }
+
   public async getCorrectTakeAnswersByQuestionId(
     questionId: string,
   ): Promise<TakeAnswer[]> {
