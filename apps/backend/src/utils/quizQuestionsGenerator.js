@@ -128,14 +128,48 @@ const setupPrerequisites = async () => {
     //   'Prerequisite teacher successfully created:',
     //   (placeholderTeacherId),
     // );
+    const randomFirstNames = [
+      'John',
+      'Mary',
+      'Robert',
+      'Linda',
+      'William',
+      'Susan',
+      'James',
+      'Karen',
+      'Michael',
+      'Jennifer',
+      'David',
+      'Nancy',
+      'Richard',
+      'Lisa',
+      'Joseph',
+      'Betty',
+      'Charles',
+      'Helen',
+      'Thomas',
+      'Margaret',
+    ];
+    const randomLastNames = [
+      'Lim',
+      'Tan',
+      'Ng',
+      'Lee',
+      'Ong',
+      'Goh',
+      'Chua',
+      'Yeo',
+      'Teo',
+      'Tan',
+    ];
     for (let i = 1; i < 10; i++) {
       const whitelistStudentResponse = await axios.post(whitelistURL, {
         email: `student${i}@student.com`,
         role: 'STUDENT',
       });
       const createStudentResponse = await axios.post(createStudentURL, {
-        firstName: `Student${i}`,
-        lastName: `Student${i}`,
+        firstName: getRandomItem(randomFirstNames),
+        lastName: getRandomItem(randomLastNames),
         email: `student${i}@student.com`,
         password: 'password',
         level: getRandomItem(LevelEnum),
@@ -323,6 +357,7 @@ const generateRandomQuiz = (titleIdx) => {
     });
     totalMarks += qsMarks;
   }
+  const isPublic = Math.random() > 0.2;
   const quizData = {
     title: `${randomLevels[0]} ${randomTopics[0]
       .split('_')
@@ -340,7 +375,10 @@ const generateRandomQuiz = (titleIdx) => {
     rewardPoints: Math.min(Math.floor(Math.random() * 10) + 1, 10),
     rewardMinimumMarks: Math.round(totalMarks * 0.8),
     teacherCreated: placeholderTeacherId,
-    allocatedTo: [],
+    isPublic: isPublic,
+    allocatedTo: isPublic
+      ? []
+      : studentIdsArray.slice(Math.random() * studentIdsArray.length),
     timeAllowed: Math.max(Math.floor(Math.random() * 7200) + 1, 600),
     quizQuestions: quizQuestions,
   };

@@ -67,6 +67,7 @@ export const Filter: React.FC<{
             questionType: questionTypes,
             showLatestOnly: !showAllVersions,
           };
+    //console.log(filterOptions);
     filterSubmitCallback(filterOptions);
   }, [
     difficulties,

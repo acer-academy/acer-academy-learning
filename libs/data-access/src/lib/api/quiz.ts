@@ -7,6 +7,7 @@ import {
 } from '../types/quiz';
 import client from './client';
 import { AxiosResponse } from 'axios';
+import { Student } from '../types/student';
 
 const URL = '/quiz';
 
@@ -37,5 +38,9 @@ export async function updateQuiz({ quizId, data }: UpdateQuizParams) {
 
 export async function getQuizByQuizId(quizId: string): Promise<QuizData> {
   const res = await client.get(`${URL}/${quizId}`);
+  // Extract student IDs
+  res.data.allocatedTo = res.data.allocatedTo.map(
+    ({ id }: Partial<Student>) => id,
+  );
   return res.data;
 }
