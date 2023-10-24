@@ -376,7 +376,9 @@ const generateRandomQuiz = (titleIdx) => {
     rewardMinimumMarks: Math.round(totalMarks * 0.8),
     teacherCreated: placeholderTeacherId,
     isPublic: isPublic,
-    allocatedTo: isPublic ? [] : studentIdsArray,
+    allocatedTo: isPublic
+      ? []
+      : studentIdsArray.slice(Math.random() * studentIdsArray.length),
     timeAllowed: Math.max(Math.floor(Math.random() * 7200) + 1, 600),
     quizQuestions: quizQuestions,
   };
