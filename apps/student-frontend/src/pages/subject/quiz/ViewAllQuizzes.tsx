@@ -14,6 +14,10 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useQuery } from 'react-query';
 import { useParams } from 'react-router-dom';
 import { QuizRow } from './components/QuizRow';
+import { AdaptiveQuizRow } from './components/AdaptiveQuizRow';
+
+const accordionTitleClassName =
+  'px-6 py-4 bg-student-primary-600 text-white hover:bg-student-primary-700';
 
 export const ViewAllQuizzes = () => {
   // Will query all quizzes for now, but will be changed to query quizzes by subject
@@ -46,15 +50,16 @@ export const ViewAllQuizzes = () => {
   }
 
   return (
-    <div>
+    <div className="flex flex-col space-y-4">
       <GenericAccordion
         title="All Quizzes"
-        titleClassName="px-6 py-4 bg-student-primary-600 text-white hover:bg-student-primary-700"
+        titleClassName={accordionTitleClassName}
         arrowClassName="text-white"
         content={
           <ul>
             {quizzes?.data.quizzes.map((quiz, index) => (
               <QuizRow
+                iconStyles="text-student-primary-600"
                 key={quiz.id}
                 quiz={quiz}
                 className="hover:bg-student-primary-100"
@@ -121,6 +126,19 @@ export const ViewAllQuizzes = () => {
             </svg>
           </button>
         </div> */}
+          </ul>
+        }
+      />
+      <GenericAccordion
+        title="Special Quizzes"
+        titleClassName={accordionTitleClassName}
+        arrowClassName="text-white"
+        content={
+          <ul>
+            <AdaptiveQuizRow
+              iconStyles="text-student-primary-600"
+              className="hover:bg-student-primary-100"
+            />
           </ul>
         }
       />

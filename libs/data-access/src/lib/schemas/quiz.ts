@@ -58,3 +58,7 @@ export const createQuizSchema = z.intersection(
   quizSchema.omit({ id: true }),
   quizMarksSchema,
 );
+
+export const createAdaptiveQuizSchema = z.object({
+  topics: z.array(z.nativeEnum(QuizQuestionTopicEnum)),
+});

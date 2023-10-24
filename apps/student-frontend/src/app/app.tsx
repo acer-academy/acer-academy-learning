@@ -42,6 +42,8 @@ import {
   VIEW_QUIZ,
   ATTEMPT_QUIZ,
   QUIZ_RESULT,
+  ATTEMPT_ADAPTIVE_QUIZ,
+  VIEW_ADAPTIVE_QUIZ,
 } from '../libs/routes';
 import { ToastContainer } from 'react-toastify';
 import { StudentNotificationPreference } from '../pages/profile/StudentNotificationPreference';
@@ -62,6 +64,8 @@ import {
   NAV_SECTIONS,
   ROUTES_WITHOUT_SIDEBAR,
 } from '../libs/layout';
+import { ViewAdaptiveQuiz } from '../pages/subject/quiz/ViewAdaptiveQuiz';
+import { AttemptAdaptiveQuiz } from '../pages/subject/quiz/context/AttemptAdaptiveQuiz';
 
 export function App() {
   const queryClient = new QueryClient();
@@ -105,6 +109,14 @@ export function App() {
                     <Route path={VIEW_QUIZ} element={<ViewQuiz />} />
                     <Route path={QUIZ_RESULT} element={<QuizResult />} />
                     <Route path={ATTEMPT_QUIZ} element={<AttemptQuiz />} />
+                    <Route
+                      path={VIEW_ADAPTIVE_QUIZ}
+                      element={<ViewAdaptiveQuiz />}
+                    />
+                    <Route
+                      path={ATTEMPT_ADAPTIVE_QUIZ}
+                      element={<AttemptAdaptiveQuiz />}
+                    />
                   </Route>
                   <Route path={RECORDINGS} element={<div>Home</div>} />
                   <Route path={ZOOM_LINK} element={<div>Home</div>} />

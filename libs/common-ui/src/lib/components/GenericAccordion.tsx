@@ -19,7 +19,7 @@ export const GenericAccordion = ({
   return (
     <Disclosure defaultOpen>
       {({ open }) => (
-        <>
+        <div>
           <Disclosure.Button
             className={`flex items-center w-full ${
               open ? 'rounded-t-lg' : 'rounded-lg'
@@ -43,7 +43,7 @@ export const GenericAccordion = ({
           >
             {content}
           </Disclosure.Panel>
-        </>
+        </div>
       )}
     </Disclosure>
   );

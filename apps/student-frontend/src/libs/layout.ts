@@ -42,12 +42,12 @@ export const NAV_SECTIONS: NavigationMenuItem[] = [
       { name: 'Assignments', path: ASSIGNMENTS, icon: PaperClipIcon },
       {
         name: 'Quizzes',
-        path: `${SUBJECTS}/math/quizzes`,
+        path: `${QUIZZES}`,
         icon: CalculatorIcon,
       },
       {
         name: 'Quiz Attempts',
-        path: `${SUBJECTS}/math/takes`,
+        path: `${TAKES}`,
         icon: BookOpenIcon,
       },
       { name: 'Recordings', path: RECORDINGS, icon: VideoCameraIcon },
