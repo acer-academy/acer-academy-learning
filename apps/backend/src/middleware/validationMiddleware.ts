@@ -1503,6 +1503,7 @@ export async function validateBodyQuizFormatValid(
       timeAllowed,
       teacherCreated,
       allocatedTo,
+      isPublic,
       quizQuestions,
     } = req.body;
     const validBody = {
@@ -1517,6 +1518,7 @@ export async function validateBodyQuizFormatValid(
       timeAllowed,
       teacherCreated,
       allocatedTo,
+      isPublic,
       quizQuestions,
     };
     for (const key of Object.keys(validBody)) {
@@ -2028,6 +2030,7 @@ export async function validateBodyUpdatePublishedQuizFormatValid(
       timeAllowed,
       teacherCreated,
       allocatedTo,
+      isPublic,
       quizQuestions,
     } = req.body;
     const validBody = {
@@ -2044,6 +2047,7 @@ export async function validateBodyUpdatePublishedQuizFormatValid(
       timeAllowed,
       teacherCreated,
       allocatedTo,
+      isPublic,
       quizQuestions,
     };
     for (const key of Object.keys(validBody)) {

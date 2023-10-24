@@ -59,7 +59,7 @@ export const Filter: React.FC<{
             questionType: questionTypes,
             showLatestOnly: !showAllVersions,
           };
-    console.log(filterOptions);
+    //console.log(filterOptions);
     filterSubmitCallback(filterOptions);
   }, [difficulties, levels, topics, statuses, questionTypes, showAllVersions]);
 

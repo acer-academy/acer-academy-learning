@@ -34,8 +34,12 @@ export const QuizCard = ({ onSubmitForm, submitText }: QuizCardProps) => {
     quizId ?? '',
   );
 
-  const [isPublic, setIsPublic] = useState<boolean>(true);
-  const [allocatedTo, setAllocatedTo] = useState<string[]>([]);
+  const [isPublic, setIsPublic] = useState<boolean>(
+    getValues('isPublic') ?? true,
+  );
+  const [allocatedTo, setAllocatedTo] = useState<string[]>(
+    getValues('allocatedTo') ?? [],
+  );
 
   useEffect(() => {
     setValue('allocatedTo', allocatedTo);

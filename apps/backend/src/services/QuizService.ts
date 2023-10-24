@@ -23,6 +23,8 @@ export interface QuizFilterOptions {
   offset: number;
   pageSize: number;
   showLatestOnly?: boolean;
+  isPublic?: boolean;
+  allocatedTo?: string[];
 }
 
 type QuizQuestion = {
@@ -67,6 +69,7 @@ export class QuizService {
           id: studentId,
         })),
       },
+      isPublic: quizData.isPublic,
       quizQuestions: {
         createMany: {
           data: quizData.quizQuestions.map((question: QuizQuestion) => ({
@@ -152,8 +155,15 @@ export class QuizService {
     filterOptions: QuizFilterOptions,
   ): Promise<{ quizzes: Quiz[]; totalCount: number }> {
     const where: Prisma.QuizWhereInput = {};
-    const { subjects, levels, difficulty, topics, showLatestOnly } =
-      filterOptions;
+    const {
+      subjects,
+      levels,
+      difficulty,
+      topics,
+      showLatestOnly,
+      isPublic,
+      allocatedTo,
+    } = filterOptions;
     if (subjects && subjects.length > 0) {
       where.subject = { in: filterOptions.subjects };
     }
@@ -168,6 +178,15 @@ export class QuizService {
     }
     if (showLatestOnly == true) {
       where.nextVersionId = null;
+    }
+    if (isPublic !== undefined && isPublic !== null) {
+      where.isPublic = isPublic;
+    }
+    if (allocatedTo && allocatedTo.length > 0) {
+      where.OR = [
+        { isPublic: true },
+        { allocatedTo: { some: { id: { in: filterOptions.allocatedTo } } } },
+      ];
     }
 
     const quizzes = await this.quizDao.getFilteredQuizzes(
@@ -205,6 +224,7 @@ export class QuizService {
           id: studentId,
         })),
       },
+      isPublic: quizData.isPublic,
       quizQuestions: {
         createMany: {
           data: quizData.quizQuestions.map((question: QuizQuestion) => ({
@@ -274,6 +294,7 @@ export class QuizService {
           id: studentId,
         })),
       },
+      isPublic: quizData.isPublic,
       quizQuestions: {
         createMany: {
           data: updatedQuizQuestions.map((question: QuizQuestion) => ({
