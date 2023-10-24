@@ -1811,7 +1811,6 @@ export async function validateClassAndSessionExist(
     });
   }
 }
-
 /** Validates if the format of a create TakeAnswer request is valid. */
 export async function validateBodyTakeAnswerFormatValid(
   req: Request,
@@ -2182,6 +2181,48 @@ export async function validateBodyNewQuestionIdIsLaterVersionOfOldQuestionId(
         return res.status(400).json({
           error:
             'New question is not a later version of the old question. Changing a quiz question of a published quiz to a completely new question is not allowed.',
+        });
+      }
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+/** Validates if question, quiz and take in params exists */
+export async function validateQuestionQuizTakeExist(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { questionId, quizId, takeId } = req.params;
+    if (questionId) {
+      const validQuestion = await quizQuestionService.getQuizQuestionById(
+        questionId,
+      );
+      if (!validQuestion) {
+        return res.status(400).json({
+          error: 'Invalid question provided.',
+        });
+      }
+    }
+    if (quizId) {
+      const validQuiz = await quizService.getQuizById(quizId);
+      if (!validQuiz) {
+        return res.status(400).json({
+          error: 'Invalid quiz provided.',
+        });
+      }
+    }
+    if (takeId) {
+      const validTake = await takeService.getTakeById(takeId);
+      if (!validTake) {
+        return res.status(400).json({
+          error: 'Invalid take attempt provided.',
         });
       }
     }

@@ -35,9 +35,18 @@ export class TakeAnswerDao {
     });
   }
 
+  public async getCorrectTakeAnswersByQuestionId(
+    questionId: string,
+  ): Promise<TakeAnswer[]> {
+    return this.prismaClient.takeAnswer.findMany({
+      where: { questionId: questionId, isCorrect: true },
+    });
+  }
+
   public async getTakeAnswersByTake(takeId: string): Promise<TakeAnswer[]> {
     return this.prismaClient.takeAnswer.findMany({
       where: { takeId: takeId },
+      include: { question: true },
     });
   }
 

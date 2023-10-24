@@ -33,6 +33,22 @@ export class TakeAnswerService {
     return this.takeAnswerDao.getTakeAnswersByQuizQuestion(quizQuestionId);
   }
 
+  public async getTakeAnswersByTakeAndQuizQuestion(
+    quizQuestionId: string,
+    takeId: string,
+  ): Promise<TakeAnswer[]> {
+    return this.takeAnswerDao.getTakeAnswersByTakeAndQuizQuestion(
+      quizQuestionId,
+      takeId,
+    );
+  }
+
+  public async getCorrectTakeAnswersByQuestionId(
+    questionId: string,
+  ): Promise<TakeAnswer[]> {
+    return this.takeAnswerDao.getCorrectTakeAnswersByQuestionId(questionId);
+  }
+
   public async updateTakeAnswer(
     answerId: string,
     answerData: Prisma.TakeAnswerUncheckedUpdateInput,
