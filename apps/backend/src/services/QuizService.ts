@@ -3,6 +3,7 @@ import {
   Prisma,
   PrismaClient,
   Quiz,
+  QuizQuestion as QuizQuestionPrisma,
   QuizQuestionDifficultyEnum,
   QuizQuestionTopicEnum,
   SubjectEnum,
@@ -14,6 +15,7 @@ import { TakeDao } from '../dao/TakeDao';
 import { TakeAnswerDao } from '../dao/TakeAnswerDao';
 import { QuizAnswerService } from './QuizAnswerService';
 import { Request } from 'express';
+import { StudentDao } from '../dao/StudentDao';
 
 export interface QuizFilterOptions {
   subjects?: SubjectEnum[];
@@ -33,6 +35,10 @@ type QuizQuestion = {
   quizQuestionMarks: number;
 };
 
+const EASY_QUESTION_COUNT = 10;
+const MEDIUM_QUESTION_COUNT = 7;
+const HARD_QUESTION_COUNT = 3;
+
 export class QuizService {
   constructor(
     private quizDao: QuizDao = new QuizDao(),
@@ -40,6 +46,7 @@ export class QuizService {
     private quizOnQuizQuestionDao: QuizOnQuizQuestionDao = new QuizOnQuizQuestionDao(),
     private takeDao: TakeDao = new TakeDao(),
     private takeAnswerDao: TakeAnswerDao = new TakeAnswerDao(),
+    private studentDao: StudentDao = new StudentDao(),
   ) {}
 
   private quizAnswerService = new QuizAnswerService();
@@ -81,6 +88,53 @@ export class QuizService {
       },
     };
     return this.quizDao.createQuiz(formattedQuizData);
+  }
+
+  public async generateAdaptiveLearningQuiz(
+    topics: string[],
+    studentId: string,
+  ): Promise<QuizQuestionPrisma[]> {
+    const student = await this.studentDao.getStudentById(studentId);
+    if (!student) {
+      throw Error('Student not found.');
+    }
+    const studentLevel = student.level;
+    const quizQuestionTopics: QuizQuestionTopicEnum[] = topics.map(topic => topic as QuizQuestionTopicEnum);
+
+    // easy questions
+    const easyQuestions = await this.quizQuestionDao.getAllQuizQuestionByConditions(quizQuestionTopics, 'BASIC', studentLevel);
+
+    // medium questions
+    const mediumQuestions = await this.quizQuestionDao.getAllQuizQuestionByConditions(quizQuestionTopics, 'INTERMEDIATE', studentLevel);
+
+    // hard questions
+    const hardQuestions = await this.quizQuestionDao.getAllQuizQuestionByConditions(quizQuestionTopics, 'ADVANCED', studentLevel);
+
+    // randomly pick questions
+    const quizQuestions: QuizQuestionPrisma[] = [];
+    const easyQuestionCount = Math.min(EASY_QUESTION_COUNT, easyQuestions.length);
+    const mediumQuestionCount = Math.min(MEDIUM_QUESTION_COUNT, mediumQuestions.length);
+    const hardQuestionCount = Math.min(HARD_QUESTION_COUNT, hardQuestions.length);
+
+    for (let i = 0; i < easyQuestionCount; i++) {
+      const randomIndex = Math.floor(Math.random() * easyQuestions.length);
+      quizQuestions.push(easyQuestions[randomIndex]);
+      easyQuestions.splice(randomIndex, 1);
+    }
+
+    for (let i = 0; i < mediumQuestionCount; i++) {
+      const randomIndex = Math.floor(Math.random() * mediumQuestions.length);
+      quizQuestions.push(mediumQuestions[randomIndex]);
+      mediumQuestions.splice(randomIndex, 1);
+    }
+
+    for (let i = 0; i < hardQuestionCount; i++) {
+      const randomIndex = Math.floor(Math.random() * hardQuestions.length);
+      quizQuestions.push(hardQuestions[randomIndex]);
+      hardQuestions.splice(randomIndex, 1);
+    }
+
+    return quizQuestions;
   }
 
   public async getAllQuizzes(): Promise<Quiz[]> {
