@@ -1,0 +1,18 @@
+.rbc-header {
+  background: blue;
+  color: white;
+}
+
+.rbc-time-slot {
+  background-color: #eaf3fa;
+  black: #74a4c3;
+  border-color: aqua !important;
+}
+
+.rbc-events-container {
+  width: 100% !important;
+}
+
+.rbc-timeslot-group {
+  min-height: 120px !important;
+}

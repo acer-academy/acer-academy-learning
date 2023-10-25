@@ -41,6 +41,9 @@ import {
   TRANSACTION,
   TERM,
   CLASS_CREDITS,
+  SCHEDULING_RESOURCES,
+  VIEW_CLASSES,
+  BOOK_CLASSES
 } from '../libs/routes';
 import AdminForgotPassword from '../pages/entry/AdminForgotPassword';
 import AdminResetPassword from '../pages/entry/AdminResetPassword';
@@ -50,6 +53,7 @@ import { AdminHRManagementPage } from '../pages/hr/AdminHRManagementPage';
 import TransactionsComponent from '../pages/transaction/TransactionManagement';
 import { CreditBundleManagement } from '../pages/creditBundle/CreditBundleManagement';
 import { ClassCreditManagement } from '../pages/classCredit/ClassCreditManagement';
+import CalendarPage from '../pages/calendar/CalendarPage';
 
 export default function App() {
   return (
@@ -95,6 +99,17 @@ export default function App() {
                 <Route path={TRANSACTION} element={<TransactionsComponent />} />
                 <Route path={PROMOTION} element={<PromotionManagement />} />
                 <Route path={TERM} element={<TermManagement />} />
+              </Route>
+
+              <Route path={SCHEDULING_RESOURCES} element={<Outlet />}>
+                <Route
+                  path={VIEW_CLASSES}
+                  element={<CalendarPage />}
+                />
+                <Route
+                  path={BOOK_CLASSES}
+                  element={<p>hello</p>}
+                />
               </Route>
 
               <Route path={`${CENTRE}`} element={<CentreManagement />} />

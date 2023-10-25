@@ -18,6 +18,7 @@ import {
   PaperClipIcon,
   CalculatorIcon,
   DocumentTextIcon,
+  CalendarDaysIcon,
 } from '@heroicons/react/24/outline';
 
 
@@ -52,7 +53,7 @@ export const NAV_SECTIONS: NavigationMenuItem[] = [
     name: 'SCHEDULING',
     path: SCHEDULING,
     children: [
-      { name: 'View Classes', path: VIEW_CLASSES, icon: PaperClipIcon },
+      { name: 'View Classes', path: VIEW_CLASSES, icon: CalendarDaysIcon },
       { name: 'Book Classes', path: BOOK_CLASSES, icon: CalculatorIcon },
     ],
   },
