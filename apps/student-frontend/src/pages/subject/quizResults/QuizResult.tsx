@@ -1,13 +1,7 @@
 import { useToast } from '@acer-academy-learning/common-ui';
-import {
-  QuizQuestionData,
-  StudentTakeData,
-} from '@acer-academy-learning/data-access';
+import { StudentTakeData } from '@acer-academy-learning/data-access';
 import { useEffect, useState } from 'react';
-import {
-  getTakeByTakeId as apiGetTakeById,
-  getTakeAnswersByTakeAndQuizQuestion as apiTakeAnsByTakeAndQues,
-} from '@acer-academy-learning/data-access';
+import { getTakeByTakeId as apiGetTakeById } from '@acer-academy-learning/data-access';
 import { useParams } from 'react-router-dom';
 import { QuizQuestionRow } from './quizQuestionRow';
 
@@ -16,7 +10,6 @@ export const QuizResult: React.FC = () => {
   const { takeId } = useParams();
 
   const [take, setTake] = useState<StudentTakeData | null>(null);
-  const [quizQuestions, setQuizQuestions] = useState<QuizQuestionData[]>([]);
   let index = 1;
 
   const fetchTake = async () => {
@@ -37,10 +30,6 @@ export const QuizResult: React.FC = () => {
   useEffect(() => {
     fetchTake();
   }, []);
-
-  const fetchTakeAnswers = async (questionId: string, takeId: string) => {
-    await apiTakeAnsByTakeAndQues(questionId, takeId);
-  };
 
   return (
     <div className="h-full">

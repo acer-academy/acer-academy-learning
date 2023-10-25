@@ -17,7 +17,6 @@ export const QuizSelectAnswer = ({
   takeAnswers,
   type,
 }: MCQAnswerOptions) => {
-  console.log(takeAnswers);
   return (
     <>
       {answers.map((answer) => (
