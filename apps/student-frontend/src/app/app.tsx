@@ -56,7 +56,7 @@ import { Subject } from '../pages/subject/Subject';
 import { ViewAllQuizzes } from '../pages/subject/quiz/ViewAllQuizzes';
 import { ViewQuiz } from '../pages/subject/quiz/ViewQuiz';
 import { AttemptQuiz } from '../pages/subject/quiz/AttemptQuiz';
-import { QuizResult } from '../pages/subject/quizResults/quizResult';
+import { QuizResult } from '../pages/subject/quizResults/QuizResult';
 import {
   ACCOUNT_NAV,
   NAV_SECTIONS,

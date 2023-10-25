@@ -1,15 +1,24 @@
 import { useToast } from '@acer-academy-learning/common-ui';
 import { StudentTakeData } from '@acer-academy-learning/data-access';
 import { useEffect, useState } from 'react';
-import { getTakeByTakeId as apiGetTakeById } from '@acer-academy-learning/data-access';
+import {
+  getTakeByTakeId as apiGetTakeById,
+  getSpiderChartForQuiz as apiSpiderChartForQuiz,
+} from '@acer-academy-learning/data-access';
 import { useParams } from 'react-router-dom';
-import { QuizQuestionRow } from './quizQuestionRow';
+import { QuizQuestionRow } from './QuizQuestionRow';
+import SpiderChart from './SpiderChart';
 
 export const QuizResult: React.FC = () => {
   const { displayToast, ToastType } = useToast();
   const { takeId } = useParams();
 
   const [take, setTake] = useState<StudentTakeData | null>(null);
+  const [spiderChart, setSpiderChart] = useState<{
+    subjectArr: string[];
+    averageScoreArr: number[];
+  }>({ subjectArr: [], averageScoreArr: [] });
+
   let index = 1;
 
   const fetchTake = async () => {
@@ -27,8 +36,21 @@ export const QuizResult: React.FC = () => {
     }
   };
 
+  const getSpiderChartAnalysis = async () => {
+    if (takeId) {
+      const res = await apiSpiderChartForQuiz(takeId);
+      setSpiderChart(res.data);
+    } else {
+      displayToast(
+        'Spider Chart could not be retrieved from the server.',
+        ToastType.ERROR,
+      );
+    }
+  };
+
   useEffect(() => {
     fetchTake();
+    getSpiderChartAnalysis();
   }, []);
 
   return (
@@ -56,6 +78,17 @@ export const QuizResult: React.FC = () => {
                   />
                 ))}
               </div>
+            </div>
+          </div>
+          <div className="gap-4">
+            <div className="bg-white px-3 py-4 align-middle sm:px-6 lg:px-8">
+              <span className="text-2xl px-3 py-4 font-bold tracking-tight">
+                Spider Chart Analysis
+              </span>
+              <SpiderChart
+                subjectArr={spiderChart.subjectArr}
+                averageScoreArr={spiderChart.averageScoreArr}
+              />
             </div>
           </div>
         </div>

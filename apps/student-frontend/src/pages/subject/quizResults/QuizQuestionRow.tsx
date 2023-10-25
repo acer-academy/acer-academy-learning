@@ -12,8 +12,7 @@ import {
   getCorrectRateByQuestionId as apiCorrectRate,
   getAverageTimeTakenByQuestionId as apiAverageTime,
 } from '@acer-academy-learning/data-access';
-import { QuizSelectAnswer } from './quizSelectAnswer';
-
+import { QuizSelectAnswer } from './QuizSelectAnswer';
 export type QuizQuestionRowProps = {
   questionId: string;
   takeId: string;

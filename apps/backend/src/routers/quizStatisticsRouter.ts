@@ -40,7 +40,7 @@ quizStatisticsRouter.get(
   validateQuestionQuizTakeExist,
   async (req, res) => {
     try {
-      const { quizId, takeId } = req.params;
+      const { takeId } = req.params;
       const spiderChart = await QuizStatisticsService.spiderChartAnalysis(
         takeId,
       );

@@ -14,3 +14,9 @@ export async function getAverageTimeTakenByQuestionId(
 ): Promise<AxiosResponse<string>> {
   return client.get(`${URL}/averageTime/${questionId}`);
 }
+
+export async function getSpiderChartForQuiz(
+  takeId: string,
+): Promise<AxiosResponse<{ subjectArr: string[]; averageScoreArr: number[] }>> {
+  return client.get(`${URL}/spiderchart/${takeId}`);
+}
