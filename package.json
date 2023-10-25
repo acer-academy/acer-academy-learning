@@ -59,7 +59,9 @@
     "tslib": "^2.3.0",
     "y-websocket": "^1.5.0",
     "yjs": "^13.6.8",
-    "zod": "^3.22.2"
+    "zod": "^3.22.2",
+    "chart.js": "^4.0.0",
+    "react-chartjs-2": "^5.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.14.5",
