@@ -3,7 +3,7 @@ import {
   QuizQuestionTypeEnum,
   TakeAnswerData,
 } from '@acer-academy-learning/data-access';
-import { Divider, LexOutput } from '@acer-academy-learning/common-ui';
+import { Divider, LexOutput, Spinner } from '@acer-academy-learning/common-ui';
 import { useEffect, useMemo } from 'react';
 import { useState } from 'react';
 import {
@@ -35,22 +35,29 @@ export const QuizQuestionRow = ({
   const [takeAnswer, setTakeAnswer] = useState<TakeAnswerData[]>();
   const [correctRate, setCorrectRate] = useState<string>('');
   const [averageTime, setAverageTime] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(false);
 
   const fetchQuestion = async () => {
+    setLoading(true);
     const question = await apiGetQuestionById(questionId);
     setQuestion(question);
+    setLoading(false);
   };
 
   const fetchTakeAnswers = async () => {
+    setLoading(true);
     const answers = await apiTakeAnsByTakeAndQues(questionId, takeId);
     setTakeAnswer(answers.data);
+    setLoading(false);
   };
 
   const fetchStatistics = async () => {
+    setLoading(true);
     const answer = await apiAverageTime(questionId);
     setAverageTime(answer.data);
     const res = await apiCorrectRate(questionId);
     setCorrectRate(res.data);
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -86,6 +93,10 @@ export const QuizQuestionRow = ({
         );
     }
   }, [question, questionNumber]);
+
+  if (loading) {
+    return <Spinner />;
+  }
 
   return (
     <>
