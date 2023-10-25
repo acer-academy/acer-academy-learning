@@ -11,7 +11,6 @@ import {
 } from '@prisma/client';
 import { QuizQuestionDao } from '../dao/QuizQuestionDao';
 import { Request } from 'express';
-import { QuizAnswerService } from './QuizAnswerService';
 
 export interface QuizQuestionFilterOptions {
   topics?: QuizQuestionTopicEnum[];

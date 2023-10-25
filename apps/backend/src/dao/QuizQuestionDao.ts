@@ -1,4 +1,11 @@
-import { Prisma, PrismaClient, QuizQuestion } from '@prisma/client';
+import {
+  LevelEnum,
+  Prisma,
+  PrismaClient,
+  QuizQuestion,
+  QuizQuestionDifficultyEnum,
+  QuizQuestionTopicEnum,
+} from '@prisma/client';
 
 export class QuizQuestionDao {
   constructor(private prismaClient: PrismaClient = new PrismaClient()) {}
@@ -32,6 +39,28 @@ export class QuizQuestionDao {
         usedInTakes: true,
       },
     });
+  }
+
+  public async getAllQuizQuestionByConditions(
+    topics: QuizQuestionTopicEnum[],
+    difficultyLevel: QuizQuestionDifficultyEnum,
+    level: LevelEnum,
+  ): Promise<QuizQuestion[]> {
+    const questionList = await this.prismaClient.quizQuestion.findMany({
+      where: {
+        difficulty: difficultyLevel,
+        levels: {
+          has: level,
+        },
+      },
+      include: {
+        answers: true,
+      },
+    });
+
+    return questionList.filter((question) =>
+      topics.some((topic) => question.topics.includes(topic)),
+    );
   }
 
   public async getTotalCountOfFilteredQuestions(
