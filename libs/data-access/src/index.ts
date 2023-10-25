@@ -18,6 +18,8 @@ export * from './lib/api/question';
 export * from './lib/api/term';
 export * from './lib/api/quiz';
 export * from './lib/api/take';
+export * from './lib/api/takeAnswer';
+export * from './lib/api/quizStatistics';
 
 // Object.freeze(api);
 
@@ -37,3 +39,4 @@ export * from './lib/api/helper/price-conversion';
 export * from './lib/types/teacher';
 export * from './lib/api/take';
 export * from './lib/types/take';
+export * from './lib/types/takeAnswer';

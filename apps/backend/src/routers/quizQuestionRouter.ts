@@ -118,6 +118,28 @@ quizQuestionRouter.get(
 );
 
 /**
+ * GET /quiz/:quizId
+ * Retrieves quiz questions based on quizId
+ */
+quizQuestionRouter.get('/quiz/:quizId', async (req: Request, res: Response) => {
+  const { quizId } = req.params;
+  try {
+    const questions = await quizQuestionService.getQuizQuestionsByQuizId(
+      quizId,
+    );
+    if (questions) {
+      return res.status(200).json(questions);
+    } else {
+      return res.status(404).json({ error: 'Questions not found' });
+    }
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+});
+
+/**
  * POST /quiz-questions/filter
  * Retrieves a list of quiz questions based on filter criteria.
  */

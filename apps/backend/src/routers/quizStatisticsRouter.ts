@@ -36,13 +36,12 @@ quizStatisticsRouter.get(
 );
 
 quizStatisticsRouter.get(
-  '/spiderChart/:quizId/:takeId',
+  '/spiderChart/:takeId',
   validateQuestionQuizTakeExist,
   async (req, res) => {
     try {
       const { quizId, takeId } = req.params;
       const spiderChart = await QuizStatisticsService.spiderChartAnalysis(
-        quizId,
         takeId,
       );
       return res.status(200).json(spiderChart);

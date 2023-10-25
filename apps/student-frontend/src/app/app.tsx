@@ -41,6 +41,7 @@ import {
   SUBJECT_MAIN,
   VIEW_QUIZ,
   ATTEMPT_QUIZ,
+  QUIZ_RESULT,
 } from '../libs/routes';
 import { ToastContainer } from 'react-toastify';
 import { StudentNotificationPreference } from '../pages/profile/StudentNotificationPreference';
@@ -55,6 +56,7 @@ import { Subject } from '../pages/subject/Subject';
 import { ViewAllQuizzes } from '../pages/subject/quiz/ViewAllQuizzes';
 import { ViewQuiz } from '../pages/subject/quiz/ViewQuiz';
 import { AttemptQuiz } from '../pages/subject/quiz/AttemptQuiz';
+import { QuizResult } from '../pages/subject/quizResults/quizResult';
 import {
   ACCOUNT_NAV,
   NAV_SECTIONS,
@@ -101,6 +103,7 @@ export function App() {
                   <Route path={QUIZZES}>
                     <Route path={QUIZZES} element={<ViewAllQuizzes />} />
                     <Route path={VIEW_QUIZ} element={<ViewQuiz />} />
+                    <Route path={QUIZ_RESULT} element={<QuizResult />} />
                     <Route path={ATTEMPT_QUIZ} element={<AttemptQuiz />} />
                   </Route>
                   <Route path={RECORDINGS} element={<div>Home</div>} />
