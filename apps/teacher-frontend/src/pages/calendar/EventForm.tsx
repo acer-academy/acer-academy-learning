@@ -2,6 +2,14 @@ import { useState, useEffect } from 'react';
 import { SessionData } from 'libs/data-access/src/lib/types/session';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import { CentreData } from 'libs/data-access/src/lib/types/centre';
+import { ClassroomData } from 'libs/data-access/src/lib/types/classroom';
+import { Teacher } from 'libs/data-access/src/lib/types/teacher';
+import { useAuth } from '@acer-academy-learning/common-ui';
+import { useToast } from '@acer-academy-learning/common-ui';
+import './CalendarView.css';
+import { ClassFrequencyEnum } from '@prisma/client';
+import { XMarkIcon } from '@heroicons/react/24/solid';
 import {
   createRecurringClass,
   deleteRecurringClass,
@@ -9,21 +17,11 @@ import {
   getClassroomsByCentre,
   updateRecurringClass,
 } from '@acer-academy-learning/data-access';
-import { CentreData } from 'libs/data-access/src/lib/types/centre';
-import { ClassroomData } from 'libs/data-access/src/lib/types/classroom';
-import { Teacher } from 'libs/data-access/src/lib/types/teacher';
-import { useAuth } from '@acer-academy-learning/common-ui';
-import { useToast } from '@acer-academy-learning/common-ui';
-
 import {
   createSession,
   deleteSession,
   updateSession,
 } from '@acer-academy-learning/data-access';
-
-import './CalendarView.css';
-import { ClassFrequencyEnum } from '@prisma/client';
-import { XMarkIcon } from '@heroicons/react/24/solid';
 
 interface EventFormProps {
   session: SessionData;
@@ -95,6 +93,67 @@ export default function EventForm({
   );
 
   const { user } = useAuth<Teacher>();
+
+  const [sessionState, setSessionState] = useState({
+    id: session.id,
+    start: sessionData.start,
+    levels: selectedLevels
+      .filter((level) => level in LevelEnum)
+      .map((level) => LevelEnum[level as keyof typeof LevelEnum]),
+    subjects: selectedSubjects
+      .filter((subject) => subject in SubjectEnum)
+      .map((subject) => SubjectEnum[subject as keyof typeof SubjectEnum]),
+    classroomId: selectedClassroom,
+    end: sessionData.end,
+    teacherId: user.id,
+    classId: null,
+  });
+
+  const [isRecurring, setIsRecurring] = useState(
+    sessionData.class ? true : false,
+  );
+  const [recurringType, setRecurringType] = useState<ClassFrequencyEnum>(
+    sessionData.class ? sessionData.class.frequency : ClassFrequencyEnum.DAILY,
+  );
+  const [recurringEndDate, setRecurringEndDate] = useState(
+    sessionData.class
+      ? new Date(sessionData.class?.endRecurringDate)
+      : new Date(sessionData.end),
+  );
+
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+  const [showUpdateModal, setShowUpdateModal] = useState(false);
+
+  const [recurringState, setRecurringState] = useState({
+    endRecurringDate: recurringEndDate,
+    frequency: recurringType as ClassFrequencyEnum,
+  });
+
+  useEffect(() => {
+    setRecurringState((prevState) => ({
+      ...prevState,
+      endRecurringDate: recurringEndDate,
+      frequency: recurringType as ClassFrequencyEnum,
+    }));
+  }, [recurringEndDate, recurringType]);
+
+  useEffect(() => {
+    setSessionState((prevState) => ({
+      ...prevState,
+      start: sessionData.start,
+      end: sessionData.end,
+      levels: selectedLevels
+        .filter((level) => level in LevelEnum)
+        .map((level) => LevelEnum[level as keyof typeof LevelEnum]),
+      subjects: selectedSubjects
+        .filter((subject) => subject in SubjectEnum)
+        .map((subject) => SubjectEnum[subject as keyof typeof SubjectEnum]),
+      classroomId: selectedClassroom,
+      teacherId: user.id,
+      // ... any other fields you want to watch
+    }));
+  }, [sessionData, selectedClassroom, selectedLevels, selectedSubjects]);
 
   const label = session?.id ? 'Update' : 'Create';
 
@@ -199,36 +258,16 @@ export default function EventForm({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const levelEnumArray: LevelEnum[] = selectedLevels
-      .filter((level) => level in LevelEnum)
-      .map((level) => LevelEnum[level as keyof typeof LevelEnum]);
-
-    const subjectEnumArray: SubjectEnum[] = selectedSubjects
-      .filter((subject) => subject in SubjectEnum)
-      .map((subject) => SubjectEnum[subject as keyof typeof SubjectEnum]);
-
-    const createSessionData = {
-      id: session.id,
-      start: sessionData.start,
-      levels: levelEnumArray,
-      subjects: subjectEnumArray,
-      classroomId: selectedClassroom,
-      end: sessionData.end,
-      teacherId: user.id,
-      classId: null,
-    };
-
-    const recurringData = {
-      endRecurringDate: recurringEndDate,
-      frequency: recurringType as ClassFrequencyEnum,
-    };
-
     console.log('createSessionData');
-    console.log(createSessionData);
+    console.log(sessionState);
 
+    console.log(isRecurring);
+    console.log(session.id);
     if (!session.id) {
       if (!isRecurring) {
-        const response = await createSession(createSessionData);
+        console.log('here in create session');
+
+        const response = await createSession(sessionState);
         if (response) {
           console.log('created obj');
           onClose();
@@ -236,9 +275,10 @@ export default function EventForm({
           displayToast('Session created successfully!', ToastType.SUCCESS);
         }
       } else {
+        console.log('in createing recurring');
         const response = await createRecurringClass([
-          recurringData,
-          createSessionData,
+          recurringState,
+          sessionState,
         ]);
         if (response) {
           console.log('created recurring');
@@ -249,45 +289,55 @@ export default function EventForm({
       }
     } else {
       if (!isRecurring) {
-        const response = await updateSession(session.id, createSessionData);
-        if (response) {
-          console.log('updated data');
-          onClose();
-          await fetchSessions();
-          displayToast('Session updated successfully!', ToastType.SUCCESS);
-        }
+        await handleUpdateSession(session.id, sessionState);
       } else {
-        if (session.class) {
-          //is recurring
-          const response = await updateRecurringClass(
-            session.id,
-            session.class?.id,
-            [recurringData, createSessionData],
-          );
-          if (response) {
-            console.log('updated data');
-            onClose();
-            await fetchSessions();
-            displayToast('Session updated successfully!', ToastType.SUCCESS);
-          }
-        }
+        setShowUpdateModal(true);
       }
     }
   };
 
-  const [isRecurring, setIsRecurring] = useState(
-    sessionData.class ? true : false,
-  );
-  const [recurringType, setRecurringType] = useState<ClassFrequencyEnum>(
-    sessionData.class ? sessionData.class.frequency : ClassFrequencyEnum.DAILY,
-  );
-  const [recurringEndDate, setRecurringEndDate] = useState(
-    sessionData.class
-      ? new Date(sessionData.class?.endRecurringDate)
-      : new Date(sessionData.end),
-  );
+  const handleUpdateSession = async (sessionId: string, sessionState: any) => {
+    console.log(handleUpdateSession);
+    try {
+      const response = await updateSession(session.id, sessionState);
+      if (response) {
+        console.log('updated data');
+        onClose();
+        await fetchSessions();
+        displayToast('Session updated successfully!', ToastType.SUCCESS);
+      }
+    } catch (err) {
+      // setError(err);
+    } finally {
+      // setLoading(false);
+    }
+  };
 
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const handleUpdateFutureSessions = async (
+    sessionId: string,
+    classId: string,
+  ) => {
+    try {
+      if (session.class) {
+        //is recurring
+        const response = await updateRecurringClass(sessionId, classId, [
+          recurringState,
+          sessionState,
+        ]);
+        if (response) {
+          console.log('updated data');
+          setShowUpdateModal(false);
+          onClose();
+          await fetchSessions();
+          displayToast('Session updated successfully!', ToastType.SUCCESS);
+        }
+      }
+    } catch (err) {
+      // setError(err);
+    } finally {
+      // setLoading(false);
+    }
+  };
 
   const openDeleteModal = () => {
     setShowDeleteModal(true);
@@ -295,6 +345,14 @@ export default function EventForm({
 
   const closeDeleteModal = () => {
     setShowDeleteModal(false);
+  };
+
+  const openUpdateModal = () => {
+    setShowUpdateModal(true);
+  };
+
+  const closeUpdateModal = () => {
+    setShowUpdateModal(false);
   };
 
   return (
@@ -563,6 +621,40 @@ export default function EventForm({
                       </div>
                     </>
                   )}
+                </div>
+              </div>
+            )}
+
+            {showUpdateModal && (
+              <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
+                <div className="bg-white p-4 rounded-md w-1/3 flex flex-col items-center">
+                  <button onClick={closeUpdateModal} className="ml-auto">
+                    <XMarkIcon className="h-6 w-6 text-gray-500 hover:text-gray-700" />
+                  </button>
+                  <p className="mb-4 text-center">
+                    Do you want to update the session or future sessions?
+                  </p>
+                  <div className="flex justify-center items-center space-x-2">
+                    <button
+                      onClick={() =>
+                        handleUpdateSession(session.id, sessionState)
+                      }
+                      className="bg-green-500 text-white rounded-md px-4 py-2 hover:bg-green-600"
+                    >
+                      Update session
+                    </button>
+                    <button
+                      onClick={() =>
+                        handleUpdateFutureSessions(
+                          session.id,
+                          session.class?.id,
+                        )
+                      }
+                      className="bg-green-500 text-white rounded-md px-4 py-2 hover:bg-green-600"
+                    >
+                      Update future sessions
+                    </button>
+                  </div>
                 </div>
               </div>
             )}

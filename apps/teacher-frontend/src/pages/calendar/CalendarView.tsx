@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { TestCalendar } from './TestCalendar';
+import { SchedulingCalendar } from './SchedulingCalendar';
 import { SessionData } from 'libs/data-access/src/lib/types/session';
 import EventForm from './EventForm';
 import {
@@ -11,9 +11,25 @@ import {
 import { CentreData } from 'libs/data-access/src/lib/types/centre';
 import { ClassroomData } from 'libs/data-access/src/lib/types/classroom';
 import { TeacherData } from 'libs/data-access/src/lib/types/teacher';
+import { EventModal } from './EventModal';
+
+function Checkbox({ label, onChange, checked }: any) {
+  return (
+    <label className="inline-flex items-center">
+      <input
+        type="checkbox"
+        className="h-5 w-5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+        checked={checked}
+        onChange={() => onChange(label)}
+      />
+      <span className="ml-2">{label}</span>
+    </label>
+  );
+}
 
 export default function CalendarView() {
   const [session, setSession] = useState<SessionData>();
+  const [readSession, setReadSession] = useState<SessionData>();
   const [sessions, setSessions] = useState<SessionData[]>([]); // Moved state here
 
   const [centres, setCentres] = useState<CentreData[]>([]);
@@ -25,6 +41,8 @@ export default function CalendarView() {
   );
   const [teachers, setTeachers] = useState<TeacherData[]>([]);
   const [selectedTeacher, setSelectedTeacher] = useState<string | null>(null);
+
+  const [selectedSubjects, setSelectedSubjects] = useState<string[]>([]);
 
   useEffect(() => {
     const fetchCentres = async () => {
@@ -99,6 +117,14 @@ export default function CalendarView() {
         );
       }
 
+      if (selectedSubjects.length > 0) {
+        allSessions = allSessions.filter((session) =>
+          selectedSubjects.every((subject) =>
+            session.subjects.includes(subject),
+          ),
+        );
+      }
+
       setSessions(allSessions);
     } catch (error) {
       console.error('Error retrieving transactions:', error);
@@ -107,13 +133,15 @@ export default function CalendarView() {
 
   useEffect(() => {
     fetchSessions();
-  }, [selectedCentre, selectedClassroom, selectedTeacher]);
+  }, [selectedCentre, selectedClassroom, selectedTeacher, selectedSubjects]);
 
   const sessionsData = sessions?.map((session) => ({
     start: new Date(session.start),
     end: new Date(session.end),
     data: { session },
   }));
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
     <div className="flex space-x-2 h-full">
@@ -197,13 +225,39 @@ export default function CalendarView() {
             ))}
           </select>
         </div>
+
+        {/* Subjects Filter */}
+        <div className="mt-4">
+          <label className="block text-sm font-medium text-gray-700">
+            Subjects:
+          </label>
+          <div className="mt-2 space-y-2">
+            {['MATHEMATICS', 'ENGLISH', 'SCIENCE'].map((subject) => (
+              <div key={subject}>
+              <Checkbox
+                key={subject}
+                label={subject}
+                checked={selectedSubjects.includes(subject)}
+                onChange={(label: string) => {
+                  setSelectedSubjects((prevSubjects) =>
+                    prevSubjects.includes(label)
+                      ? prevSubjects.filter((s) => s !== label)
+                      : [...prevSubjects, label],
+                  );
+                }}
+              />
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
 
       <div className="flex-grow flex-basis-1/2 overflow-auto">
         {/* CentreFilter */}
 
-        <TestCalendar
+        <SchedulingCalendar
           onShowSessionView={(session) => setSession(session)}
+          onShowSessionReadView={(readSession) => setReadSession(readSession)}
           sessionsData={sessionsData}
         />
       </div>
@@ -215,6 +269,13 @@ export default function CalendarView() {
             session={session}
             fetchSessions={fetchSessions}
             onClose={() => setSession(null)} // Close the modal by setting session to null
+          />
+        )}
+        {readSession && (
+          <EventModal
+            //  isOpen={isModalOpen}
+            onClose={() => setReadSession(null)}
+            event={readSession}
           />
         )}
       </div>

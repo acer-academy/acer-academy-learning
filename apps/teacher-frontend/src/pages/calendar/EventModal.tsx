@@ -8,7 +8,8 @@ interface EventModalProps {
 }
 
 export const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, event }) => {
-  if (!isOpen) return null;
+//   if (!isOpen) return null;
+console.log(event)
 
   return (
     <div className="fixed z-10 inset-0 overflow-y-auto">
@@ -22,12 +23,12 @@ export const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, event }
             <div className="mt-2">
               <p><strong>Start:</strong> {moment(event?.start).format('MMMM Do YYYY, h:mm:ss a')}</p>
               <p><strong>End:</strong> {moment(event?.end).format('MMMM Do YYYY, h:mm:ss a')}</p>
-              <p><strong>Teacher:</strong> {event?.data?.session?.teacher?.firstName} {event?.data?.session?.teacher?.lastName}</p>
-              <p><strong>Email:</strong> {event?.data?.session?.teacher?.email}</p>
-              <p><strong>Subjects:</strong> {event?.data?.session?.subjects?.join(', ')}</p>
-              <p><strong>Classroom:</strong> {event?.data?.session?.classroom?.name}</p>
-              <p><strong>Centre:</strong> {event?.data?.session?.classroom?.centre?.name}</p>
-              <p><strong>Address:</strong> {event?.data?.session?.classroom?.centre?.address}</p>
+              <p><strong>Teacher:</strong> {event?.teacher?.firstName} {event?.data?.session?.teacher?.lastName}</p>
+              <p><strong>Email:</strong> {event?.teacher?.email}</p>
+              <p><strong>Subjects:</strong> {event?.subjects?.join(', ')}</p>
+              <p><strong>Classroom:</strong> {event?.classroom?.name}</p>
+              <p><strong>Centre:</strong> {event?.classroom?.centre?.name}</p>
+              <p><strong>Address:</strong> {event?.classroom?.centre?.address}</p>
             </div>
           </div>
           <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">

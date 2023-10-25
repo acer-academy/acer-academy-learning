@@ -13,6 +13,8 @@ import { SessionData } from 'libs/data-access/src/lib/types/session';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import YearView from './YearView/YearView';
 import { EventModal } from './EventModal';
+import { useAuth } from '@acer-academy-learning/common-ui';
+import { Teacher, TeacherData } from 'libs/data-access/src/lib/types/teacher';
 
 const localizer = momentLocalizer(moment);
 
@@ -27,6 +29,7 @@ const initProps = {
 const DndCalendar = withDragAndDrop<EventItem>(BigCalendar);
 interface CalendarProps {
   onShowSessionView: (session: SessionData) => void;
+  onShowSessionReadView: (readSession: SessionData) => void;
   sessionsData: {
     start: Date;
     end: Date;
@@ -34,49 +37,46 @@ interface CalendarProps {
   }[];
 }
 
-
-
-export const TestCalendar = ({
+export const SchedulingCalendar = ({
   onShowSessionView,
+  onShowSessionReadView,
   sessionsData,
 }: CalendarProps) => {
-
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedEvent, setSelectedEvent] = useState(null);
+  // const [isModalOpen, setIsModalOpen] = useState(false);
+  // const [selectedEvent, setSelectedEvent] = useState(null);
   const [view, setView] = useState('week');
   const [date, setDate] = useState(new Date());
 
   const viewRef = useRef(view); // create a ref for the view
+
+  const { user } = useAuth<Teacher>();
 
   // update the ref every time the view changes
   useEffect(() => {
     viewRef.current = view;
   }, [view]);
 
-
-  const onSelectEvent = useCallback((calEvent) => {
-    setSelectedEvent(calEvent);
-    setIsModalOpen(true);
-  }, []);
-
-
+  // const onSelectEvent = useCallback((calEvent) => {
+  //   setSelectedEvent(calEvent);
+  //   setIsModalOpen(true);
+  // }, []);
 
   const components = {
     event: ({ event }: { event: any }) => {
-
       console.log(viewRef.current); // log the current value from the ref\
-      console.log(view)
+      console.log(view);
 
       const data = event?.data;
       if (viewRef.current === 'month') {
-
         // use the ref value here
-        return <p className="text-xs">{data?.session.teacher.firstName} {data?.session.teacher.lastName}</p>;
+        return (
+          <p className="text-xs">
+            {data?.session.teacher.firstName} {data?.session.teacher.lastName}
+          </p>
+        );
       }
 
-      
-
-      console.log(viewRef.current)
+      console.log(viewRef.current);
 
       return <SessionEvent session={data?.session} onDoubleClick={() => {}} />;
     },
@@ -85,15 +85,26 @@ export const TestCalendar = ({
   return (
     <>
       {/* View: {view} */}
-      <EventModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} event={selectedEvent} />
+      {/* <EventModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        event={selectedEvent}
+      /> */}
       <DndCalendar
         onSelectSlot={({ start, end }) => {
           onShowSessionView({ start, end });
         }}
-        onSelectEvent={onSelectEvent}
+        // onSelectEvent={onSelectEvent}
         onDoubleClickEvent={(event) => {
           const session = event?.data?.session;
-          session && onShowSessionView(session);
+          if(session && session.teacherId !== user?.id) {
+            console.log("here")
+            console.log(session)
+            onShowSessionReadView(session);
+          } else {
+            session && onShowSessionView(session);
+          }
+         
         }}
         events={sessionsData}
         style={{

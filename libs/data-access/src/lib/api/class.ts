@@ -18,7 +18,7 @@ import {
   export async function updateRecurringClass(
     sessionId: string,
     classId: string,
-    input: [ClassCreateData, SessionCreateData],
+    input: [ClassCreateData, SessionUpdateData],
   ): Promise<SessionData> {
     return client.put(`${URL}/recurring/${sessionId}/${classId}`, input);
   }
