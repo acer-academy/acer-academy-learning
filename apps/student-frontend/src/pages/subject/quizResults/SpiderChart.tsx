@@ -28,9 +28,10 @@ const SpiderChart = ({ subjectArr, averageScoreArr }: SpiderChartType) => {
     responsive: true,
     maintainAspectRatio: false,
     scale: {
-      ticks: {
+      r: {
         beginAtZero: true,
         max: 10,
+        min: 0,
       },
     },
   };
