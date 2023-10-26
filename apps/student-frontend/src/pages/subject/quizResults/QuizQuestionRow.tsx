@@ -88,48 +88,51 @@ export const QuizQuestionRow = ({
         return (
           <>
             <div className="flex space-x-5">
-              <LexOutput
-                editorStateStr={
-                  (takeAnswer &&
-                    takeAnswer[0] &&
-                    takeAnswer[0].studentAnswer) ||
-                  '-'
-                }
-              />
-              {takeAnswer && takeAnswer[0] && takeAnswer[0].isCorrect ? (
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  x="0px"
-                  y="0px"
-                  width="20"
-                  height="20"
-                  viewBox="0 0 48 48"
-                >
-                  <path
-                    fill="#43a047"
-                    d="M40.6,12.1L17,35.7l-9.6-9.6L4.6,29L17,41.3l26.4-26.4L40.6,12.1z"
-                  ></path>
-                </svg>
+              {takeAnswer && takeAnswer[0] ? (
+                <LexOutput
+                  editorStateStr={takeAnswer[0].studentAnswer || '-'}
+                />
               ) : (
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  x="0px"
-                  y="0px"
-                  width="20"
-                  height="20"
-                  viewBox="0 0 48 48"
-                >
-                  <path
-                    fill="#F44336"
-                    d="M21.5 4.5H26.501V43.5H21.5z"
-                    transform="rotate(45.001 24 24)"
-                  ></path>
-                  <path
-                    fill="#F44336"
-                    d="M21.5 4.5H26.5V43.501H21.5z"
-                    transform="rotate(135.008 24 24)"
-                  ></path>
-                </svg>
+                <></>
+              )}
+              {takeAnswer && takeAnswer[0] ? (
+                takeAnswer[0].isCorrect ? (
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    x="0px"
+                    y="0px"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 48 48"
+                  >
+                    <path
+                      fill="#43a047"
+                      d="M40.6,12.1L17,35.7l-9.6-9.6L4.6,29L17,41.3l26.4-26.4L40.6,12.1z"
+                    ></path>
+                  </svg>
+                ) : (
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    x="0px"
+                    y="0px"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 48 48"
+                  >
+                    <path
+                      fill="#F44336"
+                      d="M21.5 4.5H26.501V43.5H21.5z"
+                      transform="rotate(45.001 24 24)"
+                    ></path>
+                    <path
+                      fill="#F44336"
+                      d="M21.5 4.5H26.5V43.501H21.5z"
+                      transform="rotate(135.008 24 24)"
+                    ></path>
+                  </svg>
+                )
+              ) : (
+                <></>
               )}
             </div>
             <Divider lineClassName="border-student-primary-600" />

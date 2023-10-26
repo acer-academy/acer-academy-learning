@@ -20,7 +20,7 @@ export const QuizSelectAnswer = ({
   return (
     <>
       {answers.map((answer) => (
-        <>
+        <div key={answer.id}>
           <label
             className={
               answer.isCorrect
@@ -30,7 +30,6 @@ export const QuizSelectAnswer = ({
                 ? 'border border-red-400 bg-red-200 p-3 text-base rounded flex items-center space-x-3'
                 : 'border border-gray-400 bg-white p-3 text-base rounded flex items-center space-x-3'
             }
-            key={answer.id}
           >
             <input
               className="text-student-primary-600 focus:ring-student-primary-600"
@@ -55,7 +54,7 @@ export const QuizSelectAnswer = ({
           ) : (
             <></>
           )}
-        </>
+        </div>
       ))}
     </>
   );
