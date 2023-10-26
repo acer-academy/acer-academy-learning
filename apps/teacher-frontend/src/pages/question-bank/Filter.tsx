@@ -77,8 +77,8 @@ export const Filter: React.FC<{
     questionTypes,
     showAllVersions,
     subjectEnum,
-    filterSubmitCallback,
-    isQuizFilter,
+    //filterSubmitCallback,
+    //isQuizFilter,
   ]);
 
   const handleDifficultyPress = (difficulty: QuizQuestionDifficultyEnum) => {

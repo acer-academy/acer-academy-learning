@@ -65,19 +65,25 @@ quizRouter.get('/', async (req: Request, res: Response) => {
  * Retrieves a list of questions based on selected topic and student's level.
  * Returns 10 easy, 7 medium and 3 hard questions.
  */
-quizRouter.get('/generate-adaptive-learning-quiz/:studentId', async (req: Request, res: Response) => {
-  const { studentId } = req.params;
-  const topics: string[] = req.query.topics as string[] || [];
+quizRouter.get(
+  '/generate-adaptive-learning-quiz/:studentId',
+  async (req: Request, res: Response) => {
+    const { studentId } = req.params;
+    const topics: string[] = (req.query.topics as string[]) || [];
 
-  try {
-    const questions = await quizService.generateAdaptiveLearningQuiz(topics, studentId);
-    return res.status(200).json(questions);
-  } catch (error) {
-    return res.status(500).json({
-      error: error.message,
-    });
-  }
-});
+    try {
+      const questions = await quizService.generateAdaptiveLearningQuiz(
+        topics,
+        studentId,
+      );
+      return res.status(200).json(questions);
+    } catch (error) {
+      return res.status(500).json({
+        error: error.message,
+      });
+    }
+  },
+);
 
 /**
  * GET /quiz/:quizId
@@ -201,7 +207,7 @@ quizRouter.put(
   validateBodyQuizTeacherCreatedExists,
   validateBodyQuizOnQuizQuestionFormatValid,
   validateParamsQuizIsLatest,
-  validateParamsQuizHasNoTakes,
+  //validateParamsQuizHasNoTakes,
   async (req: Request, res: Response) => {
     const { quizId } = req.params;
     try {

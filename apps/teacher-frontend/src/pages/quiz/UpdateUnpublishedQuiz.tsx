@@ -55,7 +55,7 @@ export const UpdateUnpublishedQuiz = ({ quiz }: UpdateUnpublishedQuizProps) => {
     if (!!subject && !!user) {
       const updateValues = {
         ...values,
-        subject: getSubjectEnumFromPathParam(subject),
+        subject: subject,
         teacherCreated: user.id,
       };
       await updateQuizAsync({ quizId: memoedQuizId, data: updateValues });

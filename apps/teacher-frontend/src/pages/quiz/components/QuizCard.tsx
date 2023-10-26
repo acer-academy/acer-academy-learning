@@ -42,7 +42,7 @@ export const QuizCard = ({ onSubmitForm, submitText }: QuizCardProps) => {
   );
 
   useEffect(() => {
-    setValue('allocatedTo', allocatedTo);
+    if (allocatedTo) setValue('allocatedTo', allocatedTo);
     setValue('isPublic', isPublic);
   }, [allocatedTo, isPublic]);
 

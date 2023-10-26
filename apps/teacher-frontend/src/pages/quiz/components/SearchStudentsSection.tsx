@@ -3,7 +3,10 @@ import {
   GenericComboBox,
   useToast,
 } from '@acer-academy-learning/common-ui';
-import { getAllStudents as apiGetAllStudents } from '@acer-academy-learning/data-access';
+import {
+  QuizData,
+  getAllStudents as apiGetAllStudents,
+} from '@acer-academy-learning/data-access';
 import { ArrowLeftIcon } from '@heroicons/react/24/outline';
 import { StudentData } from 'libs/data-access/src/lib/types/student';
 import { useEffect, useState } from 'react';
@@ -12,8 +15,9 @@ export const SearchStudentsSection: React.FC<{
   allocatedTo: string[];
   setAllocatedTo: Function;
   setIsPublic: Function;
+  publishedQuiz?: QuizData;
 }> = (props) => {
-  const { allocatedTo, setAllocatedTo, setIsPublic } = props;
+  const { allocatedTo, setAllocatedTo, setIsPublic, publishedQuiz } = props;
   const { displayToast, ToastType } = useToast();
   const [allStudents, setAllStudents] = useState<StudentData[]>([]);
 
@@ -41,7 +45,7 @@ export const SearchStudentsSection: React.FC<{
           className="text-black"
           onClick={() => {
             setIsPublic(true);
-            setAllocatedTo([]);
+            //if (!publishedQuiz) setAllocatedTo([]);
           }}
         >
           <ArrowLeftIcon className="h-5 w-5 stroke-2 hover:stroke-indigo-600" />

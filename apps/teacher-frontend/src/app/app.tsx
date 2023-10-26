@@ -50,7 +50,6 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import { UpdateQuestion } from '../pages/question-bank/UpdateQuestion';
 import { Subjects } from '../pages/subjects/Subjects';
 import { Subject } from '../pages/subjects/Subject';
-import { QuizManagement } from '../pages/quizzes/QuizManagement';
 import ViewCalendar from '../pages/scheduling/ViewCalendar';
 import Calendar from '../pages/scheduling/Calendar';
 import CalendarPage from '../pages/calendar/CalendarPage';
