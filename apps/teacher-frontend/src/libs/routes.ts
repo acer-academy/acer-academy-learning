@@ -22,7 +22,12 @@ export const CREATE_QUIZ_STUDENTS_HASH = 'students';
 export const UPDATE_QUIZ = `${QUIZZES}/:quizId`;
 
 export const ANALYTICS = '/analytics';
+
+//
 export const SCHEDULING = '/scheduling';
+export const VIEW_CLASSES = `${SCHEDULING}/view-classes`;
+export const BOOK_CLASSES = `${SCHEDULING}/book-classes`;
+
 export const REWARDS = '/rewards';
 
 // Acccount

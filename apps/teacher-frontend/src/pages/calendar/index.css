@@ -1,0 +1,52 @@
+.rbc-header {
+  background: blue;
+  color: white;
+}
+
+/* .rbc-event {
+  padding: 8;
+  font-size: 16px;
+  background-color: aqua !important;
+}
+
+.rbc-events-container {
+  background-color: red !important;
+} */
+
+.rbc-time-slot {
+  background-color: #eaf3fa;
+  black: #74a4c3;
+  border-color: aqua !important;
+}
+
+.rbc-events-container {
+  width: 100% !important;
+}
+
+/* .rbc-event-label {
+  display: none !important;
+} */
+
+.rbc-timeslot-group {
+  min-height: 120px !important;
+}
+
+/* styles.css 
+rbc-month-view .rbc-row-content {
+  overflow-y: auto;
+}
+
+.rbc-month-view .rbc-date-cell {
+  overflow-y: auto;
+  max-height: 200px;
+  position: relative;
+}
+
+.rbc-month-view .rbc-event {
+  margin: 0;
+  position: relative;
+  width: 100%;
+} 
+
+
+*/

@@ -25,3 +25,8 @@ export const TERM = `${CREDIT_RESOURCES}/term`;
 export const TRANSACTION = `${CREDIT_RESOURCES}/transaction`;
 export const CREDIT_BUNDLE = `${CREDIT_RESOURCES}/credit-bundle`;
 export const CLASS_CREDITS = `${CREDIT_RESOURCES}/class-credits`;
+
+//Schedule Routes
+export const SCHEDULING_RESOURCES = '/scheduling-resources';
+export const VIEW_CLASSES = `${SCHEDULING_RESOURCES}/view-classes`;
+export const BOOK_CLASSES = `${SCHEDULING_RESOURCES}/book-classes`;

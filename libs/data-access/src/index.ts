@@ -16,7 +16,9 @@ export * from './lib/api/transaction';
 export * from './lib/api/creditBundle';
 export * from './lib/api/question';
 export * from './lib/api/term';
+export * from './lib/api/session';
 export * from './lib/api/quiz';
+export * from './lib/api/class';
 export * from './lib/api/take';
 
 // Object.freeze(api);

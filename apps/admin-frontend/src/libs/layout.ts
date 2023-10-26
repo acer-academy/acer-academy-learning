@@ -1,13 +1,14 @@
 import { NavigationMenuItem } from 'libs/common-ui/src/lib/layout/components/type';
 import {
   BuildingStorefrontIcon,
-  // CalendarDaysIcon,
+  CalendarDaysIcon,
   // CircleStackIcon,
   Cog6ToothIcon,
   QuestionMarkCircleIcon,
   UsersIcon,
   CurrencyDollarIcon,
   MegaphoneIcon,
+  PaperClipIcon,
 } from '@heroicons/react/24/outline';
 import {
   ADMINS,
@@ -22,6 +23,9 @@ import {
   CREDIT_RESOURCES,
   TERM,
   CLASS_CREDITS,
+  VIEW_CLASSES,
+  BOOK_CLASSES,
+  SCHEDULING_RESOURCES
 } from './routes';
 export const NAV_SECTIONS: NavigationMenuItem[] = [
   {
@@ -47,6 +51,15 @@ export const NAV_SECTIONS: NavigationMenuItem[] = [
           { name: 'Credit Bundle', path: CREDIT_BUNDLE },
           { name: 'Promotions', path: PROMOTION },
           { name: 'Terms', path: TERM },
+        ],
+      },
+      {
+        name: 'Scheduling Resources',
+        path: SCHEDULING_RESOURCES,
+        icon: CalendarDaysIcon,
+        children: [
+          { name: 'View Classes', path: VIEW_CLASSES},
+          { name: 'Book Classes', path: BOOK_CLASSES},
         ],
       },
       // { name: 'Scheduling', path: '/scheduling', icon: CalendarDaysIcon },

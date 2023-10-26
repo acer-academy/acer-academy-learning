@@ -18,7 +18,11 @@ class SessionDao {
       include: {
         students: true,
         teacher: true,
-        classroom: true,
+        classroom: {
+          include: {
+            centre: true
+          }
+        },
         class: true,
       },
       orderBy: [{ start: 'asc' }],

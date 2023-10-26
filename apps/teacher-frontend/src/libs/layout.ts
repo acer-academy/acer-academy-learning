@@ -2,6 +2,7 @@ import { NavigationMenuItem } from 'libs/common-ui/src/lib/layout/components/typ
 import {
   ACCOUNT,
   ANALYTICS,
+  BOOK_CLASSES,
   DASHBOARD,
   PROFILE,
   QUESTION_BANK,
@@ -10,13 +11,19 @@ import {
   SCHEDULING,
   SETTINGS,
   SUBJECTS,
+  VIEW_CLASSES,
 } from './routes';
 import {
   UserIcon,
   Cog6ToothIcon,
   InboxStackIcon,
+  PaperClipIcon,
+  CalculatorIcon,
   DocumentTextIcon,
+  CalendarDaysIcon,
 } from '@heroicons/react/24/outline';
+
+
 
 export const NAV_SECTIONS: NavigationMenuItem[] = [
   {
@@ -46,6 +53,10 @@ export const NAV_SECTIONS: NavigationMenuItem[] = [
   {
     name: 'SCHEDULING',
     path: SCHEDULING,
+    children: [
+      { name: 'View Classes', path: VIEW_CLASSES, icon: CalendarDaysIcon },
+      // { name: 'Book Classes', path: BOOK_CLASSES, icon: CalculatorIcon },
+    ],
   },
   {
     name: 'REWARDS',

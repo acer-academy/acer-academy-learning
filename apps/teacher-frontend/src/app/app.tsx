@@ -41,6 +41,8 @@ import {
   SUBJECT_MAIN,
   CREATE_QUIZ,
   QUIZZES,
+  VIEW_CLASSES,
+  BOOK_CLASSES,
   UPDATE_QUIZ,
 } from '../libs/routes';
 import { CreateQuestion } from '../pages/question-bank/CreateQuestion';
@@ -48,6 +50,10 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import { UpdateQuestion } from '../pages/question-bank/UpdateQuestion';
 import { Subjects } from '../pages/subjects/Subjects';
 import { Subject } from '../pages/subjects/Subject';
+import { QuizManagement } from '../pages/quizzes/QuizManagement';
+import ViewCalendar from '../pages/scheduling/ViewCalendar';
+import Calendar from '../pages/scheduling/Calendar';
+import CalendarPage from '../pages/calendar/CalendarPage';
 import { CreateQuiz } from '../pages/quiz/CreateQuiz';
 import { QuizManagement } from '../pages/quiz/QuizManagement';
 import { ModifyQuizWrapper } from '../pages/quiz/ModifyQuizWrapper';
@@ -103,7 +109,10 @@ export function App() {
                 {/* Analytics routes */}
                 <Route path={ANALYTICS} />
                 {/* Scheduling routes */}
-                <Route path={SCHEDULING} />
+                <Route path={SCHEDULING}>
+                  <Route path={VIEW_CLASSES} element={<CalendarPage />} />
+                  <Route path={BOOK_CLASSES} element={<Calendar />} />
+                </Route>
                 {/* Rewards routes */}
                 <Route path={REWARDS} />
                 <Route path={ACCOUNT}>
