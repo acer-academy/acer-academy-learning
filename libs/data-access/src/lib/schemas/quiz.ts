@@ -27,7 +27,7 @@ export const quizSchema = z.object({
   // in seconds
   timeAllowed: z
     .number()
-    .int('Time allowed (in seconds must be an Integer')
+    .int('Time allowed (in seconds must be an Integer)')
     .optional()
     .nullable(),
   quizQuestions: z

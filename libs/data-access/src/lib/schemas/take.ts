@@ -27,3 +27,8 @@ export const createTakeSchema = z.intersection(
     studentAnswers: z.array(createTakeAnswerSchema),
   }),
 );
+
+export const createAdaptiveQuizTakeSchema = z.object({
+  timeTaken: z.number(),
+  studentAnswer: createTakeAnswerSchema,
+});

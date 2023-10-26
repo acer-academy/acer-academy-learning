@@ -2,6 +2,7 @@ import { QuizQuestionData } from './question';
 import { QuizData } from './quiz';
 import { z } from 'zod';
 import {
+  createAdaptiveQuizTakeSchema,
   createTakeAnswerApiSchema,
   createTakeApiSchema,
   createTakeSchema,
@@ -16,6 +17,16 @@ export interface TakeData {
   quizId: string;
 }
 
+export type StudentTakeAnswerData = {
+  id: string;
+  questionId: string;
+  studentAnswer: string;
+  isCorrect: boolean;
+  timeTaken: number;
+  takeId: string;
+  question: QuizQuestionData;
+};
+
 export interface StudentTakeData {
   id: string;
   marks: number;
@@ -23,20 +34,17 @@ export interface StudentTakeData {
   timeTaken: number;
   takenById: string;
   quizId: string;
-  studentAnswers: {
-    id: string;
-    questionId: string;
-    studentAnswer: string;
-    isCorrect: boolean;
-    timeTaken: number;
-    takeId: string;
-    question: QuizQuestionData;
-  };
+  studentAnswers: StudentTakeAnswerData;
   quiz: QuizData;
 }
+
 export type CreateTakeSchema = z.infer<typeof createTakeSchema>;
 
 export type CreateTakeApiSchema = z.infer<typeof createTakeApiSchema>;
 export type CreateTakeAnswerApiSchema = z.infer<
   typeof createTakeAnswerApiSchema
+>;
+
+export type CreateAdaptiveTakeSchema = z.infer<
+  typeof createAdaptiveQuizTakeSchema
 >;

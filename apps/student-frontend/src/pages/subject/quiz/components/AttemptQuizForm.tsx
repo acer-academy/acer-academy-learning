@@ -264,7 +264,7 @@ export const AttemptQuizForm = ({
                 <XMarkIcon className="h-6 w-6" aria-hidden="true" />
               </button>
             </div>
-            <p>Time's Up! Submitting your answer in ...</p>
+            <p>Time's Up! Submitting your answers in ...</p>
             <p className="text-3xl text-center">
               {Math.floor(currentCountDownDuration / MS_IN_SECOND)}
             </p>
