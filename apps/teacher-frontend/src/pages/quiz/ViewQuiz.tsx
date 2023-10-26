@@ -3,9 +3,13 @@ import React, { useMemo } from 'react';
 import { QuizTabs } from './components/QuizTab';
 import { ViewQuizDetailsSection } from './components/ViewQuizDetailsSection';
 import { useLocation } from 'react-router-dom';
-import { CREATE_QUIZ_QUESTIONS_HASH } from '../../libs/routes';
+import {
+  CREATE_QUIZ_QUESTIONS_HASH,
+  CREATE_QUIZ_STUDENTS_HASH,
+} from '../../libs/routes';
 import { ViewQuizQuestionsSection } from './components/ViewQuizQuestionsSection';
 import { BackButton } from '@acer-academy-learning/common-ui';
+import { StudentsSection } from './components/StudentsSection';
 
 export type ViewQuizProps = {
   quiz: QuizData;
@@ -17,6 +21,17 @@ export const ViewQuiz = ({ quiz }: ViewQuizProps) => {
     switch (location.hash.slice(1)) {
       case CREATE_QUIZ_QUESTIONS_HASH:
         return <ViewQuizQuestionsSection quiz={quiz} />;
+      case CREATE_QUIZ_STUDENTS_HASH:
+        return (
+          <StudentsSection
+            viewOnly={true}
+            isPublic={quiz.isPublic}
+            allocatedTo={quiz.allocatedTo}
+            publishedQuiz={quiz}
+            setAllocatedTo={() => {}}
+            setIsPublic={() => {}}
+          />
+        );
       default:
         return <ViewQuizDetailsSection quiz={quiz} />;
     }

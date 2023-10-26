@@ -1,17 +1,91 @@
 import { RadioGroup } from '@headlessui/react';
 import { SearchStudentsSection } from './SearchStudentsSection';
+import {
+  QuizData,
+  Teacher,
+  updateQuiz,
+} from '@acer-academy-learning/data-access';
+import { useEffect } from 'react';
+import {
+  GenericButton,
+  useAuth,
+  useToast,
+} from '@acer-academy-learning/common-ui';
+import { useNavigate } from 'react-router-dom';
+import { isAxiosError } from 'axios';
 
 export const StudentsSection: React.FC<{
   isPublic: boolean;
   setIsPublic: (isPublic: boolean) => void;
   allocatedTo: string[];
   setAllocatedTo: (allocatedTo: string[]) => void;
+  publishedQuiz?: QuizData;
+  viewOnly?: boolean;
 }> = (props) => {
-  const { isPublic, setIsPublic, allocatedTo, setAllocatedTo } = props;
+  const {
+    isPublic,
+    setIsPublic,
+    allocatedTo,
+    setAllocatedTo,
+    publishedQuiz,
+    viewOnly,
+  } = props;
+  const { displayToast, ToastType } = useToast();
+  const navigate = useNavigate();
+  const { user } = useAuth<Teacher>();
+
+  const changesMade = () => {
+    const lengthCheck =
+      allocatedTo.length !== publishedQuiz?.allocatedTo.length;
+    const allocatedToCheck = !allocatedTo
+      .map((x) => publishedQuiz?.allocatedTo.includes(x))
+      .reduce((x, y) => x && y, true);
+    const publicCheck = publishedQuiz?.isPublic !== isPublic;
+    return lengthCheck || allocatedToCheck || publicCheck;
+  };
+
+  const updateAllocatedTo = async (quiz: QuizData) => {
+    if (!user || !user.id) throw Error('Error: Not logged in.');
+    try {
+      const updateValues = {
+        title: quiz.title,
+        description: quiz.description,
+        topics: quiz.topics,
+        levels: quiz.levels,
+        rewardPoints: quiz.rewardPoints,
+        timeAllowed: quiz.timeAllowed,
+        totalMarks: quiz.totalMarks,
+        rewardMinimumMarks: quiz.rewardMinimumMarks,
+        quizQuestions: quiz.quizQuestions,
+        subject: quiz.subject,
+        teacherCreated: user.id,
+        allocatedTo: allocatedTo ?? [],
+        isPublic: isPublic,
+      };
+      const newQuiz = await updateQuiz({
+        quizId: quiz.id,
+        data: updateValues,
+      });
+      displayToast(
+        'Successfully updated quiz accessibility',
+        ToastType.SUCCESS,
+      );
+      navigate(
+        `/subjects/${quiz.subject.toLowerCase()}/quizzes/${newQuiz.data.id}`,
+      );
+    } catch (error) {
+      const errorMsg = isAxiosError<{ error: string }>(error)
+        ? error.response?.data.error
+        : 'Unknown error';
+      displayToast('Error: ' + errorMsg, ToastType.ERROR);
+      console.error(error);
+    }
+  };
+
   const options = [
     {
       name: 'Public Quiz',
-      description: 'Quiz will be accessible to all students',
+      description: `Quiz will be accessible to all students of the quiz's levels`,
       isPublic: true,
     },
     {
@@ -21,18 +95,27 @@ export const StudentsSection: React.FC<{
     },
   ];
 
+  useEffect(() => {
+    if (publishedQuiz) {
+      setAllocatedTo(publishedQuiz.allocatedTo);
+    }
+  }, [isPublic]);
+
   return (
     <div>
       {isPublic && (
         <RadioGroup value={isPublic} onChange={setIsPublic}>
           <div className="mt-10">
             <RadioGroup.Label className="text-2xl font-semibold leading-6 text-gray-900">
-              Select public or allocated quiz
+              {viewOnly
+                ? 'Quiz accesibility'
+                : 'Select public or allocated quiz'}
             </RadioGroup.Label>
           </div>
           <div className="-space-y-px rounded-md bg-white mt-4 mb-4">
             {options.map((option, optionIdx) => (
               <RadioGroup.Option
+                disabled={viewOnly}
                 key={option.name}
                 value={option.isPublic}
                 className={({ checked }) => `
@@ -98,7 +181,19 @@ export const StudentsSection: React.FC<{
           allocatedTo={allocatedTo || []}
           setAllocatedTo={setAllocatedTo}
           setIsPublic={setIsPublic}
+          viewOnly={viewOnly}
         />
+      )}
+      {publishedQuiz && changesMade() && (
+        <div className="flex justify-end mt-10 gap-5">
+          <GenericButton
+            onClick={() => {
+              updateAllocatedTo(publishedQuiz);
+            }}
+            className="hover:bg-gray-700"
+            text="Update"
+          ></GenericButton>
+        </div>
       )}
     </div>
   );

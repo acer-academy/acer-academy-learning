@@ -1,11 +1,15 @@
 import { QuizData } from '@acer-academy-learning/data-access';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { QuizTabs } from './components/QuizTab';
 import { ViewQuizDetailsSection } from './components/ViewQuizDetailsSection';
 import { useLocation } from 'react-router-dom';
-import { CREATE_QUIZ_QUESTIONS_HASH } from '../../libs/routes';
+import {
+  CREATE_QUIZ_QUESTIONS_HASH,
+  CREATE_QUIZ_STUDENTS_HASH,
+} from '../../libs/routes';
 import { BackButton } from '@acer-academy-learning/common-ui';
 import { UpdatePublishedQuizQuestionsSection } from './components/UpdatePublishedQuizQuestionsSection';
+import { StudentsSection } from './components/StudentsSection';
 
 export type UpdatePublishedQuizProps = {
   quiz: QuizData;
@@ -13,14 +17,28 @@ export type UpdatePublishedQuizProps = {
 
 export const UpdatePublishedQuiz = ({ quiz }: UpdatePublishedQuizProps) => {
   const location = useLocation();
+
+  const [isPublic, setIsPublic] = useState<boolean>(quiz.isPublic);
+  const [allocatedTo, setAllocatedTo] = useState<string[]>(quiz.allocatedTo);
+
   const currentTabComponent = useMemo(() => {
     switch (location.hash.slice(1)) {
       case CREATE_QUIZ_QUESTIONS_HASH:
         return <UpdatePublishedQuizQuestionsSection quiz={quiz} />;
+      case CREATE_QUIZ_STUDENTS_HASH:
+        return (
+          <StudentsSection
+            isPublic={isPublic}
+            setIsPublic={setIsPublic}
+            allocatedTo={allocatedTo}
+            setAllocatedTo={setAllocatedTo}
+            publishedQuiz={quiz}
+          />
+        );
       default:
         return <ViewQuizDetailsSection quiz={quiz} />;
     }
-  }, [location, quiz]);
+  }, [location, quiz, isPublic, allocatedTo]);
   return (
     <div className="space-y-4">
       <BackButton />

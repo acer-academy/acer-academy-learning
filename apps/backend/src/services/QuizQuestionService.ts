@@ -174,7 +174,13 @@ export class QuizQuestionService {
     for (const key in oldQuestion) {
       if (
         !Object.keys(req.body).includes(key) &&
-        !['id', 'nextVersionId', 'createdAt', 'version'].includes(key)
+        ![
+          'id',
+          'nextVersionId',
+          'createdAt',
+          'version',
+          'usedInTakes',
+        ].includes(key)
       ) {
         req.body[key] = oldQuestion[key];
       }

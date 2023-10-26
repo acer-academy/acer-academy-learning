@@ -3,7 +3,10 @@ import {
   GenericComboBox,
   useToast,
 } from '@acer-academy-learning/common-ui';
-import { getAllStudents as apiGetAllStudents } from '@acer-academy-learning/data-access';
+import {
+  QuizData,
+  getAllStudents as apiGetAllStudents,
+} from '@acer-academy-learning/data-access';
 import { ArrowLeftIcon } from '@heroicons/react/24/outline';
 import { StudentData } from 'libs/data-access/src/lib/types/student';
 import { useEffect, useState } from 'react';
@@ -12,8 +15,11 @@ export const SearchStudentsSection: React.FC<{
   allocatedTo: string[];
   setAllocatedTo: Function;
   setIsPublic: Function;
+  publishedQuiz?: QuizData;
+  viewOnly?: boolean;
 }> = (props) => {
-  const { allocatedTo, setAllocatedTo, setIsPublic } = props;
+  const { allocatedTo, setAllocatedTo, setIsPublic, publishedQuiz, viewOnly } =
+    props;
   const { displayToast, ToastType } = useToast();
   const [allStudents, setAllStudents] = useState<StudentData[]>([]);
 
@@ -41,38 +47,54 @@ export const SearchStudentsSection: React.FC<{
           className="text-black"
           onClick={() => {
             setIsPublic(true);
-            setAllocatedTo([]);
           }}
         >
-          <ArrowLeftIcon className="h-5 w-5 stroke-2 hover:stroke-indigo-600" />
+          <ArrowLeftIcon
+            className={`h-5 w-5 stroke-2 hover:stroke-indigo-600 ${
+              viewOnly ? 'hidden' : ''
+            }`}
+          />
         </button>
         <span className="text-2xl font-semibold leading-6 text-gray-900">
-          Select allocated students
+          {viewOnly ? 'Students allocated' : 'Select allocated students'}
         </span>
       </div>
       <div className="flex flex-wrap my-4 gap-4">
-        {allStudents
-          .filter((student) => allocatedTo.includes(student.id))
-          .map((student) => (
-            <div key={student.id}>
-              <GenericBadge
-                badge={`${student.firstName} ${student.lastName}`}
-                onRemove={() =>
-                  setAllocatedTo(allocatedTo.filter((id) => id != student.id))
-                }
-              ></GenericBadge>
-            </div>
-          ))}
+        {allocatedTo.length > 0 ? (
+          allStudents
+            .filter((student) => allocatedTo.includes(student.id))
+            .map((student) => (
+              <div key={student.id}>
+                <GenericBadge
+                  badge={`${student.firstName} ${student.lastName}`}
+                  onRemove={
+                    !viewOnly
+                      ? () =>
+                          setAllocatedTo(
+                            allocatedTo.filter((id) => id != student.id),
+                          )
+                      : undefined
+                  }
+                ></GenericBadge>
+              </div>
+            ))
+        ) : (
+          <span className="text-gray-600 italic mx-2">
+            No students have been allocated to this quiz yet.
+          </span>
+        )}
       </div>
-      <GenericComboBox
-        options={allStudents.map((student) => student.id)}
-        onChange={(selectedIds) => setAllocatedTo(selectedIds)}
-        selected={allocatedTo}
-        displayValue={(id) => {
-          const curr = allStudents.find((student) => student.id == id);
-          return curr ? `${curr.firstName} ${curr.lastName}` : '';
-        }}
-      ></GenericComboBox>
+      {!viewOnly && (
+        <GenericComboBox
+          options={allStudents.map((student) => student.id)}
+          onChange={(selectedIds) => setAllocatedTo(selectedIds)}
+          selected={allocatedTo}
+          displayValue={(id) => {
+            const curr = allStudents.find((student) => student.id == id);
+            return curr ? `${curr.firstName} ${curr.lastName}` : '';
+          }}
+        ></GenericComboBox>
+      )}
     </div>
   );
 };

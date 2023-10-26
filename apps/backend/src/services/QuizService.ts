@@ -99,22 +99,48 @@ export class QuizService {
       throw Error('Student not found.');
     }
     const studentLevel = student.level;
-    const quizQuestionTopics: QuizQuestionTopicEnum[] = topics.map(topic => topic as QuizQuestionTopicEnum);
+    const quizQuestionTopics: QuizQuestionTopicEnum[] = topics.map(
+      (topic) => topic as QuizQuestionTopicEnum,
+    );
 
     // easy questions
-    const easyQuestions = await this.quizQuestionDao.getAllQuizQuestionByConditions(quizQuestionTopics, 'BASIC', studentLevel);
+    const easyQuestions =
+      await this.quizQuestionDao.getAllQuizQuestionByConditions(
+        quizQuestionTopics,
+        'BASIC',
+        studentLevel,
+      );
 
     // medium questions
-    const mediumQuestions = await this.quizQuestionDao.getAllQuizQuestionByConditions(quizQuestionTopics, 'INTERMEDIATE', studentLevel);
+    const mediumQuestions =
+      await this.quizQuestionDao.getAllQuizQuestionByConditions(
+        quizQuestionTopics,
+        'INTERMEDIATE',
+        studentLevel,
+      );
 
     // hard questions
-    const hardQuestions = await this.quizQuestionDao.getAllQuizQuestionByConditions(quizQuestionTopics, 'ADVANCED', studentLevel);
+    const hardQuestions =
+      await this.quizQuestionDao.getAllQuizQuestionByConditions(
+        quizQuestionTopics,
+        'ADVANCED',
+        studentLevel,
+      );
 
     // randomly pick questions
     const quizQuestions: QuizQuestionPrisma[] = [];
-    const easyQuestionCount = Math.min(EASY_QUESTION_COUNT, easyQuestions.length);
-    const mediumQuestionCount = Math.min(MEDIUM_QUESTION_COUNT, mediumQuestions.length);
-    const hardQuestionCount = Math.min(HARD_QUESTION_COUNT, hardQuestions.length);
+    const easyQuestionCount = Math.min(
+      EASY_QUESTION_COUNT,
+      easyQuestions.length,
+    );
+    const mediumQuestionCount = Math.min(
+      MEDIUM_QUESTION_COUNT,
+      mediumQuestions.length,
+    );
+    const hardQuestionCount = Math.min(
+      HARD_QUESTION_COUNT,
+      hardQuestions.length,
+    );
 
     for (let i = 0; i < easyQuestionCount; i++) {
       const randomIndex = Math.floor(Math.random() * easyQuestions.length);
@@ -254,6 +280,79 @@ export class QuizService {
 
   public async updateQuiz(quizId: string, req: Request): Promise<Quiz> {
     const oldQuiz = await this.getQuizById(quizId);
+    for (const key of Object.keys(req.body)) {
+      if (
+        ![
+          'allocatedTo',
+          'isPublic',
+          'quizQuestions',
+          'levels',
+          'topics',
+          'teacherCreated',
+        ].includes(key)
+      ) {
+        if (oldQuiz[key] !== req.body[key]) {
+          break;
+        }
+        continue;
+      }
+      if (key == 'teacherCreated') {
+        if (req.body.teacherCreated !== oldQuiz.teacherCreatedId) {
+          break;
+        }
+        continue;
+      }
+      if (key == 'levels') {
+        if (
+          !(
+            req.body.levels.every((lvl) => oldQuiz.levels.includes(lvl)) &&
+            oldQuiz.levels.every((lvl) => req.body.levels.includes(lvl))
+          )
+        ) {
+          break;
+        }
+        continue;
+      }
+      if (key == 'topics') {
+        if (
+          !(
+            req.body.topics.every((topic) => oldQuiz.topics.includes(topic)) &&
+            oldQuiz.topics.every((topic) => req.body.topics.includes(topic))
+          )
+        ) {
+          break;
+        }
+        continue;
+      }
+      if (key == 'quizQuestions') {
+        let matchingQuestions = true;
+        const q = new QuizOnQuizQuestionDao();
+        const q1 = await q.getQuizOnQuizQuestionsByQuizId(quizId);
+        const formattedOldQuizQuestions = q1.map((question) => {
+          return {
+            quizQuestionId: question.quizQuestionId,
+            quizQuestionIndex: question.quizQuestionIndex,
+            quizQuestionMarks: question.quizQuestionMarks,
+          };
+        });
+        for (const question of req.body.quizQuestions) {
+          if (!formattedOldQuizQuestions.includes(question)) {
+            matchingQuestions = false;
+            break;
+          }
+        }
+        if (!matchingQuestions) break;
+      }
+      const formattedQuizData = {
+        allocatedTo: {
+          connect: req.body.allocatedTo?.map((studentId: string) => ({
+            id: studentId,
+          })),
+        },
+        isPublic: req.body.isPublic,
+      };
+      return await this.quizDao.updateQuiz(quizId, formattedQuizData);
+    }
     const quizData = req.body;
     const quizQuestions = quizData.quizQuestions;
     const aggregatedDifficulty = await this.calculateAggregatedDifficulty(
