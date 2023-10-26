@@ -60,9 +60,11 @@ export const QuizQuestionRow = ({
   };
 
   useEffect(() => {
+    setLoading(true);
     fetchQuestion();
     fetchTakeAnswers();
     fetchStatistics();
+    setLoading(false);
   }, []);
 
   const answerOptions = useMemo(() => {
@@ -201,15 +203,17 @@ export const QuizQuestionRow = ({
               {` of students got this question right.`}
             </span>
             {takeAnswer &&
-            takeAnswer.filter((takeAns) => takeAns.isCorrect === true)
-              .length ===
-              question?.answers.filter((ans) => ans.isCorrect === true)
-                .length ? (
+            ((question?.questionType !== QuizQuestionTypeEnum.MRQ &&
+              takeAnswer[0].isCorrect === true) ||
+              takeAnswer.filter((takeAns) => takeAns.isCorrect === true)
+                .length ===
+                question?.answers.filter((ans) => ans.isCorrect === true)
+                  .length) ? (
               parseFloat(correctRate) < 50 ? (
                 <span>
                   {`Well done! You have a good grasp of `}
                   <span className="font-bold">
-                    {question.topics
+                    {question?.topics
                       .map((a) => a.toLowerCase().split('_').join(' '))
                       .join(', ')}
                   </span>
