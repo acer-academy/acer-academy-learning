@@ -34,8 +34,6 @@ export const AttemptAdaptiveQuiz = () => {
           topics: topics,
           studentId: user.id,
         });
-        console.log('DATA');
-        console.log(res.data);
         return res.data;
       }
     },

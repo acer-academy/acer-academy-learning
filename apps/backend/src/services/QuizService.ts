@@ -27,6 +27,7 @@ export interface QuizFilterOptions {
   showLatestOnly?: boolean;
   isPublic?: boolean;
   allocatedTo?: string[];
+  strictPublicOrAllocated?: boolean;
 }
 
 type QuizQuestion = {
@@ -269,11 +270,12 @@ export class QuizService {
       showLatestOnly,
       isPublic,
       allocatedTo,
+      strictPublicOrAllocated,
     } = filterOptions;
     if (subjects && subjects.length > 0) {
       where.subject = { in: filterOptions.subjects };
     }
-    if (levels && levels.length > 0) {
+    if (!strictPublicOrAllocated && levels && levels.length > 0) {
       where.levels = { hasEvery: filterOptions.levels };
     }
     if (difficulty && difficulty.length > 0) {
@@ -288,11 +290,19 @@ export class QuizService {
     if (isPublic !== undefined && isPublic !== null) {
       where.isPublic = isPublic;
     }
-    if (allocatedTo && allocatedTo.length > 0) {
+    if (!strictPublicOrAllocated && allocatedTo && allocatedTo.length > 0) {
       where.OR = [
         { isPublic: true },
         { allocatedTo: { some: { id: { in: filterOptions.allocatedTo } } } },
       ];
+    }
+
+    if (strictPublicOrAllocated && allocatedTo && allocatedTo?.length > 0) {
+      where.allocatedTo = { some: { id: { in: filterOptions.allocatedTo } } };
+    }
+
+    if (strictPublicOrAllocated && (!allocatedTo || allocatedTo.length === 0)) {
+      where.levels = { hasEvery: filterOptions.levels };
     }
 
     const quizzes = await this.quizDao.getFilteredQuizzes(

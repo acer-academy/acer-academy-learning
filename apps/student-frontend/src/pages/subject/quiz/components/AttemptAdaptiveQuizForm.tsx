@@ -199,10 +199,9 @@ export const AttemptAdaptiveQuizForm = ({
           />
         </div>
         {/* To remove or change */}
-        <p className="flex-start">Num of correct: {numOfCorrectQuestions}</p>
-        <p className="flex-start">Thresholds: </p>
         <p className="flex-start">
-          Basic: {thresholds.BASIC}, Int: {thresholds.INTERMEDIATE}
+          Num of correct: {numOfCorrectQuestions}, Thresholds: Basic -{' '}
+          {thresholds.BASIC}, Intermediate - {thresholds.INTERMEDIATE}
         </p>
         {currentQuestion && (
           <AdaptiveQuizQuestionCard

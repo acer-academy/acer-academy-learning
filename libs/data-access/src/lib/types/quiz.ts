@@ -19,6 +19,8 @@ export interface QuizPaginationFilter {
   difficulty?: QuizQuestionDifficultyEnum[];
   topics?: QuizQuestionTopicEnum[];
   showLatestOnly?: boolean;
+  allocatedTo?: string[];
+  strictPublicOrAllocated?: boolean;
 }
 
 export type QuizDataQuizQuestion = {
