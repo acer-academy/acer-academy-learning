@@ -18,9 +18,10 @@ import {
 } from 'libs/data-access/src/lib/types/take';
 import { Student } from 'libs/data-access/src/lib/types/student';
 import { MS_IN_SECOND } from './components/QuizTimer';
-import { QUIZZES } from '../../../libs/routes';
+import { QUIZZES, SUBJECTS } from '../../../libs/routes';
 
 export const AttemptQuiz = () => {
+  const { subject } = useParams();
   const navigate = useNavigate();
   const { displayToast, ToastType } = useToast();
   const { user } = useAuth<Student>();
@@ -32,7 +33,7 @@ export const AttemptQuiz = () => {
     onSuccess: (response) => {
       const takeId = response.data.id;
       displayToast('Quiz successfully submitted!', ToastType.SUCCESS);
-      navigate(`${QUIZZES}/result/${takeId}`);
+      navigate(`${SUBJECTS}/${subject}/quizzes/result/${takeId}`);
     },
     onError: (error) => {
       const errorMsg = isAxiosError<{ error: string }>(error)
