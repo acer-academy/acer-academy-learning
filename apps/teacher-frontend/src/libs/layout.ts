@@ -54,7 +54,7 @@ export const NAV_SECTIONS: NavigationMenuItem[] = [
     path: SCHEDULING,
     children: [
       { name: 'View Classes', path: VIEW_CLASSES, icon: CalendarDaysIcon },
-      { name: 'Book Classes', path: BOOK_CLASSES, icon: CalculatorIcon },
+      // { name: 'Book Classes', path: BOOK_CLASSES, icon: CalculatorIcon },
     ],
   },
   {
