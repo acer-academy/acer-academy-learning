@@ -1,4 +1,6 @@
 import {
+  BackButton,
+  Divider,
   ErrorField,
   GenericBadges,
   GenericButton,
@@ -56,8 +58,16 @@ export const ViewAdaptiveQuiz = () => {
   return (
     <form
       onSubmit={formMethods.handleSubmit(onSubmit, onError)}
-      className="flex flex-col space-y-4"
+      className="flex flex-col space-y-4 relative h-full"
     >
+      <BackButton className="bg-student-primary-600 hover:bg-student-primary-700 self-start" />
+      <h1 className="text-3xl font-bold tracking-tight ">Adaptive Quiz</h1>
+      <Divider lineClassName="border-gray-900" />
+      <h1 className="text-3xl font-bold tracking-tight ">Description</h1>
+      <p>
+        Go through a series of questions based on your preferred topics. These
+        questions get progressively harder based on your ability to answer them!
+      </p>
       <Controller
         control={formMethods.control}
         name="topics"
@@ -97,7 +107,7 @@ export const ViewAdaptiveQuiz = () => {
         )}
       />
       <GenericButton
-        className="bg-student-primary-600 hover:bg-student-primary-700 self-center"
+        className="bg-student-primary-600 hover:bg-student-primary-700 self-center absolute bottom-0"
         text="Start Adaptive Quiz"
       />
     </form>
