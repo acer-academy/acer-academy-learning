@@ -17,10 +17,41 @@ export class TakeAnswerService {
   public async getTakeAnswerById(answerId: string): Promise<TakeAnswer | null> {
     return this.takeAnswerDao.getTakeAnswerById(answerId);
   }
+  public async getTakeAnswersByStudent(
+    studentId: string,
+  ): Promise<TakeAnswer[]> {
+    return this.takeAnswerDao.getTakeAnswersByStudent(studentId);
+  }
+
+  public async getTakeAnswersByTake(takeId: string): Promise<TakeAnswer[]> {
+    return this.takeAnswerDao.getTakeAnswersByTake(takeId);
+  }
+
+  public async getTakeAnswersByQuizQuestion(
+    quizQuestionId: string,
+  ): Promise<TakeAnswer[]> {
+    return this.takeAnswerDao.getTakeAnswersByQuizQuestion(quizQuestionId);
+  }
+
+  public async getTakeAnswersByTakeAndQuizQuestion(
+    quizQuestionId: string,
+    takeId: string,
+  ): Promise<TakeAnswer[]> {
+    return this.takeAnswerDao.getTakeAnswersByTakeAndQuizQuestion(
+      quizQuestionId,
+      takeId,
+    );
+  }
+
+  public async getCorrectTakeAnswersByQuestionId(
+    questionId: string,
+  ): Promise<TakeAnswer[]> {
+    return this.takeAnswerDao.getCorrectTakeAnswersByQuestionId(questionId);
+  }
 
   public async updateTakeAnswer(
     answerId: string,
-    answerData: Prisma.TakeAnswerUpdateInput,
+    answerData: Prisma.TakeAnswerUncheckedUpdateInput,
   ): Promise<TakeAnswer | null> {
     return this.takeAnswerDao.updateTakeAnswer(answerId, answerData);
   }

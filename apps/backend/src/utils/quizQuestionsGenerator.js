@@ -128,14 +128,48 @@ const setupPrerequisites = async () => {
     //   'Prerequisite teacher successfully created:',
     //   (placeholderTeacherId),
     // );
+    const randomFirstNames = [
+      'John',
+      'Mary',
+      'Robert',
+      'Linda',
+      'William',
+      'Susan',
+      'James',
+      'Karen',
+      'Michael',
+      'Jennifer',
+      'David',
+      'Nancy',
+      'Richard',
+      'Lisa',
+      'Joseph',
+      'Betty',
+      'Charles',
+      'Helen',
+      'Thomas',
+      'Margaret',
+    ];
+    const randomLastNames = [
+      'Lim',
+      'Tan',
+      'Ng',
+      'Lee',
+      'Ong',
+      'Goh',
+      'Chua',
+      'Yeo',
+      'Teo',
+      'Tan',
+    ];
     for (let i = 1; i < 10; i++) {
       const whitelistStudentResponse = await axios.post(whitelistURL, {
         email: `student${i}@student.com`,
         role: 'STUDENT',
       });
       const createStudentResponse = await axios.post(createStudentURL, {
-        firstName: `Student${i}`,
-        lastName: `Student${i}`,
+        firstName: getRandomItem(randomFirstNames),
+        lastName: getRandomItem(randomLastNames),
         email: `student${i}@student.com`,
         password: 'password',
         level: getRandomItem(LevelEnum),
@@ -323,8 +357,15 @@ const generateRandomQuiz = (titleIdx) => {
     });
     totalMarks += qsMarks;
   }
+  const isPublic = Math.random() > 0.2;
   const quizData = {
-    title: `Sample Quiz ${titleIdx + 1}`,
+    title: `${randomLevels[0]} ${randomTopics[0]
+      .split('_')
+      .map((x) => {
+        x = x.toLowerCase();
+        return x.charAt(0).toUpperCase() + x.slice(1);
+      })
+      .reduce((x, y) => `${x} ${y}`)} Quiz ${titleIdx + 1}`,
     description:
       '{"root":{"children":[{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"This is a sample quiz.","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1}],"direction":"ltr","format":"","indent":0,"type":"root","version":1}}',
     subject: 'MATHEMATICS',
@@ -334,7 +375,10 @@ const generateRandomQuiz = (titleIdx) => {
     rewardPoints: Math.min(Math.floor(Math.random() * 10) + 1, 10),
     rewardMinimumMarks: Math.round(totalMarks * 0.8),
     teacherCreated: placeholderTeacherId,
-    allocatedTo: [],
+    isPublic: isPublic,
+    allocatedTo: isPublic
+      ? []
+      : studentIdsArray.slice(Math.random() * studentIdsArray.length),
     timeAllowed: Math.max(Math.floor(Math.random() * 7200) + 1, 600),
     quizQuestions: quizQuestions,
   };
@@ -351,14 +395,26 @@ const generateRandomTake = () => {
   for (const quizQuestion of quizToTake.quizQuestions) {
     const wrongAnswer =
       '{"root":{"children":[{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"Sample incorrect answer","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1}],"direction":"ltr","format":"","indent":0,"type":"root","version":1}}';
-    const correctAnswer = quizQuestion.quizQuestion.answers.filter(
+    const correctAnswers = quizQuestion.quizQuestion.answers.filter(
       (x) => x.isCorrect,
-    )[0].answer;
-    studentAnswers.push({
-      questionId: quizQuestion.quizQuestionId,
-      timeTaken: Math.round(Math.random() * 30) + 30,
-      studentAnswer: Math.random() > 0.3 ? correctAnswer : wrongAnswer,
-    });
+    ); //[0].answer;
+    if (correctAnswers.length > 1) {
+      for (const correctAnswer of correctAnswers) {
+        studentAnswers.push({
+          questionId: quizQuestion.quizQuestionId,
+          timeTaken: Math.round(Math.random() * 30) + 30,
+          studentAnswer:
+            Math.random() > 0.1 ? correctAnswer.answer : wrongAnswer,
+        });
+      }
+    } else {
+      studentAnswers.push({
+        questionId: quizQuestion.quizQuestionId,
+        timeTaken: Math.round(Math.random() * 30) + 30,
+        studentAnswer:
+          Math.random() > 0.3 ? correctAnswers[0].answer : wrongAnswer,
+      });
+    }
   }
   const takeData = {
     timeTaken: quizToTake.timeAllowed

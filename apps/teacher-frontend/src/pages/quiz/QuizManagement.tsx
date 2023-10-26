@@ -1,6 +1,7 @@
 import {
   QuizData,
   QuizPaginationFilter,
+  Teacher,
   getPaginatedFilteredQuizzes as apiGetPaginatedFilteredQuizzes,
   deleteQuiz,
 } from '@acer-academy-learning/data-access';
@@ -9,6 +10,7 @@ import { useEffect, useState } from 'react';
 import {
   LexOutput,
   WarningModal,
+  useAuth,
   useToast,
 } from '@acer-academy-learning/common-ui';
 import { Filter } from '../question-bank/Filter';
@@ -24,10 +26,13 @@ import {
   PencilSquareIcon,
   TrashIcon,
   UserGroupIcon,
+  LockOpenIcon,
+  LockClosedIcon,
 } from '@heroicons/react/24/outline';
 import { useMutation } from 'react-query';
 
 export const QuizManagement: React.FC = () => {
+  const { user } = useAuth<Teacher>();
   const navigate = useNavigate();
   const location = useLocation();
   const { displayToast, ToastType } = useToast();
@@ -52,7 +57,7 @@ export const QuizManagement: React.FC = () => {
         quizzes: QuizData[];
         totalCount: number;
       } = response.data;
-      console.log(quizzesData);
+      //console.log(quizzesData);
       setCurrentQuizzes(quizzesData.quizzes);
       setTotalCount(quizzesData.totalCount);
     } catch (error) {
@@ -88,7 +93,7 @@ export const QuizManagement: React.FC = () => {
   };
   const navToCreateQuiz = () => {
     // for now will push to url/quizzes/create, change as needed
-    navigate(`${location.pathname}/create`);
+    navigate(`${location.pathname}/create-quiz`);
   };
 
   const getTimeAllowedString = (timeAllowedInSeconds: number | undefined) => {
@@ -262,6 +267,20 @@ export const QuizManagement: React.FC = () => {
                                 </span>
                               </div>
                               <div className="flex items-center gap-1">
+                                {quiz.isPublic ? (
+                                  <LockOpenIcon className="w-4 h-4 text-teacherBlue-700" />
+                                ) : (
+                                  <LockClosedIcon className="w-4 h-4 text-teacherBlue-700" />
+                                )}
+                                <span className="font-semibold text-sm">
+                                  {`${
+                                    quiz.isPublic
+                                      ? 'Public'
+                                      : `${quiz.allocatedTo.length} students`
+                                  }`}
+                                </span>
+                              </div>
+                              <div className="flex items-center gap-1">
                                 <UserGroupIcon className="w-4 h-4 text-teacherBlue-700" />
                                 <span className="font-semibold text-sm">
                                   {`${quiz.takes.length} taken`}
@@ -329,27 +348,31 @@ export const QuizManagement: React.FC = () => {
                             <DifficultyTag difficulty={quiz.difficulty} />
                           </td>
                           <td className="whitespace-nowrap font-medium text-gray-900 space-x-1 w-max pr-3">
-                            <button
-                              type="button"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                navToSelectedQuiz(quiz.id);
-                              }}
-                              className="inline-flex items-center rounded-md bg-green-500 px-3 py-2 text-sm font-semibold shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-green-600"
-                            >
-                              <PencilSquareIcon className="w-6 h-6 text-white" />
-                            </button>
-                            <button
-                              type="button"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setDeleteQuizId(quiz.id);
-                                setDeleteModalOpen(true);
-                              }}
-                              className="inline-flex items-center rounded-md bg-red-500 px-3 py-2 text-sm font-semibold shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-red-600"
-                            >
-                              <TrashIcon className="w-6 h-6 text-white" />
-                            </button>
+                            {user?.id === quiz.teacherCreatedId && (
+                              <>
+                                <button
+                                  type="button"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    navToSelectedQuiz(quiz.id);
+                                  }}
+                                  className="inline-flex items-center rounded-md bg-green-500 px-3 py-2 text-sm font-semibold shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-green-600"
+                                >
+                                  <PencilSquareIcon className="w-6 h-6 text-white" />
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setDeleteQuizId(quiz.id);
+                                    setDeleteModalOpen(true);
+                                  }}
+                                  className="inline-flex items-center rounded-md bg-red-500 px-3 py-2 text-sm font-semibold shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-red-600"
+                                >
+                                  <TrashIcon className="w-6 h-6 text-white" />
+                                </button>
+                              </>
+                            )}
                           </td>
                         </tr>
                       ))

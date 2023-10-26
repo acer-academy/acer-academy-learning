@@ -21,6 +21,52 @@ export class TakeAnswerDao {
     });
   }
 
+  public async getTakeAnswersByStudent(
+    studentId: string,
+  ): Promise<TakeAnswer[]> {
+    return this.prismaClient.takeAnswer.findMany({
+      where: {
+        take: {
+          is: {
+            takenById: studentId,
+          },
+        },
+      },
+    });
+  }
+
+  public async getCorrectTakeAnswersByQuestionId(
+    questionId: string,
+  ): Promise<TakeAnswer[]> {
+    return this.prismaClient.takeAnswer.findMany({
+      where: { questionId: questionId, isCorrect: true },
+    });
+  }
+
+  public async getTakeAnswersByTake(takeId: string): Promise<TakeAnswer[]> {
+    return this.prismaClient.takeAnswer.findMany({
+      where: { takeId: takeId },
+      include: { question: true },
+    });
+  }
+
+  public async getTakeAnswersByQuizQuestion(
+    quizQuestionId: string,
+  ): Promise<TakeAnswer[]> {
+    return this.prismaClient.takeAnswer.findMany({
+      where: { questionId: quizQuestionId },
+    });
+  }
+
+  public async getTakeAnswersByTakeAndQuizQuestion(
+    takeId: string,
+    quizQuestionId: string,
+  ): Promise<TakeAnswer[]> {
+    return this.prismaClient.takeAnswer.findMany({
+      where: { takeId: takeId, questionId: quizQuestionId },
+    });
+  }
+
   public async updateTakeAnswer(
     answerId: string,
     answerData: Prisma.TakeAnswerUpdateInput,

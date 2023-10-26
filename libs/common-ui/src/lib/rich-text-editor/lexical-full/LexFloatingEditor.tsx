@@ -17,7 +17,7 @@ import { EquationNode } from './nodes/EquationNode';
 export type LexFloatingEditorProps = {
   className?: string;
   onChange: (val: string) => void;
-  onBlur: () => void;
+  onBlur?: () => void;
   editorStateStr?: string;
   placeholder?: string;
 };
@@ -69,11 +69,11 @@ export const LexFloatingEditor = forwardRef<
       });
     };
 
-    useEffect(() => {
-      if (!isFocused && isContentLoaded) {
-        onBlur();
-      }
-    }, [isFocused, onBlur, isContentLoaded]);
+    // useEffect(() => {
+    //   if (!isFocused && isContentLoaded) {
+    //     onBlur();
+    //   }
+    // }, [isFocused, onBlur, isContentLoaded]);
 
     return (
       <LexicalComposer initialConfig={initialConfig}>

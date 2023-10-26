@@ -36,8 +36,7 @@ export const QuestionCard = ({
   submitText,
 }: QuestionCardProps) => {
   const { displayToast, ToastType } = useToast();
-  const { control, handleSubmit, getValues } =
-    useFormContext<CreateQuizQuestionType>();
+  const { control, handleSubmit } = useFormContext<CreateQuizQuestionType>();
 
   const { errors } = useFormState<CreateQuizQuestionType>();
 
@@ -90,9 +89,9 @@ export const QuestionCard = ({
         render={({ field: { onChange, value, onBlur }, fieldState }) => (
           <>
             <LexEditor
-              errorMessage={errors.questionText?.message}
+              hasError={!!errors.questionText?.message}
               onChange={onChange}
-              editorStateStr={getValues('questionText')}
+              editorStateStr={value}
               onBlur={onBlur}
             />
             <ErrorMessage

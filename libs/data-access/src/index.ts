@@ -19,6 +19,7 @@ export * from './lib/api/term';
 export * from './lib/api/session';
 export * from './lib/api/quiz';
 export * from './lib/api/class';
+export * from './lib/api/take';
 
 // Object.freeze(api);
 
@@ -31,6 +32,10 @@ export {
 } from './lib/types/CommonTypes';
 export * from './lib/types/question';
 export * from './lib/types/quiz';
+export * from './lib/types/take';
 export * from './lib/schemas';
 export * from './lib/constants';
 export * from './lib/api/helper/price-conversion';
+export * from './lib/types/teacher';
+export * from './lib/api/take';
+export * from './lib/types/take';

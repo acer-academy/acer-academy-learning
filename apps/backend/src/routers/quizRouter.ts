@@ -4,12 +4,17 @@ import { Prisma } from '@prisma/client';
 import {
   validateBodyDifficultiesExist,
   validateBodyLevelsExist,
+  validateBodyNewQuestionIdExists,
+  validateBodyNewQuestionIdIsLaterVersionOfOldQuestionId,
+  validateBodyOldQuestionIdExists,
   validateBodyQuizFormatValid,
   validateBodyQuizOnQuizQuestionFormatValid,
   validateBodyQuizQuestionTopicsExist,
   validateBodyQuizTeacherCreatedExists,
   validateBodySubjectExists,
   validateBodySubjectsExist,
+  validateBodyUpdatePublishedQuizFormatValid,
+  validateParamsQuizHasNoTakes,
   validateParamsQuizIsLatest,
 } from '../middleware/validationMiddleware';
 
@@ -48,6 +53,25 @@ quizRouter.get('/', async (req: Request, res: Response) => {
   try {
     const quizzes = await quizService.getAllQuizzes();
     return res.status(200).json(quizzes);
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+});
+
+/**
+ * GET /quiz/generate-adaptive-learning-quiz
+ * Retrieves a list of questions based on selected topic and student's level.
+ * Returns 10 easy, 7 medium and 3 hard questions.
+ */
+quizRouter.get('/generate-adaptive-learning-quiz/:studentId', async (req: Request, res: Response) => {
+  const { studentId } = req.params;
+  const topics: string[] = req.query.topics as string[] || [];
+
+  try {
+    const questions = await quizService.generateAdaptiveLearningQuiz(topics, studentId);
+    return res.status(200).json(questions);
   } catch (error) {
     return res.status(500).json({
       error: error.message,
@@ -166,7 +190,7 @@ quizRouter.post(
 
 /**
  * PUT /quiz/:quizId
- * Update a quiz by ID.
+ * Update an unpublished quiz by ID.
  */
 quizRouter.put(
   '/:quizId',
@@ -177,10 +201,43 @@ quizRouter.put(
   validateBodyQuizTeacherCreatedExists,
   validateBodyQuizOnQuizQuestionFormatValid,
   validateParamsQuizIsLatest,
+  validateParamsQuizHasNoTakes,
   async (req: Request, res: Response) => {
     const { quizId } = req.params;
     try {
       const quiz = await quizService.updateQuiz(quizId, req);
+      if (quiz) {
+        return res.status(200).json(quiz);
+      } else {
+        return res.status(404).json({ error: 'Quiz not found' });
+      }
+    } catch (error) {
+      return res.status(500).json({
+        error: error.message,
+      });
+    }
+  },
+);
+
+/**
+ * PUT /quiz/published/:quizId
+ * Update the version of a quiz question in a published quiz by quiz ID and triggers re-marking process.
+ */
+quizRouter.put(
+  '/published/:quizId',
+  validateBodyUpdatePublishedQuizFormatValid,
+  validateBodyOldQuestionIdExists,
+  validateBodyNewQuestionIdExists,
+  validateBodyNewQuestionIdIsLaterVersionOfOldQuestionId,
+  validateBodySubjectExists,
+  validateBodyLevelsExist,
+  validateBodyQuizQuestionTopicsExist,
+  validateBodyQuizTeacherCreatedExists,
+  validateParamsQuizIsLatest,
+  async (req: Request, res: Response) => {
+    const { quizId } = req.params;
+    try {
+      const quiz = await quizService.updatePublishedQuiz(quizId, req);
       if (quiz) {
         return res.status(200).json(quiz);
       } else {

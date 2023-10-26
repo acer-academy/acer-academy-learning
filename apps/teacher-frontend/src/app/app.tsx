@@ -2,8 +2,6 @@
 import {
   EnforceLoginStatePageWrapper,
   LayoutRole,
-  LexEditor,
-  LexOutput,
   PrimaryLayout,
   ToastProvider,
 } from '@acer-academy-learning/common-ui';
@@ -20,7 +18,11 @@ import ChangePassword from '../pages/profile/ChangePassword';
 import TeacherForgotPassword from '../pages/entry/TeacherForgotPassword';
 import TeacherResetPassword from '../pages/entry/TeacherResetPassword';
 import { QuestionBank } from '../pages/question-bank/QuestionBank';
-import { ACCOUNT_NAV, NAV_SECTIONS } from '../libs/layout';
+import {
+  ACCOUNT_NAV,
+  NAV_SECTIONS,
+  ROUTES_WITHOUT_SIDEBAR,
+} from '../libs/layout';
 import {
   ACCOUNT,
   ANALYTICS,
@@ -36,11 +38,12 @@ import {
   QUESTION_BANK,
   CREATE_QUESTION,
   UPDATE_QUESTION,
-  WITHOUT_SIDEBARS,
   SUBJECT_MAIN,
+  CREATE_QUIZ,
   QUIZZES,
   VIEW_CLASSES,
   BOOK_CLASSES,
+  UPDATE_QUIZ,
 } from '../libs/routes';
 import { CreateQuestion } from '../pages/question-bank/CreateQuestion';
 import { QueryClient, QueryClientProvider } from 'react-query';
@@ -51,6 +54,9 @@ import { QuizManagement } from '../pages/quizzes/QuizManagement';
 import ViewCalendar from '../pages/scheduling/ViewCalendar';
 import Calendar from '../pages/scheduling/Calendar';
 import CalendarPage from '../pages/calendar/CalendarPage';
+import { CreateQuiz } from '../pages/quiz/CreateQuiz';
+import { QuizManagement } from '../pages/quiz/QuizManagement';
+import { ModifyQuizWrapper } from '../pages/quiz/ModifyQuizWrapper';
 
 export function App() {
   const queryClient = new QueryClient();
@@ -68,7 +74,7 @@ export function App() {
                       role={LayoutRole.Teacher}
                       navigationMenu={NAV_SECTIONS}
                       accountNavigation={ACCOUNT_NAV}
-                      routesWithoutSidebar={WITHOUT_SIDEBARS}
+                      routesWithoutSidebar={ROUTES_WITHOUT_SIDEBAR}
                     />
                   </EnforceLoginStatePageWrapper>
                 }
@@ -96,6 +102,8 @@ export function App() {
                   {/* Quizzes routes */}
                   <Route path={QUIZZES}>
                     <Route path={QUIZZES} element={<QuizManagement />} />
+                    <Route path={CREATE_QUIZ} element={<CreateQuiz />} />
+                    <Route path={UPDATE_QUIZ} element={<ModifyQuizWrapper />} />
                   </Route>
                 </Route>
                 {/* Analytics routes */}

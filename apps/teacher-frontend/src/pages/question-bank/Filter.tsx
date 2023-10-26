@@ -10,17 +10,24 @@ import {
 } from '@acer-academy-learning/data-access';
 import { QuizQuestionPaginationFilter } from 'libs/data-access/src/lib/types/question';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { LevelTag } from './LevelTag';
 import { TopicTag } from './TopicTag';
 import { QuizStatusTag } from './QuizStatusTag';
 import DifficultyTag from './DifficultyTag';
 import TypeTag from './QuestionTypeTag';
+import { useParams } from 'react-router-dom';
+import { getSubjectEnumFromPathParam } from '@acer-academy-learning/common-ui';
 
 export const Filter: React.FC<{
   filterSubmitCallback: Function;
   isQuizFilter?: boolean;
 }> = (props) => {
+  const { subject } = useParams();
+  const subjectEnum = useMemo(
+    () => getSubjectEnumFromPathParam(subject ?? ''),
+    [subject],
+  );
   const [difficulties, setDifficulties] = useState<
     QuizQuestionDifficultyEnum[]
   >([]);
@@ -49,6 +56,7 @@ export const Filter: React.FC<{
             difficulty: difficulties,
             levels: levels,
             topics: topics,
+            subjects: subjectEnum ? [subjectEnum] : [],
             showLatestOnly: !showAllVersions,
           }
         : {
@@ -59,9 +67,19 @@ export const Filter: React.FC<{
             questionType: questionTypes,
             showLatestOnly: !showAllVersions,
           };
-    console.log(filterOptions);
+    //console.log(filterOptions);
     filterSubmitCallback(filterOptions);
-  }, [difficulties, levels, topics, statuses, questionTypes, showAllVersions]);
+  }, [
+    difficulties,
+    levels,
+    topics,
+    statuses,
+    questionTypes,
+    showAllVersions,
+    subjectEnum,
+    filterSubmitCallback,
+    isQuizFilter,
+  ]);
 
   const handleDifficultyPress = (difficulty: QuizQuestionDifficultyEnum) => {
     if (difficulties.includes(difficulty)) {

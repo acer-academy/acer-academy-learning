@@ -8,7 +8,6 @@ import {
 import { QuestionTypeOption } from './QuestionTypeOption';
 import { QuestionTypeIcon } from './QuestionTypeIcon';
 import { Controller, useFormContext } from 'react-hook-form';
-import { LEX_DEFAULT_JSON_STRING } from '@acer-academy-learning/common-ui';
 import { TRUE_FALSE_VALUES } from '../constants';
 
 export const QuestionTypeSelect = () => {

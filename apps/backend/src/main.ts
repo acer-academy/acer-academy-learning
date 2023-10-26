@@ -26,9 +26,11 @@ import quizAnswerRouter from './routers/quizAnswerRouter';
 import stripeWebhookRouter from './routers/stripeWebhookRouter';
 import classRouter from './routers/classRouter';
 import sessionRouter from './routers/sessionRouter';
-import bodyParser from 'body-parser';
 import quizRouter from './routers/quizRouter';
 import takeRouter from './routers/takeRouter';
+import quizStatisticsRouter from './routers/quizStatisticsRouter';
+import takeAnswerRouter from './routers/takeAnswerRouter';
+import messageRouter from './routers/messageRouter';
 
 dotenv.config();
 
@@ -104,6 +106,9 @@ app.use('/api/v1/classes', classRouter);
 app.use('/api/v1/sessions', sessionRouter);
 app.use('/api/v1/quiz', quizRouter);
 app.use('/api/v1/take', takeRouter);
+app.use('/api/v1/quiz-statistics', quizStatisticsRouter);
+app.use('/api/v1/take-answers', takeAnswerRouter);
+app.use('/api/v1/message', messageRouter);
 
 // Start the server
 const server = app.listen(port, () => {
