@@ -14,6 +14,7 @@ import {
 import { Teacher } from './teacher';
 
 export interface QuizPaginationFilter {
+  searchString?: string;
   subjects?: SubjectEnum[];
   levels?: LevelEnum[];
   difficulty?: QuizQuestionDifficultyEnum[];

@@ -18,6 +18,7 @@ import { Request } from 'express';
 import { StudentDao } from '../dao/StudentDao';
 
 export interface QuizFilterOptions {
+  searchString?: string;
   subjects?: SubjectEnum[];
   levels?: LevelEnum[];
   difficulty?: QuizQuestionDifficultyEnum[];
@@ -271,6 +272,7 @@ export class QuizService {
       isPublic,
       allocatedTo,
       strictPublicOrAllocated,
+      searchString,
     } = filterOptions;
     if (subjects && subjects.length > 0) {
       where.subject = { in: filterOptions.subjects };
@@ -303,6 +305,19 @@ export class QuizService {
 
     if (strictPublicOrAllocated && (!allocatedTo || allocatedTo.length === 0)) {
       where.levels = { hasEvery: filterOptions.levels };
+    }
+
+    if (searchString) {
+      where.OR = [
+        { title: { contains: searchString, mode: 'insensitive' } },
+        { description: { contains: searchString, mode: 'insensitive' } },
+        {
+          teacherCreated: {
+            firstName: { contains: searchString, mode: 'insensitive' },
+            lastName: { contains: searchString, mode: 'insensitive' },
+          },
+        },
+      ];
     }
 
     const quizzes = await this.quizDao.getFilteredQuizzes(
