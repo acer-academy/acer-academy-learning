@@ -60,7 +60,9 @@ export const StudentsSection: React.FC<{
         data: updateValues,
       });
       displayToast('Successfully updated question version', ToastType.SUCCESS);
-      navigate(`/subjects/${quiz.subject}/quizzes/${newQuiz.data.id}`);
+      navigate(
+        `/subjects/${quiz.subject.toLowerCase()}/quizzes/${newQuiz.data.id}`,
+      );
     } catch (error) {
       const errorMsg = isAxiosError<{ error: string }>(error)
         ? error.response?.data.error

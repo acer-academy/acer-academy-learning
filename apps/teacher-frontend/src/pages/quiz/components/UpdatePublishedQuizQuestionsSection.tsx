@@ -89,6 +89,8 @@ export const UpdatePublishedQuizQuestionsSection = ({
           teacherCreated: user.id,
           oldQuestionId: selectedQuestion.id,
           newQuestionId: newQuestionId,
+          allocatedTo: quiz.allocatedTo,
+          isPublic: quiz.isPublic,
         };
         const newQuiz = await updatePublishedQuiz({
           quizId: quiz.id,
