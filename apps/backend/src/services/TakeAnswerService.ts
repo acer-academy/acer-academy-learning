@@ -34,12 +34,12 @@ export class TakeAnswerService {
   }
 
   public async getTakeAnswersByTakeAndQuizQuestion(
-    quizQuestionId: string,
     takeId: string,
+    quizQuestionId: string,
   ): Promise<TakeAnswer[]> {
     return this.takeAnswerDao.getTakeAnswersByTakeAndQuizQuestion(
-      quizQuestionId,
       takeId,
+      quizQuestionId,
     );
   }
 

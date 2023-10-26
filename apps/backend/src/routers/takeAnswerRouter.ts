@@ -6,6 +6,7 @@ import {
   validateBodyTakeAnswerFormatValid,
   validateBodyQuizQuestionExists,
   validateBodyTakeExists,
+  validateQuestionQuizTakeExist,
 } from '../middleware/validationMiddleware';
 
 const takeAnswerRouter = Router();
@@ -126,6 +127,33 @@ takeAnswerRouter.get(
       const takeAnswers = await takeAnswerService.getTakeAnswersByQuizQuestion(
         quizQuestionId,
       );
+      if (takeAnswers) {
+        return res.status(200).json(takeAnswers);
+      } else {
+        return res.status(404).json({ error: 'Take answers not found' });
+      }
+    } catch (error) {
+      return res.status(500).json({
+        error: error.message,
+      });
+    }
+  },
+);
+/**
+ * GET /take-answers/take-and-quiz/:takeId
+ * Retrieves take answers by take ID and quiz question.
+ */
+takeAnswerRouter.get(
+  '/questionAndTake/:questionId/:takeId',
+  validateQuestionQuizTakeExist,
+  async (req: Request, res: Response) => {
+    const { questionId, takeId } = req.params;
+    try {
+      const takeAnswers =
+        await takeAnswerService.getTakeAnswersByTakeAndQuizQuestion(
+          takeId,
+          questionId,
+        );
       if (takeAnswers) {
         return res.status(200).json(takeAnswers);
       } else {

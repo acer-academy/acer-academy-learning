@@ -29,9 +29,10 @@ export const AttemptQuiz = () => {
     getQuizByQuizId(quizId ?? ''),
   );
   const { mutateAsync: createTakeAsync } = useMutation(createTake, {
-    onSuccess: () => {
+    onSuccess: (response) => {
+      const takeId = response.data.id;
       displayToast('Quiz successfully submitted!', ToastType.SUCCESS);
-      navigate(`${QUIZZES}/${quizId}`);
+      navigate(`${QUIZZES}/result/${takeId}`);
     },
     onError: (error) => {
       const errorMsg = isAxiosError<{ error: string }>(error)

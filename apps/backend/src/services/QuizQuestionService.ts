@@ -11,6 +11,8 @@ import {
 } from '@prisma/client';
 import { QuizQuestionDao } from '../dao/QuizQuestionDao';
 import { Request } from 'express';
+import { QuizAnswerService } from './QuizAnswerService';
+import { QuizOnQuizQuestionDao } from '../dao/QuizOnQuizQuestionDao';
 
 export interface QuizQuestionFilterOptions {
   topics?: QuizQuestionTopicEnum[];
@@ -26,6 +28,7 @@ export interface QuizQuestionFilterOptions {
 export class QuizQuestionService {
   constructor(
     private quizQuestionDao: QuizQuestionDao = new QuizQuestionDao(),
+    private quizOnQuizQuestionDao: QuizOnQuizQuestionDao = new QuizOnQuizQuestionDao(),
   ) {}
 
   public async createQuizQuestion(
@@ -42,6 +45,18 @@ export class QuizQuestionService {
     questionId: string,
   ): Promise<QuizQuestion | null> {
     return this.quizQuestionDao.getQuizQuestionById(questionId);
+  }
+
+  public async getQuizQuestionsByQuizId(quizId): Promise<QuizQuestion[]> {
+    const quizOnQuizQuestions =
+      await this.quizOnQuizQuestionDao.getQuizOnQuizQuestionsByQuizId(quizId);
+    const quizQuestions: QuizQuestion[] = [];
+    for (const quizOnQuiz of quizOnQuizQuestions) {
+      quizQuestions.push(
+        await this.getQuizQuestionById(quizOnQuiz.quizQuestionId),
+      );
+    }
+    return quizQuestions;
   }
 
   public async getQuizQuestionAllVersionsById(

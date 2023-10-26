@@ -4,11 +4,12 @@ import { QuizQuestionService } from './QuizQuestionService';
 import { QuizQuestionTypeEnum, QuizQuestion } from '@prisma/client';
 import { QuizAnswerService } from './QuizAnswerService';
 import { QuizOnQuizQuestionDao } from '../dao/QuizOnQuizQuestionDao';
+import { TakeService } from './TakeService';
 
 class QuizStatisticsService {
   constructor(
     private takeAnswerService = new TakeAnswerService(),
-    private quizService = new QuizService(),
+    private takeService = new TakeService(),
     private quizQuestionService = new QuizQuestionService(),
     private quizAnswerService = new QuizAnswerService(),
     private quizOnQuizQuestionDao = new QuizOnQuizQuestionDao(),
@@ -71,12 +72,13 @@ class QuizStatisticsService {
 
   // View Spider Chart analysis for quiz attempt
   public async spiderChartAnalysis(
-    quizId: string,
     takeId: string,
   ): Promise<{ subjectArr: string[]; averageScoreArr: number[] }> {
-    const quiz = await this.quizService.getQuizById(quizId);
+    const take = await this.takeService.getTakeById(takeId);
     const quizOnQuizQuestions =
-      await this.quizOnQuizQuestionDao.getQuizOnQuizQuestionsByQuizId(quizId);
+      await this.quizOnQuizQuestionDao.getQuizOnQuizQuestionsByQuizId(
+        take.quizId,
+      );
     const quizQuestions: QuizQuestion[] = [];
     for (const quizOnQuiz of quizOnQuizQuestions) {
       quizQuestions.push(
@@ -92,10 +94,10 @@ class QuizStatisticsService {
     for (const ques of quizQuestions) {
       const takeAns =
         await this.takeAnswerService.getTakeAnswersByTakeAndQuizQuestion(
-          ques.id,
           takeId,
+          ques.id,
         );
-      let correct = takeAns[0].isCorrect;
+      let correct = takeAns.length > 0 ? takeAns[0].isCorrect : false;
       if (ques.questionType === QuizQuestionTypeEnum.MRQ) {
         let correctAnsLength = (
           await this.quizAnswerService.getCorrectAnswersByQuestion(ques.id)

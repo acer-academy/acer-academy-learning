@@ -14,3 +14,9 @@ export const createTake = async (
 ): Promise<AxiosResponse<TakeData>> => {
   return client.post(`${URL}`, data);
 };
+
+export async function getTakeByTakeId(
+  takeId: string,
+): Promise<AxiosResponse<StudentTakeData>> {
+  return client.get(`${URL}/${takeId}`);
+}
