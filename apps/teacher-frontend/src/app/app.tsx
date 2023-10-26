@@ -5,7 +5,6 @@ import {
   PrimaryLayout,
   ToastProvider,
 } from '@acer-academy-learning/common-ui';
-import styles from './app.module.css';
 import TeacherLogin from '../pages/entry/TeacherLogin';
 import TeacherSignUp from '../pages/entry/TeacherSignUp';
 import { Route, Routes } from 'react-router-dom';
@@ -50,8 +49,6 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import { UpdateQuestion } from '../pages/question-bank/UpdateQuestion';
 import { Subjects } from '../pages/subjects/Subjects';
 import { Subject } from '../pages/subjects/Subject';
-import { QuizManagement } from '../pages/quizzes/QuizManagement';
-import ViewCalendar from '../pages/scheduling/ViewCalendar';
 import Calendar from '../pages/scheduling/Calendar';
 import CalendarPage from '../pages/calendar/CalendarPage';
 import { CreateQuiz } from '../pages/quiz/CreateQuiz';
