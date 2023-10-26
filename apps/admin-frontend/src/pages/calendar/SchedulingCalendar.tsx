@@ -97,13 +97,13 @@ export const SchedulingCalendar = ({
         // onSelectEvent={onSelectEvent}
         onDoubleClickEvent={(event) => {
           const session = event?.data?.session;
-          if(session && session.teacherId !== user?.id) {
-            console.log("here")
-            console.log(session)
-            onShowSessionReadView(session);
-          } else {
+          // if(session && session.teacherId !== user?.id) {
+          //   console.log("here")
+          //   console.log(session)
+          //   onShowSessionReadView(session);
+          // } else {
             session && onShowSessionView(session);
-          }
+          // }
          
         }}
         events={sessionsData}

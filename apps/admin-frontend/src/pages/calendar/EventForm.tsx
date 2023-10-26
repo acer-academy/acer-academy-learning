@@ -4,7 +4,8 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { CentreData } from 'libs/data-access/src/lib/types/centre';
 import { ClassroomData } from 'libs/data-access/src/lib/types/classroom';
-import { Teacher } from 'libs/data-access/src/lib/types/teacher';
+import { Admin } from 'libs/data-access/src/lib/types/admin';
+import { Teacher, TeacherData } from 'libs/data-access/src/lib/types/teacher';
 import { useAuth } from '@acer-academy-learning/common-ui';
 import { useToast } from '@acer-academy-learning/common-ui';
 import './CalendarView.css';
@@ -14,6 +15,7 @@ import {
   createRecurringClass,
   deleteRecurringClass,
   getAllCentres,
+  getAllTeachers,
   getClassroomsByCentre,
   updateRecurringClass,
 } from '@acer-academy-learning/data-access';
@@ -92,7 +94,11 @@ export default function EventForm({
     session.levels || [],
   );
 
-  const { user } = useAuth<Teacher>();
+  const [teachers, setTeachers] = useState<TeacherData[]>([]);
+  const [selectedTeacher, setSelectedTeacher] = useState(session.teacherId || '',);
+
+
+  const { user } = useAuth<Admin>();
 
   const [sessionState, setSessionState] = useState({
     id: session.id,
@@ -105,7 +111,7 @@ export default function EventForm({
       .map((subject) => SubjectEnum[subject as keyof typeof SubjectEnum]),
     classroomId: selectedClassroom,
     end: sessionData.end,
-    teacherId: user.id,
+    teacherId: selectedTeacher,
     classId: null,
   });
 
@@ -150,10 +156,10 @@ export default function EventForm({
         .filter((subject) => subject in SubjectEnum)
         .map((subject) => SubjectEnum[subject as keyof typeof SubjectEnum]),
       classroomId: selectedClassroom,
-      teacherId: user.id,
+      teacherId: selectedTeacher
       // ... any other fields you want to watch
     }));
-  }, [sessionData, selectedClassroom, selectedLevels, selectedSubjects]);
+  }, [sessionData, selectedClassroom, selectedLevels, selectedSubjects, selectedTeacher]);
 
   const label = session?.id ? 'Update' : 'Create';
 
@@ -161,6 +167,22 @@ export default function EventForm({
     setSessionData({ ...session });
     console.log(session);
   }, [session]);
+
+  useEffect(() => {
+    const fetchTeachers = async () => {
+      try {
+        const response = await getAllTeachers();
+        const teachers: TeacherData[] = response.data;
+        setTeachers(teachers);
+      } catch (err) {
+        // setError(err);
+      } finally {
+        // setLoading(false);
+      }
+    };
+
+    fetchTeachers();
+  }, []);
 
   useEffect(() => {
     const fetchCentres = async () => {
@@ -253,6 +275,7 @@ export default function EventForm({
     setSelectedLevels(session.levels || []);
     setSelectedCentre(session.classroom?.centreId || '');
     setSelectedClassroom(session.classroomId || '');
+    setSelectedTeacher(session.teacherId || '');
   }, [session]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -452,6 +475,34 @@ export default function EventForm({
                 </div>
               </div>
             )}
+          </div>
+
+          <div className="mt-4">
+            <div className="flex items-center space-x-4">
+              <label
+                htmlFor="teacher"
+                className="block w-1/4 text-sm font-medium leading-6 text-gray-900"
+              >
+                Teacher
+              </label>
+              <select
+                id="teacher"
+                name="teacher"
+                required
+                value={selectedTeacher}
+                onChange={(e) => setSelectedTeacher(e.target.value)}
+                className="mt-2 block w-3/4 space-y-2 rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              >
+                <option value="">
+                  Select a teacher
+                </option>
+                {teachers.map((teacher, index) => (
+                  <option key={index} value={teacher.id}>
+                    {teacher.firstName} {teacher.lastName} 
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
 
           <div className="mt-4">
