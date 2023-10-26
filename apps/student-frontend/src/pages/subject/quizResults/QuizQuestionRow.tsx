@@ -13,6 +13,7 @@ import {
   getAverageTimeTakenByQuestionId as apiAverageTime,
 } from '@acer-academy-learning/data-access';
 import { QuizSelectAnswer } from './QuizSelectAnswer';
+import { QuizAnswer } from '@prisma/client';
 export type QuizQuestionRowProps = {
   questionId: string;
   takeId: string;
@@ -86,9 +87,22 @@ export const QuizQuestionRow = ({
         );
       default:
         return (
-          <LexOutput
-            editorStateStr={(takeAnswer && takeAnswer[0].studentAnswer) || ''}
-          />
+          <>
+            <LexOutput
+              editorStateStr={(takeAnswer && takeAnswer[0].studentAnswer) || ''}
+            />
+            <Divider lineClassName="border-student-primary-600" />
+            <span className="font-bold">Answer</span>
+            <LexOutput editorStateStr={question?.answers[0].answer || ''} />
+            {question?.answers[0].explanation ? (
+              <>
+                <span className="font-bold">Explanation</span>
+                <LexOutput editorStateStr={question?.answers[0].explanation} />
+              </>
+            ) : (
+              <></>
+            )}
+          </>
         );
     }
   }, [question, questionNumber]);
@@ -112,19 +126,61 @@ export const QuizQuestionRow = ({
           <LexOutput editorStateStr={question?.questionText || ''} />
           <Divider lineClassName="border-student-primary-600" />
           {answerOptions}
-          <div className="bg-gray-100 px-3 py-3 sm:px-3 shadow space-y-4 flex flex-col">
+          <div className="bg-gray-100 px-3 py-3 sm:px-3 shadow space-y-2 flex flex-col">
+            <span className="font-bold">Time Analysis</span>
             <span>{`Time taken: ${
               takeAnswer && takeAnswer[0].timeTaken
             } seconds`}</span>
             <span>
+              {`On average, students take `}
+              <span className="font-bold">{averageTime}</span>
+              {` seconds to complete this question. `}
+              {/* <span> */}
+              {takeAnswer && takeAnswer[0] && takeAnswer[0].timeTaken ? (
+                takeAnswer[0].timeTaken < parseFloat(averageTime) ? (
+                  <span>
+                    {`Well done! You completed this question faster than most students.`}
+                  </span>
+                ) : (
+                  <span>
+                    {`You took longer to complete this question than most students, which could indicate that you were putting extra thought into it.`}
+                  </span>
+                )
+              ) : (
+                <span></span>
+              )}
+              {/* </span> */}
+            </span>
+            <span className="font-bold">Correctness</span>
+            <span>
               <span className="font-bold">{`${correctRate}%`}</span>
               {` of students got this question right.`}
             </span>
-            <span>
-              {`On average, students take `}
-              <span className="font-bold">{averageTime}</span>
-              {` seconds to complete this question`}
-            </span>
+            {takeAnswer &&
+            takeAnswer.filter((takeAns) => takeAns.isCorrect === true)
+              .length ===
+              question?.answers.filter((ans) => ans.isCorrect === true)
+                .length ? (
+              parseFloat(correctRate) < 50 ? (
+                <span>
+                  {`Well done! You have a good grasp of `}
+                  <span className="font-bold">
+                    {question.topics
+                      .map((a) => a.toLowerCase().split('_').join(' '))
+                      .join(', ')}
+                  </span>
+                  {`! This is a tricky question.`}
+                </span>
+              ) : (
+                <></>
+              )
+            ) : parseFloat(correctRate) > 50 ? (
+              <span>
+                {`Did you make a careless mistake? This is a common question that most students got right.`}
+              </span>
+            ) : (
+              <> </>
+            )}
           </div>
         </div>
       </div>

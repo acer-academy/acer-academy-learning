@@ -58,9 +58,16 @@ export const QuizResult: React.FC = () => {
       <div className="flex min-h-full flex-col gap-7 align-middle">
         <div className="flex align-middle justify-between">
           <div className="flex align-middle gap-4">
-            <span className="text-2xl py-1 font-bold tracking-tight">
-              Quiz Results: {`${take?.marks}/ ${take?.quiz.totalMarks}`}
-            </span>
+            <div className="px-3 py-3 sm:px-3 space-y-2 flex flex-col">
+              <span className="text-2xl py-1 font-bold tracking-tight">
+                {`${take?.quiz.title}`}
+              </span>
+              <div className="flex align-left gap-4">
+                <span className="text-2xl py-1 font-bold tracking-tight">
+                  Quiz Results: {`${take?.marks}/ ${take?.quiz.totalMarks}`}
+                </span>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -85,10 +92,12 @@ export const QuizResult: React.FC = () => {
               <span className="text-2xl px-3 py-4 font-bold tracking-tight">
                 Spider Chart Analysis
               </span>
-              <SpiderChart
-                subjectArr={spiderChart.subjectArr}
-                averageScoreArr={spiderChart.averageScoreArr}
-              />
+              <div className="h-50">
+                <SpiderChart
+                  subjectArr={spiderChart.subjectArr}
+                  averageScoreArr={spiderChart.averageScoreArr}
+                />
+              </div>
             </div>
           </div>
         </div>
