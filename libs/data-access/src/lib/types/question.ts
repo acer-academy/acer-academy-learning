@@ -5,8 +5,8 @@ import {
   QuizQuestionDifficultyEnum,
   QuizQuestionStatusEnum,
   QuizQuestionTopicEnum,
+  QuizQuestionTypeEnum,
 } from '../constants';
-import { QuizQuestionTypeEnum } from '@prisma/client';
 
 export interface QuizAnswer {
   id: string;

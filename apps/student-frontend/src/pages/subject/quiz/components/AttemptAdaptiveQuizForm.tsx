@@ -15,6 +15,8 @@ import {
 import { getDifficultyBasedOn } from '../utils/getDifficultyBasedOn';
 import { FormProvider } from 'react-hook-form';
 import { AdaptiveQuizQuestionCard } from './AdaptiveQuizQuestionCard';
+import { AdaptiveQuizResults } from './AdaptiveQuizResults';
+import { MS_IN_SECOND } from './QuizTimer';
 
 export type AttemptAdaptiveQuizFormProps = {
   thresholds: {
@@ -71,6 +73,8 @@ export const AttemptAdaptiveQuizForm = ({
     currentDifficulty,
     currentPercentage,
     nextIndex,
+    currStageCorrectQuestions,
+    currStageTotalNumberOfQuestionsToClear,
   } = useMemo(() => {
     const numOfCorrectQuestions = Object.entries(answers).reduce(
       (curr, [key, answer]) => (answer.isCorrect ? ++curr : curr),
@@ -81,7 +85,7 @@ export const AttemptAdaptiveQuizForm = ({
       thresholds,
     );
 
-    const currTotalNumberOfQuestions =
+    const totalNumberOfQuestionsBuffer =
       currentDifficulty === QuizQuestionDifficultyEnum.BASIC
         ? thresholds.BASIC
         : currentDifficulty === QuizQuestionDifficultyEnum.INTERMEDIATE
@@ -93,11 +97,12 @@ export const AttemptAdaptiveQuizForm = ({
           ? numOfCorrectQuestions - thresholds.BASIC
           : numOfCorrectQuestions - thresholds.INTERMEDIATE
         : numOfCorrectQuestions;
+    const currStageTotalNumberOfQuestionsToClear =
+      totalNumberOfQuestionsBuffer === 0
+        ? currStageCorrectQuestions
+        : totalNumberOfQuestionsBuffer;
     const currentPercentage = Math.ceil(
-      (currStageCorrectQuestions /
-        (currTotalNumberOfQuestions === 0
-          ? currStageCorrectQuestions
-          : currTotalNumberOfQuestions)) *
+      (currStageCorrectQuestions / currStageTotalNumberOfQuestionsToClear) *
         100,
     );
 
@@ -114,6 +119,8 @@ export const AttemptAdaptiveQuizForm = ({
       numOfCorrectQuestions,
       currentDifficulty,
       currentPercentage,
+      currStageCorrectQuestions,
+      currStageTotalNumberOfQuestionsToClear,
     };
   }, [answers, thresholds]);
   const questionNumber = useMemo(
@@ -142,6 +149,7 @@ export const AttemptAdaptiveQuizForm = ({
           : [],
       );
       formMethods.setValue('studentAnswer.timeTaken', 0);
+      formMethods.setValue('studentAnswer.question', currQuestion);
       return currQuestion;
     }
   }, [
@@ -162,6 +170,9 @@ export const AttemptAdaptiveQuizForm = ({
         .map((answer) => answer.answer);
       const currStudentAnswer = values.studentAnswer.studentAnswer.filter(
         (answer): answer is string => typeof answer === 'string',
+      );
+      values.studentAnswer.timeTaken = Math.floor(
+        values.studentAnswer.timeTaken / MS_IN_SECOND,
       );
       if (
         currStudentAnswer.length === answersForCurrQuestion.length ||
@@ -188,39 +199,50 @@ export const AttemptAdaptiveQuizForm = ({
         onSubmit={formMethods.handleSubmit(onSubmit)}
         className="h-full space-y-1 flex flex-col w-full relative justify-center items-center"
       >
-        <div className="absolute top-0 w-full flex flex-col items-center">
-          <p className="my-4 text-xl font-semibold">
-            Stage {currentStage}: {currentDifficulty}
-          </p>
-          <ProgressBar
-            width={currentPercentage}
-            rounded
-            unfinishedClassName="w-[60%] box-content border border-black border-2"
-          />
-        </div>
-        {/* To remove or change */}
-        <p className="flex-start">
-          Num of correct: {numOfCorrectQuestions}, Thresholds: Basic -{' '}
-          {thresholds.BASIC}, Intermediate - {thresholds.INTERMEDIATE}
-        </p>
-        {currentQuestion && (
-          <AdaptiveQuizQuestionCard
-            key={currentQuestion.id}
-            question={currentQuestion}
-            questionNumber={questionNumber}
-            marks={1}
-            className={`${
-              isCardShowing ? 'opacity-100' : 'opacity-0'
-            } transition-opacity duration-300 self-center w-full`}
-            bannerClassName={`bg-student-primary-600 text-white `}
+        {(currentQuestion && (
+          <>
+            <div className="absolute top-0 w-full flex flex-col items-center">
+              <p className="my-4 text-xl font-semibold">
+                Stage {currentStage}: {currentDifficulty}
+              </p>
+              <ProgressBar
+                width={currentPercentage}
+                rounded
+                unfinishedClassName="w-[60%] box-content border border-black border-2"
+              />
+            </div>
+            {/* To remove or change */}
+            <p className="flex-start">
+              Num of correct: {numOfCorrectQuestions}, Thresholds: Basic -{' '}
+              {thresholds.BASIC}, Intermediate - {thresholds.INTERMEDIATE}
+            </p>
+            <AdaptiveQuizQuestionCard
+              key={currentQuestion.id}
+              question={currentQuestion}
+              questionNumber={questionNumber}
+              marks={1}
+              className={`${
+                isCardShowing ? 'opacity-100' : 'opacity-0'
+              } transition-opacity duration-300 self-center w-full`}
+              bannerClassName={`bg-student-primary-600 text-white `}
+            />
+            <nav className="rounded bg-white border border-gray-200 absolute bottom-0 space-x-4 w-full p-2 flex justify-end">
+              <GenericButton
+                type="submit"
+                className="bg-student-primary-600 hover:bg-student-primary-700 text-white self-center w-24"
+              />
+            </nav>
+          </>
+        )) || (
+          <AdaptiveQuizResults
+            currentDifficulty={currentDifficulty}
+            currentStageNumberOfCorrect={currStageCorrectQuestions}
+            currentStageTotalNumberOfQuestions={
+              currStageTotalNumberOfQuestionsToClear
+            }
+            answers={answers}
           />
         )}
-        <nav className="rounded bg-white border border-gray-200 absolute bottom-0 space-x-4 w-full p-2 flex justify-end">
-          <GenericButton
-            type="submit"
-            className="bg-student-primary-600 hover:bg-student-primary-700 text-white self-center w-24"
-          />
-        </nav>
       </form>
     </FormProvider>
   );

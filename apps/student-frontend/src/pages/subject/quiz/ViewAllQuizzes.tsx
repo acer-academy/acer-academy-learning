@@ -1,9 +1,9 @@
 import {
-  FullscreenSpinner,
   GenericAccordion,
   Spinner,
   getSubjectPathFrom,
   useAuth,
+  useDebounceValue,
 } from '@acer-academy-learning/common-ui';
 import {
   QuizPaginationFilter,
@@ -38,25 +38,26 @@ export const ViewAllQuizzes = () => {
   const [currentPageForAllocated, setCurrentPageForAllocated] = useState(1);
   const [pageSizeForAllocated, setPageSizeForAllocated] = useState(10);
   const [pageSizeForSpecial, setPageSizeForSpecial] = useState(10);
+  const debouncedString = useDebounceValue<string>(searchString, 300);
   const quizFilterOptions: QuizPaginationFilter = useMemo(
     () => ({
-      searchString: searchString,
+      searchString: debouncedString,
       levels: user ? [user.level] : [],
       subjects: currentSubject ? [currentSubject] : [],
       showLatestOnly: true,
       strictPublicOrAllocated: true,
     }),
-    [currentSubject, user, searchString],
+    [currentSubject, user, debouncedString],
   );
   const allocatedFilterOptions: QuizPaginationFilter = useMemo(
     () => ({
-      searchString: searchString,
+      searchString: debouncedString,
       subjects: currentSubject ? [currentSubject] : [],
       allocatedTo: user ? [user.id] : [],
       showLatestOnly: true,
       strictPublicOrAllocated: true,
     }),
-    [user, currentSubject, searchString],
+    [user, currentSubject, debouncedString],
   );
   const { data: publicQuizzes, isLoading } = useQuery(
     ['quiz', pageSize, currentPage, quizFilterOptions],
@@ -126,7 +127,7 @@ export const ViewAllQuizzes = () => {
                 <span className="py-2 text-base">Rows per page:</span>
                 <select
                   className="rounded-md"
-                  value={pageSize}
+                  value={pageSizeForSpecial}
                   onChange={(e) =>
                     setPageSizeForSpecial(Number(e.target.value))
                   }
