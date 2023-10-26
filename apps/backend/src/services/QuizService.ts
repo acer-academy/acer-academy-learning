@@ -93,7 +93,10 @@ export class QuizService {
   public async generateAdaptiveLearningQuiz(
     topics: string[],
     studentId: string,
-  ): Promise<QuizQuestionPrisma[]> {
+  ): Promise<{
+    thresholds: { [key in QuizQuestionDifficultyEnum]: number };
+    questions: QuizQuestionPrisma[];
+  }> {
     const student = await this.studentDao.getStudentById(studentId);
     if (!student) {
       throw Error('Student not found.');
@@ -160,7 +163,30 @@ export class QuizService {
       hardQuestions.splice(randomIndex, 1);
     }
 
-    return quizQuestions;
+    // Split thresholds into 30% (easy) (40% medium) and (30%) hard
+    const numberOfBasicQuestions = Math.min(
+      easyQuestionCount,
+      Math.ceil(10 * 0.3),
+    );
+    const numberOfIntermediateQuestions = Math.min(
+      mediumQuestionCount,
+      Math.ceil(10 * 0.4),
+    );
+
+    return {
+      thresholds: {
+        [QuizQuestionDifficultyEnum.BASIC]: numberOfBasicQuestions,
+        [QuizQuestionDifficultyEnum.INTERMEDIATE]:
+          numberOfBasicQuestions + numberOfIntermediateQuestions,
+        [QuizQuestionDifficultyEnum.ADVANCED]: Math.min(
+          10,
+          numberOfBasicQuestions +
+            numberOfIntermediateQuestions +
+            hardQuestionCount,
+        ),
+      },
+      questions: quizQuestions,
+    };
   }
 
   public async getAllQuizzes(): Promise<Quiz[]> {

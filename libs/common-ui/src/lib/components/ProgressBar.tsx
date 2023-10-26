@@ -25,9 +25,11 @@ export const ProgressBar = ({
     >
       <div
         style={{ width: `${width}%` }}
-        className={`absolute ${height ? height : 'h-6'} ${
-          filledColor ? filledColor : 'bg-green-400'
-        } ${rounded ? 'rounded-l' : ''} ${completedClassName}`}
+        className={`absolute transition-all duration-200 ${
+          height ? height : 'h-6'
+        } ${filledColor ? filledColor : 'bg-green-400'} ${
+          rounded ? 'rounded-l' : ''
+        } ${completedClassName}`}
       />
     </div>
   );

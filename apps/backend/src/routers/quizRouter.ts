@@ -69,7 +69,10 @@ quizRouter.get(
   '/generate-adaptive-learning-quiz/:studentId',
   async (req: Request, res: Response) => {
     const { studentId } = req.params;
-    const topics: string[] = (req.query.topics as string[]) || [];
+    const retrievedTopics = req.query.topics;
+    const topics: string[] = Array.isArray(retrievedTopics)
+      ? (retrievedTopics as string[])
+      : [retrievedTopics as string];
 
     try {
       const questions = await quizService.generateAdaptiveLearningQuiz(

@@ -60,5 +60,7 @@ export const createQuizSchema = z.intersection(
 );
 
 export const createAdaptiveQuizSchema = z.object({
-  topics: z.array(z.nativeEnum(QuizQuestionTopicEnum)),
+  topics: z
+    .array(z.nativeEnum(QuizQuestionTopicEnum))
+    .min(1, 'Must select at least 1 topic to continue'),
 });

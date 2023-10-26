@@ -9,6 +9,12 @@ import {
 import client from './client';
 import { AxiosResponse } from 'axios';
 import { Student } from '../types/student';
+import {
+  QuizQuestionDifficultyEnum,
+  QuizQuestionTopicEnum,
+} from '../constants';
+import { LevelEnum } from '../types/CommonTypes';
+import { QuizQuestionData } from '../types/question';
 
 const URL = '/quiz';
 
@@ -52,3 +58,22 @@ export async function getQuizByQuizId(quizId: string): Promise<QuizData> {
   );
   return res.data;
 }
+
+export const getAdaptiveQuizQuestions = async (data: {
+  topics: QuizQuestionTopicEnum[];
+  studentId: string;
+}): Promise<
+  AxiosResponse<{
+    totalQuestionCount: number;
+    questions: QuizQuestionData[];
+    thresholds: { [key in QuizQuestionDifficultyEnum]: number };
+  }>
+> => {
+  // return client.post(`/quiz-questions/filter?=page${1}&pageSize=${1}`, data);
+  const topics = data.topics
+    .map((topic, index) => `${index !== 0 ? '&' : ''}topics=${topic}`)
+    .join('');
+  return client.get(
+    `${URL}/generate-adaptive-learning-quiz/${data.studentId}?${topics}`,
+  );
+};

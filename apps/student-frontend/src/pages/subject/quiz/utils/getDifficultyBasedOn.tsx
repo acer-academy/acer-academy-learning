@@ -1,11 +1,14 @@
 import { QuizQuestionDifficultyEnum } from '@acer-academy-learning/data-access';
 
-const BASIC_THRESHOLD = 3;
-const INTERMEDIATE_THRESHOLD = 7;
-export const getDifficultyBasedOn = (numOfCorrectQuestions: number) => {
-  if (numOfCorrectQuestions < BASIC_THRESHOLD) {
+export const getDifficultyBasedOn = (
+  numOfCorrectQuestions: number,
+  thresholds: {
+    [key in QuizQuestionDifficultyEnum]: number;
+  },
+) => {
+  if (numOfCorrectQuestions < thresholds.BASIC) {
     return QuizQuestionDifficultyEnum.BASIC;
-  } else if (numOfCorrectQuestions < INTERMEDIATE_THRESHOLD) {
+  } else if (numOfCorrectQuestions < thresholds.INTERMEDIATE) {
     return QuizQuestionDifficultyEnum.INTERMEDIATE;
   } else {
     return QuizQuestionDifficultyEnum.ADVANCED;

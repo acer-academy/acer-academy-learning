@@ -17,10 +17,14 @@ import { FormProvider } from 'react-hook-form';
 import { AdaptiveQuizQuestionCard } from './AdaptiveQuizQuestionCard';
 
 export type AttemptAdaptiveQuizFormProps = {
+  thresholds: {
+    [key in QuizQuestionDifficultyEnum]: number;
+  };
   questions: QuizQuestionData[];
 };
 
 export const AttemptAdaptiveQuizForm = ({
+  thresholds,
   questions,
 }: AttemptAdaptiveQuizFormProps) => {
   const formMethods = useZodForm({
@@ -62,23 +66,61 @@ export const AttemptAdaptiveQuizForm = ({
     [questions],
   );
 
-  const numOfCorrectQuestions = useMemo(
-    () =>
-      Object.entries(answers).reduce(
-        (curr, [key, answer]) => (answer.isCorrect ? ++curr : curr),
-        0,
-      ),
-    [answers],
-  );
+  const {
+    numOfCorrectQuestions,
+    currentDifficulty,
+    currentPercentage,
+    nextIndex,
+  } = useMemo(() => {
+    const numOfCorrectQuestions = Object.entries(answers).reduce(
+      (curr, [key, answer]) => (answer.isCorrect ? ++curr : curr),
+      0,
+    );
+    const currentDifficulty = getDifficultyBasedOn(
+      numOfCorrectQuestions,
+      thresholds,
+    );
+
+    const currTotalNumberOfQuestions =
+      currentDifficulty === QuizQuestionDifficultyEnum.BASIC
+        ? thresholds.BASIC
+        : currentDifficulty === QuizQuestionDifficultyEnum.INTERMEDIATE
+        ? thresholds.INTERMEDIATE - thresholds.BASIC
+        : thresholds.ADVANCED - thresholds.INTERMEDIATE;
+    const currStageCorrectQuestions =
+      currentDifficulty !== QuizQuestionDifficultyEnum.BASIC
+        ? currentDifficulty === QuizQuestionDifficultyEnum.INTERMEDIATE
+          ? numOfCorrectQuestions - thresholds.BASIC
+          : numOfCorrectQuestions - thresholds.INTERMEDIATE
+        : numOfCorrectQuestions;
+    const currentPercentage = Math.ceil(
+      (currStageCorrectQuestions /
+        (currTotalNumberOfQuestions === 0
+          ? currStageCorrectQuestions
+          : currTotalNumberOfQuestions)) *
+        100,
+    );
+
+    const offSet =
+      currentDifficulty !== QuizQuestionDifficultyEnum.BASIC
+        ? currentDifficulty === QuizQuestionDifficultyEnum.INTERMEDIATE
+          ? thresholds.BASIC
+          : thresholds.INTERMEDIATE
+        : 0;
+    const nextIndex = Object.entries(answers).length - offSet;
+
+    return {
+      nextIndex,
+      numOfCorrectQuestions,
+      currentDifficulty,
+      currentPercentage,
+    };
+  }, [answers, thresholds]);
   const questionNumber = useMemo(
     () => Object.entries(answers).length + 1,
     [answers],
   );
 
-  const currentDifficulty = useMemo(
-    () => getDifficultyBasedOn(numOfCorrectQuestions),
-    [numOfCorrectQuestions],
-  );
   const currentStage = useMemo(
     () =>
       Object.values(QuizQuestionDifficultyEnum).findIndex(
@@ -88,7 +130,7 @@ export const AttemptAdaptiveQuizForm = ({
   );
 
   const currentQuestion = useMemo(() => {
-    const currQuestion = wrangledQuestions[currentDifficulty].pop();
+    const currQuestion = wrangledQuestions[currentDifficulty][nextIndex];
     if (currQuestion && questionNumber <= 10) {
       setIsCardShowing(false);
       setTimeout(() => setIsCardShowing(true), 100);
@@ -102,7 +144,13 @@ export const AttemptAdaptiveQuizForm = ({
       formMethods.setValue('studentAnswer.timeTaken', 0);
       return currQuestion;
     }
-  }, [numOfCorrectQuestions, questionNumber, wrangledQuestions, formMethods]);
+  }, [
+    questionNumber,
+    wrangledQuestions,
+    currentDifficulty,
+    formMethods,
+    nextIndex,
+  ]);
 
   const onSubmit = async (values: CreateAdaptiveTakeSchema) => {
     console.log(values);
@@ -145,13 +193,17 @@ export const AttemptAdaptiveQuizForm = ({
             Stage {currentStage}: {currentDifficulty}
           </p>
           <ProgressBar
-            width={50}
+            width={currentPercentage}
             rounded
             unfinishedClassName="w-[60%] box-content border border-black border-2"
           />
         </div>
         {/* To remove or change */}
         <p className="flex-start">Num of correct: {numOfCorrectQuestions}</p>
+        <p className="flex-start">Thresholds: </p>
+        <p className="flex-start">
+          Basic: {thresholds.BASIC}, Int: {thresholds.INTERMEDIATE}
+        </p>
         {currentQuestion && (
           <AdaptiveQuizQuestionCard
             key={currentQuestion.id}

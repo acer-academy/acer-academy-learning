@@ -65,7 +65,7 @@ import {
   ROUTES_WITHOUT_SIDEBAR,
 } from '../libs/layout';
 import { ViewAdaptiveQuiz } from '../pages/subject/quiz/ViewAdaptiveQuiz';
-import { AttemptAdaptiveQuiz } from '../pages/subject/quiz/context/AttemptAdaptiveQuiz';
+import { AttemptAdaptiveQuiz } from '../pages/subject/quiz/AttemptAdaptiveQuiz';
 
 export function App() {
   const queryClient = new QueryClient();

@@ -1,21 +1,18 @@
-import {
-  FullscreenSpinner,
-  useAuth,
-} from '@acer-academy-learning/common-ui';
+import { FullscreenSpinner, useAuth } from '@acer-academy-learning/common-ui';
 import React, { useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { AdaptiveNoTopics } from '../components/AdaptiveNoTopics';
+import { AdaptiveNoTopics } from './components/AdaptiveNoTopics';
 import { useQuery } from 'react-query';
 import {
   QuizQuestionTopicEnum,
   getAdaptiveQuizQuestions,
 } from '@acer-academy-learning/data-access';
 import { Student } from 'libs/data-access/src/lib/types/student';
-import { AttemptAdaptiveQuizForm } from '../components/AttemptAdaptiveQuizForm';
+import { AttemptAdaptiveQuizForm } from './components/AttemptAdaptiveQuizForm';
 
 export const AttemptAdaptiveQuiz = () => {
   const { user } = useAuth<Student>();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const topics = useMemo(
     () =>
       searchParams
@@ -29,24 +26,34 @@ export const AttemptAdaptiveQuiz = () => {
     [searchParams],
   );
 
-  const { data: questions, isLoading } = useQuery([topics, user], async () => {
-    if (topics && user) {
-      const res = await getAdaptiveQuizQuestions({
-        topics: topics,
-        level: user.level,
-        studentId: user.id,
-      });
-      return res.data.questions;
-    }
-  });
+  const { data, isLoading } = useQuery(
+    [topics, user],
+    async () => {
+      if (topics && user) {
+        const res = await getAdaptiveQuizQuestions({
+          topics: topics,
+          studentId: user.id,
+        });
+        console.log('DATA');
+        console.log(res.data);
+        return res.data;
+      }
+    },
+    {
+      refetchOnWindowFocus: false,
+    },
+  );
 
   if (!topics?.length) {
     return <AdaptiveNoTopics />;
   }
 
   return (
-    (!isLoading && questions && (
-      <AttemptAdaptiveQuizForm questions={questions} />
+    (!isLoading && data && (
+      <AttemptAdaptiveQuizForm
+        thresholds={data.thresholds}
+        questions={data.questions}
+      />
     )) || <FullscreenSpinner />
   );
 };
