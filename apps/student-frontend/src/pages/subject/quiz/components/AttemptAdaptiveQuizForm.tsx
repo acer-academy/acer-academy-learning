@@ -7,7 +7,11 @@ import {
   createAdaptiveQuizTakeSchema,
 } from '@acer-academy-learning/data-access';
 import { useMemo, useState } from 'react';
-import { GenericButton, useZodForm } from '@acer-academy-learning/common-ui';
+import {
+  GenericButton,
+  ProgressBar,
+  useZodForm,
+} from '@acer-academy-learning/common-ui';
 import { getDifficultyBasedOn } from '../utils/getDifficultyBasedOn';
 import { FormProvider } from 'react-hook-form';
 import { AdaptiveQuizQuestionCard } from './AdaptiveQuizQuestionCard';
@@ -71,9 +75,20 @@ export const AttemptAdaptiveQuizForm = ({
     [answers],
   );
 
+  const currentDifficulty = useMemo(
+    () => getDifficultyBasedOn(numOfCorrectQuestions),
+    [numOfCorrectQuestions],
+  );
+  const currentStage = useMemo(
+    () =>
+      Object.values(QuizQuestionDifficultyEnum).findIndex(
+        (difficulty) => difficulty === currentDifficulty,
+      ) + 1,
+    [currentDifficulty],
+  );
+
   const currentQuestion = useMemo(() => {
-    const difficulty = getDifficultyBasedOn(numOfCorrectQuestions);
-    const currQuestion = wrangledQuestions[difficulty].pop();
+    const currQuestion = wrangledQuestions[currentDifficulty].pop();
     if (currQuestion && questionNumber <= 10) {
       setIsCardShowing(false);
       setTimeout(() => setIsCardShowing(true), 100);
@@ -125,6 +140,16 @@ export const AttemptAdaptiveQuizForm = ({
         onSubmit={formMethods.handleSubmit(onSubmit)}
         className="h-full space-y-1 flex flex-col w-full relative justify-center items-center"
       >
+        <div className="absolute top-0 w-full flex flex-col items-center">
+          <p className="my-4 text-xl font-semibold">
+            Stage {currentStage}: {currentDifficulty}
+          </p>
+          <ProgressBar
+            width={50}
+            rounded
+            unfinishedClassName="w-[60%] box-content border border-black border-2"
+          />
+        </div>
         {/* To remove or change */}
         <p className="flex-start">Num of correct: {numOfCorrectQuestions}</p>
         {currentQuestion && (
