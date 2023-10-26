@@ -25,7 +25,8 @@ export type SpiderChartType = {
 
 const SpiderChart = ({ subjectArr, averageScoreArr }: SpiderChartType) => {
   const options = {
-    maintainAspectRatio: true,
+    responsive: true,
+    maintainAspectRatio: false,
     scale: {
       ticks: {
         beginAtZero: true,

@@ -13,7 +13,6 @@ import {
   getAverageTimeTakenByQuestionId as apiAverageTime,
 } from '@acer-academy-learning/data-access';
 import { QuizSelectAnswer } from './QuizSelectAnswer';
-import { QuizAnswer } from '@prisma/client';
 export type QuizQuestionRowProps = {
   questionId: string;
   takeId: string;
@@ -89,11 +88,13 @@ export const QuizQuestionRow = ({
         return (
           <>
             <LexOutput
-              editorStateStr={(takeAnswer && takeAnswer[0].studentAnswer) || ''}
+              editorStateStr={
+                (takeAnswer && takeAnswer[0].studentAnswer) || '-'
+              }
             />
             <Divider lineClassName="border-student-primary-600" />
             <span className="font-bold">Answer</span>
-            <LexOutput editorStateStr={question?.answers[0].answer || ''} />
+            <LexOutput editorStateStr={question?.answers[0].answer || '-'} />
             {question?.answers[0].explanation ? (
               <>
                 <span className="font-bold">Explanation</span>
@@ -129,7 +130,7 @@ export const QuizQuestionRow = ({
           <div className="bg-gray-100 px-3 py-3 sm:px-3 shadow space-y-2 flex flex-col">
             <span className="font-bold">Time Analysis</span>
             <span>{`Time taken: ${
-              takeAnswer && takeAnswer[0].timeTaken
+              takeAnswer && takeAnswer[0] && takeAnswer[0].timeTaken
             } seconds`}</span>
             <span>
               {`On average, students take `}

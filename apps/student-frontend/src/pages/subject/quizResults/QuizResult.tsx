@@ -71,28 +71,30 @@ export const QuizResult: React.FC = () => {
           </div>
         </div>
 
-        <div className="min-w-max">
+        <div className="min-w-fit">
           <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
             <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
               <div className="flex flex-col gap-4">
-                {take?.quiz.quizQuestions.map((quizQuestion) => (
-                  <QuizQuestionRow
-                    key={quizQuestion.quizQuestionId}
-                    questionId={quizQuestion.quizQuestionId}
-                    takeId={take.id}
-                    questionNumber={index++}
-                    marks={quizQuestion.quizQuestionMarks}
-                  />
-                ))}
+                {take?.quiz.quizQuestions
+                  .sort((a, b) => a.quizQuestionIndex - b.quizQuestionIndex)
+                  .map((quizQuestion) => (
+                    <QuizQuestionRow
+                      key={quizQuestion.quizQuestionId}
+                      questionId={quizQuestion.quizQuestionId}
+                      takeId={take.id}
+                      questionNumber={index++}
+                      marks={quizQuestion.quizQuestionMarks}
+                    />
+                  ))}
               </div>
             </div>
           </div>
           <div className="gap-4">
-            <div className="bg-white px-3 py-4 align-middle sm:px-6 lg:px-8">
+            <div className="bg-white px-2 py-2 align-middle sm:px-2 lg:px-2">
               <span className="text-2xl px-3 py-4 font-bold tracking-tight">
                 Spider Chart Analysis
               </span>
-              <div className="h-50">
+              <div className="h-screen	">
                 <SpiderChart
                   subjectArr={spiderChart.subjectArr}
                   averageScoreArr={spiderChart.averageScoreArr}
