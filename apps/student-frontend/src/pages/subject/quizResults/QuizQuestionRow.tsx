@@ -174,9 +174,13 @@ export const QuizQuestionRow = ({
           {answerOptions}
           <div className="bg-gray-100 px-3 py-3 sm:px-3 shadow space-y-2 flex flex-col">
             <span className="font-bold">Time Analysis</span>
-            <span>{`Time taken: ${
-              takeAnswer && takeAnswer[0] && takeAnswer[0].timeTaken
-            } seconds`}</span>
+            {takeAnswer && takeAnswer[0] ? (
+              <span>{`Time taken: ${takeAnswer[0].timeTaken} seconds`}</span>
+            ) : (
+              <span>
+                {`It appears that you were unable to complete this question within the given time frame..`}
+              </span>
+            )}
             <span>
               {`On average, students take `}
               <span className="font-bold">{averageTime}</span>
