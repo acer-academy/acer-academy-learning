@@ -203,6 +203,7 @@ export const QuizQuestionRow = ({
               {` of students got this question right.`}
             </span>
             {takeAnswer &&
+            takeAnswer[0] &&
             ((question?.questionType !== QuizQuestionTypeEnum.MRQ &&
               takeAnswer[0].isCorrect === true) ||
               takeAnswer.filter((takeAns) => takeAns.isCorrect === true)
