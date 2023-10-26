@@ -48,10 +48,10 @@ export const QuizSelectAnswer = ({
             <LexOutput editorStateStr={answer.answer} />
           </label>
           {answer.explanation ? (
-            <>
+            <div className="bg-white px-2 py-2 align-middle sm:px-2 lg:px-2 border border-gray">
               <span className="font-bold">Explanation</span>
               <LexOutput editorStateStr={answer.explanation} />
-            </>
+            </div>
           ) : (
             <></>
           )}
