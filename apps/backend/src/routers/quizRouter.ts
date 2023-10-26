@@ -207,7 +207,7 @@ quizRouter.put(
   validateBodyQuizTeacherCreatedExists,
   validateBodyQuizOnQuizQuestionFormatValid,
   validateParamsQuizIsLatest,
-  //validateParamsQuizHasNoTakes,
+  //validateParamsQuizHasNoTakes // validation removed; breaks updateQuiz allocatedTo
   async (req: Request, res: Response) => {
     const { quizId } = req.params;
     try {
