@@ -14,20 +14,6 @@ import { TeacherData } from 'libs/data-access/src/lib/types/teacher';
 import { EventModal } from './EventModal';
 import MultiSelect from './MultiSelect';
 
-function Checkbox({ label, onChange, checked }: any) {
-  return (
-    <label className="inline-flex items-center">
-      <input
-        type="checkbox"
-        className="h-5 w-5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
-        checked={checked}
-        onChange={() => onChange(label)}
-      />
-      <span className="ml-2">{label}</span>
-    </label>
-  );
-}
-
 export default function CalendarView() {
   const [session, setSession] = useState<SessionData>();
   const [readSession, setReadSession] = useState<SessionData>();

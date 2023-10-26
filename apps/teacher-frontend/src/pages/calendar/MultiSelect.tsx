@@ -1,14 +1,26 @@
 import React, { useState, useEffect, useRef } from 'react';
 
-const MultiSelect = ({ options = [], defaultSelected = [], onChange, tag }) => {
-  const [selectedOptions, setSelectedOptions] = useState(defaultSelected);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
+interface MultiSelectProps {
+  options?: string[];
+  defaultSelected?: string[];
+  onChange?: (selected: string[]) => void;
+  tag: string;
+}
+
+const MultiSelect: React.FC<MultiSelectProps> = ({ 
+  options = [], 
+  defaultSelected = [], 
+  onChange, 
+  tag 
+}) => {
+  const [selectedOptions, setSelectedOptions] = useState<string[]>(defaultSelected);
+  const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
   
-  const dropdownRef = useRef(null);
+  const dropdownRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setDropdownOpen(false);
       }
     };
@@ -25,7 +37,7 @@ const MultiSelect = ({ options = [], defaultSelected = [], onChange, tag }) => {
     }
   }, [selectedOptions, onChange]);
 
-  const toggleOption = (option) => {
+  const toggleOption = (option: string) => {
     setSelectedOptions(prevState => {
       if (prevState.includes(option)) {
         return prevState.filter(item => item !== option);
@@ -35,7 +47,7 @@ const MultiSelect = ({ options = [], defaultSelected = [], onChange, tag }) => {
     });
   };
 
-  const removeOption = (option) => {
+  const removeOption = (option: string) => {
     setSelectedOptions(prevState => prevState.filter(item => item !== option));
   };
 
@@ -45,27 +57,26 @@ const MultiSelect = ({ options = [], defaultSelected = [], onChange, tag }) => {
         onClick={() => setDropdownOpen(!dropdownOpen)}
         className="w-full text-left bg-white border p-2 rounded shadow flex justify-between items-center cursor-pointer"
       >
-        {/* Use flex-wrap to allow wrapping for the tags */}
         <div className="flex flex-wrap max-w-[186px] items-center">
-  {selectedOptions.length === 0 ? (
-    <span className="text-gray-500">Select a {tag}</span>
-  ) : (
-    selectedOptions.map(option => (
-      <span key={option} className="mr-2 mb-2 flex items-center bg-indigo-200 rounded-md p-1">
-        {option}
-        <button
-          className="ml-2 text-sm"
-          onClick={(e) => {
-            e.stopPropagation();
-            removeOption(option);
-          }}
-        >
-          &times;
-        </button>
-      </span>
-    ))
-  )}
-</div>
+          {selectedOptions.length === 0 ? (
+            <span className="text-gray-500">Select a {tag}</span>
+          ) : (
+            selectedOptions.map(option => (
+              <span key={option} className="mr-2 mb-2 flex items-center bg-indigo-200 rounded-md p-1">
+                {option}
+                <button
+                  className="ml-2 text-sm"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    removeOption(option);
+                  }}
+                >
+                  &times;
+                </button>
+              </span>
+            ))
+          )}
+        </div>
         <div className="ml-2">
           {dropdownOpen ? (
             <svg width="16" height="16" fill="currentColor" className="bi bi-chevron-up" viewBox="0 0 16 16">
