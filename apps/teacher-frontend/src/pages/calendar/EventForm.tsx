@@ -266,25 +266,34 @@ export default function EventForm({
     if (!session.id) {
       if (!isRecurring) {
         console.log('here in create session');
-
-        const response = await createSession(sessionState);
-        if (response) {
-          console.log('created obj');
+        try {
+          const response = await createSession(sessionState);
+          if (response) {
+            console.log('created obj');
+            onClose();
+            await fetchSessions();
+            displayToast('Session created successfully!', ToastType.SUCCESS);
+          }
+        } catch (err) {
           onClose();
-          await fetchSessions();
-          displayToast('Session created successfully!', ToastType.SUCCESS);
+          displayToast(`${err.response.data.error}`, ToastType.ERROR);
         }
       } else {
         console.log('in createing recurring');
-        const response = await createRecurringClass([
-          recurringState,
-          sessionState,
-        ]);
-        if (response) {
-          console.log('created recurring');
+        try {
+          const response = await createRecurringClass([
+            recurringState,
+            sessionState,
+          ]);
+          if (response) {
+            console.log('created recurring');
+            onClose();
+            await fetchSessions();
+            displayToast('Session created successfully!', ToastType.SUCCESS);
+          }
+        } catch (err) {
           onClose();
-          await fetchSessions();
-          displayToast('Session created successfully!', ToastType.SUCCESS);
+          displayToast(`${err.response.data.error}`, ToastType.ERROR);
         }
       }
     } else {
@@ -300,6 +309,7 @@ export default function EventForm({
     console.log(handleUpdateSession);
     try {
       const response = await updateSession(session.id, sessionState);
+      console.log(response);
       if (response) {
         console.log('updated data');
         onClose();
@@ -307,7 +317,9 @@ export default function EventForm({
         displayToast('Session updated successfully!', ToastType.SUCCESS);
       }
     } catch (err) {
-      // setError(err);
+      console.log(err);
+      onClose();
+      displayToast(`${err.response.data.error}`, ToastType.ERROR);
     } finally {
       // setLoading(false);
     }
@@ -333,7 +345,8 @@ export default function EventForm({
         }
       }
     } catch (err) {
-      // setError(err);
+      onClose();
+      displayToast(`${err.response.data.error}`, ToastType.ERROR);
     } finally {
       // setLoading(false);
     }
