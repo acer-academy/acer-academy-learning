@@ -1,6 +1,7 @@
 import { Fragment } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { useToast } from '@acer-academy-learning/common-ui';
+import { createWhatsappMessage as apiCreateWhatsappMessage } from '@acer-academy-learning/data-access';
 
 interface SendAlertModalProps {
   studentName: string;
@@ -19,6 +20,20 @@ export const SendAlertModal: React.FC<SendAlertModalProps> = (
   const copyToClipboard = () => {
     navigator.clipboard.writeText(templateMessage);
     displayToast('Copied to clipboard!', ToastType.SUCCESS);
+  };
+
+  const sendWhatsappNotification = async () => {
+    try {
+      await apiCreateWhatsappMessage();
+      displayToast('Whatsapp message sent successfully.', ToastType.SUCCESS);
+    } catch (error: any) {
+      if (error.response) {
+        displayToast(`${error.response.data.error}`, ToastType.ERROR);
+      } else {
+        displayToast('Error sending whatsapp message', ToastType.ERROR);
+      }
+      console.log(error);
+    }
   };
 
   return (
@@ -80,6 +95,16 @@ export const SendAlertModal: React.FC<SendAlertModalProps> = (
                   </div>
                 </div>
                 <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
+                  <button
+                    type="button"
+                    className="inline-flex w-full justify-center rounded-md bg-adminGreen-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-adminGreen-500 sm:ml-3 sm:w-auto"
+                    onClick={() => {
+                      sendWhatsappNotification();
+                      setOpen(false);
+                    }}
+                  >
+                    Send Whatsapp
+                  </button>
                   <button
                     type="button"
                     className="inline-flex w-full justify-center rounded-md bg-adminGreen-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-adminGreen-500 sm:ml-3 sm:w-auto"
