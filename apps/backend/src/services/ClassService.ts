@@ -1,4 +1,5 @@
 import ClassDao from '../dao/ClassDao';
+import { MessageService, MessageTemplate } from './MessageService';
 import SessionService from './SessionService';
 import {
   Class,
@@ -10,6 +11,7 @@ import {
 } from '@prisma/client';
 
 class ClassService {
+  constructor(private messageService: MessageService = new MessageService()) {}
   public async createClass(
     data: Prisma.ClassUncheckedCreateInput,
   ): Promise<Class> {
@@ -29,7 +31,7 @@ class ClassService {
       ...classData,
       endRecurringDate: endDate,
     });
-    let sessions: Session[] = [];
+    const sessions: Session[] = [];
 
     try {
       while (currDate <= endDate) {
@@ -48,10 +50,16 @@ class ClassService {
         currDate = newDates[0];
         eventEndDate = newDates[1];
       }
+
+      // Send whatsapp message
+      await this.messageService.sendWhatsappMessage(
+        MessageTemplate.NEW_CLASS_ALERT,
+      );
+
       return sessions;
     } catch (error) {
       this.deleteClass(newClass.id);
-      for (let session of sessions) {
+      for (const session of sessions) {
         SessionService.deleteSession(session.id);
       }
       throw new Error(error.message);
@@ -109,11 +117,11 @@ class ClassService {
     });
 
     let updatedSessions: Session[] = [];
-    let endIndex: number = -1;
+    let endIndex = -1;
     let start = false;
 
     try {
-      for (let index in sessions) {
+      for (const index in sessions) {
         if (sessions[index].id === sessionId) {
           start = true;
         }
@@ -165,6 +173,12 @@ class ClassService {
         }
         updatedSessions = updatedSessions.splice(0, endIndex);
       }
+
+      // Send whatsapp message
+      await this.messageService.sendWhatsappMessage(
+        MessageTemplate.UPDATE_CLASS_ALERT,
+      );
+
       return updatedSessions;
     } catch (error) {
       await this.updateClass(classId, {
@@ -174,7 +188,7 @@ class ClassService {
       const updatedList = await SessionService.getFutureSessionsOfClass(
         classId,
       );
-      for (let index in sessions) {
+      for (const index in sessions) {
         const oldData = {
           levels: sessions[index].levels,
           subjects: sessions[index].subjects,
@@ -243,10 +257,14 @@ class ClassService {
 
   public async deleteRecurringClass(id: string): Promise<Class> {
     const classData = await SessionService.getFutureSessionsOfClass(id);
-    for (let i of classData) {
+    for (const i of classData) {
       await SessionService.deleteSession(i.id);
     }
     const checkSessionsExist = await SessionService.getSessionsByClassId(id);
+    // Send whatsapp message
+    await this.messageService.sendWhatsappMessage(
+      MessageTemplate.DELETED_CLASS_ALERT,
+    );
     if (checkSessionsExist.length === 0) {
       return await this.deleteClass(id);
     }
