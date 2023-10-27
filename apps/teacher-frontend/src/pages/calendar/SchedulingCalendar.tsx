@@ -63,8 +63,6 @@ export const SchedulingCalendar = ({
 
   const components = {
     event: ({ event }: { event: any }) => {
-      console.log(viewRef.current); // log the current value from the ref\
-      console.log(view);
 
       const data = event?.data;
       if (viewRef.current === 'month') {
@@ -75,8 +73,6 @@ export const SchedulingCalendar = ({
           </p>
         );
       }
-
-      console.log(viewRef.current);
 
       return <SessionEvent session={data?.session} onDoubleClick={() => {}} />;
     },
