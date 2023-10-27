@@ -406,6 +406,7 @@ model Quiz {
   teacherCreatedId   String                     @db.Uuid
   createdAt          DateTime                   @default(now())
   allocatedTo        Student[]
+  isPublic           Boolean                    @default(true)
   quizQuestions      QuizOnQuizQuestions[]
   takes              Take[]
   nextVersion        Quiz?                      @relation("versioning", fields: [nextVersionId], references: [id])

@@ -16,4 +16,12 @@ export class QuizOnQuizQuestionDao {
       },
     });
   }
+
+  public async getQuizOnQuizQuestionsByQuizId(quizId: string) {
+    return this.prismaClient.quizOnQuizQuestions.findMany({
+      where: {
+        quizId: quizId,
+      },
+    });
+  }
 }

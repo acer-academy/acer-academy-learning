@@ -6,6 +6,7 @@ import {
   QuizQuestionTypeEnum,
 } from '../constants/question';
 import { LevelEnum } from '../types/CommonTypes';
+import { LEX_DEFAULT_JSON_STRING } from '../constants';
 
 // FE schemas
 export const quizAnswerSchema = z.object({
@@ -14,11 +15,7 @@ export const quizAnswerSchema = z.object({
     .string()
     .trim()
     .superRefine((answer, ctx) => {
-      if (
-        !answer ||
-        answer ===
-          '{"root":{"children":[{"children":[],"direction":null,"format":"","indent":0,"type":"paragraph","version":1}],"direction":null,"format":"","indent":0,"type":"root","version":1}}'
-      ) {
+      if (!answer || answer === LEX_DEFAULT_JSON_STRING) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           message: 'Answer field cannot be left empty',
@@ -36,7 +33,6 @@ export const retrieveQuizQuestionSchema = quizAnswerSchema.extend({
 });
 
 export const quizQuestionSchema = z.object({
-  // options: z.array(z.string().trim().min(1, 'Option cannot be empty.')).min(2, 'You must have at least 2 options.'),
   topics: z
     .array(z.nativeEnum(QuizQuestionTopicEnum))
     .min(1, 'You must select at least one topic'),
@@ -52,11 +48,7 @@ export const quizQuestionSchema = z.object({
     .string()
     .trim()
     .superRefine((questionText, ctx) => {
-      if (
-        !questionText ||
-        questionText ===
-          '{"root":{"children":[{"children":[],"direction":null,"format":"","indent":0,"type":"paragraph","version":1}],"direction":null,"format":"","indent":0,"type":"root","version":1}}'
-      ) {
+      if (!questionText || questionText === LEX_DEFAULT_JSON_STRING) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           message: 'Question text is required',
@@ -118,3 +110,10 @@ export const createQuizQuestionSchema = z.intersection(
   quizQuestionSchema.omit({ questionType: true }),
   questionAnswerValidateSchema,
 );
+
+// Schema for quiz questions within the quiz schema
+export const quizQuestionInQuizSchema = z.object({
+  quizQuestionId: z.string(),
+  quizQuestionIndex: z.number().int().positive(),
+  quizQuestionMarks: z.number().int().positive(),
+});

@@ -44,7 +44,9 @@ export class TakeDao {
         studentAnswers: {
           include: { question: { include: { answers: true } } },
         },
-        quiz: { select: { totalMarks: true } },
+        quiz: {
+          include: { quizQuestions: true },
+        },
       },
     });
   }
@@ -60,6 +62,27 @@ export class TakeDao {
         },
         quiz: { select: { totalMarks: true } },
       },
+    });
+  }
+
+  public async getFilteredTakes(
+    filterOptions: Prisma.TakeWhereInput,
+    offset: number,
+    pageSize: number,
+  ): Promise<Take[]> {
+    return this.prismaClient.take.findMany({
+      where: filterOptions,
+      skip: offset,
+      take: pageSize,
+      orderBy: { attemptedAt: 'desc' },
+    });
+  }
+
+  public async getTotalCountOfFilteredTakes(
+    filterOptions: Prisma.TakeWhereInput,
+  ): Promise<number> {
+    return this.prismaClient.take.count({
+      where: filterOptions,
     });
   }
 

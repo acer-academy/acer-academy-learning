@@ -94,7 +94,7 @@ quizQuestionRouter.get(
 );
 
 /**
- * GET /versioning/:quizId
+ * GET /versioning/:questionId
  * Retrieves versioning lineage of a quiz question by ID
  */
 quizQuestionRouter.get(

@@ -15,7 +15,6 @@ import { StudentAuthWrapper } from '@acer-academy-learning/common-ui';
 import StudentForgotPassword from '../pages/entry/StudentForgotPassword';
 import StudentResetPassword from '../pages/entry/StudentResetPassword';
 import 'react-toastify/dist/ReactToastify.css'; //
-import { ACCOUNT_NAV, NAV_SECTIONS } from '../libs/layout';
 import {
   ACCOUNT,
   ASSIGNMENTS,
@@ -38,6 +37,10 @@ import {
   VIEW_CLASSES,
   ZOOM_LINK,
   FAQ,
+  TAKES,
+  SUBJECT_MAIN,
+  VIEW_QUIZ,
+  ATTEMPT_QUIZ,
 } from '../libs/routes';
 import { ToastContainer } from 'react-toastify';
 import { StudentNotificationPreference } from '../pages/profile/StudentNotificationPreference';
@@ -46,6 +49,17 @@ import { FaqPage } from '../pages/faq/FaqPage';
 import { StudentProfile } from '../pages/profile/StudentProfile';
 import TransactionManagement from '../pages/transaction/TransactionManagement';
 import { CreditBundleManagement } from '../pages/creditBundle/CreditBundleManagement';
+import { TakeViewAll } from '../pages/take/TakeViewAll';
+import { Subjects } from '../pages/subject/Subjects';
+import { Subject } from '../pages/subject/Subject';
+import { ViewAllQuizzes } from '../pages/subject/quiz/ViewAllQuizzes';
+import { ViewQuiz } from '../pages/subject/quiz/ViewQuiz';
+import { AttemptQuiz } from '../pages/subject/quiz/AttemptQuiz';
+import {
+  ACCOUNT_NAV,
+  NAV_SECTIONS,
+  ROUTES_WITHOUT_SIDEBAR,
+} from '../libs/layout';
 
 export function App() {
   const queryClient = new QueryClient();
@@ -70,6 +84,7 @@ export function App() {
                       navigationMenu={NAV_SECTIONS}
                       accountNavigation={ACCOUNT_NAV}
                       role={LayoutRole.Student}
+                      routesWithoutSidebar={ROUTES_WITHOUT_SIDEBAR}
                     />
                   </EnforceLoginStatePageWrapper>
                 }
@@ -78,9 +93,16 @@ export function App() {
                   path={DASHBOARD}
                   element={<div>Welcome to AcerTech!</div>}
                 />
-                <Route path={SUBJECTS} element={<div>Home</div>}>
+                <Route path={SUBJECTS}>
+                  <Route path={SUBJECTS} element={<Subjects />} />
+                  <Route path={SUBJECT_MAIN} element={<Subject />} />
                   <Route path={ASSIGNMENTS} element={<div>Home</div>} />
-                  <Route path={QUIZZES} element={<div>Home</div>} />
+                  <Route path={TAKES} element={<TakeViewAll />} />
+                  <Route path={QUIZZES}>
+                    <Route path={QUIZZES} element={<ViewAllQuizzes />} />
+                    <Route path={VIEW_QUIZ} element={<ViewQuiz />} />
+                    <Route path={ATTEMPT_QUIZ} element={<AttemptQuiz />} />
+                  </Route>
                   <Route path={RECORDINGS} element={<div>Home</div>} />
                   <Route path={ZOOM_LINK} element={<div>Home</div>} />
                 </Route>

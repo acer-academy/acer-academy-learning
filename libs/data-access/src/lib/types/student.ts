@@ -61,7 +61,7 @@ export interface Student {
   phoneNumber: string;
   status: StudentStatusEnum;
   school: string;
-  level: LevelEnum[];
+  level: LevelEnum;
   subjects: SubjectEnum[];
   centre?: Centre;
   parents: Parent[];

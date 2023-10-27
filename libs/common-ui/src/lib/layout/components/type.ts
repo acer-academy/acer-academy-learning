@@ -8,9 +8,6 @@ export type NavigationMenuItem = {
     } & React.RefAttributes<SVGSVGElement>
   >;
   children?: NavigationMenuItem[];
-  defaultChild?: string;
-  noSideBar?: boolean;
-  dynamicRoute?: boolean;
 };
 
 export type NavigationSection = {

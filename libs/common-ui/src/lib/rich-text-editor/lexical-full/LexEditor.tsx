@@ -15,7 +15,6 @@ import { SharedHistoryContext } from './context/SharedHistoryContext';
 import Editor from './Editor';
 import PlaygroundNodes from './nodes/PlaygroundNodes';
 import { TableContext } from './plugins/TablePlugin';
-import Settings from './Settings';
 import PlaygroundEditorTheme from './themes/PlaygroundEditorTheme';
 import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin';
 import { EditorState, LexicalEditor } from 'lexical';
@@ -31,14 +30,14 @@ import './index.css';
 export type LexEditorProps = {
   editorStateStr?: string;
   onChange: (val: string) => void;
-  errorMessage?: string;
+  hasError?: boolean;
   onBlur: () => void;
 };
 
 export const LexEditor = ({
   editorStateStr,
   onChange,
-  errorMessage,
+  hasError,
   onBlur,
 }: LexEditorProps): JSX.Element => {
   // States
@@ -74,7 +73,7 @@ export const LexEditor = ({
       value={{
         isFocused,
         setIsFocused,
-        errorMessage,
+        hasError,
         isContentLoaded,
         setIsContentLoaded,
       }}
@@ -90,7 +89,7 @@ export const LexEditor = ({
                 )}
                 <div
                   className={`editor-shell border-solid border-[1px] rounded-t-[10px] ${
-                    errorMessage
+                    hasError
                       ? 'border-red-500'
                       : isFocused
                       ? 'border-black'
@@ -99,7 +98,6 @@ export const LexEditor = ({
                 >
                   {(isContentLoaded && <Editor />) || <Spinner />}
                 </div>
-                <Settings />
               </SharedAutocompleteContext>
             </TableContext>
           </SharedHistoryContext>

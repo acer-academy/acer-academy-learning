@@ -5,7 +5,7 @@ import {
   StudentStatusEnum,
 } from '@prisma/client';
 
-class StudentDao {
+export class StudentDao {
   private prisma: PrismaClient;
 
   constructor() {
