@@ -75,6 +75,10 @@ export default function EventForm({
     // add more rows as needed
   ];
 
+  const areAllFieldsValidated = (errors: FormErrors) => {
+    return Object.values(errors).every((value) => value === null);
+  };
+
   const { displayToast, ToastType } = useToast();
   const [centres, setCentres] = useState<CentreData[]>([]);
   const [classrooms, setClassrooms] = useState<ClassroomData[]>([]);
@@ -109,6 +113,15 @@ export default function EventForm({
     classId: null,
   });
 
+  interface FormErrors {
+    dateError: string | null;
+    recurringEndDateError: string | null;
+    selectedCentre: string | null;
+    selectedClassroom: string | null;
+    selectedLevels: string | null;
+    selectedSubjects: string | null;
+  }
+
   const [isRecurring, setIsRecurring] = useState(
     sessionData.class ? true : false,
   );
@@ -129,6 +142,120 @@ export default function EventForm({
     endRecurringDate: recurringEndDate,
     frequency: recurringType as ClassFrequencyEnum,
   });
+
+  const [formErrors, setFormErrors] = useState<FormErrors>({
+    dateError: null,
+    recurringEndDateError: null,
+    selectedCentre: null,
+    selectedClassroom: null,
+    selectedLevels: null,
+    selectedSubjects: null,
+  });
+
+  // useEffect(() => {
+  //   if (sessionState.end <= sessionState.start) {
+  //     setFormErrors((prevErrors) => ({
+  //       ...prevErrors,
+  //       dateError: 'Start date needs to be before end date',
+  //     }));
+  //   } else {
+  //     setFormErrors((prevErrors) => ({
+  //       ...prevErrors,
+  //       dateError: null,
+  //     }));
+  //   }
+
+  //   if (recurringState.endRecurringDate <= sessionState.end) {
+  //     setFormErrors((prevErrors) => ({
+  //       ...prevErrors,
+  //       recurringEndDateError:
+  //         'Recurring end date needs to be after end time date',
+  //     }));
+  //   } else {
+  //     setFormErrors((prevErrors) => ({
+  //       ...prevErrors,
+  //       recurringEndDateError: null,
+  //     }));
+  //   }
+
+  //   // Check selectedCentre
+  //   if (!selectedCentre) {
+  //     setFormErrors((prevErrors) => ({
+  //       ...prevErrors,
+  //       selectedCentre: 'Centre needs to be selected',
+  //     }));
+  //   } else {
+  //     setFormErrors((prevErrors) => ({
+  //       ...prevErrors,
+  //       selectedCentre: null,
+  //     }));
+  //   }
+
+  //   // Check selectedClassroom
+  //   if (!selectedClassroom) {
+  //     setFormErrors((prevErrors) => ({
+  //       ...prevErrors,
+  //       selectedClassroom: 'Classroom needs to be selected',
+  //     }));
+  //   } else {
+  //     setFormErrors((prevErrors) => ({
+  //       ...prevErrors,
+  //       selectedClassroom: null,
+  //     }));
+  //   }
+
+  //   // Check selectedLevels
+  //   if (selectedLevels.length === 0) {
+  //     setFormErrors((prevErrors) => ({
+  //       ...prevErrors,
+  //       selectedLevels: 'At least one level needs to be selected',
+  //     }));
+  //   } else {
+  //     setFormErrors((prevErrors) => ({
+  //       ...prevErrors,
+  //       selectedLevels: null,
+  //     }));
+  //   }
+
+  //   // Check selectedSubjects
+  //   if (selectedSubjects.length === 0) {
+  //     setFormErrors((prevErrors) => ({
+  //       ...prevErrors,
+  //       selectedSubjects: 'At least one subject needs to be selected',
+  //     }));
+  //   } else {
+  //     setFormErrors((prevErrors) => ({
+  //       ...prevErrors,
+  //       selectedSubjects: null,
+  //     }));
+  //   }
+
+  //   // You can add similar conditions for `start` and `end` if needed.
+  // }, [
+  //   sessionState,
+  //   selectedCentre,
+  //   selectedClassroom,
+  //   selectedLevels,
+  //   selectedSubjects,
+  //   recurringState,
+  // ]);
+
+  const validateForm = () => {
+
+
+    const newErrors = {
+      ...formErrors, // retain any other previous errors not checked here
+      dateError: sessionState.end <= sessionState.start ? 'Start date needs to be before end date' : null,
+      recurringEndDateError: (isRecurring && (recurringState.endRecurringDate <= sessionState.end)) ? 'Recurring end date needs to be after end time date' : null,
+      selectedCentre: !selectedCentre ? 'Centre needs to be selected' : null,
+      selectedClassroom: !selectedClassroom ? 'Classroom needs to be selected' : null,
+      selectedLevels: sessionState.levels.length === 0 ? 'At least one level needs to be selected' : null,
+      selectedSubjects: sessionState.subjects.length === 0 ? 'At least one subject needs to be selected' : null,
+    };
+
+    return newErrors;
+  };
+  
 
   useEffect(() => {
     setRecurringState((prevState) => ({
@@ -159,7 +286,6 @@ export default function EventForm({
 
   useEffect(() => {
     setSessionData({ ...session });
-    console.log(session);
   }, [session]);
 
   useEffect(() => {
@@ -255,14 +381,30 @@ export default function EventForm({
     setSelectedClassroom(session.classroomId || '');
   }, [session]);
 
+  console.log(sessionState)
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    console.log('createSessionData');
-    console.log(sessionState);
+    console.log("in handle submit")
+    console.log(sessionState)
 
-    console.log(isRecurring);
-    console.log(session.id);
+    console.log(formErrors);
+
+    const errors = validateForm();
+
+    setFormErrors(errors);
+
+    //issue is that even tho it sets state in validateform function above for formErrors, it doesnt take the latest state why, do i need it to be async?
+
+    console.log(errors);
+
+    areAllFieldsValidated(errors);
+
+    if (!areAllFieldsValidated(errors)) {
+      return;
+    }
+
     if (!session.id) {
       if (!isRecurring) {
         console.log('here in create session');
@@ -383,6 +525,7 @@ export default function EventForm({
             </div>
           </div>
 
+       
           <div className="flex space-x-4">
             <div className="w-1/2">
               <label className="block w-1/4 text-sm font-medium leading-6 text-gray-900">
@@ -413,6 +556,10 @@ export default function EventForm({
               />
             </div>
           </div>
+
+          {formErrors.dateError && (
+            <div className="text-red-500">{formErrors.dateError}</div>
+          )}
 
           <div className="mt-2">
             <label className="flex items-center">
@@ -463,8 +610,14 @@ export default function EventForm({
                     className="w-[450px] block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   />
                 </div>
+                {formErrors.recurringEndDateError && (
+                  <div className="text-red-500">
+                    {formErrors.recurringEndDateError}
+                  </div>
+                )}
               </div>
             )}
+         
           </div>
 
           <div className="mt-4">
@@ -486,6 +639,7 @@ export default function EventForm({
                 <option value="" disabled>
                   Select a centre
                 </option>
+
                 {centres.map((centre, index) => (
                   <option key={index} value={centre.id}>
                     {centre.name}
@@ -493,6 +647,9 @@ export default function EventForm({
                 ))}
               </select>
             </div>
+            {formErrors.selectedCentre && (
+              <div className="text-red-500">{formErrors.selectedCentre}</div>
+            )}
           </div>
 
           <div className="mt-4">
@@ -521,6 +678,9 @@ export default function EventForm({
                 ))}
               </select>
             </div>
+            {formErrors.selectedClassroom && (
+              <div className="text-red-500">{formErrors.selectedClassroom}</div>
+            )}
           </div>
 
           <div className="flex items-center mt-4">
@@ -547,6 +707,9 @@ export default function EventForm({
                 </div>
               ))}
             </div>
+            {formErrors.selectedLevels && (
+              <div className="text-red-500">{formErrors.selectedLevels}</div>
+            )}
           </div>
 
           <div className="flex items-center mt-6">
@@ -571,6 +734,9 @@ export default function EventForm({
                 ))}
               </div>
             </div>
+            {formErrors.selectedSubjects && (
+              <div className="text-red-500">{formErrors.selectedSubjects}</div>
+            )}
           </div>
 
           <div className="flex justify-center mt-4 space-x-4">

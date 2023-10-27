@@ -8,7 +8,7 @@ export default function SessionEvent({ session }: { session: SessionData }) {
   // console.log(session);
 
   return (
-    <div className="p-1 h-full text-black">
+    <div className="h-full text-black">
       <div className="flex items-center justify-between">
         <div className="flex">
           <p className="text-xs">Capacity: {classroom.capacity}</p>
@@ -18,19 +18,17 @@ export default function SessionEvent({ session }: { session: SessionData }) {
         <p className="text-xs">Teacher: {teacher.firstName}</p>
       </div>
       <div className="flex">
-        <p className="text-xs">Levels: {levels}</p>
+        <p className="text-xs">Levels: {levels.join(', ')}</p>
       </div>
       <div className="flex">
-        <p className="text-xs">Subjects: {subjects}</p>
+        <p className="text-xs">Subjects: {subjects.join(', ')}</p>
       </div>
       <div className="flex">
-        <p className="text-xs">CentreId: {classroom.centre.name}</p>
+        <p className="text-xs">Centre: {classroom.centre.name}</p>
       </div>
       <div className="mt-4">
-        {/* {address.split('\n').map((add) => (
-          <p className="text-xs">{add}</p>
-        ))} */}
       </div>
     </div>
   );
 }
+

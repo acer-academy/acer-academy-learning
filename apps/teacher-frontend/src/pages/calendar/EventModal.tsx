@@ -35,17 +35,18 @@ export const EventModal: React.FC<EventModalProps> = ({ onClose, event }) => {
                 <strong>Email:</strong> {event?.teacher?.email}
               </p>
               <p>
-                <strong>Subjects:</strong> {event?.subjects?.join(', ')}
+                <strong>Levels:</strong> {event?.levels?.join(', ')}
               </p>
               <p>
-                <strong>Classroom:</strong> {event?.classroom?.name}
+                <strong>Subjects:</strong> {event?.subjects?.join(', ')}
               </p>
               <p>
                 <strong>Centre:</strong> {event?.classroom?.centre?.name}
               </p>
               <p>
-                <strong>Address:</strong> {event?.classroom?.centre?.address}
+                <strong>Classroom:</strong> {event?.classroom?.name}
               </p>
+           
             </div>
           </div>
           <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
