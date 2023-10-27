@@ -108,7 +108,7 @@ export const AdaptiveQuizQuestionCard = ({
           </div>
         </div>
       </div>
-      <div className="invisible">
+      <div className="hidden">
         <QuizTimer<CreateAdaptiveTakeSchema>
           key={`studentAnswer.timeTaken`}
           name={`studentAnswer.timeTaken`}

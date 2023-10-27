@@ -161,7 +161,6 @@ export const AttemptAdaptiveQuizForm = ({
   ]);
 
   const onSubmit = async (values: CreateAdaptiveTakeSchema) => {
-    console.log(values);
     // Validate and push to answer
     if (currentQuestion) {
       let isCorrect = false;
@@ -197,11 +196,11 @@ export const AttemptAdaptiveQuizForm = ({
     <FormProvider {...formMethods}>
       <form
         onSubmit={formMethods.handleSubmit(onSubmit)}
-        className="h-full space-y-1 flex flex-col w-full relative justify-center items-center"
+        className="h-full space-y-1 flex flex-col w-full relative justify-between items-center"
       >
         {(currentQuestion && (
           <>
-            <div className="absolute top-0 w-full flex flex-col items-center">
+            <div className="w-full flex flex-col items-center">
               <p className="my-4 text-xl font-semibold">
                 Stage {currentStage}: {currentDifficulty}
               </p>
@@ -210,12 +209,18 @@ export const AttemptAdaptiveQuizForm = ({
                 rounded
                 unfinishedClassName="w-[60%] box-content border border-black border-2"
               />
+              <p className="font-semibold space-x-1">
+                Answer{' '}
+                {currStageTotalNumberOfQuestionsToClear -
+                  currStageCorrectQuestions}{' '}
+                Questions Correctly to Advance to the Next Stage!
+              </p>
             </div>
             {/* To remove or change */}
-            <p className="flex-start">
+            {/* <p className="flex-start">
               Num of correct: {numOfCorrectQuestions}, Thresholds: Basic -{' '}
               {thresholds.BASIC}, Intermediate - {thresholds.INTERMEDIATE}
-            </p>
+            </p> */}
             <AdaptiveQuizQuestionCard
               key={currentQuestion.id}
               question={currentQuestion}
@@ -226,7 +231,9 @@ export const AttemptAdaptiveQuizForm = ({
               } transition-opacity duration-300 self-center w-full`}
               bannerClassName={`bg-student-primary-600 text-white `}
             />
-            <nav className="rounded bg-white border border-gray-200 absolute bottom-0 space-x-4 w-full p-2 flex justify-end">
+            <nav
+              className={`rounded bg-white border border-gray-200 space-x-4 w-full p-2 flex justify-end`}
+            >
               <GenericButton
                 type="submit"
                 className="bg-student-primary-600 hover:bg-student-primary-700 text-white self-center w-24"
