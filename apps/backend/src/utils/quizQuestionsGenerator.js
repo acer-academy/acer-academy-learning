@@ -178,6 +178,15 @@ const setupPrerequisites = async () => {
         phoneNumber: '90909090',
         centreId: createCentreResponse.data.id,
         whitelistItemId: whitelistStudentResponse.data.id,
+        parents: {
+          create: [
+            {
+              firstName: `Parent${i}`,
+              lastName: 'One',
+              phoneNumber: '80808080',
+            },
+          ],
+        },
       });
       studentIdsArray.push(createStudentResponse.data.student.id);
       // console.log(
