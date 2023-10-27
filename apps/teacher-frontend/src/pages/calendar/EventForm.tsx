@@ -417,8 +417,8 @@ export default function EventForm({
             displayToast('Session created successfully!', ToastType.SUCCESS);
           }
         } catch (err) {
-          // onClose();
-          // displayToast(`${err.response.data.error}`, ToastType.ERROR);
+          onClose();
+          displayToast(`${err.response.data.error}`, ToastType.ERROR);
         }
       } else {
         console.log('in createing recurring');
@@ -434,8 +434,8 @@ export default function EventForm({
             displayToast('Session created successfully!', ToastType.SUCCESS);
           }
         } catch (err) {
-          // onClose();
-          // displayToast(`${err.response.data.error}`, ToastType.ERROR);
+          onClose();
+          displayToast(`${err.response.data.error}`, ToastType.ERROR);
         }
       }
     } else {
