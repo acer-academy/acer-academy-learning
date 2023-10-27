@@ -20,8 +20,8 @@ class SessionDao {
         teacher: true,
         classroom: {
           include: {
-            centre: true
-          }
+            centre: true,
+          },
         },
         class: true,
       },
@@ -34,13 +34,38 @@ class SessionDao {
     startDateTime: Date,
     endDateTime: Date,
   ): Promise<string> {
-    const classes = await this.prisma.session.findMany({
+    const beforeStartAfterEnd = await this.prisma.session.findMany({
       where: {
         classroomId,
         start: { lte: startDateTime },
         end: { gte: endDateTime },
       },
     });
+    const afterStartBeforeEnd = await this.prisma.session.findMany({
+      where: {
+        classroomId,
+        start: { gte: startDateTime },
+        end: { lte: endDateTime },
+      },
+    });
+    const afterStartAfterEnd = await this.prisma.session.findMany({
+      where: {
+        classroomId,
+        start: { lt: endDateTime },
+        end: { gte: endDateTime },
+      },
+    });
+    const beforeStartBeforeEnd = await this.prisma.session.findMany({
+      where: {
+        classroomId,
+        start: { lte: startDateTime },
+        end: { gt: startDateTime },
+      },
+    });
+    const classes = beforeStartAfterEnd
+      .concat(afterStartAfterEnd)
+      .concat(afterStartBeforeEnd)
+      .concat(beforeStartBeforeEnd);
     return classes.length > 0 ? classes[0].id : undefined;
   }
 
