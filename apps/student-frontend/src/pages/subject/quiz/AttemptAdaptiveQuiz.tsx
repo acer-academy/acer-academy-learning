@@ -1,5 +1,5 @@
 import { FullscreenSpinner, useAuth } from '@acer-academy-learning/common-ui';
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { AdaptiveNoTopics } from './components/AdaptiveNoTopics';
 import { useQuery } from 'react-query';
