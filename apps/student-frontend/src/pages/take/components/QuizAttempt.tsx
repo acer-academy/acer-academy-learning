@@ -39,9 +39,7 @@ export const QuizAttempt: React.FC<{
 
   const navToSelectedQuizAttempt = () => {
     navigate(
-      `${location.pathname.slice(0, -6)}/quizzes/${
-        quizAttempt.quizId
-      }?attempt=${quizAttempt.id}`,
+      `${location.pathname.slice(0, -6)}/quizzes/result/${quizAttempt.id}`,
     );
   };
 
