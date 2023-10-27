@@ -27,7 +27,7 @@ export const quizSchema = z.object({
   // in seconds
   timeAllowed: z
     .number()
-    .int('Time allowed (in seconds must be an Integer')
+    .int('Time allowed (in seconds must be an Integer)')
     .optional()
     .nullable(),
   quizQuestions: z
@@ -58,3 +58,9 @@ export const createQuizSchema = z.intersection(
   quizSchema.omit({ id: true }),
   quizMarksSchema,
 );
+
+export const createAdaptiveQuizSchema = z.object({
+  topics: z
+    .array(z.nativeEnum(QuizQuestionTopicEnum))
+    .min(1, 'Must select at least 1 topic to continue'),
+});

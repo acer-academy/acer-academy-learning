@@ -18,6 +18,8 @@ export const QUIZZES = `${SUBJECT_MAIN}/quizzes`;
 export const VIEW_QUIZ = `${QUIZZES}/:quizId`;
 export const QUIZ_RESULT = `${QUIZZES}/result/:takeId`;
 export const ATTEMPT_QUIZ = `${QUIZZES}/:quizId/take`;
+export const VIEW_ADAPTIVE_QUIZ = `${QUIZZES}/adaptive`;
+export const ATTEMPT_ADAPTIVE_QUIZ = `${QUIZZES}/adaptive/take`;
 
 export const RECORDINGS = `${SUBJECT_MAIN}/recordings`;
 export const ZOOM_LINK = `${SUBJECT_MAIN}/zoom-link`;

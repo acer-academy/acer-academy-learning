@@ -54,7 +54,7 @@ export const LexOutput = ({
         {(isContentLoaded && (
           <RichTextPlugin
             contentEditable={<ContentEditable />}
-            placeholder={<Placeholder>No content to render</Placeholder>}
+            placeholder={<Placeholder> </Placeholder>}
             ErrorBoundary={LexicalErrorBoundary}
           />
         )) ||

@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { questionAnswerValidateSchema, quizQuestionSchema } from './question';
 
 export const createTakeAnswerApiSchema = z.object({
   questionId: z.string(),
@@ -18,6 +19,12 @@ export const createTakeAnswerSchema = z.intersection(
   createTakeAnswerApiSchema.omit({ studentAnswer: true }),
   z.object({
     studentAnswer: z.array(z.string().or(z.boolean()).nullable()),
+    question: z
+      .intersection(
+        quizQuestionSchema.omit({ questionType: true }),
+        questionAnswerValidateSchema,
+      )
+      .optional(),
   }),
 );
 
@@ -27,3 +34,8 @@ export const createTakeSchema = z.intersection(
     studentAnswers: z.array(createTakeAnswerSchema),
   }),
 );
+
+export const createAdaptiveQuizTakeSchema = z.object({
+  timeTaken: z.number(),
+  studentAnswer: createTakeAnswerSchema,
+});

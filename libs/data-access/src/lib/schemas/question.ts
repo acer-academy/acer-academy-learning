@@ -33,6 +33,7 @@ export const retrieveQuizQuestionSchema = quizAnswerSchema.extend({
 });
 
 export const quizQuestionSchema = z.object({
+  id: z.string(),
   topics: z
     .array(z.nativeEnum(QuizQuestionTopicEnum))
     .min(1, 'You must select at least one topic'),
@@ -59,7 +60,7 @@ export const quizQuestionSchema = z.object({
   questionType: z.nativeEnum(QuizQuestionTypeEnum),
 });
 
-const questionAnswerValidateSchema = z
+export const questionAnswerValidateSchema = z
   .object({
     questionType: z.nativeEnum(QuizQuestionTypeEnum),
     answers: z
@@ -107,7 +108,7 @@ const questionAnswerValidateSchema = z
 
 // Have to use intersection for validate messages to work
 export const createQuizQuestionSchema = z.intersection(
-  quizQuestionSchema.omit({ questionType: true }),
+  quizQuestionSchema.omit({ questionType: true, id: true }),
   questionAnswerValidateSchema,
 );
 

@@ -1,6 +1,12 @@
 import { CreateTakeSchema } from '@acer-academy-learning/data-access';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { FieldPath, useFormContext } from 'react-hook-form';
+import {
+  FieldPath,
+  FieldValues,
+  Path,
+  PathValue,
+  useFormContext,
+} from 'react-hook-form';
 export const MS_IN_SECOND = 1000;
 const SECONDS_IN_MINUTE = 60;
 const MINUTES_IN_HOUR = 60;
@@ -47,16 +53,16 @@ export const formatTime = (timeParam: number): HMSMTimeFormat => {
   return parts;
 };
 
-export type QuizTimerProps = {
+export type QuizTimerProps<T extends FieldValues> = {
   totalDurationInMiliseconds?: number;
-  name?: FieldPath<CreateTakeSchema>;
+  name?: FieldPath<T>;
 };
 
-export const QuizTimer = ({
+export const QuizTimer = <T extends FieldValues>({
   totalDurationInMiliseconds,
   name,
-}: QuizTimerProps) => {
-  const { setValue, getValues } = useFormContext<CreateTakeSchema>();
+}: QuizTimerProps<T>) => {
+  const { setValue, getValues } = useFormContext<T>();
   // useRef to prevent unnecessary re-render
   const lastTickTiming = useRef<number | null>(null);
   const timerIdRef = useRef<NodeJS.Timer | null>(null);
@@ -83,9 +89,9 @@ export const QuizTimer = ({
           !totalDurationInMiliseconds ||
           updatedTimeInMS <= totalDurationInMiliseconds
         ) {
-          setValue(name, updatedTimeInMS);
+          setValue(name, updatedTimeInMS as PathValue<T, Path<T>>);
         } else {
-          setValue(name, totalDurationInMiliseconds);
+          setValue(name, totalDurationInMiliseconds as PathValue<T, Path<T>>);
         }
       }
       lastTickTiming.current = now;

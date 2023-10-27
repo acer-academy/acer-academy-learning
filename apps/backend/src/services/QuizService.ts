@@ -18,6 +18,7 @@ import { Request } from 'express';
 import { StudentDao } from '../dao/StudentDao';
 
 export interface QuizFilterOptions {
+  searchString?: string;
   subjects?: SubjectEnum[];
   levels?: LevelEnum[];
   difficulty?: QuizQuestionDifficultyEnum[];
@@ -27,6 +28,7 @@ export interface QuizFilterOptions {
   showLatestOnly?: boolean;
   isPublic?: boolean;
   allocatedTo?: string[];
+  strictPublicOrAllocated?: boolean;
 }
 
 type QuizQuestion = {
@@ -93,7 +95,10 @@ export class QuizService {
   public async generateAdaptiveLearningQuiz(
     topics: string[],
     studentId: string,
-  ): Promise<QuizQuestionPrisma[]> {
+  ): Promise<{
+    thresholds: { [key in QuizQuestionDifficultyEnum]: number };
+    questions: QuizQuestionPrisma[];
+  }> {
     const student = await this.studentDao.getStudentById(studentId);
     if (!student) {
       throw Error('Student not found.');
@@ -160,7 +165,30 @@ export class QuizService {
       hardQuestions.splice(randomIndex, 1);
     }
 
-    return quizQuestions;
+    // Split thresholds into 30% (easy) (40% medium) and (30%) hard
+    const numberOfBasicQuestions = Math.min(
+      easyQuestionCount,
+      Math.ceil(10 * 0.3),
+    );
+    const numberOfIntermediateQuestions = Math.min(
+      mediumQuestionCount,
+      Math.ceil(10 * 0.4),
+    );
+
+    return {
+      thresholds: {
+        [QuizQuestionDifficultyEnum.BASIC]: numberOfBasicQuestions,
+        [QuizQuestionDifficultyEnum.INTERMEDIATE]:
+          numberOfBasicQuestions + numberOfIntermediateQuestions,
+        [QuizQuestionDifficultyEnum.ADVANCED]: Math.min(
+          10,
+          numberOfBasicQuestions +
+            numberOfIntermediateQuestions +
+            hardQuestionCount,
+        ),
+      },
+      questions: quizQuestions,
+    };
   }
 
   public async getAllQuizzes(): Promise<Quiz[]> {
@@ -243,11 +271,13 @@ export class QuizService {
       showLatestOnly,
       isPublic,
       allocatedTo,
+      strictPublicOrAllocated,
+      searchString,
     } = filterOptions;
     if (subjects && subjects.length > 0) {
       where.subject = { in: filterOptions.subjects };
     }
-    if (levels && levels.length > 0) {
+    if (!strictPublicOrAllocated && levels && levels.length > 0) {
       where.levels = { hasEvery: filterOptions.levels };
     }
     if (difficulty && difficulty.length > 0) {
@@ -262,10 +292,31 @@ export class QuizService {
     if (isPublic !== undefined && isPublic !== null) {
       where.isPublic = isPublic;
     }
-    if (allocatedTo && allocatedTo.length > 0) {
+    if (!strictPublicOrAllocated && allocatedTo && allocatedTo.length > 0) {
       where.OR = [
         { isPublic: true },
         { allocatedTo: { some: { id: { in: filterOptions.allocatedTo } } } },
+      ];
+    }
+
+    if (strictPublicOrAllocated && allocatedTo && allocatedTo?.length > 0) {
+      where.allocatedTo = { some: { id: { in: filterOptions.allocatedTo } } };
+    }
+
+    if (strictPublicOrAllocated && (!allocatedTo || allocatedTo.length === 0)) {
+      where.levels = { hasEvery: filterOptions.levels };
+    }
+
+    if (searchString) {
+      where.OR = [
+        { title: { contains: searchString, mode: 'insensitive' } },
+        { description: { contains: searchString, mode: 'insensitive' } },
+        {
+          teacherCreated: {
+            firstName: { contains: searchString, mode: 'insensitive' },
+            lastName: { contains: searchString, mode: 'insensitive' },
+          },
+        },
       ];
     }
 
