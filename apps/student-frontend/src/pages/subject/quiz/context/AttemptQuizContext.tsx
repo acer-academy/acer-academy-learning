@@ -2,6 +2,7 @@ import { QuizData } from '@acer-academy-learning/data-access';
 import { PropsWithChildren, createContext, useContext } from 'react';
 
 export type AttemptQuizContextState = {
+  isTimeUp: boolean;
   quiz: QuizData;
   timeAllowedInMS?: number;
 };

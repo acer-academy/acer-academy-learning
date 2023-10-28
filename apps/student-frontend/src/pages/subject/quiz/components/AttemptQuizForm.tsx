@@ -95,10 +95,11 @@ export const AttemptQuizForm = ({
   // Context
   const contextState: AttemptQuizContextState = useMemo(
     () => ({
+      isTimeUp: isTimeUp,
       quiz: quiz,
       timeAllowedInMS: timeAllowedInMS,
     }),
-    [quiz, timeAllowedInMS],
+    [quiz, timeAllowedInMS, isTimeUp],
   );
 
   const {

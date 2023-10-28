@@ -98,6 +98,7 @@ export const QuizManagement: React.FC = () => {
 
   const getTimeAllowedString = (timeAllowedInSeconds: number | undefined) => {
     if (!timeAllowedInSeconds) return 'None';
+    if (timeAllowedInSeconds < 60) return 'Less than 1 minute';
     let numMins = Math.floor(timeAllowedInSeconds / 60);
     const numHrs = Math.floor(numMins / 60);
     numMins %= 60;
