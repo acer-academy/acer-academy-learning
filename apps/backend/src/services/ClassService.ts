@@ -1,5 +1,4 @@
 import ClassDao from '../dao/ClassDao';
-import { MessageService, MessageTemplate } from './MessageService';
 import SessionService from './SessionService';
 import {
   Class,
@@ -11,7 +10,7 @@ import {
 } from '@prisma/client';
 
 class ClassService {
-  constructor(private messageService: MessageService = new MessageService()) {}
+  constructor() {}
   public async createClass(
     data: Prisma.ClassUncheckedCreateInput,
   ): Promise<Class> {
@@ -50,11 +49,6 @@ class ClassService {
         currDate = newDates[0];
         eventEndDate = newDates[1];
       }
-
-      // Send whatsapp message
-      await this.messageService.sendWhatsappMessage(
-        MessageTemplate.NEW_CLASS_ALERT,
-      );
 
       return sessions;
     } catch (error) {
@@ -174,11 +168,6 @@ class ClassService {
         updatedSessions = updatedSessions.splice(0, endIndex);
       }
 
-      // Send whatsapp message
-      await this.messageService.sendWhatsappMessage(
-        MessageTemplate.UPDATE_CLASS_ALERT,
-      );
-
       return updatedSessions;
     } catch (error) {
       await this.updateClass(classId, {
@@ -261,10 +250,6 @@ class ClassService {
       await SessionService.deleteSession(i.id);
     }
     const checkSessionsExist = await SessionService.getSessionsByClassId(id);
-    // Send whatsapp message
-    await this.messageService.sendWhatsappMessage(
-      MessageTemplate.DELETED_CLASS_ALERT,
-    );
     if (checkSessionsExist.length === 0) {
       return await this.deleteClass(id);
     }
