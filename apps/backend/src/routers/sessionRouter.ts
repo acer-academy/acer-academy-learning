@@ -6,8 +6,10 @@ import {
   validateSubjectsAndLevelsExist,
   validateSessionDate,
 } from '../middleware/validationMiddleware';
+import { MessageService, MessageTemplate } from '../services/MessageService';
 
 const sessionRouter = Router();
+const messageService = new MessageService();
 
 sessionRouter.get('/', async (req, res) => {
   try {
@@ -39,6 +41,8 @@ sessionRouter.post(
     try {
       const input: Prisma.SessionUncheckedCreateInput = req.body;
       const session = await SessionService.createSession(input);
+      // Send whatsapp message
+      await messageService.sendWhatsappMessage(MessageTemplate.NEW_CLASS_ALERT);
       return res.status(200).json(session);
     } catch (error) {
       console.log(error);
@@ -57,6 +61,10 @@ sessionRouter.put(
       const { id } = req.params;
       const input: Prisma.SessionUncheckedUpdateInput = req.body;
       const session = await SessionService.updateSession(id, input);
+      // Send whatsapp message
+      await messageService.sendWhatsappMessage(
+        MessageTemplate.UPDATE_CLASS_ALERT,
+      );
       return res.status(200).json(session);
     } catch (error) {
       console.log(error);
@@ -69,6 +77,9 @@ sessionRouter.delete('/:id', async (req, res) => {
   try {
     const { id } = req.params;
     await SessionService.deleteSession(id);
+    await messageService.sendWhatsappMessage(
+      MessageTemplate.DELETED_CLASS_ALERT,
+    );
     return res.status(200).json('Session Deleted Successfully');
   } catch (error) {
     console.log(error);

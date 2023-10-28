@@ -8,8 +8,10 @@ import {
   validateClassTeacherClassroomExist,
   validateClassAndSessionExist,
 } from '../middleware/validationMiddleware';
+import { MessageService, MessageTemplate } from '../services/MessageService';
 
 const classRouter = Router();
+const messageService = new MessageService();
 
 classRouter.get('/', async (req, res) => {
   try {
@@ -63,6 +65,8 @@ classRouter.post(
         classInput,
         sessionInput,
       );
+      // Send whatsapp message
+      await messageService.sendWhatsappMessage(MessageTemplate.NEW_CLASS_ALERT);
       return res.status(200).json(sessions);
     } catch (error) {
       console.log(error);
@@ -90,6 +94,10 @@ classRouter.put(
         classInput,
         sessionInput,
       );
+      // Send whatsapp message
+      await messageService.sendWhatsappMessage(
+        MessageTemplate.UPDATE_CLASS_ALERT,
+      );
       return res.status(200).json(session);
     } catch (error) {
       console.log(error);
@@ -107,6 +115,10 @@ classRouter.put(
       const { id } = req.params;
       const input: Prisma.ClassUncheckedUpdateInput = req.body;
       const updatedClass = await ClassService.updateClass(id, input);
+      // Send whatsapp message
+      await messageService.sendWhatsappMessage(
+        MessageTemplate.UPDATE_CLASS_ALERT,
+      );
       return res.status(200).json(updatedClass);
     } catch (error) {
       console.log(error);
@@ -119,6 +131,10 @@ classRouter.delete('/:id', async (req, res) => {
   try {
     const { id } = req.params;
     await ClassService.deleteRecurringClass(id);
+    // Send whatsapp message
+    await messageService.sendWhatsappMessage(
+      MessageTemplate.DELETED_CLASS_ALERT,
+    );
     return res
       .status(200)
       .json('All future recurring sessions deleted successfully');
