@@ -20,6 +20,7 @@ export const ViewQuiz = () => {
   );
   const timeAllowed = useMemo(() => {
     const timeAllowed = quiz?.timeAllowed;
+    if (timeAllowed && timeAllowed < 60) return 'Less than 1 minute';
     if (timeAllowed) {
       const minutes = Math.floor(timeAllowed / 60);
       const hours = Math.floor(minutes / 60);

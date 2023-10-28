@@ -7,6 +7,7 @@ import {
   PathValue,
   useFormContext,
 } from 'react-hook-form';
+import { useAttemptQuizContext } from '../context/AttemptQuizContext';
 export const MS_IN_SECOND = 1000;
 const SECONDS_IN_MINUTE = 60;
 const MINUTES_IN_HOUR = 60;
@@ -62,6 +63,7 @@ export const QuizTimer = <T extends FieldValues>({
   totalDurationInMiliseconds,
   name,
 }: QuizTimerProps<T>) => {
+  const { isTimeUp } = useAttemptQuizContext();
   const { setValue, getValues } = useFormContext<T>();
   // useRef to prevent unnecessary re-render
   const lastTickTiming = useRef<number | null>(null);
@@ -74,6 +76,12 @@ export const QuizTimer = <T extends FieldValues>({
     }
     return formatTime(totalDurationInMiliseconds - currentDuration);
   }, [totalDurationInMiliseconds, currentDuration]);
+
+  useEffect(() => {
+    if (isTimeUp && timerIdRef.current) {
+      clearInterval(timerIdRef.current);
+    }
+  }, [isTimeUp]);
 
   useEffect(() => {
     lastTickTiming.current = Date.now();

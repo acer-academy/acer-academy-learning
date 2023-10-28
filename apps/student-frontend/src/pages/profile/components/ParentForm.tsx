@@ -98,15 +98,6 @@ export const ParentForm = ({
     <>
       <h2 className="text-base font-semibold leading-7 text-gray-900 mt-4">
         Parents Particulars
-        {student.parents?.length === 1 && (
-          <button
-            onClick={openAddParentModal}
-            type="button"
-            className="ml-2 rounded-full bg-indigo-600 p-1.5 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-          >
-            <PlusIcon className="h-3 w-3" aria-hidden="true" />
-          </button>
-        )}
         {student.parents?.length === 2 && (
           <button
             onClick={handleDeleteParent}

@@ -158,83 +158,83 @@ export const QuizQuestionRow = ({
   }
 
   return (
-      <div className="opacity-100 transition-opacity duration-300">
-        <div
-          className={`bg-gray-200 px-4 py-2 text-left font-bold text-gray-900 focus:outline-none focus-visible:ring focus-visible:ring-gray-500 focus-visible:ring-opacity-75 text-base border border-gray-400 rounded-t flex justify-between bg-student-primary-600 text-white`}
-        >
-          <span>Question {questionNumber}</span>
+    <div className="opacity-100 transition-opacity duration-300">
+      <div
+        className={`bg-gray-200 px-4 py-2 text-left font-bold text-gray-900 focus:outline-none focus-visible:ring focus-visible:ring-gray-500 focus-visible:ring-opacity-75 text-base border border-gray-400 rounded-t flex justify-between bg-student-primary-600 text-white`}
+      >
+        <span>Question {questionNumber}</span>
+        <span>
+          {marks} mark{marks > 1 ? 's' : ''}
+        </span>
+      </div>
+      <div className="rounded-b border-b border-x border-gray-200 bg-white px-4 py-5 sm:px-6 shadow space-y-4 flex flex-col">
+        <LexOutput editorStateStr={question?.questionText || ''} />
+        <Divider lineClassName="border-student-primary-600" />
+        {answerOptions}
+        <div className="bg-gray-100 px-3 py-3 sm:px-3 shadow space-y-2 flex flex-col">
+          <span className="font-bold">Time Analysis</span>
+          {takeAnswer && takeAnswer[0] ? (
+            <span>{`Time taken: ${takeAnswer[0].timeTaken} seconds`}</span>
+          ) : (
+            <span>
+              {`It appears that you were unable to complete this question within the given time frame..`}
+            </span>
+          )}
           <span>
-            {marks} mark{marks > 1 ? 's' : ''}
-          </span>
-        </div>
-        <div className="rounded-b border-b border-x border-gray-200 bg-white px-4 py-5 sm:px-6 shadow space-y-4 flex flex-col">
-          <LexOutput editorStateStr={question?.questionText || ''} />
-          <Divider lineClassName="border-student-primary-600" />
-          {answerOptions}
-          <div className="bg-gray-100 px-3 py-3 sm:px-3 shadow space-y-2 flex flex-col">
-            <span className="font-bold">Time Analysis</span>
-            {takeAnswer && takeAnswer[0] ? (
-              <span>{`Time taken: ${takeAnswer[0].timeTaken} seconds`}</span>
-            ) : (
-              <span>
-                {`It appears that you were unable to complete this question within the given time frame..`}
-              </span>
-            )}
-            <span>
-              {`On average, students take `}
-              <span className="font-bold">{averageTime}</span>
-              {` seconds to complete this question. `}
-              {/* <span> */}
-              {takeAnswer && takeAnswer[0] && takeAnswer[0].timeTaken ? (
-                takeAnswer[0].timeTaken < parseFloat(averageTime) ? (
-                  <span>
-                    {`Well done! You completed this question faster than most students.`}
-                  </span>
-                ) : (
-                  <span>
-                    {`You took longer to complete this question than most students, which could indicate that you were putting extra thought into it.`}
-                  </span>
-                )
-              ) : (
-                <span></span>
-              )}
-              {/* </span> */}
-            </span>
-            <span className="font-bold">Correctness</span>
-            <span>
-              <span className="font-bold">{`${correctRate}%`}</span>
-              {` of students got this question right.`}
-            </span>
-            {takeAnswer &&
-            takeAnswer[0] &&
-            ((question?.questionType !== QuizQuestionTypeEnum.MRQ &&
-              takeAnswer[0].isCorrect === true) ||
-              takeAnswer.filter((takeAns) => takeAns.isCorrect === true)
-                .length ===
-                question?.answers.filter((ans) => ans.isCorrect === true)
-                  .length) ? (
-              parseFloat(correctRate) < 50 ? (
+            {`On average, students take `}
+            <span className="font-bold">{averageTime}</span>
+            {` seconds to complete this question. `}
+            {/* <span> */}
+            {takeAnswer && takeAnswer[0] && takeAnswer[0].timeTaken ? (
+              takeAnswer[0].timeTaken < parseFloat(averageTime) ? (
                 <span>
-                  {`Well done! You have a good grasp of `}
-                  <span className="font-bold">
-                    {question?.topics
-                      .map((a) => a.toLowerCase().split('_').join(' '))
-                      .join(', ')}
-                  </span>
-                  {`! This is a tricky question.`}
+                  {`Well done! You completed this question faster than most students.`}
                 </span>
               ) : (
-                <></>
+                <span>
+                  {`You took longer to complete this question than most students, which could indicate that you were putting extra thought into it.`}
+                </span>
               )
-            ) : parseFloat(correctRate) > 50 ? (
+            ) : (
+              <span></span>
+            )}
+            {/* </span> */}
+          </span>
+          <span className="font-bold">Correctness</span>
+          <span>
+            <span className="font-bold">{`${correctRate}%`}</span>
+            {` of students got this question right.`}
+          </span>
+          {takeAnswer &&
+          takeAnswer[0] &&
+          ((question?.questionType !== QuizQuestionTypeEnum.MRQ &&
+            takeAnswer[0].isCorrect === true) ||
+            takeAnswer.filter((takeAns) => takeAns.isCorrect === true)
+              .length ===
+              question?.answers.filter((ans) => ans.isCorrect === true)
+                .length) ? (
+            parseFloat(correctRate) < 50 ? (
               <span>
-                {`Did you make a careless mistake? This is a common question that most students got right.`}
+                {`Well done! You have a good grasp of `}
+                <span className="font-bold">
+                  {question?.topics
+                    .map((a) => a.toLowerCase().split('_').join(' '))
+                    .join(', ')}
+                </span>
+                {`! This is a tricky question.`}
               </span>
             ) : (
-              <> </>
-            )}
-          </div>
+              <></>
+            )
+          ) : parseFloat(correctRate) > 50 ? (
+            <span>
+              {`Did you make a careless mistake? This is a common question that most students got right.`}
+            </span>
+          ) : (
+            <> </>
+          )}
         </div>
       </div>
+    </div>
   );
 };
