@@ -63,7 +63,6 @@ export const AutoGenerateInputParametersForm: React.FC<
         questions: QuizQuestionData[];
         totalCount: number;
       } = response.data;
-      console.log(questionData);
       if (questionData.totalCount < numberOfQuestions) {
         displayToast(
           `Only ${questionData.totalCount} questions found. Please reduce the number of questions or add more questions to the question bank.`,

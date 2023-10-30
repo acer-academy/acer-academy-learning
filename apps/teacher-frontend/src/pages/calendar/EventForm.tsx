@@ -241,21 +241,32 @@ export default function EventForm({
   // ]);
 
   const validateForm = () => {
-
-
     const newErrors = {
       ...formErrors, // retain any other previous errors not checked here
-      dateError: sessionState.end <= sessionState.start ? 'Start date needs to be before end date' : null,
-      recurringEndDateError: (isRecurring && (recurringState.endRecurringDate <= sessionState.end)) ? 'Recurring end date needs to be after end time date' : null,
+      dateError:
+        sessionState.end <= sessionState.start
+          ? 'Start date needs to be before end date'
+          : null,
+      recurringEndDateError:
+        isRecurring && recurringState.endRecurringDate <= sessionState.end
+          ? 'Recurring end date needs to be after end time date'
+          : null,
       selectedCentre: !selectedCentre ? 'Centre needs to be selected' : null,
-      selectedClassroom: !selectedClassroom ? 'Classroom needs to be selected' : null,
-      selectedLevels: sessionState.levels.length === 0 ? 'At least one level needs to be selected' : null,
-      selectedSubjects: sessionState.subjects.length === 0 ? 'At least one subject needs to be selected' : null,
+      selectedClassroom: !selectedClassroom
+        ? 'Classroom needs to be selected'
+        : null,
+      selectedLevels:
+        sessionState.levels.length === 0
+          ? 'At least one level needs to be selected'
+          : null,
+      selectedSubjects:
+        sessionState.subjects.length === 0
+          ? 'At least one subject needs to be selected'
+          : null,
     };
 
     return newErrors;
   };
-  
 
   useEffect(() => {
     setRecurringState((prevState) => ({
@@ -339,7 +350,6 @@ export default function EventForm({
   const handleDeleteSession = async (sessionId: string) => {
     try {
       const response = await deleteSession(sessionId);
-      console.log(response);
       if (response.status === 200) {
         await fetchSessions();
         setShowDeleteModal(false);
@@ -356,7 +366,6 @@ export default function EventForm({
   const handleDeleteFutureSessions = async (classId: string) => {
     try {
       const response = await deleteRecurringClass(classId);
-      console.log(response);
       if (response.status === 200) {
         await fetchSessions();
         setShowDeleteModal(false);
@@ -381,23 +390,14 @@ export default function EventForm({
     setSelectedClassroom(session.classroomId || '');
   }, [session]);
 
-  console.log(sessionState)
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    console.log("in handle submit")
-    console.log(sessionState)
-
-    console.log(formErrors);
 
     const errors = validateForm();
 
     setFormErrors(errors);
 
     //issue is that even tho it sets state in validateform function above for formErrors, it doesnt take the latest state why, do i need it to be async?
-
-    console.log(errors);
 
     areAllFieldsValidated(errors);
 
@@ -407,28 +407,24 @@ export default function EventForm({
 
     if (!session.id) {
       if (!isRecurring) {
-        console.log('here in create session');
         try {
           const response = await createSession(sessionState);
           if (response) {
-            console.log('created obj');
             onClose();
             await fetchSessions();
             displayToast('Session created successfully!', ToastType.SUCCESS);
           }
-        } catch (err) {
+        } catch (err:) {
           onClose();
           displayToast(`${err.response.data.error}`, ToastType.ERROR);
         }
       } else {
-        console.log('in createing recurring');
         try {
           const response = await createRecurringClass([
             recurringState,
             sessionState,
           ]);
           if (response) {
-            console.log('created recurring');
             onClose();
             await fetchSessions();
             displayToast('Session created successfully!', ToastType.SUCCESS);
@@ -448,12 +444,9 @@ export default function EventForm({
   };
 
   const handleUpdateSession = async (sessionId: string, sessionState: any) => {
-    console.log(handleUpdateSession);
     try {
       const response = await updateSession(session.id, sessionState);
-      console.log(response);
       if (response) {
-        console.log('updated data');
         onClose();
         await fetchSessions();
         displayToast('Session updated successfully!', ToastType.SUCCESS);
@@ -479,7 +472,6 @@ export default function EventForm({
           sessionState,
         ]);
         if (response) {
-          console.log('updated data');
           setShowUpdateModal(false);
           onClose();
           await fetchSessions();
@@ -525,7 +517,6 @@ export default function EventForm({
             </div>
           </div>
 
-       
           <div className="flex space-x-4">
             <div className="w-1/2">
               <label className="block w-1/4 text-sm font-medium leading-6 text-gray-900">
@@ -617,7 +608,6 @@ export default function EventForm({
                 )}
               </div>
             )}
-         
           </div>
 
           <div className="mt-4">

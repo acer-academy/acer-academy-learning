@@ -36,7 +36,6 @@ export const FaqTopicDetails: React.FC = () => {
     try {
       const response = await getFaqTopicById(id);
       const faqTopicData: FaqTopicData = response.data;
-      console.log(faqTopicData);
       setFaqTopic(faqTopicData);
       setUpdatedFaqTopicTitle(faqTopicData.title);
       setFaqArticles(faqTopicData.faqArticles);
@@ -56,7 +55,6 @@ export const FaqTopicDetails: React.FC = () => {
     try {
       const response = await apiUpdateFaqTopic(faqTopicId, faqTopicData);
       const updatedFaqTopic: FaqTopicData = response.data;
-      console.log(updatedFaqTopic);
       displayToast('FAQ topic updated successfully.', ToastType.SUCCESS);
       setFaqTopic(updatedFaqTopic);
     } catch (error: any) {
@@ -77,8 +75,7 @@ export const FaqTopicDetails: React.FC = () => {
   const deleteFaqTopic = async () => {
     if (!faqTopicId) return;
     try {
-      const response = await apiDeleteFaqTopic(faqTopicId);
-      console.log(response);
+      await apiDeleteFaqTopic(faqTopicId);
       displayToast('FAQ topic deleted successfully.', ToastType.INFO);
       navigate('/faq-management');
     } catch (error: any) {
@@ -109,7 +106,6 @@ export const FaqTopicDetails: React.FC = () => {
       const faqTopicUpdateData: FaqTopicUpdateData = {
         title: updatedFaqTopicTitle,
       };
-      console.log(faqTopicUpdateData);
       updateFaqTopic(faqTopicId, faqTopicUpdateData);
     }
   }, [updatesMade]);

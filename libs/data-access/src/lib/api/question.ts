@@ -63,7 +63,6 @@ export const updateQuizQuestion = async ({
   data,
 }: UpdateQuizQuestionParams): Promise<QuizQuestionData> => {
   const res = await client.put(`${URL}/${questionId}`, data);
-  console.log(res);
   return res.data;
 };
 

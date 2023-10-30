@@ -25,7 +25,6 @@ export const CentreManagement: React.FC = () => {
     try {
       const response = await apiGetAllCentres();
       const allCentres: CentreData[] = response.data;
-      console.log(response);
       setCentres(allCentres);
     } catch (error) {
       displayToast(
@@ -40,8 +39,7 @@ export const CentreManagement: React.FC = () => {
     try {
       centreData.name = centreData.name.trim();
       centreData.address = centreData.address.trim();
-      const response = await apiCreateCentre(centreData);
-      console.log(response);
+      await apiCreateCentre(centreData);
 
       displayToast('Centre created successfully.', ToastType.SUCCESS);
     } catch (error: any) {
@@ -61,8 +59,7 @@ export const CentreManagement: React.FC = () => {
 
   const deleteCentre = async () => {
     try {
-      const response = await apiDeleteCentre(deleteCentreId);
-      console.log(response);
+      await apiDeleteCentre(deleteCentreId);
       displayToast('Centre deleted successfully.', ToastType.INFO);
     } catch (error: any) {
       if (error.response) {

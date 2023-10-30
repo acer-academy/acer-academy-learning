@@ -12,7 +12,6 @@ export default function UpdateEventModal({
   const [endTime, setEndTime] = useState('');
 
   useEffect(() => {
-    console.log('eventData', eventData);
     if (eventData) {
       setEventName(eventData.name);
       setEventDate(eventData.datetime);

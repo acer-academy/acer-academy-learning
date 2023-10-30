@@ -32,7 +32,6 @@ export const PromotionManagement: React.FC = () => {
     try {
       const response = await apiGetAllPromotions();
       const allPromotions: PromotionData[] = response.data;
-      console.log(response);
       setPromotions(allPromotions);
     } catch (error) {
       displayToast(
@@ -45,8 +44,7 @@ export const PromotionManagement: React.FC = () => {
 
   const createPromotion = async (promotionData: PromotionPostData) => {
     try {
-      const response = await apiCreatePromotion(promotionData);
-      console.log(response);
+      await apiCreatePromotion(promotionData);
 
       displayToast('Promotion created successfully.', ToastType.SUCCESS);
     } catch (error: any) {
@@ -69,8 +67,7 @@ export const PromotionManagement: React.FC = () => {
     promotionData: PromotionPutData,
   ) => {
     try {
-      const response = await apiUpdatePromotion(id, promotionData);
-      console.log(response);
+      await apiUpdatePromotion(id, promotionData);
 
       displayToast('Promotion created successfully.', ToastType.SUCCESS);
     } catch (error: any) {
@@ -90,9 +87,7 @@ export const PromotionManagement: React.FC = () => {
 
   const deletePromotion = async () => {
     try {
-      const response = await apiDeletePromotion(deletePromotionId);
-
-      console.log(response);
+      await apiDeletePromotion(deletePromotionId);
       displayToast('Promotion deleted successfully.', ToastType.INFO);
     } catch (error: any) {
       if (error.response) {

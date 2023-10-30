@@ -43,7 +43,6 @@ export const CreditBundleManagement: React.FC = () => {
     try {
       const response = await apiGetAllCreditBundles();
       const allCreditBundles: CreditBundleData[] = response.data;
-      console.log(response);
       setCreditBundles(allCreditBundles);
     } catch (error) {
       displayToast(
@@ -62,9 +61,7 @@ export const CreditBundleManagement: React.FC = () => {
       creditBundleData.basePrice = convertFloatToInt(
         creditBundleData.basePrice,
       );
-      const response = await apiCreateCreditBundle(creditBundleData);
-      console.log(response);
-
+      await apiCreateCreditBundle(creditBundleData);
       displayToast('Credit bundle created successfully.', ToastType.SUCCESS);
     } catch (error: any) {
       if (error.response) {
@@ -88,11 +85,7 @@ export const CreditBundleManagement: React.FC = () => {
     try {
       creditBundleData.name = creditBundleData.name?.trim();
       creditBundleData.description = creditBundleData.description?.trim();
-      const response = await apiUpdateCreditBundle(
-        updateCreditBundleId,
-        creditBundleData,
-      );
-      console.log(response);
+      await apiUpdateCreditBundle(updateCreditBundleId, creditBundleData);
       displayToast('Credit bundle updated successfully.', ToastType.INFO);
     } catch (error: any) {
       if (error.response) {
@@ -111,8 +104,7 @@ export const CreditBundleManagement: React.FC = () => {
 
   const deleteCreditBundle = async () => {
     try {
-      const response = await apiDeleteCreditBundle(deleteCreditBundleId);
-      console.log(response);
+      await apiDeleteCreditBundle(deleteCreditBundleId);
       displayToast('Credit bundle deleted successfully.', ToastType.INFO);
     } catch (error: any) {
       if (error.response) {

@@ -57,7 +57,6 @@ export const QuizManagement: React.FC = () => {
         quizzes: QuizData[];
         totalCount: number;
       } = response.data;
-      //console.log(quizzesData);
       setCurrentQuizzes(quizzesData.quizzes);
       setTotalCount(quizzesData.totalCount);
     } catch (error) {

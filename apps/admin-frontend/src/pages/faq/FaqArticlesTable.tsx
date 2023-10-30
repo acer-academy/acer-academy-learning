@@ -46,8 +46,7 @@ export const FaqArticlesTable: React.FC<FaqArticlesTableProps> = ({
       faqArticleData.title = faqArticleData.title.trim();
       faqArticleData.body = faqArticleData.body.trim();
       faqArticleData.faqTopicId = faqTopicId;
-      const response = await apiCreateFaqArticle(faqArticleData);
-      console.log(response);
+      await apiCreateFaqArticle(faqArticleData);
 
       displayToast('FAQ article created successfully.', ToastType.SUCCESS);
 
@@ -74,11 +73,7 @@ export const FaqArticlesTable: React.FC<FaqArticlesTableProps> = ({
       faqArticleData.title = faqArticleData.title.trim();
       faqArticleData.body = faqArticleData.body.trim();
       faqArticleData.faqTopicId = faqTopicId;
-      const response = await apiUpdateFaqArticle(
-        updateFaqArticleId,
-        faqArticleData,
-      );
-      console.log(response);
+      await apiUpdateFaqArticle(updateFaqArticleId, faqArticleData);
       displayToast('FAQ article updated successfully.', ToastType.INFO);
 
       // Update the parent component's state
@@ -101,8 +96,7 @@ export const FaqArticlesTable: React.FC<FaqArticlesTableProps> = ({
 
   const deleteFaqArticle = async () => {
     try {
-      const response = await apiDeleteFaqArticle(deleteFaqArticleId);
-      console.log(response);
+      await apiDeleteFaqArticle(deleteFaqArticleId);
       displayToast('FAQ article deleted successfully.', ToastType.INFO);
 
       // Update the parent component's state by removing the deleted article
@@ -223,8 +217,6 @@ export const FaqArticlesTable: React.FC<FaqArticlesTableProps> = ({
                                 faqTopicId: faqTopicId,
                               });
                               setIsUpdateModalOpen(true);
-                              console.log('updateFaqArticleData');
-                              console.log(updateFaqArticleData);
                             }}
                           >
                             Edit

@@ -48,7 +48,6 @@ export async function loginAdmin(
       `${URL}/login`,
       data,
     );
-    console.log(response);
     return response;
   } catch (error) {
     if (

@@ -39,7 +39,6 @@ export default function EventForm({
   const [sessionData, setSessionData] = useState({
     ...session,
   });
-  //   console.log(session);
 
   enum LevelEnum {
     P1 = 'P1',
@@ -95,8 +94,9 @@ export default function EventForm({
   );
 
   const [teachers, setTeachers] = useState<TeacherData[]>([]);
-  const [selectedTeacher, setSelectedTeacher] = useState(session.teacherId || '',);
-
+  const [selectedTeacher, setSelectedTeacher] = useState(
+    session.teacherId || '',
+  );
 
   const { user } = useAuth<Admin>();
 
@@ -156,16 +156,21 @@ export default function EventForm({
         .filter((subject) => subject in SubjectEnum)
         .map((subject) => SubjectEnum[subject as keyof typeof SubjectEnum]),
       classroomId: selectedClassroom,
-      teacherId: selectedTeacher
+      teacherId: selectedTeacher,
       // ... any other fields you want to watch
     }));
-  }, [sessionData, selectedClassroom, selectedLevels, selectedSubjects, selectedTeacher]);
+  }, [
+    sessionData,
+    selectedClassroom,
+    selectedLevels,
+    selectedSubjects,
+    selectedTeacher,
+  ]);
 
   const label = session?.id ? 'Update' : 'Create';
 
   useEffect(() => {
     setSessionData({ ...session });
-    console.log(session);
   }, [session]);
 
   useEffect(() => {
@@ -235,7 +240,6 @@ export default function EventForm({
   const handleDeleteSession = async (sessionId: string) => {
     try {
       const response = await deleteSession(sessionId);
-      console.log(response);
       if (response.status === 200) {
         await fetchSessions();
         setShowDeleteModal(false);
@@ -252,7 +256,6 @@ export default function EventForm({
   const handleDeleteFutureSessions = async (classId: string) => {
     try {
       const response = await deleteRecurringClass(classId);
-      console.log(response);
       if (response.status === 200) {
         await fetchSessions();
         setShowDeleteModal(false);
@@ -281,30 +284,20 @@ export default function EventForm({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    console.log('createSessionData');
-    console.log(sessionState);
-
-    console.log(isRecurring);
-    console.log(session.id);
     if (!session.id) {
       if (!isRecurring) {
-        console.log('here in create session');
-
         const response = await createSession(sessionState);
         if (response) {
-          console.log('created obj');
           onClose();
           await fetchSessions();
           displayToast('Session created successfully!', ToastType.SUCCESS);
         }
       } else {
-        console.log('in createing recurring');
         const response = await createRecurringClass([
           recurringState,
           sessionState,
         ]);
         if (response) {
-          console.log('created recurring');
           onClose();
           await fetchSessions();
           displayToast('Session created successfully!', ToastType.SUCCESS);
@@ -320,11 +313,9 @@ export default function EventForm({
   };
 
   const handleUpdateSession = async (sessionId: string, sessionState: any) => {
-    console.log(handleUpdateSession);
     try {
       const response = await updateSession(session.id, sessionState);
       if (response) {
-        console.log('updated data');
         onClose();
         await fetchSessions();
         displayToast('Session updated successfully!', ToastType.SUCCESS);
@@ -348,7 +339,6 @@ export default function EventForm({
           sessionState,
         ]);
         if (response) {
-          console.log('updated data');
           setShowUpdateModal(false);
           onClose();
           await fetchSessions();
@@ -493,12 +483,10 @@ export default function EventForm({
                 onChange={(e) => setSelectedTeacher(e.target.value)}
                 className="mt-2 block w-3/4 space-y-2 rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
               >
-                <option value="">
-                  Select a teacher
-                </option>
+                <option value="">Select a teacher</option>
                 {teachers.map((teacher, index) => (
                   <option key={index} value={teacher.id}>
-                    {teacher.firstName} {teacher.lastName} 
+                    {teacher.firstName} {teacher.lastName}
                   </option>
                 ))}
               </select>

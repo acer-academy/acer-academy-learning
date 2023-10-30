@@ -111,7 +111,7 @@ export const ClassCreditManagement: React.FC = () => {
 
   const handleBlockStudent = async () => {
     try {
-      const response = await blockStudent(blockStudentId);
+      await blockStudent(blockStudentId);
       displayToast('Successfully blocked student.', ToastType.SUCCESS);
 
       setStudentData((prevStudentData) =>
@@ -129,7 +129,7 @@ export const ClassCreditManagement: React.FC = () => {
 
   const handleUnblockStudent = async () => {
     try {
-      const response = await blockStudent(blockStudentId);
+      await blockStudent(blockStudentId);
       displayToast('Successfully unblocked student.', ToastType.SUCCESS);
 
       setStudentData((prevStudentData) =>

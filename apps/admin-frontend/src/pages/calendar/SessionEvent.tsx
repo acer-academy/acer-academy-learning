@@ -5,8 +5,6 @@ import { SessionData } from 'libs/data-access/src/lib/types/session';
 export default function SessionEvent({ session }: { session: SessionData }) {
   const { classroom, levels, subjects, teacher } = session;
 
-  // console.log(session);
-
   return (
     <div className="p-1 h-full text-black">
       <div className="flex items-center justify-between">

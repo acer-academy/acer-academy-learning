@@ -198,7 +198,6 @@ export const AttemptQuizForm = ({
       );
       return curr && typeof ans === 'boolean' && ans;
     }, true);
-    console.log(allHasBeenFilled);
     if (!allHasBeenFilled) {
       setShowSubmitWarning(true);
       return;

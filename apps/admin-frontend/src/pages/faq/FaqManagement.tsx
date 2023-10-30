@@ -25,7 +25,6 @@ export const FaqTopicManagement: React.FC = () => {
     try {
       const response = await apiGetAllFaqTopics();
       const allFaqTopics: FaqTopicData[] = response.data;
-      console.log(response);
       setFaqTopics(allFaqTopics);
     } catch (error) {
       displayToast(
@@ -39,8 +38,7 @@ export const FaqTopicManagement: React.FC = () => {
   const createFaqTopic = async (faqTopicData: FaqTopicCreateData) => {
     try {
       faqTopicData.title = faqTopicData.title.trim();
-      const response = await apiCreateFaqTopic(faqTopicData);
-      console.log(response);
+      await apiCreateFaqTopic(faqTopicData);
 
       displayToast('FAQ topic created successfully.', ToastType.SUCCESS);
     } catch (error: any) {
@@ -60,8 +58,7 @@ export const FaqTopicManagement: React.FC = () => {
 
   const deleteFaqTopic = async () => {
     try {
-      const response = await apiDeleteFaqTopic(deleteFaqTopicId);
-      console.log(response);
+      await apiDeleteFaqTopic(deleteFaqTopicId);
       displayToast('FAQ topic deleted successfully.', ToastType.INFO);
     } catch (error: any) {
       if (error.response) {

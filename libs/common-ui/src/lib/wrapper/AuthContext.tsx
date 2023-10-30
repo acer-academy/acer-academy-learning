@@ -70,7 +70,6 @@ export function AuthWrapper<UserData>({
     const fetchUser = async () => {
       try {
         const userInfo = await fetchUserApi();
-        // console.log(userInfo);
         const { data } = userInfo;
         const user: UserData = data;
         setUser(user);

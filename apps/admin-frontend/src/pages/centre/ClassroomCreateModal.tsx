@@ -58,17 +58,13 @@ export const ClassroomCreateModal: React.FC<ClassroomCreateModalProps> = ({
       return;
     }
     try {
-      classroomData.name = classroomData.name.trim();
-      classroomData.capacity = classroomData.capacity;
       if (isEdit) {
-        const response = await apiUpdateClassroom(
-          editClassroomId,
-          classroomData,
-        );
-        console.log(response);
+        await apiUpdateClassroom(editClassroomId, {
+          ...classroomData,
+          name: classroomData.name.trim(),
+        });
       } else {
-        const response = await apiCreateClassroom(classroomData);
-        console.log(response);
+        await apiCreateClassroom(classroomData);
       }
     } catch (error: any) {
       if (error.response) {
