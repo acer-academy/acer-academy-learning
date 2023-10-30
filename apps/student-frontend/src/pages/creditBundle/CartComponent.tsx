@@ -90,8 +90,6 @@ export default function CartComponent({
       ...prevState,
       creditBundleIdArray: newCreditBundleIdArray,
     }));
-
-    console.log(cartItems);
   }, [cartItems]);
 
   // Update discountAmount and totalAfterDiscount when subtotal or selectedPromotion changes
@@ -112,8 +110,6 @@ export default function CartComponent({
       creditsTransacted: totalCredits,
     }));
   }, [subtotal, totalCredits, totalAfterDiscount, selectedPromotion]);
-
-  console.log(transactionState);
 
   const applyPromotion = (promoCode: string) => {
     if (!validPromotions) {

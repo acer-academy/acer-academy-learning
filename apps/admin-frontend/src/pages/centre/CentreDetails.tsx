@@ -48,7 +48,6 @@ export const CentreDetails: React.FC = () => {
     try {
       const response = await getCentreById(id);
       const centreData: CentreData = response.data;
-      console.log(centreData);
       setCentre(centreData);
       setUpdatedCentreName(centreData.name);
       setUpdatedCentreAddress(centreData.address);
@@ -65,7 +64,6 @@ export const CentreDetails: React.FC = () => {
     try {
       const response = await apiGetClassroomsByCentre(id);
       const classroomsData: ClassroomData[] = response.data;
-      console.log(classroomsData);
       setClassrooms(classroomsData);
     } catch (error) {
       displayToast(
@@ -83,7 +81,6 @@ export const CentreDetails: React.FC = () => {
     try {
       const response = await apiUpdateCentre(centreId, centreData);
       const updatedCentre: CentreData = response.data;
-      console.log(updatedCentre);
       displayToast('Centre updated successfully.', ToastType.SUCCESS);
       setCentre(updatedCentre);
     } catch (error: any) {
@@ -106,7 +103,6 @@ export const CentreDetails: React.FC = () => {
     if (!centreId) return;
     try {
       const response = await apiDeleteCentre(centreId);
-      console.log(response);
       displayToast('Centre deleted successfully.', ToastType.INFO);
       navigate('/centre-management');
     } catch (error: any) {
@@ -128,7 +124,6 @@ export const CentreDetails: React.FC = () => {
     if (!(deleteClassroomId as string)) return;
     try {
       const response = await apiDeleteClassroom(deleteClassroomId);
-      console.log(response);
       displayToast('Classroom deleted successfully.', ToastType.INFO);
     } catch (error: any) {
       if (error.response) {
@@ -160,7 +155,6 @@ export const CentreDetails: React.FC = () => {
         name: updatedCentreName,
         address: updatedCentreAddress,
       };
-      console.log(centreUpdateData);
       updateCentre(centreId, centreUpdateData);
     }
   }, [updatesMade]);

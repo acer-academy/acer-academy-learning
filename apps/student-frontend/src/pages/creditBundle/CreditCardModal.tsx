@@ -46,9 +46,6 @@ const CreditCardModal: React.FC<Props> = ({
     cvv: '',
   });
 
-  //   console.log(cartItems);
-  console.log(transactionState);
-
   const handleCardHolderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     if (/^[a-zA-Z\s]*$/.test(value) || value === '') {

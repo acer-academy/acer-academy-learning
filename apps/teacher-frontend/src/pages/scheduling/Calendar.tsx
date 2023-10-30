@@ -113,30 +113,21 @@ export default function Calendar() {
   const [selectedEvent, setSelectedEvent] = useState(null);
 
   const handleUpdateEvent = (updatedEvent) => {
-    console.log('days', days);
-    console.log('updatedEvent', updatedEvent);
     const dayIndex = days.findIndex(
       (day) => day.date === updatedEvent.datetime,
     );
-    console.log('dayIndex', dayIndex);
+
     const eventIndex = days[dayIndex].events.findIndex(
       (event) => event.id === updatedEvent.id,
     );
 
-    console.log(eventIndex);
-
-    console.log('eventIndex', eventIndex);
-
     const updatedDays = [...days];
 
-    console.log('updatedDays', updatedDays);
     updatedDays[dayIndex].events[eventIndex] = updatedEvent;
     setDays(updatedDays);
   };
 
   const handleSelectDay = (selectedDay) => {
-    console.log(selectedDay);
-
     // Create a new array of days with updated isSelected values
     const updatedDays = days.map((day) =>
       day.date === selectedDay.date

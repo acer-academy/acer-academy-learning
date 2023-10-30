@@ -5,8 +5,6 @@ import { SessionData } from 'libs/data-access/src/lib/types/session';
 export default function SessionEvent({ session }: { session: SessionData }) {
   const { classroom, levels, subjects, teacher } = session;
 
-  // console.log(session);
-
   return (
     <div className="h-full text-black">
       <div className="flex items-center justify-between">
@@ -26,9 +24,7 @@ export default function SessionEvent({ session }: { session: SessionData }) {
       <div className="flex">
         <p className="text-xs">Centre: {classroom.centre.name}</p>
       </div>
-      <div className="mt-4">
-      </div>
+      <div className="mt-4"></div>
     </div>
   );
 }
-

@@ -26,7 +26,6 @@ export default function CreditsBar() {
     const results = await getCurrentTerms();
     const term = results.data[0];
     setCurrentTermId(term.id);
-    console.log(term.id);
   }
 
   async function fetchCredits() {
@@ -35,7 +34,6 @@ export default function CreditsBar() {
         currentTermId,
         studentId,
       );
-      console.log(retrievedCredits.data);
       setCredits(retrievedCredits.data);
       setIsLoading(false); // Set loading to false after fetching credits
     }

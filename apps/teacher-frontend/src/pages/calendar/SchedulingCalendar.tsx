@@ -63,7 +63,6 @@ export const SchedulingCalendar = ({
 
   const components = {
     event: ({ event }: { event: any }) => {
-
       const data = event?.data;
       if (viewRef.current === 'month') {
         // use the ref value here
@@ -93,14 +92,11 @@ export const SchedulingCalendar = ({
         // onSelectEvent={onSelectEvent}
         onDoubleClickEvent={(event) => {
           const session = event?.data?.session;
-          if(session && session.teacherId !== user?.id) {
-            console.log("here")
-            console.log(session)
+          if (session && session.teacherId !== user?.id) {
             onShowSessionReadView(session);
           } else {
             session && onShowSessionView(session);
           }
-         
         }}
         events={sessionsData}
         style={{

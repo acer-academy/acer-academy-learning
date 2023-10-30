@@ -32,7 +32,6 @@ stripeWebhookRouter.post('/', async (req, res) => {
 
   switch (payload.type) {
     case 'charge.succeeded':
-      console.log(payload.data.object);
       const chargeSucceeded = payload.data.object;
 
       const succeededTransaction =
@@ -52,7 +51,6 @@ stripeWebhookRouter.post('/', async (req, res) => {
       // Then define and call a function to handle the event payment_intent.succeeded
       break;
     case 'charge.refunded':
-      console.log(payload.data.object);
       const chargeRefunded = payload.data.object;
 
       const refundedTransaction =

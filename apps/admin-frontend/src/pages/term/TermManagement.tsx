@@ -32,7 +32,6 @@ export const TermManagement: React.FC = () => {
     try {
       const response = await apiGetAllTerms();
       const allTerms: TermData[] = response.data;
-      console.log(response);
       setTerm(allTerms);
     } catch (error) {
       displayToast(
@@ -45,9 +44,7 @@ export const TermManagement: React.FC = () => {
 
   const createTerm = async (termData: TermCreateData) => {
     try {
-      const response = await apiCreateTerm(termData);
-      console.log(response);
-
+      await apiCreateTerm(termData);
       displayToast('Term created successfully.', ToastType.SUCCESS);
     } catch (error: any) {
       if (error.response) {
@@ -66,9 +63,7 @@ export const TermManagement: React.FC = () => {
 
   const updateTerm = async (id: string, updateData: TermUpdateData) => {
     try {
-      const response = await apiUpdateTerm(id, updateData);
-      console.log(response);
-
+      await apiUpdateTerm(id, updateData);
       displayToast('Term created successfully.', ToastType.SUCCESS);
     } catch (error: any) {
       if (error.response) {
@@ -87,9 +82,7 @@ export const TermManagement: React.FC = () => {
 
   const deleteTerm = async () => {
     try {
-      const response = await apiDeleteTerm(deleteTermId);
-
-      console.log(response);
+      await apiDeleteTerm(deleteTermId);
       displayToast('Term deleted successfully.', ToastType.INFO);
     } catch (error: any) {
       if (error.response) {

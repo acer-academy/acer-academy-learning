@@ -56,8 +56,6 @@ router.post('/login', async (req, res) => {
  * removes the cookie for the user who sent in the request
  */
 router.post('/logout', (req, res) => {
-  // console.log('Logout endpoint hit');
-  // console.log(req);
   res
     .clearCookie('jwtToken_Admin', {
       httpOnly: true,

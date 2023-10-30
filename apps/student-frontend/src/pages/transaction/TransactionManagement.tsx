@@ -65,7 +65,6 @@ const TransactionManagement = () => {
     try {
       const response = await getTransactionsByStudentId(authUser?.id);
       const allTransactions: TransactionData[] = response.data;
-      console.log(allTransactions);
       setTransactions(allTransactions);
     } catch (error) {
       console.error('Error retrieving transactions:', error);

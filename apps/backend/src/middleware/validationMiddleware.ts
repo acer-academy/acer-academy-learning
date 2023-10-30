@@ -1610,7 +1610,6 @@ export async function validateBodyQuizOnQuizQuestionFormatValid(
           );
         }
         if (quizQuestionIndex == undefined || quizQuestionIndex < 0) {
-          console.log(!quizQuestionIndex);
           throw Error(
             'Malformed request; a valid quizQuestionIndex is required per quizQuestions element.',
           );
