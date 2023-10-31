@@ -21,15 +21,7 @@ export class AssignmentDao {
     return this.prismaClient.assignment.findUnique({
       where: { id: assignmentId },
       include: {
-        assignmentAttempts: {
-          include: {
-            student: {
-              select: {
-                id: true,
-              },
-            },
-          },
-        },
+        assignmentAttempts: true,
       },
     });
   }
@@ -47,6 +39,14 @@ export class AssignmentDao {
   public async deleteAssignment(
     assignmentId: string,
   ): Promise<Assignment | null> {
+    const deleteAttempts = await this.prismaClient.assignmentAttempt.deleteMany(
+      {
+        where: {
+          assignmentId: assignmentId,
+        },
+      },
+    );
+
     return this.prismaClient.assignment.delete({
       where: { id: assignmentId },
     });
