@@ -39,9 +39,10 @@ model Student {
 
   transaction Transaction[]
 
-  sessions Session[]
-  quizzes  Quiz[]
-  takes    Take[]
+  sessions           Session[]
+  quizzes            Quiz[]
+  takes              Take[]
+  assignmentAttempts AssignmentAttempt[]
 }
 
 model Parent {
@@ -471,6 +472,9 @@ model AssignmentAttempt {
   score       Int
   feedback    String   @db.Text
 
-  Assignment   Assignment? @relation(fields: [assignmentId], references: [id])
+  assignment   Assignment? @relation(fields: [assignmentId], references: [id])
   assignmentId String?     @db.Uuid
+
+  student   Student @relation(fields: [studentId], references: [id])
+  studentId String  @db.Uuid
 }
