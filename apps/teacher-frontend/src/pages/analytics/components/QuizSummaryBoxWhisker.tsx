@@ -10,10 +10,12 @@ export const QuizSummaryBoxWhisker: React.FC<{
   const sortedTotalMarksArr = totalMarksArr.sort((x, y) => x - y);
   const min = sortedTotalMarksArr[0];
   const max = sortedTotalMarksArr[sortedTotalMarksArr.length - 1];
-  const median = sortedTotalMarksArr[sortedTotalMarksArr.length / 2];
-  const lowerQuartile = sortedTotalMarksArr[sortedTotalMarksArr.length / 4];
+  const median =
+    sortedTotalMarksArr[Math.round(sortedTotalMarksArr.length / 2)];
+  const lowerQuartile =
+    sortedTotalMarksArr[Math.round(sortedTotalMarksArr.length / 4)];
   const upperQuartile =
-    sortedTotalMarksArr[(sortedTotalMarksArr.length / 4) * 3];
+    sortedTotalMarksArr[Math.round((sortedTotalMarksArr.length / 4) * 3)];
   const mean = (
     sortedTotalMarksArr.reduce((x, y) => x + y, 0) / sortedTotalMarksArr.length
   ).toFixed(2);

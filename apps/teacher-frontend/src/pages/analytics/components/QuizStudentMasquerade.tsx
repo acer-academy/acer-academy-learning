@@ -48,7 +48,7 @@ export const QuizStudentMasquerade: React.FC<{
       const selectedTake =
         takes.find((take) => take.id == selectedTakeId) ?? takes[0];
       const takesSliced = takes.splice(takes.indexOf(selectedTake), 1)[0];
-      takes.push(takesSliced);
+      takes.unshift(takesSliced);
       setTakes(takes);
     }
   }, [selectedTakeId]);
@@ -91,7 +91,7 @@ export const QuizStudentMasquerade: React.FC<{
   return (
     <div className="relative">
       {isDropdownOpen ? (
-        <div className="fixed text-sm font-semibold z-50 bottom-10 rounded-lg right-10 bg-teacher-primary-600 text-white shadow-lg">
+        <div className="fixed max-h-96 no-scrollbar overflow-y-scroll text-sm font-semibold z-50 bottom-10 rounded-lg right-10 bg-teacher-primary-600 text-white shadow-lg">
           {takes.map((take, index) => (
             <div
               key={take.id}

@@ -53,10 +53,7 @@ export const QuizQuestionStatistics: React.FC<{
   };
 
   return (
-    <div
-      id={quizQuestionId}
-      className="rounded-lg border bg-white border-gray-300 overflow-hidden shadow-sm"
-    >
+    <div className="rounded-lg border bg-white border-gray-300 overflow-hidden shadow-sm">
       <div
         className={`px-4 py-2 font-bold flex justify-between bg-teacher-primary-800 text-white`}
       >

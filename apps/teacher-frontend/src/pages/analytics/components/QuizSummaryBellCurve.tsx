@@ -15,15 +15,23 @@ export const QuizSummaryBellCurve: React.FC<{
     data.reduce((sum, value) => sum + (value - mean) ** 2, 0) /
       (data.length - 1),
   );
+  const max = props.quizStats.quizDetails.totalMarks;
 
   const stdDeviationLines = [-2, -1, 0, 1, 2];
   const deviationLineSeries = stdDeviationLines.map((numDeviations) => ({
-    name: `${numDeviations}σ`,
+    name:
+      numDeviations == 0
+        ? 'Mean (μ)'
+        : `μ${numDeviations > 0 ? '+' : ''}${numDeviations}σ`,
     type: 'line',
     data: [
       [mean + numDeviations * stdDeviation, 0],
-      [mean + numDeviations * stdDeviation, 0.2],
+      [mean + numDeviations * stdDeviation, 1],
     ],
+    color:
+      numDeviations === 0
+        ? 'rgba(0,0,0,1)'
+        : `rgba(0,0, 0, ${1 - Math.abs(numDeviations) * 0.35})`,
     marker: {
       enabled: false,
     },
@@ -34,6 +42,20 @@ export const QuizSummaryBellCurve: React.FC<{
       },
     },
   }));
+
+  function estimateMaxProbabilityDensity(numbers: number[]): number {
+    if (numbers.length === 0) {
+      return 0;
+    }
+    const mean = numbers.reduce((acc, val) => acc + val, 0) / numbers.length;
+    const squaredDifferencesSum = numbers.reduce(
+      (acc, val) => acc + (val - mean) ** 2,
+      0,
+    );
+    const stdDev = Math.sqrt(squaredDifferencesSum / numbers.length);
+    const maxProbabilityDensity = 1 / (stdDev * Math.sqrt(2 * Math.PI));
+    return maxProbabilityDensity;
+  }
 
   const options = {
     chart: {
@@ -47,13 +69,15 @@ export const QuizSummaryBellCurve: React.FC<{
       title: {
         text: 'Scores',
       },
+      min: mean - 3 * stdDeviation,
+      max: mean + 3 * stdDeviation,
     },
     yAxis: {
       title: {
         text: 'Probability',
       },
       min: 0,
-      max: 0.2,
+      max: estimateMaxProbabilityDensity(data),
     },
     plotOptions: {
       line: {
