@@ -1,0 +1,107 @@
+import { useToast } from '@acer-academy-learning/common-ui';
+import { StudentTakeData } from '@acer-academy-learning/data-access';
+import { useEffect, useState } from 'react';
+import {
+  getTakeByTakeId as apiGetTakeById,
+  getSpiderChartForQuiz as apiSpiderChartForQuiz,
+} from '@acer-academy-learning/data-access';
+import { QuizQuestionRow } from './QuizQuestionRow';
+import SpiderChart from './SpiderChart';
+
+export const QuizStudentMasqueradePreview: React.FC<{ takeId: string }> = (
+  props,
+) => {
+  const { displayToast, ToastType } = useToast();
+  const { takeId } = props;
+
+  const [take, setTake] = useState<StudentTakeData | null>(null);
+  const [spiderChart, setSpiderChart] = useState<{
+    subjectArr: string[];
+    averageScoreArr: number[];
+  }>({ subjectArr: [], averageScoreArr: [] });
+
+  let index = 1;
+
+  const fetchTake = async () => {
+    try {
+      if (takeId) {
+        const response = await apiGetTakeById(takeId);
+        setTake(response.data);
+      }
+    } catch (error) {
+      displayToast(
+        'Quiz result could not be retrieved from the server.',
+        ToastType.ERROR,
+      );
+      console.log(error);
+    }
+  };
+
+  const getSpiderChartAnalysis = async () => {
+    if (takeId) {
+      const res = await apiSpiderChartForQuiz(takeId);
+      setSpiderChart(res.data);
+    } else {
+      displayToast(
+        'Spider Chart could not be retrieved from the server.',
+        ToastType.ERROR,
+      );
+    }
+  };
+
+  useEffect(() => {
+    fetchTake();
+    getSpiderChartAnalysis();
+  }, [takeId]);
+
+  return (
+    <div className="h-full">
+      <div className="mt-5">
+        <div className="px-2 py-2 align-middle sm:px-2 lg:px-2">
+          <span className="text-xl py-4 font-bold tracking-tight">
+            Spider Chart Analysis
+          </span>
+          <div className=" h-96">
+            <SpiderChart
+              subjectArr={spiderChart.subjectArr}
+              averageScoreArr={spiderChart.averageScoreArr}
+            />
+          </div>
+        </div>
+      </div>
+      <div className="flex min-h-full flex-col gap-4 align-middle">
+        <div className="flex align-middle justify-between">
+          <div className="flex align-middle gap-4">
+            <div className="space-y-2 flex flex-col">
+              <div className="flex align-left gap-4">
+                <span className="text-xl font-bold tracking-tight">
+                  Quiz Results: {`${take?.marks}/ ${take?.quiz.totalMarks}`}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="min-w-fit">
+          <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+            <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+              <div className="flex flex-col gap-4">
+                {take?.quiz.quizQuestions
+                  .sort((a, b) => a.quizQuestionIndex - b.quizQuestionIndex)
+                  .map((quizQuestion) => (
+                    <QuizQuestionRow
+                      key={quizQuestion.quizQuestionId}
+                      questionId={quizQuestion.quizQuestionId}
+                      takeId={take.id}
+                      questionNumber={index++}
+                      marks={quizQuestion.quizQuestionMarks}
+                    />
+                  ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};

@@ -1,3 +1,4 @@
+import { ConsolidatedQuizStatistics } from '../types/statistics';
 import client from './client';
 import { AxiosResponse } from 'axios';
 
@@ -19,4 +20,10 @@ export async function getSpiderChartForQuiz(
   takeId: string,
 ): Promise<AxiosResponse<{ subjectArr: string[]; averageScoreArr: number[] }>> {
   return client.get(`${URL}/spiderchart/${takeId}`);
+}
+
+export async function getQuizStatisticsByQuizId(
+  quizId: string,
+): Promise<AxiosResponse<ConsolidatedQuizStatistics>> {
+  return client.get(`${URL}/quiz/${quizId}`);
 }

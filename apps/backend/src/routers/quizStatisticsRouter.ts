@@ -1,6 +1,9 @@
 import { Router } from 'express';
 import QuizStatisticsService from '../services/QuizStatisticsService';
-import { validateQuestionQuizTakeExist } from '../middleware/validationMiddleware';
+import {
+  validateParamsQuizExists,
+  validateQuestionQuizTakeExist,
+} from '../middleware/validationMiddleware';
 
 const quizStatisticsRouter = Router();
 
@@ -45,6 +48,22 @@ quizStatisticsRouter.get(
         takeId,
       );
       return res.status(200).json(spiderChart);
+    } catch (error) {
+      return res.status(500).json({ error: error.message });
+    }
+  },
+);
+
+quizStatisticsRouter.get(
+  '/quiz/:quizId',
+  validateParamsQuizExists,
+  async (req, res) => {
+    try {
+      const { quizId } = req.params;
+      const quizStatistics = await QuizStatisticsService.quizStatisticsByQuizId(
+        quizId,
+      );
+      return res.status(200).json(quizStatistics);
     } catch (error) {
       return res.status(500).json({ error: error.message });
     }
