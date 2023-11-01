@@ -24,6 +24,8 @@ import { StudentService } from '../services/StudentService';
 import { TakeService } from '../services/TakeService';
 import { TeacherService } from '../services/TeacherService';
 import transactionService from '../services/TransactionService';
+import { TermService } from '../services/TermService';
+import AttendanceService from '../services/AttendanceService';
 
 const teacherService = new TeacherService();
 const centreService = new CentreService();
@@ -37,6 +39,7 @@ const promotionService = new PromotionService();
 const quizService = new QuizService();
 const takeService = new TakeService();
 const studentService = new StudentService();
+const termService = new TermService();
 
 /*
  * Validators Naming Convention: (Expand on as we code)
@@ -2228,6 +2231,70 @@ export async function validateQuestionQuizTakeExist(
           error: 'Invalid take attempt provided.',
         });
       }
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+/** Validates there is a current term */
+export async function validateCurrentTermExist(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const terms = await termService.getCurrentTerms();
+    if (terms.length === 0) {
+      return res.status(400).json({
+        error: 'A current term is needed.',
+      });
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+/** Validates there is a current term */
+export async function validateAttendanceParamExist(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { id } = req.params;
+    const attendance = await AttendanceService.getAttendanceById(id);
+    if (!attendance) {
+      return res.status(400).json({
+        error: 'Invalid attendance.',
+      });
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+export async function validateBodySessionExist(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { sessionId } = req.body;
+    const session = await SessionService.getSessionBySessionId(sessionId);
+    if (!session) {
+      return res.status(400).json({
+        error: 'Invalid session provided.',
+      });
     }
     next();
   } catch (error) {

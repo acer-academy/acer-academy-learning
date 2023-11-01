@@ -31,6 +31,7 @@ import takeRouter from './routers/takeRouter';
 import quizStatisticsRouter from './routers/quizStatisticsRouter';
 import takeAnswerRouter from './routers/takeAnswerRouter';
 import messageRouter from './routers/messageRouter';
+import attendanceRouter from './routers/attendanceRouter';
 
 dotenv.config();
 
@@ -109,6 +110,7 @@ app.use('/api/v1/take', takeRouter);
 app.use('/api/v1/quiz-statistics', quizStatisticsRouter);
 app.use('/api/v1/take-answers', takeAnswerRouter);
 app.use('/api/v1/message', messageRouter);
+app.use('/api/v1/attendances', attendanceRouter);
 
 // Start the server
 const server = app.listen(port, () => {

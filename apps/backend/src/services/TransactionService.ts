@@ -83,6 +83,12 @@ class TransactionService {
     return TransactionDao.getTransactionsByPromotionId(id);
   }
 
+  public async getTransactionsByAttendanceId(
+    id: string,
+  ): Promise<Transaction[]> {
+    return TransactionDao.getTransactionsByAttendanceId(id);
+  }
+
   public async updateTransaction(
     id: string,
     input: Prisma.TransactionUncheckedUpdateInput,
