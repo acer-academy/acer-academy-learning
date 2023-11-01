@@ -113,6 +113,7 @@ export const QuizStatisticsManagement: React.FC = () => {
               setFilterOptions(newFilterOptions);
             }}
             isQuizFilter={true}
+            isQuizStatisticsFilter={true}
           ></Filter>
         </div>
 

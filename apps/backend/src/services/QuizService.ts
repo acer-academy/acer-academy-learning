@@ -29,6 +29,7 @@ export interface QuizFilterOptions {
   isPublic?: boolean;
   allocatedTo?: string[];
   strictPublicOrAllocated?: boolean;
+  showWithTakesOnly?: boolean;
 }
 
 type QuizQuestion = {
@@ -273,6 +274,7 @@ export class QuizService {
       allocatedTo,
       strictPublicOrAllocated,
       searchString,
+      showWithTakesOnly,
     } = filterOptions;
     if (subjects && subjects.length > 0) {
       where.subject = { in: filterOptions.subjects };
@@ -318,6 +320,10 @@ export class QuizService {
           },
         },
       ];
+    }
+
+    if (showWithTakesOnly == true) {
+      where.takes = { some: { timeTaken: { gte: 0 } } };
     }
 
     const quizzes = await this.quizDao.getFilteredQuizzes(

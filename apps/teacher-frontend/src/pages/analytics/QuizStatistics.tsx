@@ -49,7 +49,12 @@ export const QuizStatistics: React.FC = () => {
   }, [quizId]);
 
   const currentTabComponent = useMemo(() => {
-    if (!quizStats) return <></>;
+    if (!quizStats || quizStats.totalMarksArr.length == 0)
+      return (
+        <div className="flex justify-center my-auto text-gray-700 italic text-center">
+          No statistics to show - this quiz has not been attempted yet.
+        </div>
+      );
     switch (location.hash.slice(1)) {
       case VIEW_QUIZ_ANALYTICS_STUDENTS_HASH:
         return <QuizStudentMasquerade quizStats={quizStats} />;

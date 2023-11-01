@@ -26,7 +26,13 @@ export const QuizStudentMasquerade: React.FC<{
     if (quizStats?.quizDetails.id)
       getTakesByQuizId(quizStats.quizDetails.id)
         .then((res) => {
-          setTakes(res.data);
+          const uniqueTakes = new Set();
+          const latestTakesOnly = res.data.filter(
+            (take) =>
+              !uniqueTakes.has(take.takenById) &&
+              uniqueTakes.add(take.takenById),
+          );
+          setTakes(latestTakesOnly);
         })
         .catch((error: any) => {
           displayToast(
