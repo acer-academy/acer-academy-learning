@@ -6,6 +6,7 @@ import {
   validateBodySessionExist,
   validateAttendanceParamExist,
   validateCurrentTermExist,
+  validateAttendanceNotTaken,
 } from '../middleware/validationMiddleware';
 
 const attendanceRouter = Router();
@@ -36,6 +37,7 @@ attendanceRouter.post(
   validateBodyStudentExists,
   validateCurrentTermExist,
   validateBodySessionExist,
+  validateAttendanceNotTaken,
   async (req, res) => {
     try {
       const input: Prisma.AttendanceUncheckedCreateInput = req.body;

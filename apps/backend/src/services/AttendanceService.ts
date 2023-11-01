@@ -16,7 +16,6 @@ class AttendanceService {
   ): Promise<{ attendance: Attendance; transaction: Transaction }> {
     const currTerm = await termService.getCurrentTerms();
     const attendance = await AttendanceDao.createAttendance(attendanceData);
-    console.log('attendance', attendance);
     const transaction = await TransactionService.createTransaction({
       termId: currTerm[0].id,
       creditsTransacted: 1,
@@ -24,7 +23,6 @@ class AttendanceService {
       transactionType: TransactionType.DEDUCTED,
       attendanceId: attendance.id,
     });
-    console.log('transaction', transaction);
     return { attendance: attendance, transaction: transaction };
   }
 
@@ -38,7 +36,7 @@ class AttendanceService {
       termId: prevTransaction[0].termId,
       creditsTransacted: 1,
       studentId: attendance.studentId,
-      transactionType: TransactionType.VOID,
+      transactionType: TransactionType.CREDIT_REFUND,
       attendanceId: attendance.id,
       referenceId: prevTransaction[0].id,
     });
@@ -49,7 +47,7 @@ class AttendanceService {
     return AttendanceDao.getAllAttendances();
   }
 
-  public async getAttendancesBySessiionId(
+  public async getAttendancesBySessionId(
     sessionId: string,
   ): Promise<Attendance[]> {
     return AttendanceDao.getAttendancesBySessionId(sessionId);
@@ -57,6 +55,16 @@ class AttendanceService {
 
   public async getAttendanceById(attendanceId: string): Promise<Attendance> {
     return AttendanceDao.getAttendanceById(attendanceId);
+  }
+
+  public async getAttendanceBySessionAndStudentId(
+    sessionId: string,
+    studentId: string,
+  ) {
+    return AttendanceDao.getAttendanceBySessionAndStudentId(
+      sessionId,
+      studentId,
+    );
   }
 }
 

@@ -58,6 +58,7 @@ class TransactionService {
       switch (transaction.transactionType) {
         case TransactionType.PURCHASED:
         case TransactionType.ROLLOVER:
+        case TransactionType.CREDIT_REFUND:
           credits += transaction.creditsTransacted;
           break;
         case TransactionType.DEDUCTED:

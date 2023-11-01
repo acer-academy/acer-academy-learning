@@ -18,7 +18,17 @@ class AttendanceDao {
       include: {
         student: true,
         session: true,
+        transactions: true,
       },
+    });
+  }
+
+  public async getAttendanceBySessionAndStudentId(
+    sessionId: string,
+    studentId: string,
+  ): Promise<Attendance[]> {
+    return this.prisma.attendance.findMany({
+      where: { studentId, sessionId },
     });
   }
 

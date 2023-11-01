@@ -2303,3 +2303,28 @@ export async function validateBodySessionExist(
     });
   }
 }
+
+export async function validateAttendanceNotTaken(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { sessionId, studentId } = req.body;
+    const attendance =
+      await AttendanceService.getAttendanceBySessionAndStudentId(
+        sessionId,
+        studentId,
+      );
+    if (attendance && attendance.length > 0) {
+      return res.status(400).json({
+        error: 'Your attendance has been taken.',
+      });
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
