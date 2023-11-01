@@ -414,7 +414,7 @@ export default function EventForm({
             await fetchSessions();
             displayToast('Session created successfully!', ToastType.SUCCESS);
           }
-        } catch (err:) {
+        } catch (err: unknown) {
           onClose();
           displayToast(`${err.response.data.error}`, ToastType.ERROR);
         }

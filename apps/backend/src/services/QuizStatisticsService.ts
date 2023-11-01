@@ -1,11 +1,16 @@
 import { TakeAnswerService } from './TakeAnswerService';
 import { QuizService } from './QuizService';
 import { QuizQuestionService } from './QuizQuestionService';
-import { QuizQuestionTypeEnum, QuizQuestion } from '@prisma/client';
+import {
+  QuizQuestionTypeEnum,
+  QuizQuestion,
+  TakeAnswer,
+  QuizAnswer,
+  Quiz,
+} from '@prisma/client';
 import { QuizAnswerService } from './QuizAnswerService';
 import { QuizOnQuizQuestionDao } from '../dao/QuizOnQuizQuestionDao';
 import { TakeService } from './TakeService';
-
 class QuizStatisticsService {
   constructor(
     private takeAnswerService = new TakeAnswerService(),
@@ -13,6 +18,7 @@ class QuizStatisticsService {
     private quizQuestionService = new QuizQuestionService(),
     private quizAnswerService = new QuizAnswerService(),
     private quizOnQuizQuestionDao = new QuizOnQuizQuestionDao(),
+    private quizService = new QuizService(),
   ) {}
 
   // View correct/incorrect statistics per question
@@ -135,6 +141,86 @@ class QuizStatisticsService {
     });
 
     return { subjectArr, averageScoreArr };
+  }
+
+  // Gets consolidated quiz statistics per quiz
+  public async quizStatisticsByQuizId(quizId: string): Promise<any> {
+    const {
+      rewardPoints,
+      rewardMinimumMarks,
+      teacherCreatedId,
+      nextVersionId,
+      allocatedTo,
+      takes,
+      quizQuestions,
+      ...rest
+    } = (await this.quizService.getQuizById(quizId)) as any;
+
+    const questionOptionCountMap: Map<string, number> = new Map();
+    for (const take of takes) {
+      const takeAnswers = await this.takeAnswerService.getTakeAnswersByTake(
+        take.id,
+      );
+      for (const takeAnswer of takeAnswers) {
+        const key = `${takeAnswer.questionId}${takeAnswer.studentAnswer}`;
+        const val = questionOptionCountMap.get(key) ?? 0;
+        questionOptionCountMap.set(key, val + 1);
+      }
+    }
+
+    let formattedQuizQuestions = [];
+    for (const quizQuestion of quizQuestions) {
+      formattedQuizQuestions.push({
+        quizQuestionId: quizQuestion.quizQuestionId,
+        quizQuestionIndex: quizQuestion.quizQuestionIndex,
+        quizQuestionMarks: quizQuestion.quizQuestionMarks,
+        questionText: quizQuestion.quizQuestion.questionText,
+        correctRate: await this.correctRateByQuestionId(
+          quizQuestion.quizQuestionId,
+        ),
+        averageTimeTaken: await this.averageTimeTakenByQuestionId(
+          quizQuestion.quizQuestionId,
+        ),
+        options: [
+          ...quizQuestion.quizQuestion.answers.map(
+            (option: Partial<QuizAnswer>) => {
+              const key = `${quizQuestion.quizQuestionId}${option.answer}`;
+              const count = questionOptionCountMap.get(key) ?? 0;
+              questionOptionCountMap.delete(key);
+              return {
+                answer: option.answer,
+                isCorrect: option.isCorrect,
+                count: count,
+              };
+            },
+          ),
+          ...Array.from(questionOptionCountMap.keys())
+            .filter((key) => key.includes(quizQuestion.quizQuestionId))
+            .map((key) => {
+              return {
+                answer: key.slice(key.indexOf('{')),
+                isCorrect: false,
+                count: questionOptionCountMap.get(key),
+              };
+            }),
+        ],
+      });
+    }
+
+    const quizTakes = await this.takeService.getTakesByQuiz(quizId);
+
+    const totalMarksArr = quizTakes.map((take) => take.marks);
+
+    const averageTotalTimeTaken =
+      quizTakes.map((take) => take.timeTaken).reduce((x, y) => x + y, 0) /
+      quizTakes.length;
+
+    return {
+      totalMarksArr: totalMarksArr,
+      averageTotalTimeTaken: averageTotalTimeTaken,
+      quizDetails: rest,
+      quizQuestions: formattedQuizQuestions,
+    };
   }
 }
 

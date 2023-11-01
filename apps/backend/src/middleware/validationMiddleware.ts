@@ -2236,3 +2236,32 @@ export async function validateQuestionQuizTakeExist(
     });
   }
 }
+
+/** Validates if a quizId in params exists */
+export async function validateParamsQuizExists(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { quizId } = req.params;
+    if (quizId.length !== 36) {
+      return res.status(400).json({
+        error: 'Malformed request; quizId is not of valid length.',
+      });
+    }
+    if (quizId) {
+      const validQuiz = await quizService.getQuizById(quizId);
+      if (!validQuiz) {
+        return res.status(400).json({
+          error: 'Quiz does not exist.',
+        });
+      }
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
