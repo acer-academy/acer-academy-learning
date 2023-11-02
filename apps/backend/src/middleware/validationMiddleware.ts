@@ -2422,3 +2422,31 @@ export async function validateBodyAssignmentExists(
     });
   }
 }
+
+export async function validateParamStudentExists(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { studentId } = req.params;
+    if (studentId) {
+      if (studentId.length !== 36) {
+        return res.status(400).json({
+          error: 'Malformed request; studentId is not of valid length.',
+        });
+      }
+      const studentExists = await studentService.getStudentById(studentId);
+      if (!studentExists) {
+        return res.status(400).json({
+          error: 'Student does not exist.',
+        });
+      }
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}

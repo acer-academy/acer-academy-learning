@@ -5,6 +5,8 @@ import {
   validateClassTeacherClassroomExist,
   validateSubjectsAndLevelsExist,
   validateSessionDate,
+  validateClassAndSessionExist,
+  validateParamStudentExists,
 } from '../middleware/validationMiddleware';
 import { MessageService, MessageTemplate } from '../services/MessageService';
 
@@ -64,6 +66,41 @@ sessionRouter.put(
       // Send whatsapp message
       await messageService.sendWhatsappMessage(
         MessageTemplate.UPDATE_CLASS_ALERT,
+      );
+      return res.status(200).json(session);
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({ error: error.message });
+    }
+  },
+);
+
+sessionRouter.put(
+  '/book/:sessionId/:studentId',
+  validateClassAndSessionExist,
+  validateParamStudentExists,
+  async (req, res) => {
+    try {
+      const { sessionId, studentId } = req.params;
+      const session = await SessionService.bookSession(studentId, sessionId);
+      return res.status(200).json(session);
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({ error: error.message });
+    }
+  },
+);
+
+sessionRouter.put(
+  '/cancel/:sessionId/:studentId',
+  validateClassAndSessionExist,
+  validateParamStudentExists,
+  async (req, res) => {
+    try {
+      const { sessionId, studentId } = req.params;
+      const session = await SessionService.cancelBookedSession(
+        studentId,
+        sessionId,
       );
       return res.status(200).json(session);
     } catch (error) {
