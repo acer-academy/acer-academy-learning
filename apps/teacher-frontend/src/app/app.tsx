@@ -47,6 +47,7 @@ import {
   QUIZ_ANALYTICS_MGMT,
   ASSIGNMENT_ANALYTICS_MGMT,
   VIEW_ASSIGNMENT_ANALYTICS,
+  ASSIGNMENTS,
 } from '../libs/routes';
 import { CreateQuestion } from '../pages/question-bank/CreateQuestion';
 import { QueryClient, QueryClientProvider } from 'react-query';
@@ -62,6 +63,7 @@ import { QuizStatistics } from '../pages/analytics/QuizStatistics';
 import { QuizStatisticsManagement } from '../pages/analytics/QuizStatisticsManagement';
 import { AssignmentStatisticsManagement } from '../pages/analytics/AssignmentStatisticsManagement';
 import { AssignmentStatistics } from '../pages/analytics/AssignmentStatistics';
+import { AssignmentManagement } from '../pages/assignments/AssignmentManagement';
 
 export function App() {
   const queryClient = new QueryClient();
@@ -109,6 +111,13 @@ export function App() {
                     <Route path={QUIZZES} element={<QuizManagement />} />
                     <Route path={CREATE_QUIZ} element={<CreateQuiz />} />
                     <Route path={UPDATE_QUIZ} element={<ModifyQuizWrapper />} />
+                  </Route>
+                  {/* Assignments routes */}
+                  <Route path={ASSIGNMENTS}>
+                    <Route
+                      path={ASSIGNMENTS}
+                      element={<AssignmentManagement />}
+                    />
                   </Route>
                 </Route>
                 {/* Analytics routes */}

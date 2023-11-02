@@ -12,7 +12,12 @@ export class AssignmentDao {
   }
 
   public async getAllAssignments(): Promise<Assignment[]> {
-    return this.prismaClient.assignment.findMany();
+    return this.prismaClient.assignment.findMany({
+      include: {
+        teacher: true,
+        assignmentAttempts: true,
+      },
+    });
   }
 
   public async getAssignmentById(
