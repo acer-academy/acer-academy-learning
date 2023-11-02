@@ -45,3 +45,4 @@ export * from './lib/types/teacher';
 export * from './lib/api/take';
 export * from './lib/types/take';
 export * from './lib/types/takeAnswer';
+export * from './lib/types/statistics';

@@ -38,6 +38,18 @@ export interface StudentTakeData {
   quiz: QuizData;
 }
 
+export interface StudentTakeDataWithTakenBy {
+  id: string;
+  marks: number;
+  attemptedAt: string;
+  timeTaken: number;
+  takenById: string;
+  quizId: string;
+  studentAnswers: StudentTakeAnswerData;
+  quiz: QuizData;
+  takenBy: { firstName: string; lastName: string };
+}
+
 export type CreateTakeSchema = z.infer<typeof createTakeSchema>;
 
 export type CreateTakeApiSchema = z.infer<typeof createTakeApiSchema>;

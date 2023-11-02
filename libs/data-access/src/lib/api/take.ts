@@ -20,3 +20,9 @@ export async function getTakeByTakeId(
 ): Promise<AxiosResponse<StudentTakeData>> {
   return client.get(`${URL}/${takeId}`);
 }
+
+export async function getTakesByQuizId(
+  quizId: string,
+): Promise<AxiosResponse<any[]>> {
+  return client.get(`${URL}/quiz/${quizId}`);
+}

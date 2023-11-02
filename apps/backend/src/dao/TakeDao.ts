@@ -61,6 +61,7 @@ export class TakeDao {
           include: { question: { include: { answers: true } } },
         },
         quiz: { select: { totalMarks: true } },
+        takenBy: { select: { firstName: true, lastName: true } },
       },
     });
   }

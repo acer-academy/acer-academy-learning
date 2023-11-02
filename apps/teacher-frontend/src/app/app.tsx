@@ -43,6 +43,10 @@ import {
   VIEW_CLASSES,
   BOOK_CLASSES,
   UPDATE_QUIZ,
+  VIEW_QUIZ_ANALYTICS,
+  QUIZ_ANALYTICS_MGMT,
+  ASSIGNMENT_ANALYTICS_MGMT,
+  VIEW_ASSIGNMENT_ANALYTICS,
 } from '../libs/routes';
 import { CreateQuestion } from '../pages/question-bank/CreateQuestion';
 import { QueryClient, QueryClientProvider } from 'react-query';
@@ -54,6 +58,10 @@ import CalendarPage from '../pages/calendar/CalendarPage';
 import { CreateQuiz } from '../pages/quiz/CreateQuiz';
 import { QuizManagement } from '../pages/quiz/QuizManagement';
 import { ModifyQuizWrapper } from '../pages/quiz/ModifyQuizWrapper';
+import { QuizStatistics } from '../pages/analytics/QuizStatistics';
+import { QuizStatisticsManagement } from '../pages/analytics/QuizStatisticsManagement';
+import { AssignmentStatisticsManagement } from '../pages/analytics/AssignmentStatisticsManagement';
+import { AssignmentStatistics } from '../pages/analytics/AssignmentStatistics';
 
 export function App() {
   const queryClient = new QueryClient();
@@ -104,7 +112,24 @@ export function App() {
                   </Route>
                 </Route>
                 {/* Analytics routes */}
-                <Route path={ANALYTICS} />
+                <Route path={ANALYTICS}>
+                  <Route
+                    path={QUIZ_ANALYTICS_MGMT}
+                    element={<QuizStatisticsManagement />}
+                  />
+                  <Route
+                    path={VIEW_QUIZ_ANALYTICS}
+                    element={<QuizStatistics />}
+                  />
+                  <Route
+                    path={ASSIGNMENT_ANALYTICS_MGMT}
+                    element={<AssignmentStatisticsManagement />}
+                  />
+                  <Route
+                    path={VIEW_ASSIGNMENT_ANALYTICS}
+                    element={<AssignmentStatistics />}
+                  />
+                </Route>
                 {/* Scheduling routes */}
                 <Route path={SCHEDULING}>
                   <Route path={VIEW_CLASSES} element={<CalendarPage />} />
