@@ -49,6 +49,21 @@ assignmentRouter.get('/:assignmentId', async (req, res) => {
   }
 });
 
+assignmentRouter.get('/statistics/:assignmentId', async (req, res) => {
+  try {
+    const { assignmentId } = req.params;
+    const statistics = await assignmentService.getAssignmentStatisticsById(
+      assignmentId,
+    );
+    if (!statistics) {
+      return res.status(404).json({ error: 'Assignment not found' });
+    }
+    return res.status(200).json(statistics);
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+});
+
 assignmentRouter.put(
   '/:assignmentId',
   restrictBodyId,
