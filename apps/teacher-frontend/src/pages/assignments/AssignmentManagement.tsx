@@ -1,5 +1,14 @@
-import { LexOutput, useAuth, useToast } from '@acer-academy-learning/common-ui';
-import { Teacher, getAllAssignments } from '@acer-academy-learning/data-access';
+import {
+  LexOutput,
+  WarningModal,
+  useAuth,
+  useToast,
+} from '@acer-academy-learning/common-ui';
+import {
+  Teacher,
+  deleteAssignment,
+  getAllAssignments,
+} from '@acer-academy-learning/data-access';
 import {
   DocumentCheckIcon,
   LockClosedIcon,
@@ -11,20 +20,28 @@ import {
 } from '@heroicons/react/24/outline';
 import { AssignmentData } from 'libs/data-access/src/lib/types/assignment';
 import { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { LevelTag } from '../question-bank/LevelTag';
+import { useMutation } from 'react-query';
+import moment from 'moment';
 
 export const AssignmentManagement: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { displayToast, ToastType } = useToast();
   const { user } = useAuth<Teacher>();
+  const { subject } = useParams();
   const [assignments, setAssignments] = useState<AssignmentData[]>([]);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [deleteAssignmentId, setDeleteAssignmentId] = useState('');
 
   const fetchAssignments = async () => {
     try {
       const response = await getAllAssignments();
-      setAssignments(response.data);
+      const assignmentsData = response.data.filter(
+        (assignment) => assignment.subject.toLowerCase() === subject,
+      );
+      setAssignments(assignmentsData);
     } catch (error) {
       displayToast(
         'Assignments could not be retrieved from the server.',
@@ -38,8 +55,24 @@ export const AssignmentManagement: React.FC = () => {
     navigate(`${location.pathname}/${selectedAssignmentId}`);
   };
   const navToCreateAssignment = () => {
-    navigate(`${location.pathname}/create-assignment`);
+    navigate(`${location.pathname}/create`);
   };
+  const navToEditAssignment = (selectedAssignmentId: string) => {
+    navigate(`${location.pathname}/edit/${selectedAssignmentId}`);
+  };
+
+  const { mutate: deleteAssignmentMutate } = useMutation(deleteAssignment, {
+    onSuccess: async () => {
+      await fetchAssignments();
+      displayToast('Successfully deleted assignment', ToastType.SUCCESS);
+    },
+    onError: (error: Error) => {
+      displayToast(
+        'Error deleting assignment: ' + error.message,
+        ToastType.ERROR,
+      );
+    },
+  });
 
   useEffect(() => {
     fetchAssignments();
@@ -114,7 +147,7 @@ export const AssignmentManagement: React.FC = () => {
                     {assignments.length === 0 ? (
                       <tr>
                         <td
-                          colSpan={4}
+                          colSpan={5}
                           className="whitespace-nowrap py-4 px-4 font-light italic text-gray-400 text-center"
                         >
                           No assignments found.
@@ -182,12 +215,9 @@ export const AssignmentManagement: React.FC = () => {
                           <td className="whitespace-nowrap py-4 px-3 font-medium text-gray-900">
                             <div className="flex flex-col gap-1">
                               <span className="text-xs text-gray-500">
-                                {new Date(assignment.dueDate)
-                                  .toLocaleString()
-                                  .split(',')
-                                  .map((date) => {
-                                    return <div className="mb-2">{date}</div>;
-                                  })}
+                                {moment(assignment.dueDate).format(
+                                  'D MMMM YYYY, h:mm:ss A',
+                                )}
                               </span>
                             </div>
                           </td>
@@ -211,7 +241,7 @@ export const AssignmentManagement: React.FC = () => {
                                   type="button"
                                   onClick={(e) => {
                                     e.stopPropagation();
-                                    navToSelectedAssignment(assignment.id);
+                                    navToEditAssignment(assignment.id);
                                   }}
                                   className="inline-flex items-center rounded-md bg-green-500 px-3 py-2 text-sm font-semibold shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-green-600"
                                 >
@@ -221,8 +251,8 @@ export const AssignmentManagement: React.FC = () => {
                                   type="button"
                                   onClick={(e) => {
                                     e.stopPropagation();
-                                    // setDeleteQuizId(quiz.id);
-                                    // setDeleteModalOpen(true);
+                                    setDeleteAssignmentId(assignment.id);
+                                    setDeleteModalOpen(true);
                                   }}
                                   className="inline-flex items-center rounded-md bg-red-500 px-3 py-2 text-sm font-semibold shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-red-600"
                                 >
@@ -241,17 +271,17 @@ export const AssignmentManagement: React.FC = () => {
           </div>
         </div>
       </div>
-      {/* <WarningModal
+      <WarningModal
         open={deleteModalOpen}
         setOpen={setDeleteModalOpen}
-        title={'Delete Quiz'}
+        title={'Delete Assignment'}
         description={
-          'Are you sure you want to delete this quiz? All student attempts for this quiz will also be removed and cannot be undone.'
+          'Are you sure you want to delete this assignment? All student attempts for this assignment will also be removed and cannot be undone.'
         }
         confirmContent={'Delete'}
         dismissContent={'Cancel'}
-        onConfirm={() => deleteQuizMutate(deleteQuestionId)}
-      /> */}
+        onConfirm={() => deleteAssignmentMutate(deleteAssignmentId)}
+      />
     </div>
   );
 };

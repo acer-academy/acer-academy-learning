@@ -26,6 +26,7 @@ export class AssignmentDao {
     return this.prismaClient.assignment.findUnique({
       where: { id: assignmentId },
       include: {
+        teacher: true,
         assignmentAttempts: true,
       },
     });

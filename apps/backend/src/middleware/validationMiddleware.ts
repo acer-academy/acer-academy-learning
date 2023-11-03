@@ -2278,6 +2278,7 @@ export async function validateBodyAssignmentFormatValid(
     const {
       title,
       description,
+      fileName,
       fileUrl,
       dueDate,
       totalMarks,
@@ -2288,6 +2289,7 @@ export async function validateBodyAssignmentFormatValid(
     const validBody = {
       title,
       description,
+      fileName,
       fileUrl,
       dueDate,
       totalMarks,
@@ -2305,6 +2307,9 @@ export async function validateBodyAssignmentFormatValid(
           (typeof validBody[key] !== 'string' ||
             validBody[key].trim().length === 0)) ||
         (key === 'description' &&
+          (typeof validBody[key] !== 'string' ||
+            validBody[key].trim().length === 0)) ||
+        (key === 'fileName' &&
           (typeof validBody[key] !== 'string' ||
             validBody[key].trim().length === 0)) ||
         (key === 'fileUrl' &&

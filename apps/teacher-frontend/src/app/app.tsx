@@ -48,6 +48,9 @@ import {
   ASSIGNMENT_ANALYTICS_MGMT,
   VIEW_ASSIGNMENT_ANALYTICS,
   ASSIGNMENTS,
+  VIEW_ASSIGNMENT,
+  CREATE_ASSIGNMENT,
+  EDIT_ASSIGNMENT,
 } from '../libs/routes';
 import { CreateQuestion } from '../pages/question-bank/CreateQuestion';
 import { QueryClient, QueryClientProvider } from 'react-query';
@@ -64,6 +67,9 @@ import { QuizStatisticsManagement } from '../pages/analytics/QuizStatisticsManag
 import { AssignmentStatisticsManagement } from '../pages/analytics/AssignmentStatisticsManagement';
 import { AssignmentStatistics } from '../pages/analytics/AssignmentStatistics';
 import { AssignmentManagement } from '../pages/assignments/AssignmentManagement';
+import { ViewAssignment } from '../pages/assignments/ViewAssignment';
+import { CreateAssignment } from '../pages/assignments/CreateAssignment';
+import { EditAssignment } from '../pages/assignments/EditAssignment';
 
 export function App() {
   const queryClient = new QueryClient();
@@ -117,6 +123,18 @@ export function App() {
                     <Route
                       path={ASSIGNMENTS}
                       element={<AssignmentManagement />}
+                    />
+                    <Route
+                      path={CREATE_ASSIGNMENT}
+                      element={<CreateAssignment />}
+                    />
+                    <Route
+                      path={VIEW_ASSIGNMENT}
+                      element={<ViewAssignment />}
+                    />
+                    <Route
+                      path={EDIT_ASSIGNMENT}
+                      element={<EditAssignment />}
                     />
                   </Route>
                 </Route>
