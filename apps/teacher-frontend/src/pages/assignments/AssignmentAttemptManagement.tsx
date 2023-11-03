@@ -9,9 +9,11 @@ import {
   useToast,
 } from '@acer-academy-learning/common-ui';
 import {
+  AssignmentData,
   getAllStudents as apiGetAllStudents,
   createAssignmentAttempt,
   getAssignmentAttemptsByAssignmentId,
+  getAssignmentById,
 } from '@acer-academy-learning/data-access';
 import { isAxiosError } from 'axios';
 import { AssignmentAttemptCreateData } from 'libs/data-access/src/lib/types/assignmentAttempt';
@@ -25,6 +27,7 @@ export const AssignmentAttemptManagement: React.FC = () => {
   const { assignmentId } = useParams();
   const queryClient = useQueryClient();
   const { displayToast, ToastType } = useToast();
+  const [assignment, setAssignment] = useState<AssignmentData>();
   const [createAttemptData, setCreateAttemptData] =
     useState<AssignmentAttemptCreateData>({
       assignmentId: assignmentId ?? '',
@@ -50,8 +53,21 @@ export const AssignmentAttemptManagement: React.FC = () => {
     }
   };
 
+  const getAssignment = async () => {
+    try {
+      const response = await getAssignmentById(assignmentId ?? '');
+      setAssignment(response.data);
+    } catch (error) {
+      displayToast(
+        'Assignment could not be retrieved from the server.',
+        ToastType.ERROR,
+      );
+    }
+  };
+
   useEffect(() => {
     getAllStudents();
+    getAssignment();
   }, []);
 
   const {
@@ -82,8 +98,8 @@ export const AssignmentAttemptManagement: React.FC = () => {
       displayToast('Score cannot be negative', ToastType.ERROR);
     } else if (
       !!assignmentAttemptsData &&
-      createAttemptData.score >
-        assignmentAttemptsData.data[0].assignment.totalMarks
+      assignment &&
+      createAttemptData.score > assignment.totalMarks
     ) {
       displayToast('Score cannot be larger than total marks', ToastType.ERROR);
     } else if (selectedStudent === undefined) {
@@ -132,7 +148,7 @@ export const AssignmentAttemptManagement: React.FC = () => {
           <div className="flex align-middle justify-between">
             <div className="flex align-middle gap-4">
               <span className="text-2xl py-1 font-bold tracking-tight">
-                Attempts for {attempts[0].assignment.title}
+                Attempts for {assignment?.title}
               </span>
             </div>
             {isAddAttemptFormOpen ? (
