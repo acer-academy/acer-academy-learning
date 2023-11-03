@@ -1,16 +1,13 @@
 import { TakeAnswerService } from './TakeAnswerService';
 import { QuizService } from './QuizService';
 import { QuizQuestionService } from './QuizQuestionService';
-import {
-  QuizQuestionTypeEnum,
-  QuizQuestion,
-  TakeAnswer,
-  QuizAnswer,
-  Quiz,
-} from '@prisma/client';
+import { QuizQuestionTypeEnum, QuizQuestion, QuizAnswer } from '@prisma/client';
 import { QuizAnswerService } from './QuizAnswerService';
 import { QuizOnQuizQuestionDao } from '../dao/QuizOnQuizQuestionDao';
 import { TakeService } from './TakeService';
+import { TakeDao } from '../dao/TakeDao';
+import { AllTakesStudentParams } from '../types/takes';
+
 class QuizStatisticsService {
   constructor(
     private takeAnswerService = new TakeAnswerService(),
@@ -19,6 +16,7 @@ class QuizStatisticsService {
     private quizAnswerService = new QuizAnswerService(),
     private quizOnQuizQuestionDao = new QuizOnQuizQuestionDao(),
     private quizService = new QuizService(),
+    private takeDao = new TakeDao(),
   ) {}
 
   // View correct/incorrect statistics per question
@@ -221,6 +219,15 @@ class QuizStatisticsService {
       quizDetails: rest,
       quizQuestions: formattedQuizQuestions,
     };
+  }
+
+  public async getQuizStatisticsFilteredBy(filter: AllTakesStudentParams) {
+    return this.takeDao.getAllTakesOfStudent(filter);
+  }
+
+  public async getTotalMarksByQuizId(quizId: string) {
+    const res = await this.quizService.getQuizById(quizId);
+    return res.totalMarks;
   }
 }
 

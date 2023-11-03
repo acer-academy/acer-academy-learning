@@ -1,4 +1,5 @@
 import { Prisma, PrismaClient, Take } from '@prisma/client';
+import { AllTakesStudentParams } from '../types/takes';
 
 export class TakeDao {
   constructor(private prismaClient: PrismaClient = new PrismaClient()) {}
@@ -76,6 +77,38 @@ export class TakeDao {
       skip: offset,
       take: pageSize,
       orderBy: { attemptedAt: 'desc' },
+    });
+  }
+
+  public async getAllTakesOfStudent(filterOptions: AllTakesStudentParams) {
+    const where: Prisma.TakeWhereInput = {
+      quizId: filterOptions.quizId,
+      takenById: filterOptions.studentId,
+    };
+    const startDateRange = filterOptions.startDate;
+    const endDateRange = filterOptions.endDate;
+    if (startDateRange && !endDateRange) {
+      where.attemptedAt = {
+        gte: new Date(startDateRange),
+      };
+    }
+
+    if (!startDateRange && endDateRange) {
+      where.attemptedAt = {
+        lte: new Date(endDateRange),
+      };
+    }
+
+    if (startDateRange && endDateRange) {
+      where.attemptedAt = {
+        gte: new Date(startDateRange),
+        lte: new Date(endDateRange),
+      };
+    }
+    return this.prismaClient.take.findMany({
+      select: filterOptions.select,
+      where: where,
+      orderBy: { attemptedAt: 'asc' },
     });
   }
 

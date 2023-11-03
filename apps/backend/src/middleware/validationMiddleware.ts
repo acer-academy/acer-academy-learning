@@ -2576,7 +2576,8 @@ export async function validateParamStudentExists(
   try {
     const { studentId } = req.params;
     if (studentId) {
-      if (studentId.length !== 36) {
+      const validStudent = await studentService.getStudentById(studentId);
+      if (!validStudent) {
         return res.status(400).json({
           error: 'Malformed request; studentId is not of valid length.',
         });

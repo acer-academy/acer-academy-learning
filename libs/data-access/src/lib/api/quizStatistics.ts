@@ -1,4 +1,7 @@
-import { ConsolidatedQuizStatistics } from '../types/statistics';
+import {
+  ConsolidatedQuizStatistics,
+  StudentStatisticsQuizFormat,
+} from '../types/statistics';
 import client from './client';
 import { AxiosResponse } from 'axios';
 
@@ -26,4 +29,19 @@ export async function getQuizStatisticsByQuizId(
   quizId: string,
 ): Promise<AxiosResponse<ConsolidatedQuizStatistics>> {
   return client.get(`${URL}/quiz/${quizId}`);
+}
+
+export async function getQuizStatisticsForStudent(data: {
+  quizId: string;
+  studentId: string;
+  startDate?: string;
+  endDate?: string;
+}): Promise<AxiosResponse<StudentStatisticsQuizFormat>> {
+  const startDate = data.startDate;
+  const startDateQuery = startDate ? `startDate=${startDate}` : '';
+  const endDate = data.endDate;
+  const endDateQuery = endDate ? `endDate=${endDate}` : '';
+  return client.get(
+    `${URL}/student-quizzes/${data.quizId}/${data.studentId}?${startDateQuery}&${endDateQuery}`,
+  );
 }

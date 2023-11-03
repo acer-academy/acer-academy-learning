@@ -28,3 +28,10 @@ export interface ConsolidatedAssignmentStatistics {
   assignmentDetails: Partial<AssignmentData>;
   assignmentAttempts: AssignmentAttemptData[];
 }
+export type StudentStatisticsQuizFormat = {
+  totalMarks: number;
+  takes: {
+    attemptedAt: string;
+    marks: number;
+  }[];
+};
