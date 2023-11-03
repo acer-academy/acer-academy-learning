@@ -119,12 +119,14 @@ export const ViewAssignment: React.FC = () => {
                 <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
                   <div className="flex flex-row gap-3 items-center">
                     {assignment.assignmentAttempts.length}
-                    <a
-                      href={location.pathname + '/attempts'}
-                      className="divide-y divide-gray-100 rounded-md border border-gray-300 py-1 px-4 ml-4 flex-shrink-0 font-medium text-indigo-600 bg-slate-50 hover:bg-slate-200 hover:text-indigo-900"
-                    >
-                      View All
-                    </a>
+                    {assignment.assignmentAttempts.length > 0 && (
+                      <a
+                        href={location.pathname + '/attempts'}
+                        className="divide-y divide-gray-100 rounded-md border border-gray-300 py-1 px-4 ml-4 flex-shrink-0 font-medium text-indigo-600 bg-slate-50 hover:bg-slate-200 hover:text-indigo-900"
+                      >
+                        View All
+                      </a>
+                    )}
                   </div>
                 </dd>
               </div>
