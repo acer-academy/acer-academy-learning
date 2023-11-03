@@ -69,7 +69,7 @@ import { AssignmentStatistics } from '../pages/analytics/AssignmentStatistics';
 import { AssignmentManagement } from '../pages/assignments/AssignmentManagement';
 import { ViewAssignment } from '../pages/assignments/ViewAssignment';
 import { CreateAssignment } from '../pages/assignments/CreateAssignment';
-import { EditAssignment } from '../pages/assignments/EditAssignment';
+import { EditAssignmentWrapper } from '../pages/assignments/EditAssignmentWrapper';
 
 export function App() {
   const queryClient = new QueryClient();
@@ -134,7 +134,7 @@ export function App() {
                     />
                     <Route
                       path={EDIT_ASSIGNMENT}
-                      element={<EditAssignment />}
+                      element={<EditAssignmentWrapper />}
                     />
                   </Route>
                 </Route>

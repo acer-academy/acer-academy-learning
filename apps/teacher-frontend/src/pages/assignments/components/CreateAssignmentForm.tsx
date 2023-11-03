@@ -15,10 +15,14 @@ import { AssignmentDueDateField } from './AssignmentDueDateField';
 
 export type CreateAssignmentFormProps = {
   onSubmitForm: (values: CreateAssignmentType) => Promise<void>;
+  submitText: string;
+  isUpdate: boolean;
 };
 
 export const CreateAssignmentForm = ({
   onSubmitForm,
+  submitText,
+  isUpdate,
 }: CreateAssignmentFormProps) => {
   const { displayToast, ToastType } = useToast();
   const { handleSubmit } = useFormContext<CreateAssignmentType>();
@@ -44,23 +48,21 @@ export const CreateAssignmentForm = ({
   return (
     <section className="space-y-4">
       <BackButton />
-      <div className="text-2xl py-1 font-bold tracking-tight">
-        Create Assignment
-      </div>
+      <div className="text-2xl py-1 font-bold tracking-tight">{submitText}</div>
       <form
         onSubmit={handleSubmit(onSubmitForm, onError)}
         className="border-b border-gray-200 bg-white px-4 py-5 sm:px-6 rounded shadow space-y-4 flex flex-col"
       >
         <AssignmentTitle />
         <AssignmentDescription />
-        <AssignmentDueDateField />
+        <AssignmentDueDateField isUpdate={isUpdate} />
         <AssignmentLevelsField />
         <AssignmentTotalMarksField />
         <AssignmentFileName />
         <AssignmentFileUrl />
         <GenericButton
           type="submit"
-          text="Create"
+          text={submitText}
           className="self-center hover:bg-gray-700"
         />
       </form>

@@ -2385,7 +2385,7 @@ export async function validateBodyAssignmentAttemptFormatValid(
             validBody[key].trim().length === 0)) ||
         (key === 'submittedOn' && !postgresDatetimeRegex.test(submittedOn)) ||
         (key === 'score' &&
-          (typeof validBody[key] !== 'number' || validBody[key] <= 0)) ||
+          (typeof validBody[key] !== 'number' || validBody[key] < 0)) ||
         (key === 'studentId' &&
           (!validBody[key] || typeof validBody[key] !== 'string')) ||
         (key === 'assignmentId' &&

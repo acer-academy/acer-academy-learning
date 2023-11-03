@@ -58,7 +58,11 @@ export const CreateAssignment: React.FC = () => {
 
   return (
     <FormProvider {...formMethods}>
-      <CreateAssignmentForm onSubmitForm={onSubmit} />
+      <CreateAssignmentForm
+        onSubmitForm={onSubmit}
+        submitText="Create Assignment"
+        isUpdate={false}
+      />
     </FormProvider>
   );
 };
