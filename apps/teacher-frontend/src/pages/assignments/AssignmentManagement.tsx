@@ -34,6 +34,7 @@ export const AssignmentManagement: React.FC = () => {
   const [assignments, setAssignments] = useState<AssignmentData[]>([]);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [deleteAssignmentId, setDeleteAssignmentId] = useState('');
+  const [searchbarText, setSearchbarText] = useState('');
 
   const fetchAssignments = async () => {
     try {
@@ -81,6 +82,28 @@ export const AssignmentManagement: React.FC = () => {
   return (
     <div className="h-full">
       <div className="flex min-h-full flex-col gap-7 align-middle">
+        <div className="relative mt-2 rounded-md shadow-sm">
+          <input
+            type="text"
+            name="assignment-searchbar"
+            id="assignment-searchbar"
+            className="block w-full rounded-md border-0 py-1.5 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-adminGreen-600 sm:text-sm sm:leading-6"
+            placeholder="Search for an assignment..."
+            value={searchbarText}
+            onChange={(e) => {
+              setSearchbarText(e.target.value);
+            }}
+          />
+          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-4 w-4 fill-gray-400 stroke-2"
+              viewBox="0 0 16 16"
+            >
+              <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+            </svg>
+          </div>
+        </div>
         <div className="flex align-middle justify-between">
           <div className="flex align-middle gap-4">
             <span className="text-2xl py-1 font-bold tracking-tight">
@@ -154,115 +177,126 @@ export const AssignmentManagement: React.FC = () => {
                         </td>
                       </tr>
                     ) : (
-                      assignments.map((assignment) => (
-                        <tr
-                          key={assignment.id}
-                          className="hover:bg-slate-50 hover:cursor-pointer"
-                          onClick={() => {
-                            navToSelectedAssignment(assignment.id);
-                          }}
-                        >
-                          <td className="py-4 pl-3.5 pr-3 text-xs font-medium text-gray-900">
-                            <div>
-                              <span className="font-bold text-sm">
-                                {assignment.title}
-                              </span>
-                              <span>
-                                <LexOutput
-                                  editorStateStr={assignment.description}
-                                  shorten
-                                />
-                              </span>
-                            </div>
-                          </td>
-                          <td className="whitespace-nowrap py-4 px-3 text-sm text-gray-900">
-                            <div className="flex flex-col">
-                              <div className="flex items-center gap-1">
-                                {new Date() <= new Date(assignment.dueDate) ? (
-                                  <LockOpenIcon className="w-4 h-4 text-teacherBlue-700" />
-                                ) : (
-                                  <LockClosedIcon className="w-4 h-4 text-teacherBlue-700" />
-                                )}
-                                <span className="font-semibold text-sm">
-                                  {`${
-                                    new Date() <= new Date(assignment.dueDate)
-                                      ? 'Available'
-                                      : `Closed`
-                                  }`}
+                      assignments
+                        .filter(
+                          (assignment) =>
+                            assignment.title
+                              .toLowerCase()
+                              .includes(searchbarText.toLowerCase()) ||
+                            assignment.description
+                              ?.toLowerCase()
+                              .includes(searchbarText.toLowerCase()),
+                        )
+                        .map((assignment) => (
+                          <tr
+                            key={assignment.id}
+                            className="hover:bg-slate-50 hover:cursor-pointer"
+                            onClick={() => {
+                              navToSelectedAssignment(assignment.id);
+                            }}
+                          >
+                            <td className="py-4 pl-3.5 pr-3 text-xs font-medium text-gray-900">
+                              <div>
+                                <span className="font-bold text-sm">
+                                  {assignment.title}
                                 </span>
-                              </div>
-                              <div className="flex items-center gap-1">
-                                <DocumentCheckIcon className="w-4 h-4 text-teacherBlue-700" />
-                                <span className="font-semibold text-sm">
-                                  {`${String(assignment.totalMarks)} marks`}
-                                </span>
-                              </div>
-                              <div className="flex items-center gap-1">
-                                <UserGroupIcon className="w-4 h-4 text-teacherBlue-700" />
-                                <span className="font-semibold text-sm">
-                                  {`${assignment.assignmentAttempts.length} submitted`}
-                                </span>
-                              </div>
-                              <div className="flex items-center gap-1">
-                                <PlusCircleIcon className="w-4 h-4 text-teacherBlue-700" />
-                                <span className="font-semibold text-sm">
-                                  Created by{' '}
-                                  {`${assignment.teacher.firstName} ${assignment.teacher.lastName}`}
-                                </span>
-                              </div>
-                            </div>
-                          </td>
-                          <td className="whitespace-nowrap py-4 px-3 font-medium text-gray-900">
-                            <div className="flex flex-col gap-1">
-                              <span className="text-xs text-gray-500">
-                                {moment(assignment.dueDate).format(
-                                  'D MMMM YYYY, h:mm:ss A',
-                                )}
-                              </span>
-                            </div>
-                          </td>
-                          <td className="whitespace-nowrap py-4 px-3 font-medium text-gray-900">
-                            <div className="flex flex-col gap-1">
-                              {assignment.levels.map((level, index) => {
-                                return (
-                                  <LevelTag
-                                    key={index}
-                                    index={index}
-                                    levelEnum={level}
+                                <span>
+                                  <LexOutput
+                                    editorStateStr={assignment.description}
+                                    shorten
                                   />
-                                );
-                              })}
-                            </div>
-                          </td>
-                          <td className="whitespace-nowrap font-medium text-gray-900 space-x-1 w-max pr-3">
-                            {user?.id === assignment.teacher.id && (
-                              <>
-                                <button
-                                  type="button"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    navToEditAssignment(assignment.id);
-                                  }}
-                                  className="inline-flex items-center rounded-md bg-green-500 px-3 py-2 text-sm font-semibold shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-green-600"
-                                >
-                                  <PencilSquareIcon className="w-6 h-6 text-white" />
-                                </button>
-                                <button
-                                  type="button"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    setDeleteAssignmentId(assignment.id);
-                                    setDeleteModalOpen(true);
-                                  }}
-                                  className="inline-flex items-center rounded-md bg-red-500 px-3 py-2 text-sm font-semibold shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-red-600"
-                                >
-                                  <TrashIcon className="w-6 h-6 text-white" />
-                                </button>
-                              </>
-                            )}
-                          </td>
-                        </tr>
-                      ))
+                                </span>
+                              </div>
+                            </td>
+                            <td className="whitespace-nowrap py-4 px-3 text-sm text-gray-900">
+                              <div className="flex flex-col">
+                                <div className="flex items-center gap-1">
+                                  {new Date() <=
+                                  new Date(assignment.dueDate) ? (
+                                    <LockOpenIcon className="w-4 h-4 text-teacherBlue-700" />
+                                  ) : (
+                                    <LockClosedIcon className="w-4 h-4 text-teacherBlue-700" />
+                                  )}
+                                  <span className="font-semibold text-sm">
+                                    {`${
+                                      new Date() <= new Date(assignment.dueDate)
+                                        ? 'Available'
+                                        : `Closed`
+                                    }`}
+                                  </span>
+                                </div>
+                                <div className="flex items-center gap-1">
+                                  <DocumentCheckIcon className="w-4 h-4 text-teacherBlue-700" />
+                                  <span className="font-semibold text-sm">
+                                    {`${String(assignment.totalMarks)} marks`}
+                                  </span>
+                                </div>
+                                <div className="flex items-center gap-1">
+                                  <UserGroupIcon className="w-4 h-4 text-teacherBlue-700" />
+                                  <span className="font-semibold text-sm">
+                                    {`${assignment.assignmentAttempts.length} submitted`}
+                                  </span>
+                                </div>
+                                <div className="flex items-center gap-1">
+                                  <PlusCircleIcon className="w-4 h-4 text-teacherBlue-700" />
+                                  <span className="font-semibold text-sm">
+                                    Created by{' '}
+                                    {`${assignment.teacher.firstName} ${assignment.teacher.lastName}`}
+                                  </span>
+                                </div>
+                              </div>
+                            </td>
+                            <td className="whitespace-nowrap py-4 px-3 font-medium text-gray-900">
+                              <div className="flex flex-col gap-1">
+                                <span className="text-xs text-gray-500">
+                                  {moment(assignment.dueDate).format(
+                                    'D MMMM YYYY, h:mm:ss A',
+                                  )}
+                                </span>
+                              </div>
+                            </td>
+                            <td className="whitespace-nowrap py-4 px-3 font-medium text-gray-900">
+                              <div className="flex flex-col gap-1">
+                                {assignment.levels.map((level, index) => {
+                                  return (
+                                    <LevelTag
+                                      key={index}
+                                      index={index}
+                                      levelEnum={level}
+                                    />
+                                  );
+                                })}
+                              </div>
+                            </td>
+                            <td className="whitespace-nowrap font-medium text-gray-900 space-x-1 w-max pr-3">
+                              {user?.id === assignment.teacher.id && (
+                                <>
+                                  <button
+                                    type="button"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      navToEditAssignment(assignment.id);
+                                    }}
+                                    className="inline-flex items-center rounded-md bg-green-500 px-3 py-2 text-sm font-semibold shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-green-600"
+                                  >
+                                    <PencilSquareIcon className="w-6 h-6 text-white" />
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      setDeleteAssignmentId(assignment.id);
+                                      setDeleteModalOpen(true);
+                                    }}
+                                    className="inline-flex items-center rounded-md bg-red-500 px-3 py-2 text-sm font-semibold shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-red-600"
+                                  >
+                                    <TrashIcon className="w-6 h-6 text-white" />
+                                  </button>
+                                </>
+                              )}
+                            </td>
+                          </tr>
+                        ))
                     )}
                   </tbody>
                 </table>
