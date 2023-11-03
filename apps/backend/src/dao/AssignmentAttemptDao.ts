@@ -33,6 +33,7 @@ export class AssignmentAttemptDao {
         assignment: {
           select: {
             title: true,
+            totalMarks: true,
           },
         },
       },
