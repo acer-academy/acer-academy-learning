@@ -23,6 +23,22 @@ export class AssignmentAttemptDao {
     });
   }
 
+  public async getAssignmentAttemptsByAssignmentId(
+    assignmentId: string,
+  ): Promise<AssignmentAttempt[]> {
+    return this.prismaClient.assignmentAttempt.findMany({
+      where: { assignmentId: assignmentId },
+      include: {
+        student: true,
+        assignment: {
+          select: {
+            title: true,
+          },
+        },
+      },
+    });
+  }
+
   public async updateAssignmentAttempt(
     assignmentAttemptId: string,
     assignmentAttemptData: Prisma.AssignmentAttemptUpdateInput,

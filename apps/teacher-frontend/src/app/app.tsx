@@ -51,6 +51,7 @@ import {
   VIEW_ASSIGNMENT,
   CREATE_ASSIGNMENT,
   EDIT_ASSIGNMENT,
+  VIEW_ASSIGNMENT_ATTEMPTS,
 } from '../libs/routes';
 import { CreateQuestion } from '../pages/question-bank/CreateQuestion';
 import { QueryClient, QueryClientProvider } from 'react-query';
@@ -70,6 +71,7 @@ import { AssignmentManagement } from '../pages/assignments/AssignmentManagement'
 import { ViewAssignment } from '../pages/assignments/ViewAssignment';
 import { CreateAssignment } from '../pages/assignments/CreateAssignment';
 import { EditAssignmentWrapper } from '../pages/assignments/EditAssignmentWrapper';
+import { AssignmentAttemptManagement } from '../pages/assignments/AssignmentAttemptManagement';
 
 export function App() {
   const queryClient = new QueryClient();
@@ -135,6 +137,10 @@ export function App() {
                     <Route
                       path={EDIT_ASSIGNMENT}
                       element={<EditAssignmentWrapper />}
+                    />
+                    <Route
+                      path={VIEW_ASSIGNMENT_ATTEMPTS}
+                      element={<AssignmentAttemptManagement />}
                     />
                   </Route>
                 </Route>

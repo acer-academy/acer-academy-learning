@@ -25,6 +25,12 @@ export async function getAssignmentAttemptById(
   return client.get(`${URL}/${assignmentAttemptId}`);
 }
 
+export async function getAssignmentAttemptsByAssignmentId(
+  assignmentId: string,
+): Promise<AxiosResponse<AssignmentAttemptData[]>> {
+  return client.get(`${URL}/assignment/${assignmentId}`);
+}
+
 export async function updateAssignmentAttempt(
   assignmentAttemptId: string,
   assignmentAttemptData: AssignmentAttemptCreateData,

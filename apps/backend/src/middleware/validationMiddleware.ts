@@ -2427,3 +2427,29 @@ export async function validateBodyAssignmentExists(
     });
   }
 }
+
+/** Validates if a assignmentId passed in params exists */
+export async function validateParamsAssignmentExists(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { assignmentId } = req.params;
+    if (assignmentId) {
+      const validAssignment = await assignmentService.getAssignmentById(
+        assignmentId,
+      );
+      if (!validAssignment) {
+        return res.status(400).json({
+          error: 'Invalid assignment ID provided.',
+        });
+      }
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}

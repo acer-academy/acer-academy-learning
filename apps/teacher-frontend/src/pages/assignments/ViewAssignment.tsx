@@ -117,8 +117,14 @@ export const ViewAssignment: React.FC = () => {
                   No. of Student Submissions
                 </dt>
                 <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-                  <div className="flex flex-row gap-3">
+                  <div className="flex flex-row gap-3 items-center">
                     {assignment.assignmentAttempts.length}
+                    <a
+                      href={location.pathname + '/attempts'}
+                      className="divide-y divide-gray-100 rounded-md border border-gray-300 py-1 px-4 ml-4 flex-shrink-0 font-medium text-indigo-600 bg-slate-50 hover:bg-slate-200 hover:text-indigo-900"
+                    >
+                      View All
+                    </a>
                   </div>
                 </dd>
               </div>
@@ -127,10 +133,7 @@ export const ViewAssignment: React.FC = () => {
                   Attachment
                 </dt>
                 <dd className="mt-2 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
-                  <ul
-                    role="list"
-                    className="divide-y divide-gray-100 rounded-md border border-gray-200"
-                  >
+                  <ul className="divide-y divide-gray-100 rounded-md border border-gray-200">
                     <li className="flex items-center justify-between py-4 pl-4 pr-5 text-sm leading-6">
                       <div className="flex w-0 flex-1 items-center">
                         <PaperClipIcon

@@ -26,6 +26,7 @@ export const ASSIGNMENTS = `${SUBJECTS}/:subject/assignments`;
 export const VIEW_ASSIGNMENT = `${ASSIGNMENTS}/:assignmentId`;
 export const CREATE_ASSIGNMENT = `${ASSIGNMENTS}/create`;
 export const EDIT_ASSIGNMENT = `${ASSIGNMENTS}/edit/:assignmentId`;
+export const VIEW_ASSIGNMENT_ATTEMPTS = `${VIEW_ASSIGNMENT}/attempts`;
 
 // Analytics
 export const ANALYTICS = '/analytics';
