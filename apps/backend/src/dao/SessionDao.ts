@@ -101,7 +101,7 @@ class SessionDao {
   public async getSessionBySessionId(id: string): Promise<Session> {
     return this.prisma.session.findUnique({
       where: { id },
-      include: { teacher: true, class: true, classroom: true },
+      include: { teacher: true, class: true, classroom: true, students: true },
     });
   }
 
@@ -113,6 +113,7 @@ class SessionDao {
     return this.prisma.session.update({
       where: { id },
       data: input,
+      include: { students: true },
     });
   }
 

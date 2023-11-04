@@ -26,6 +26,7 @@ import { TeacherService } from '../services/TeacherService';
 import transactionService from '../services/TransactionService';
 import { TermService } from '../services/TermService';
 import AttendanceService from '../services/AttendanceService';
+import { AssignmentService } from '../services/AssignmentService';
 
 const teacherService = new TeacherService();
 const centreService = new CentreService();
@@ -40,6 +41,7 @@ const quizService = new QuizService();
 const takeService = new TakeService();
 const studentService = new StudentService();
 const termService = new TermService();
+const assignmentService = new AssignmentService();
 
 /*
  * Validators Naming Convention: (Expand on as we code)
@@ -2242,7 +2244,7 @@ export async function validateQuestionQuizTakeExist(
 
 /** Validates there is a current term */
 export async function validateCurrentTermExist(
-  req: Request,
+req: Request,
   res: Response,
   next: NextFunction,
 ) {
@@ -2261,9 +2263,44 @@ export async function validateCurrentTermExist(
   }
 }
 
-/** Validates there is a current term */
-export async function validateAttendanceParamExist(
+/** Validates if a quizId in params exists */
+export async function validateParamsQuizExists(
   req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const terms = await termService.getCurrentTerms();
+    if (terms.length === 0) {
+      return res.status(400).json({
+        error: 'A current term is needed.',
+      });
+    }
+    const { quizId } = req.params;
+    if (quizId.length !== 36) {
+      return res.status(400).json({
+        error: 'Malformed request; quizId is not of valid length.',
+      });
+    }
+    if (quizId) {
+      const validQuiz = await quizService.getQuizById(quizId);
+      if (!validQuiz) {
+        return res.status(400).json({
+          error: 'Quiz does not exist.',
+        });
+      }
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+/** Validates there is a current attendance */
+export async function validateAttendanceParamExist(
+req: Request,
   res: Response,
   next: NextFunction,
 ) {
@@ -2283,7 +2320,91 @@ export async function validateAttendanceParamExist(
   }
 }
 
+/** Validates if the format of a create or update assignment request is valid */
+export async function validateBodyAssignmentFormatValid(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const {
+      title,
+      description,
+      fileUrl,
+      dueDate,
+      totalMarks,
+      subject,
+      levels,
+      teacherId,
+    } = req.body;
+    const validBody = {
+      title,
+      description,
+      fileUrl,
+      dueDate,
+      totalMarks,
+      subject,
+      levels,
+      teacherId,
+    };
+    const postgresDatetimeRegex =
+      /^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[+-]\d{2}:\d{2}))$/;
+
+    for (const key of Object.keys(validBody)) {
+      if (
+        validBody[key] === undefined ||
+        (key === 'title' &&
+          (typeof validBody[key] !== 'string' ||
+            validBody[key].trim().length === 0)) ||
+        (key === 'description' &&
+          (typeof validBody[key] !== 'string' ||
+            validBody[key].trim().length === 0)) ||
+        (key === 'fileUrl' &&
+          (typeof validBody[key] !== 'string' ||
+            validBody[key].trim().length === 0)) ||
+        (key === 'dueDate' && !postgresDatetimeRegex.test(dueDate)) ||
+        (key === 'subject' && typeof validBody[key] !== 'string') ||
+        (key === 'levels' &&
+          (!Array.isArray(validBody[key]) || validBody[key].length === 0)) ||
+        (key === 'totalMarks' &&
+          (typeof validBody[key] !== 'number' || validBody[key] <= 0)) ||
+        (key === 'teacherId' &&
+          (!validBody[key] || typeof validBody[key] !== 'string'))
+      ) {
+        throw Error(`${key} is missing or has an invalid format.`);
+      }
+    }
+    req.body = validBody;
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
 export async function validateBodySessionExist(
+req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { sessionId } = req.body;
+    const session = await SessionService.getSessionBySessionId(sessionId);
+    if (!session) {
+      return res.status(400).json({
+        error: 'Invalid session provided.',
+      });
+     }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+export async function validateBodyTeacherExists(
   req: Request,
   res: Response,
   next: NextFunction,
@@ -2295,6 +2416,14 @@ export async function validateBodySessionExist(
       return res.status(400).json({
         error: 'Invalid session provided.',
       });
+    const { teacherId } = req.body;
+    if (teacherId) {
+      const validTeacher = await teacherService.getTeacherById(teacherId);
+      if (!validTeacher) {
+        return res.status(400).json({
+          error: 'Invalid teacher ID provided.',
+        });
+      }
     }
     next();
   } catch (error) {
@@ -2305,7 +2434,7 @@ export async function validateBodySessionExist(
 }
 
 export async function validateAttendanceNotTaken(
-  req: Request,
+req: Request,
   res: Response,
   next: NextFunction,
 ) {
@@ -2320,6 +2449,101 @@ export async function validateAttendanceNotTaken(
       return res.status(400).json({
         error: 'Your attendance has been taken.',
       });
+      next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+
+/** Validates if the format of a create or update assignment attempt request is valid */
+export async function validateBodyAssignmentAttemptFormatValid(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { submittedOn, score, feedback, assignmentId, studentId } = req.body;
+    const validBody = {
+      submittedOn,
+      score,
+      feedback,
+      assignmentId,
+      studentId,
+    };
+    const postgresDatetimeRegex =
+      /^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[+-]\d{2}:\d{2}))$/;
+
+    for (const key of Object.keys(validBody)) {
+      if (
+        validBody[key] === undefined ||
+        (key === 'feedback' &&
+          (typeof validBody[key] !== 'string' ||
+            validBody[key].trim().length === 0)) ||
+        (key === 'submittedOn' && !postgresDatetimeRegex.test(submittedOn)) ||
+        (key === 'score' &&
+          (typeof validBody[key] !== 'number' || validBody[key] <= 0)) ||
+        (key === 'studentId' &&
+          (!validBody[key] || typeof validBody[key] !== 'string')) ||
+        (key === 'assignmentId' &&
+          (!validBody[key] || typeof validBody[key] !== 'string'))
+      ) {
+        throw Error(`${key} is missing or has an invalid format.`);
+      }
+    }
+    req.body = validBody;
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+export async function validateBodyAssignmentExists(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { assignmentId } = req.body;
+    if (assignmentId) {
+      const validAssignment = await assignmentService.getAssignmentById(
+        assignmentId,
+      );
+      if (!validAssignment) {
+        return res.status(400).json({
+          error: 'Invalid assignment ID provided.',
+        });
+      }
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+export async function validateParamStudentExists(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { studentId } = req.params;
+    if (studentId) {
+      if (studentId.length !== 36) {
+        return res.status(400).json({
+          error: 'Malformed request; studentId is not of valid length.',
+        });
+      }
+      const studentExists = await studentService.getStudentById(studentId);
+      if (!studentExists) {
+        return res.status(400).json({
+          error: 'Student does not exist.',
+        });
+      }
     }
     next();
   } catch (error) {

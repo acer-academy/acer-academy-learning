@@ -44,6 +44,7 @@ model Student {
   takes    Take[]
 
   attendances Attendance[]
+  assignmentAttempts AssignmentAttempt[]
 }
 
 model Parent {
@@ -95,19 +96,19 @@ enum LevelEnum {
 }
 
 model Teacher {
-  id        String        @id @default(uuid()) @db.Uuid
-  email     String        @unique
-  firstName String
-  lastName  String
-  password  String
-  levels    LevelEnum[]
-  subjects  SubjectEnum[]
-  centre    Centre        @relation(fields: [centreId], references: [id])
-  centreId  String        @db.Uuid
+  id          String        @id @default(uuid()) @db.Uuid
+  email       String        @unique
+  firstName   String
+  lastName    String
+  password    String
+  levels      LevelEnum[]
+  subjects    SubjectEnum[]
+  centre      Centre        @relation(fields: [centreId], references: [id])
+  centreId    String        @db.Uuid
   // sessions Session[]
   // announcements Announcement[]
-  // assignments Assignment[]
-  quizzes   Quiz[]
+  assignments Assignment[]
+  quizzes     Quiz[]
 
   whitelistItem   WhitelistItem @relation(fields: [whitelistItemId], references: [id])
   whitelistItemId String        @unique @db.Uuid
@@ -468,4 +469,33 @@ model Attendance {
   sessionId String  @db.Uuid
 
   transactions Transaction[]
+ }
+ 
+model Assignment {
+  id          String      @id @default(uuid()) @db.Uuid
+  title       String
+  description String      @db.Text
+  fileUrl     String
+  dueDate     DateTime
+  totalMarks  Int
+  subject     SubjectEnum
+  levels      LevelEnum[]
+
+  Teacher   Teacher? @relation(fields: [teacherId], references: [id])
+  teacherId String?  @db.Uuid
+
+  assignmentAttempts AssignmentAttempt[]
+}
+
+model AssignmentAttempt {
+  id          String   @id @default(uuid()) @db.Uuid
+  submittedOn DateTime
+  score       Int
+  feedback    String   @db.Text
+
+  assignment   Assignment? @relation(fields: [assignmentId], references: [id])
+  assignmentId String?     @db.Uuid
+
+  student   Student @relation(fields: [studentId], references: [id])
+  studentId String  @db.Uuid
 }

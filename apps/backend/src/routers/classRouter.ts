@@ -7,6 +7,7 @@ import {
   validateSubjectsAndLevelsExist,
   validateClassTeacherClassroomExist,
   validateClassAndSessionExist,
+  validateParamStudentExists,
 } from '../middleware/validationMiddleware';
 import { MessageService, MessageTemplate } from '../services/MessageService';
 
@@ -120,6 +121,44 @@ classRouter.put(
         MessageTemplate.UPDATE_CLASS_ALERT,
       );
       return res.status(200).json(updatedClass);
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({ error: error.message });
+    }
+  },
+);
+
+classRouter.put(
+  '/book-recurring/:sessionId/:studentId',
+  validateClassAndSessionExist,
+  validateParamStudentExists,
+  async (req, res) => {
+    try {
+      const { sessionId, studentId } = req.params;
+      const session = await ClassService.bookRecurringSession(
+        studentId,
+        sessionId,
+      );
+      return res.status(200).json(session);
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({ error: error.message });
+    }
+  },
+);
+
+classRouter.put(
+  '/cancel-recurring/:sessionId/:studentId',
+  validateClassAndSessionExist,
+  validateParamStudentExists,
+  async (req, res) => {
+    try {
+      const { sessionId, studentId } = req.params;
+      const session = await ClassService.cancelRecurringBookedSession(
+        studentId,
+        sessionId,
+      );
+      return res.status(200).json(session);
     } catch (error) {
       console.log(error);
       return res.status(500).json({ error: error.message });

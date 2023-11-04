@@ -2,7 +2,7 @@ import React, { ButtonHTMLAttributes, DetailedHTMLProps } from 'react';
 import { Transition } from '@headlessui/react';
 
 export type GenericButtonProps = {
-  text?: string;
+  text?: string | React.ReactNode;
   icon?: React.ReactNode;
   isLoading?: boolean;
 } & DetailedHTMLProps<

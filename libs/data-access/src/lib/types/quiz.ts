@@ -22,6 +22,7 @@ export interface QuizPaginationFilter {
   showLatestOnly?: boolean;
   allocatedTo?: string[];
   strictPublicOrAllocated?: boolean;
+  showWithTakesOnly?: boolean;
 }
 
 export type QuizDataQuizQuestion = {

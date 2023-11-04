@@ -22,6 +22,7 @@ import { getSubjectEnumFromPathParam } from '@acer-academy-learning/common-ui';
 export const Filter: React.FC<{
   filterSubmitCallback: Function;
   isQuizFilter?: boolean;
+  isQuizStatisticsFilter?: boolean;
 }> = (props) => {
   const { subject } = useParams();
   const subjectEnum = useMemo(
@@ -46,8 +47,7 @@ export const Filter: React.FC<{
   const [selectedStatus, setSelectedStatus] = useState('');
   const [selectedQuestionType, setSelectedQuestionType] = useState('');
 
-  const { filterSubmitCallback } = props;
-  const { isQuizFilter } = props;
+  const { filterSubmitCallback, isQuizFilter, isQuizStatisticsFilter } = props;
 
   useEffect(() => {
     const filterOptions: QuizQuestionPaginationFilter | QuizPaginationFilter =
@@ -58,6 +58,7 @@ export const Filter: React.FC<{
             topics: topics,
             subjects: subjectEnum ? [subjectEnum] : [],
             showLatestOnly: !showAllVersions,
+            showWithTakesOnly: isQuizStatisticsFilter,
           }
         : {
             difficulty: difficulties,
