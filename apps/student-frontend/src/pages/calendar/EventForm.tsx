@@ -4,14 +4,9 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { CentreData } from 'libs/data-access/src/lib/types/centre';
 import { ClassroomData } from 'libs/data-access/src/lib/types/classroom';
-import { Admin } from 'libs/data-access/src/lib/types/admin';
-import { Teacher, TeacherData } from 'libs/data-access/src/lib/types/teacher';
+import { Teacher } from 'libs/data-access/src/lib/types/teacher';
 import { useAuth } from '@acer-academy-learning/common-ui';
-import {
-  GenericBadge,
-  GenericComboBox,
-  useToast,
-} from '@acer-academy-learning/common-ui';
+import { useToast } from '@acer-academy-learning/common-ui';
 import './CalendarView.css';
 import { ClassFrequencyEnum } from '@prisma/client';
 import { XMarkIcon } from '@heroicons/react/24/solid';
@@ -19,7 +14,6 @@ import {
   createRecurringClass,
   deleteRecurringClass,
   getAllCentres,
-  getAllTeachers,
   getClassroomsByCentre,
   updateRecurringClass,
 } from '@acer-academy-learning/data-access';
@@ -28,8 +22,6 @@ import {
   deleteSession,
   updateSession,
 } from '@acer-academy-learning/data-access';
-import { StudentData } from 'libs/data-access/src/lib/types/student';
-import { getAllStudents as apiGetAllStudents } from '@acer-academy-learning/data-access';
 
 interface EventFormProps {
   session: SessionData;
@@ -45,6 +37,7 @@ export default function EventForm({
   const [sessionData, setSessionData] = useState({
     ...session,
   });
+  //   console.log(session);
 
   enum LevelEnum {
     P1 = 'P1',
@@ -103,15 +96,7 @@ export default function EventForm({
     session.levels || [],
   );
 
-  const [teachers, setTeachers] = useState<TeacherData[]>([]);
-  const [selectedTeacher, setSelectedTeacher] = useState(
-    session.teacherId || '',
-  );
-
-  //remark
-  const [allocatedStudents, setAllocatedStudents] = useState<string[]>([]);
-
-  const { user } = useAuth<Admin>();
+  const { user } = useAuth<Teacher>();
 
   const [sessionState, setSessionState] = useState({
     id: session.id,
@@ -124,14 +109,13 @@ export default function EventForm({
       .map((subject) => SubjectEnum[subject as keyof typeof SubjectEnum]),
     classroomId: selectedClassroom,
     end: sessionData.end,
-    teacherId: selectedTeacher,
+    teacherId: user.id,
     classId: null,
   });
 
   interface FormErrors {
     dateError: string | null;
     recurringEndDateError: string | null;
-    selectedTeacher: string | null;
     selectedCentre: string | null;
     selectedClassroom: string | null;
     selectedLevels: string | null;
@@ -162,12 +146,99 @@ export default function EventForm({
   const [formErrors, setFormErrors] = useState<FormErrors>({
     dateError: null,
     recurringEndDateError: null,
-    selectedTeacher: null,
     selectedCentre: null,
     selectedClassroom: null,
     selectedLevels: null,
     selectedSubjects: null,
   });
+
+  // useEffect(() => {
+  //   if (sessionState.end <= sessionState.start) {
+  //     setFormErrors((prevErrors) => ({
+  //       ...prevErrors,
+  //       dateError: 'Start date needs to be before end date',
+  //     }));
+  //   } else {
+  //     setFormErrors((prevErrors) => ({
+  //       ...prevErrors,
+  //       dateError: null,
+  //     }));
+  //   }
+
+  //   if (recurringState.endRecurringDate <= sessionState.end) {
+  //     setFormErrors((prevErrors) => ({
+  //       ...prevErrors,
+  //       recurringEndDateError:
+  //         'Recurring end date needs to be after end time date',
+  //     }));
+  //   } else {
+  //     setFormErrors((prevErrors) => ({
+  //       ...prevErrors,
+  //       recurringEndDateError: null,
+  //     }));
+  //   }
+
+  //   // Check selectedCentre
+  //   if (!selectedCentre) {
+  //     setFormErrors((prevErrors) => ({
+  //       ...prevErrors,
+  //       selectedCentre: 'Centre needs to be selected',
+  //     }));
+  //   } else {
+  //     setFormErrors((prevErrors) => ({
+  //       ...prevErrors,
+  //       selectedCentre: null,
+  //     }));
+  //   }
+
+  //   // Check selectedClassroom
+  //   if (!selectedClassroom) {
+  //     setFormErrors((prevErrors) => ({
+  //       ...prevErrors,
+  //       selectedClassroom: 'Classroom needs to be selected',
+  //     }));
+  //   } else {
+  //     setFormErrors((prevErrors) => ({
+  //       ...prevErrors,
+  //       selectedClassroom: null,
+  //     }));
+  //   }
+
+  //   // Check selectedLevels
+  //   if (selectedLevels.length === 0) {
+  //     setFormErrors((prevErrors) => ({
+  //       ...prevErrors,
+  //       selectedLevels: 'At least one level needs to be selected',
+  //     }));
+  //   } else {
+  //     setFormErrors((prevErrors) => ({
+  //       ...prevErrors,
+  //       selectedLevels: null,
+  //     }));
+  //   }
+
+  //   // Check selectedSubjects
+  //   if (selectedSubjects.length === 0) {
+  //     setFormErrors((prevErrors) => ({
+  //       ...prevErrors,
+  //       selectedSubjects: 'At least one subject needs to be selected',
+  //     }));
+  //   } else {
+  //     setFormErrors((prevErrors) => ({
+  //       ...prevErrors,
+  //       selectedSubjects: null,
+  //     }));
+  //   }
+
+  //   // You can add similar conditions for `start` and `end` if needed.
+  // }, [
+  //   sessionState,
+  //   selectedCentre,
+  //   selectedClassroom,
+  //   selectedLevels,
+  //   selectedSubjects,
+  //   recurringState,
+  // ]);
 
   const validateForm = () => {
     const newErrors = {
@@ -180,7 +251,6 @@ export default function EventForm({
         isRecurring && recurringState.endRecurringDate <= sessionState.end
           ? 'Recurring end date needs to be after end time date'
           : null,
-      selectedTeacher: !selectedTeacher ? 'Teacher needs to be selected' : null,
       selectedCentre: !selectedCentre ? 'Centre needs to be selected' : null,
       selectedClassroom: !selectedClassroom
         ? 'Classroom needs to be selected'
@@ -218,40 +288,16 @@ export default function EventForm({
         .filter((subject) => subject in SubjectEnum)
         .map((subject) => SubjectEnum[subject as keyof typeof SubjectEnum]),
       classroomId: selectedClassroom,
-      teacherId: selectedTeacher,
-      students:allocatedStudents,
+      teacherId: user.id,
       // ... any other fields you want to watch
     }));
-  }, [
-    sessionData,
-    selectedClassroom,
-    selectedLevels,
-    selectedSubjects,
-    selectedTeacher,
-    allocatedStudents
-  ]);
+  }, [sessionData, selectedClassroom, selectedLevels, selectedSubjects]);
 
   const label = session?.id ? 'Update' : 'Create';
 
   useEffect(() => {
     setSessionData({ ...session });
   }, [session]);
-
-  useEffect(() => {
-    const fetchTeachers = async () => {
-      try {
-        const response = await getAllTeachers();
-        const teachers: TeacherData[] = response.data;
-        setTeachers(teachers);
-      } catch (err) {
-        // setError(err);
-      } finally {
-        // setLoading(false);
-      }
-    };
-
-    fetchTeachers();
-  }, []);
 
   useEffect(() => {
     const fetchCentres = async () => {
@@ -342,7 +388,6 @@ export default function EventForm({
     setSelectedLevels(session.levels || []);
     setSelectedCentre(session.classroom?.centreId || '');
     setSelectedClassroom(session.classroomId || '');
-    setSelectedTeacher(session.teacherId || '');
   }, [session]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -434,7 +479,8 @@ export default function EventForm({
         }
       }
     } catch (err) {
-      // setError(err);
+      onClose();
+      displayToast(`${err.response.data.error}`, ToastType.ERROR);
     } finally {
       // setLoading(false);
     }
@@ -455,27 +501,6 @@ export default function EventForm({
   const closeUpdateModal = () => {
     setShowUpdateModal(false);
   };
-
-  const [allStudents, setAllStudents] = useState<StudentData[]>([]);
-
-  const getAllStudents = async () => {
-    try {
-      const response = await apiGetAllStudents();
-      const studentData = response.data;
-      setAllStudents(studentData.students);
-    } catch (error) {
-      displayToast(
-        'Students could not be retrieved from the server.',
-        ToastType.ERROR,
-      );
-    }
-  };
-
-  useEffect(() => {
-    getAllStudents();
-  }, []);
-
-  console.log(allocatedStudents);
 
   return (
     <div className="modal">
@@ -588,35 +613,6 @@ export default function EventForm({
           <div className="mt-4">
             <div className="flex items-center space-x-4">
               <label
-                htmlFor="teacher"
-                className="block w-1/4 text-sm font-medium leading-6 text-gray-900"
-              >
-                Teacher
-              </label>
-              <select
-                id="teacher"
-                name="teacher"
-                required
-                value={selectedTeacher}
-                onChange={(e) => setSelectedTeacher(e.target.value)}
-                className="mt-2 block w-3/4 space-y-2 rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              >
-                <option value="">Select a teacher</option>
-                {teachers.map((teacher, index) => (
-                  <option key={index} value={teacher.id}>
-                    {teacher.firstName} {teacher.lastName}
-                  </option>
-                ))}
-              </select>
-            </div>
-            {formErrors.selectedTeacher && (
-              <div className="text-red-500">{formErrors.selectedTeacher}</div>
-            )}
-          </div>
-
-          <div className="mt-4">
-            <div className="flex items-center space-x-4">
-              <label
                 htmlFor="location"
                 className="block w-1/4 text-sm font-medium leading-6 text-gray-900"
               >
@@ -633,6 +629,7 @@ export default function EventForm({
                 <option value="" disabled>
                   Select a centre
                 </option>
+
                 {centres.map((centre, index) => (
                   <option key={index} value={centre.id}>
                     {centre.name}
@@ -675,39 +672,6 @@ export default function EventForm({
               <div className="text-red-500">{formErrors.selectedClassroom}</div>
             )}
           </div>
-
-          <div className="flex flex-wrap my-4 gap-4">
-            {allocatedStudents.length > 0 ? (
-              allStudents
-                .filter((student) => allocatedStudents.includes(student.id))
-                .map((student) => (
-                  <div key={student.id}>
-                    <GenericBadge
-                      badge={`${student.firstName} ${student.lastName}`}
-                      onRemove={() =>
-                        setAllocatedStudents(
-                          allocatedStudents.filter((id) => id != student.id),
-                        )
-                      }
-                    ></GenericBadge>
-                  </div>
-                ))
-            ) : (
-              <span className="text-gray-600 italic mx-2">
-                No students have been allocated to this session yet.
-              </span>
-            )}
-          </div>
-
-          <GenericComboBox
-            options={allStudents.map((student) => student.id)}
-            onChange={(selectedIds) => setAllocatedStudents(selectedIds)}
-            selected={allocatedStudents}
-            displayValue={(id) => {
-              const curr = allStudents.find((student) => student.id == id);
-              return curr ? `${curr.firstName} ${curr.lastName}` : '';
-            }}
-          ></GenericComboBox>
 
           <div className="flex items-center mt-4">
             <label
