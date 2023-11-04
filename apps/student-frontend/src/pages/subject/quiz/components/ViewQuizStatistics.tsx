@@ -15,96 +15,79 @@ import { ChevronDownIcon } from '@heroicons/react/20/solid';
 import { useParams } from 'react-router-dom';
 
 enum Duration {
-  TODAY = 'Today',
-  THIS_WEEK = 'This Week',
-  THIS_MONTH = 'This Month',
-  THIS_YEAR = 'This Year',
+  PAST_FOURTEEN_DAYS = 'Past 2 Weeks',
+  PAST_THREE_MONTHS = 'Past 3 Months',
+  PAST_YEAR = 'Past Year',
   ALL = 'All',
 }
+
+const getExactDateDaysBefore = (data: {
+  days: number;
+  date: Date;
+  toMidnight?: boolean;
+}) => {
+  const pastDate = new Date(
+    data.date.getTime() - data.days * 24 * 60 * 60 * 1000,
+  );
+  if (data.toMidnight) {
+    pastDate.setHours(0, 0, 0, 0);
+  }
+
+  return pastDate;
+};
+
+// Helper function to check for a leap year
+export const isLeapYear = (year: number) => {
+  return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
+};
 
 export const ViewQuizStatistics = () => {
   const { user } = useAuth<Student>();
   const { quizId } = useParams();
   const [currentDuration, setCurrenDuration] = useState<Duration>(Duration.ALL);
-  const datesToShow = useMemo(() => {
+  const startDate = useMemo(() => {
     // Get current date
     const currentDate = new Date();
-    const newStartDate = new Date(currentDate);
-    const newEndDate = new Date(currentDate);
     switch (currentDuration) {
-      case Duration.TODAY: {
-        newStartDate.setHours(0, 0, 0, 0);
-        newEndDate.setHours(23, 59, 59, 999);
-        return {
-          startDate: newStartDate.toISOString(),
-          endDate: newEndDate.toISOString(),
-        };
+      case Duration.PAST_FOURTEEN_DAYS: {
+        return getExactDateDaysBefore({
+          days: 14,
+          date: currentDate,
+          toMidnight: true,
+        }).toISOString();
       }
-      case Duration.THIS_WEEK: {
-        const dayOfWeek = newStartDate.getDay();
-        const startOfWeek = new Date(
-          newStartDate.setDate(newStartDate.getDate() - dayOfWeek),
-        );
-        startOfWeek.setHours(0, 0, 0, 0);
-
-        const daysToAdd = 6 - dayOfWeek;
-        const endOfWeek = new Date(
-          newEndDate.getFullYear(),
-          newEndDate.getMonth(),
-          newEndDate.getDate() + daysToAdd,
-          23,
-          59,
-          59,
-          999,
-        );
-
-        return {
-          startDate: startOfWeek.toISOString(),
-          endDate: endOfWeek.toISOString(),
-        };
+      case Duration.PAST_THREE_MONTHS: {
+        return getExactDateDaysBefore({
+          days: 90,
+          date: currentDate,
+          toMidnight: true,
+        }).toISOString();
       }
-      case Duration.THIS_MONTH: {
-        const startOfMonth = new Date(
-          currentDate.getFullYear(),
-          currentDate.getMonth(),
-          1,
-        );
-        startOfMonth.setHours(0, 0, 0, 0);
-        const startOfNextMonth = new Date(
-          newEndDate.getFullYear(),
-          newEndDate.getMonth() + 1,
-          1,
-        );
-        const endOfMonth = new Date(startOfNextMonth.getTime() - 1);
-        return {
-          startDate: startOfMonth.toISOString(),
-          endDate: endOfMonth.toISOString(),
-        };
-      }
-      case Duration.THIS_YEAR: {
-        const currentYear = currentDate.getFullYear();
-        const startOfYear = new Date(currentYear, 0, 1);
-        startOfYear.setHours(0, 0, 0, 0);
-        const startOfNextYear = new Date(currentYear + 1, 0, 1);
-        const endOfYear = new Date(startOfNextYear.getTime() - 1);
-        return {
-          startDate: startOfYear.toISOString(),
-          endDate: endOfYear.toISOString(),
-        };
+      case Duration.PAST_YEAR: {
+        const oneYearAgo = new Date(currentDate);
+        oneYearAgo.setFullYear(currentDate.getFullYear() - 1);
+        // Check for leap year edge case. If currentDate is Feb 29 and the previous year is not a leap year, this will adjust to Feb 28.
+        if (
+          currentDate.getMonth() === 1 &&
+          currentDate.getDate() === 29 &&
+          !isLeapYear(oneYearAgo.getFullYear())
+        ) {
+          oneYearAgo.setDate(28);
+        }
+        return oneYearAgo.toISOString();
       }
       default:
         break;
     }
   }, [currentDuration]);
   const { data: quizStats, isLoading } = useQuery(
-    ['student-quiz', user, quizId, datesToShow],
+    ['student-quiz', user, quizId, startDate],
     async () => {
       if (user && quizId) {
         const res = await getQuizStatisticsForStudent({
           quizId: quizId,
           studentId: user.id,
-          startDate: datesToShow?.startDate,
-          endDate: datesToShow?.endDate,
+          startDate: startDate,
         });
         return res.data;
       }
@@ -121,8 +104,7 @@ export const ViewQuizStatistics = () => {
       },
       xAxis: {
         type: 'datetime',
-        min: datesToShow ? new Date(datesToShow.startDate).getTime() : null,
-        max: datesToShow ? new Date(datesToShow.endDate).getTime() : null,
+        min: startDate ? new Date(startDate).getTime() : null,
       },
       yAxis: {
         title: {
@@ -150,7 +132,7 @@ export const ViewQuizStatistics = () => {
         },
       },
     }),
-    [quizStats, datesToShow],
+    [quizStats, startDate],
   );
 
   if (isLoading) {
