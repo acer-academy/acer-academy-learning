@@ -122,26 +122,26 @@ export async function validateBodyTeacherEmailUnique(
 }
 
 /** Validates if a teacherId passed in params exists */
-// export async function validateParamsTeacherExists(
-//   req: Request,
-//   res: Response,
-//   next: NextFunction,
-// ) {
-//   try {
-//     const { teacherId } = req.params;
-//     const teacherExists = await teacherService.getTeacherById(teacherId);
-//     if (!teacherExists || !teacherId) {
-//       return res.status(400).json({
-//         error: 'Teacher does not exist.',
-//       });
-//     }
-//     next();
-//   } catch (error) {
-//     return res.status(500).json({
-//       error: error.message,
-//     });
-//   }
-// }
+export async function validateParamsTeacherExists(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { teacherId } = req.params;
+    const teacherExists = await teacherService.getTeacherById(teacherId);
+    if (!teacherExists || !teacherId) {
+      return res.status(400).json({
+        error: 'Teacher does not exist.',
+      });
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
 
 /** Validates if a centreId passed in params exists */
 export async function validateParamsCentreExists(
@@ -2413,6 +2413,116 @@ export async function validateBodyAssignmentExists(
         return res.status(400).json({
           error: 'Invalid assignment ID provided.',
         });
+      }
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+/** Validates if a studentId passed in params exists */
+export async function validateParamsStudentExists(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { studentId } = req.params;
+    if (studentId) {
+      const studentExists = await studentService.getStudentById(studentId);
+      if (!studentExists) {
+        return res.status(400).json({
+          error: 'Student does not exist.',
+        });
+      }
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+/** Validates if the format of a create or update announcement request is valid */
+export async function validateBodyAnnouncementFormatValid(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const {
+      title,
+      message,
+      createdAt,
+      targetSubjects,
+      targetLevels,
+      targetCentres,
+      teacherId,
+    } = req.body;
+    const validBody = {
+      title,
+      message,
+      createdAt,
+      targetSubjects,
+      targetLevels,
+      targetCentres,
+      teacherId,
+    };
+    const postgresDatetimeRegex =
+      /^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[+-]\d{2}:\d{2}))$/;
+
+    for (const key of Object.keys(validBody)) {
+      if (
+        validBody[key] === undefined ||
+        (key === 'title' &&
+          (typeof validBody[key] !== 'string' ||
+            validBody[key].trim().length === 0)) ||
+        (key === 'message' &&
+          (typeof validBody[key] !== 'string' ||
+            validBody[key].trim().length === 0)) ||
+        (key === 'createdAt' && !postgresDatetimeRegex.test(createdAt)) ||
+        (key === 'targetSubjects' &&
+          (!Array.isArray(validBody[key]) || validBody[key].length === 0)) ||
+        (key === 'targetLevels' &&
+          (!Array.isArray(validBody[key]) || validBody[key].length === 0)) ||
+        (key === 'targetCentres' &&
+          (!Array.isArray(validBody[key]) || validBody[key].length === 0)) ||
+        (key === 'teacherId' &&
+          (!validBody[key] ||
+            typeof validBody[key] !== 'string' ||
+            validBody[key].length !== 36))
+      ) {
+        throw Error(`${key} is missing or has an invalid format.`);
+      }
+    }
+    req.body = validBody;
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+export async function validateBodyAnnouncementCentresExist(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { targetCentres } = req.body;
+    if (targetCentres && targetCentres.length > 0) {
+      for (const centreId of targetCentres) {
+        const validCentre = await centreService.getCentreById(centreId);
+        if (!validCentre) {
+          return res.status(400).json({
+            error: 'Invalid centre ID provided: ' + centreId,
+          });
+        }
       }
     }
     next();

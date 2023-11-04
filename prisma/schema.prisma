@@ -94,19 +94,19 @@ enum LevelEnum {
 }
 
 model Teacher {
-  id          String        @id @default(uuid()) @db.Uuid
-  email       String        @unique
-  firstName   String
-  lastName    String
-  password    String
-  levels      LevelEnum[]
-  subjects    SubjectEnum[]
-  centre      Centre        @relation(fields: [centreId], references: [id])
-  centreId    String        @db.Uuid
+  id            String         @id @default(uuid()) @db.Uuid
+  email         String         @unique
+  firstName     String
+  lastName      String
+  password      String
+  levels        LevelEnum[]
+  subjects      SubjectEnum[]
+  centre        Centre         @relation(fields: [centreId], references: [id])
+  centreId      String         @db.Uuid
   // sessions Session[]
-  // announcements Announcement[]
-  assignments Assignment[]
-  quizzes     Quiz[]
+  announcements Announcement[]
+  assignments   Assignment[]
+  quizzes       Quiz[]
 
   whitelistItem   WhitelistItem @relation(fields: [whitelistItemId], references: [id])
   whitelistItemId String        @unique @db.Uuid
@@ -127,12 +127,13 @@ model NotificationPreference {
 }
 
 model Centre {
-  id         String      @id @default(uuid()) @db.Uuid
-  name       String      @unique
-  address    String      @unique
-  teachers   Teacher[]
-  student    Student[]
-  classrooms Classroom[]
+  id           String         @id @default(uuid()) @db.Uuid
+  name         String         @unique
+  address      String         @unique
+  teachers     Teacher[]
+  student      Student[]
+  classrooms   Classroom[]
+  announcement Announcement[]
 }
 
 model Classroom {
@@ -477,4 +478,18 @@ model AssignmentAttempt {
 
   student   Student @relation(fields: [studentId], references: [id])
   studentId String  @db.Uuid
+}
+
+model Announcement {
+  id             String        @id @default(uuid()) @db.Uuid
+  title          String
+  message        String        @db.Text
+  createdAt      DateTime
+  targetSubjects SubjectEnum[]
+  targetLevels   LevelEnum[]
+
+  targetCentres Centre[]
+
+  teacher   Teacher @relation(fields: [teacherId], references: [id])
+  teacherId String  @db.Uuid
 }
