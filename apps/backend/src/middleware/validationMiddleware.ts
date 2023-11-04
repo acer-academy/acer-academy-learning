@@ -2244,7 +2244,7 @@ export async function validateQuestionQuizTakeExist(
 
 /** Validates there is a current term */
 export async function validateCurrentTermExist(
-req: Request,
+  req: Request,
   res: Response,
   next: NextFunction,
 ) {
@@ -2300,7 +2300,7 @@ export async function validateParamsQuizExists(
 
 /** Validates there is a current attendance */
 export async function validateAttendanceParamExist(
-req: Request,
+  req: Request,
   res: Response,
   next: NextFunction,
 ) {
@@ -2384,7 +2384,7 @@ export async function validateBodyAssignmentFormatValid(
 }
 
 export async function validateBodySessionExist(
-req: Request,
+  req: Request,
   res: Response,
   next: NextFunction,
 ) {
@@ -2395,7 +2395,7 @@ req: Request,
       return res.status(400).json({
         error: 'Invalid session provided.',
       });
-     }
+    }
     next();
   } catch (error) {
     return res.status(500).json({
@@ -2416,6 +2416,7 @@ export async function validateBodyTeacherExists(
       return res.status(400).json({
         error: 'Invalid session provided.',
       });
+    }
     const { teacherId } = req.body;
     if (teacherId) {
       const validTeacher = await teacherService.getTeacherById(teacherId);
@@ -2434,7 +2435,7 @@ export async function validateBodyTeacherExists(
 }
 
 export async function validateAttendanceNotTaken(
-req: Request,
+  req: Request,
   res: Response,
   next: NextFunction,
 ) {
@@ -2449,12 +2450,14 @@ req: Request,
       return res.status(400).json({
         error: 'Your attendance has been taken.',
       });
-      next();
+    }
+    next();
   } catch (error) {
     return res.status(500).json({
       error: error.message,
     });
   }
+}
 
 /** Validates if the format of a create or update assignment attempt request is valid */
 export async function validateBodyAssignmentAttemptFormatValid(
