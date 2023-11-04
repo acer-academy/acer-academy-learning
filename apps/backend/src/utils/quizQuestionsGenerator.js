@@ -1,111 +1,71 @@
+const {
+  whitelistURL,
+  createCentreURL,
+  createTeacherURL,
+  createQuizQuestionURL,
+  createQuizURL,
+  createStudentURL,
+  createTakeURL,
+  createAssignmentAttemptURL,
+  createAssignmentURL,
+  randomFirstNames,
+  randomLastNames,
+  QuizQuestionTypeEnum,
+  QuizQuestionStatusEnum,
+  QuizQuestionTopicEnum,
+  QuizQuestionDifficultyEnum,
+  LevelEnum,
+  answers,
+  answers2,
+} = require('./generatorMockData');
 const axios = require('axios');
-
-const whitelistURL = 'http://localhost:8000/api/v1/whitelist/create';
-const createCentreURL = 'http://localhost:8000/api/v1/centres';
-const createTeacherURL = 'http://localhost:8000/api/v1/teachers';
-const createQuizQuestionURL = 'http://localhost:8000/api/v1/quiz-questions/';
-const createQuizURL = 'http://localhost:8000/api/v1/quiz';
-const createStudentURL = 'http://localhost:8000/api/v1/students/create';
-const createTakeURL = 'http://localhost:8000/api/v1/take';
 
 const args = process.argv.slice(2);
 
 const setArgumentValue = (arg, defaultValue) => {
   const index = args.indexOf(arg);
   if (index !== -1 && index + 1 < args.length) {
-    return parseInt(args[index + 1]);
+    const value = parseInt(args[index + 1]);
+    return isNaN(value) ? defaultValue : value;
   }
   return defaultValue;
 };
 
+const numberOfStudentsToCreate = setArgumentValue('--students', 20);
 const numberOfQuestionsToCreate = setArgumentValue('--questions', 1000);
 const numberOfQuizzesToCreate = setArgumentValue('--quizzes', 100);
 const numberOfTakesToCreate = setArgumentValue('--takes', 500);
+const numberOfAssignmentsToCreate = setArgumentValue('--assignments', 100);
+const numberOfAssignmentAttemptsToCreate = setArgumentValue('--attempts', 500);
+
+console.log(
+  `
+  Usage: node quizQuestionsGenerator.js --students 20 --questions 1000 --quizzes 100 --takes 500 --assignments 100 --attempts 500\n
+  ========== Args Parsed ==========
+  Students:${numberOfStudentsToCreate}
+  Questions: ${numberOfQuestionsToCreate}
+  Quizzes: ${numberOfQuizzesToCreate}
+  Takes: ${numberOfTakesToCreate}
+  Assignments: ${numberOfAssignmentsToCreate}
+  Attempts: ${numberOfAssignmentAttemptsToCreate}
+  =================================
+  \nCreating...\n`,
+);
 
 let placeholderTeacherId = '';
 let questionIndexesArray = [];
 let quizDataArray = [];
 let studentIdsArray = [];
+let assignmentDataArray = [];
 
 const getRandomItem = (array) => {
   const uniqueItems = [...new Set(array)];
   return uniqueItems[Math.floor(Math.random() * uniqueItems.length)];
 };
 
-const QuizQuestionTopicEnum = [
-  'WHOLE_NUMBERS',
-  'MONEY',
-  'MEASUREMENT',
-  'GEOMETRY',
-  'DATA_REPRESENTATION_AND_INTERPRETATION',
-  'FRACTIONS',
-  'AREA_AND_VOLUME',
-  'DECIMALS',
-  'PERCENTAGE',
-  'RATIO',
-  'RATE_AND_SPEED',
-  'DATA_ANALYSIS',
-  'ALGEBRA',
-  'NUMBERS_AND_OPERATIONS',
-  'RATIO_AND_PROPORTION',
-  'ALGEBRAIC_EXPRESSIONS_AND_FORMULAE',
-  'FUNCTIONS_AND_GRAPHS',
-  'EQUATIONS_AND_INEQUALITIES',
-  'SET_LANGUAGE_AND_NOTATION',
-  'MATRICES',
-  'ANGLES_TRIANGLES_AND_POLYGONS',
-  'CONGRUENCE_AND_SIMILARITY',
-  'PROPERTIES_OF_CIRCLES',
-  'PYTHAGORAS_THEOREM_AND_TRIGONOMETRY',
-  'MENSURATION',
-  'COORDINATE_GEOMETRY',
-  'VECTORS_IN_2D',
-  'DATA_HANDLING_AND_ANALYSIS',
-  'PROBABILITY',
-  'SEQUENCE_AND_SERIES',
-  'VECTORS',
-  'INTRODUCTION_TO_COMPLEX_NUMBERS',
-  'CALCULUS',
-  'PROBABILITY_AND_STATISTICS',
-];
-
-const LevelEnum = [
-  'P1',
-  'P2',
-  'P3',
-  'P4',
-  'P5',
-  'P6',
-  'S1',
-  'S2',
-  'S3',
-  'S4',
-  'S5',
-  'J1',
-  'J2',
-];
-
-const QuizQuestionDifficultyEnum = ['BASIC', 'INTERMEDIATE', 'ADVANCED'];
-
-const QuizQuestionStatusEnum = [
-  'READY',
-  'READY',
-  'READY',
-  'READY',
-  'READY',
-  'DRAFT',
-  'DISABLED',
-];
-
-const QuizQuestionTypeEnum = {
-  MCQ: 'MCQ',
-  MRQ: 'MRQ',
-  TFQ: 'TFQ',
-  SHORT_ANSWER: 'SHORT_ANSWER',
-};
-
 const setupPrerequisites = async () => {
   try {
+    const startTime = Date.now();
     const whitelistResponse = await axios.post(whitelistURL, {
       email: 'teacher@teacher.com',
       role: 'TEACHER',
@@ -124,45 +84,8 @@ const setupPrerequisites = async () => {
       levels: ['P3'],
     });
     placeholderTeacherId = createTeacherResponse.data.id;
-    // console.log(
-    //   'Prerequisite teacher successfully created:',
-    //   (placeholderTeacherId),
-    // );
-    const randomFirstNames = [
-      'John',
-      'Mary',
-      'Robert',
-      'Linda',
-      'William',
-      'Susan',
-      'James',
-      'Karen',
-      'Michael',
-      'Jennifer',
-      'David',
-      'Nancy',
-      'Richard',
-      'Lisa',
-      'Joseph',
-      'Betty',
-      'Charles',
-      'Helen',
-      'Thomas',
-      'Margaret',
-    ];
-    const randomLastNames = [
-      'Lim',
-      'Tan',
-      'Ng',
-      'Lee',
-      'Ong',
-      'Goh',
-      'Chua',
-      'Yeo',
-      'Teo',
-      'Tan',
-    ];
-    for (let i = 1; i < 10; i++) {
+
+    for (let i = 1; i < numberOfStudentsToCreate; i++) {
       const whitelistStudentResponse = await axios.post(whitelistURL, {
         email: `student${i}@student.com`,
         role: 'STUDENT',
@@ -189,11 +112,12 @@ const setupPrerequisites = async () => {
         },
       });
       studentIdsArray.push(createStudentResponse.data.student.id);
-      // console.log(
-      //   'Prerequisite student successfully created:',
-      //   createStudentResponse.data.student.id,
-      // );
     }
+    const endTime = Date.now();
+    const duration = endTime - startTime;
+    console.log(
+      `${numberOfStudentsToCreate} students created successfully (${duration} ms).`,
+    );
   } catch (error) {
     console.log('Error creating placeholder data', error);
   }
@@ -201,6 +125,7 @@ const setupPrerequisites = async () => {
 
 const createRandomQuestions = async (count) => {
   try {
+    const startTime = Date.now();
     for (let i = 0; i < count; i++) {
       const questionData = generateRandomQuestion();
       const createQuestionResponse = await axios.post(
@@ -208,9 +133,12 @@ const createRandomQuestions = async (count) => {
         questionData,
       );
       questionIndexesArray.push(createQuestionResponse.data.id);
-      //console.log(`Question ${i + 1} created.`);
     }
-    console.log(`${numberOfQuestionsToCreate} questions created successfully.`);
+    const endTime = Date.now();
+    const duration = endTime - startTime;
+    console.log(
+      `${numberOfQuestionsToCreate} questions created successfully (${duration} ms).`,
+    );
   } catch (error) {
     console.error('Error creating questions:', error);
   }
@@ -218,13 +146,17 @@ const createRandomQuestions = async (count) => {
 
 const createRandomQuizzes = async (count) => {
   try {
+    const startTime = Date.now();
     for (let i = 0; i < count; i++) {
       const quizData = generateRandomQuiz(i);
       const createQuizResponse = await axios.post(createQuizURL, quizData);
       quizDataArray.push(createQuizResponse.data);
-      //console.log(`Quiz ${i + 1} created.`);
     }
-    console.log(`${numberOfQuizzesToCreate} quizzes created successfully.`);
+    const endTime = Date.now();
+    const duration = endTime - startTime;
+    console.log(
+      `${numberOfQuizzesToCreate} quizzes created successfully (${duration} ms).`,
+    );
   } catch (error) {
     console.error('Error creating quizzes:', error);
   }
@@ -232,14 +164,59 @@ const createRandomQuizzes = async (count) => {
 
 const createRandomTakes = async (count) => {
   try {
+    const startTime = Date.now();
     for (let i = 0; i < count; i++) {
       const takeData = generateRandomTake();
       const createTakeResponse = await axios.post(createTakeURL, takeData);
-      //console.log(`Take ${i + 1} created.`);
     }
-    console.log(`${numberOfTakesToCreate} takes created successfully.`);
+    const endTime = Date.now();
+    const duration = endTime - startTime;
+    console.log(
+      `${numberOfTakesToCreate} takes created successfully (${duration} ms).`,
+    );
   } catch (error) {
     console.error('Error creating takes:', error);
+  }
+};
+
+const createRandomAssignments = async (count) => {
+  try {
+    const startTime = Date.now();
+    for (let i = 0; i < count; i++) {
+      const assignmentData = generateRandomAssignment(i);
+      const createAssignmentResponse = await axios.post(
+        createAssignmentURL,
+        assignmentData,
+      );
+      assignmentDataArray.push(createAssignmentResponse.data);
+    }
+    const endTime = Date.now();
+    const duration = endTime - startTime;
+    console.log(
+      `${numberOfAssignmentsToCreate} assignments created successfully (${duration} ms).`,
+    );
+  } catch (error) {
+    console.error('Error creating assignments:', error);
+  }
+};
+
+const createRandomAssignmentAttempts = async (count) => {
+  try {
+    const startTime = Date.now();
+    for (let i = 0; i < count; i++) {
+      const assignmentAttemptData = generateRandomAssignmentAttempt();
+      const createAssignmentAttemptResponse = await axios.post(
+        createAssignmentAttemptURL,
+        assignmentAttemptData,
+      );
+    }
+    const endTime = Date.now();
+    const duration = endTime - startTime;
+    console.log(
+      `${numberOfAssignmentAttemptsToCreate} attempts created successfully (${duration} ms).\n`,
+    );
+  } catch (error) {
+    console.error('Error creating attempts:', error);
   }
 };
 
@@ -255,36 +232,6 @@ const generateRandomQuestion = () => {
   const randomLevels = Array.from({ length: randomLevelsLength }, () =>
     getRandomItem(LevelEnum),
   );
-
-  const answers = [
-    {
-      answer:
-        '{"root":{"children":[{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"Option A","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1}],"direction":"ltr","format":"","indent":0,"type":"root","version":1}}',
-      explanation: '',
-      isCorrect: true,
-    },
-    {
-      answer:
-        '{"root":{"children":[{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"Option B","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1}],"direction":"ltr","format":"","indent":0,"type":"root","version":1}}',
-      explanation: '',
-      isCorrect: false,
-    },
-  ];
-
-  const answers2 = [
-    {
-      answer:
-        '{"root":{"children":[{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"Option C","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1}],"direction":"ltr","format":"","indent":0,"type":"root","version":1}}',
-      explanation: '',
-      isCorrect: true,
-    },
-    {
-      answer:
-        '{"root":{"children":[{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"Option D","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1}],"direction":"ltr","format":"","indent":0,"type":"root","version":1}}',
-      explanation: '',
-      isCorrect: false,
-    },
-  ];
 
   switch (questionType) {
     case QuizQuestionTypeEnum.TFQ:
@@ -346,10 +293,11 @@ const generateRandomQuiz = (titleIdx) => {
   const randomLevels = Array.from({ length: randomLevelsLength }, () =>
     getRandomItem(LevelEnum),
   );
-  const randomQuestionsLength = Math.min(
-    Math.floor(Math.random() * 20) + 1,
-    20,
-  );
+  let randomQuestionsLength = Math.min(Math.floor(Math.random() * 20) + 1, 20);
+  randomQuestionsLength =
+    randomQuestionsLength > numberOfQuestionsToCreate
+      ? numberOfQuestionsToCreate
+      : randomQuestionsLength;
   let totalMarks = 0;
   let quizQuestions = [];
   for (let i = 1; i <= randomQuestionsLength; i++) {
@@ -439,11 +387,67 @@ const generateRandomTake = () => {
   return takeData;
 };
 
+const generateRandomAssignment = (titleIdx) => {
+  const randomLevelsLength = Math.min(Math.floor(Math.random() * 3) + 1, 2);
+  const randomLevels = Array.from({ length: randomLevelsLength }, () =>
+    getRandomItem(LevelEnum),
+  );
+  const assignmentData = {
+    title: `${randomLevels[0]} ${getRandomItem(QuizQuestionTopicEnum)
+      .split('_')
+      .map((x) => {
+        x = x.toLowerCase();
+        return x.charAt(0).toUpperCase() + x.slice(1);
+      })
+      .reduce((x, y) => `${x} ${y}`)} Assignment ${titleIdx + 1}`,
+    description:
+      '{"root":{"children":[{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"This is a sample assignment.","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1}],"direction":"ltr","format":"","indent":0,"type":"root","version":1}}',
+    subject: 'MATHEMATICS',
+    levels: randomLevels,
+    totalMarks: Math.round(Math.random() * 80) + 20,
+    teacherId: placeholderTeacherId,
+    fileUrl:
+      'https://www.jcu.edu.au/__data/assets/pdf_file/0006/115548/Maths-Refresher-Workbook-1.pdf',
+    dueDate: '2023-01-14T09:00:05.123Z',
+  };
+  return assignmentData;
+};
+
+const generateRandomAssignmentAttempt = () => {
+  const assignmentToTake = getRandomItem(assignmentDataArray);
+  const score =
+    (Math.random() * assignmentToTake.totalMarks * 2) / 3 +
+    (1 / 3) * assignmentToTake.totalMarks;
+  let feedback;
+  if (score < assignmentToTake.totalMarks / 4) {
+    feedback = 'Student has a poor understanding of topics tested';
+  } else if (score < assignmentToTake.totalMarks / 2) {
+    feedback = 'Student needs much improvement';
+  } else if (score < (assignmentToTake.totalMarks / 100) * 65) {
+    feedback = 'Student has a basic understanding of content tested';
+  } else if (score < (assignmentToTake.totalMarks / 100) * 80) {
+    feedback =
+      'Student has achieved a satisfactory grade with room for improvement';
+  } else {
+    feedback = 'Student has a good understanding of topics tested';
+  }
+  const assignmentAttemptData = {
+    submittedOn: '2023-01-14T09:00:05.123Z',
+    score: score,
+    feedback: feedback,
+    assignmentId: assignmentToTake.id,
+    studentId: getRandomItem(studentIdsArray),
+  };
+  return assignmentAttemptData;
+};
+
 const main = async () => {
   await setupPrerequisites();
   await createRandomQuestions(numberOfQuestionsToCreate);
   await createRandomQuizzes(numberOfQuizzesToCreate);
   await createRandomTakes(numberOfTakesToCreate);
+  await createRandomAssignments(numberOfAssignmentsToCreate);
+  await createRandomAssignmentAttempts(numberOfAssignmentAttemptsToCreate);
 };
 
 main();

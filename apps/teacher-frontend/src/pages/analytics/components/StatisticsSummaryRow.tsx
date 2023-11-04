@@ -7,50 +7,50 @@ import {
   MinusCircleIcon,
 } from '@heroicons/react/24/outline';
 
-export const QuizSummaryRow: React.FC<{
+export const StatisticsSummaryRow: React.FC<{
   quizStats?: ConsolidatedQuizStatistics;
+  totalMarksArr?: number[];
+  totalMarksPossible?: number;
 }> = (props) => {
-  const { quizStats } = props;
+  const { quizStats, totalMarksArr, totalMarksPossible } = props;
 
-  const getQuizAverageScore = (totalMarksArr?: number[]) => {
-    if (!totalMarksArr) return '-';
+  const getQuizAverageScore = (marksArr?: number[]) => {
+    if (!marksArr) return '-';
     return `${Math.round(
-      (totalMarksArr.reduce((x, y) => x + y, 0) /
-        totalMarksArr.length /
-        (quizStats?.quizDetails.totalMarks ?? 1)) *
+      (marksArr.reduce((x, y) => x + y, 0) /
+        marksArr.length /
+        (totalMarksPossible ?? 1)) *
         100,
     )}%`;
   };
 
-  const getQuizHighScore = (totalMarksArr?: number[]) => {
-    if (!totalMarksArr) return '-';
+  const getQuizHighScore = (marksArr?: number[]) => {
+    if (!marksArr) return '-';
     return `${Math.round(
-      (totalMarksArr.reduce((x, y) => (x > y ? x : y), 0) /
-        (quizStats?.quizDetails.totalMarks ?? 1)) *
+      (marksArr.reduce((x, y) => (x > y ? x : y), 0) /
+        (totalMarksPossible ?? 1)) *
         100,
     )}%`;
   };
 
-  const getQuizLowScore = (totalMarksArr?: number[]) => {
-    if (!totalMarksArr) return '-';
+  const getQuizLowScore = (marksArr?: number[]) => {
+    if (!marksArr) return '-';
     return `${Math.round(
-      (totalMarksArr.reduce((x, y) => (x < y ? x : y)) /
-        (quizStats?.quizDetails.totalMarks ?? 1)) *
+      (marksArr.reduce((x, y) => (x < y ? x : y)) / (totalMarksPossible ?? 1)) *
         100,
     )}%`;
   };
 
-  const getStdDev = (totalMarksArr?: number[]) => {
-    if (!totalMarksArr || totalMarksArr.length <= 1) {
+  const getStdDev = (marksArr?: number[]) => {
+    if (!marksArr || marksArr.length <= 1) {
       return '-';
     }
-    const mean =
-      totalMarksArr.reduce((sum, num) => sum + num, 0) / totalMarksArr.length;
-    const squaredDifferencesSum = totalMarksArr.reduce((sum, num) => {
+    const mean = marksArr.reduce((sum, num) => sum + num, 0) / marksArr.length;
+    const squaredDifferencesSum = marksArr.reduce((sum, num) => {
       const diff = num - mean;
       return sum + diff * diff;
     }, 0);
-    const variance = squaredDifferencesSum / (totalMarksArr.length - 1);
+    const variance = squaredDifferencesSum / (marksArr.length - 1);
     const standardDeviation = Math.sqrt(variance).toFixed(2);
     return standardDeviation;
   };
@@ -73,7 +73,7 @@ export const QuizSummaryRow: React.FC<{
           <MinusCircleIcon className="h-5" />
           Average Score
         </div>
-        {getQuizAverageScore(quizStats?.totalMarksArr)}
+        {getQuizAverageScore(totalMarksArr)}
       </div>
 
       <div className="flex flex-col w-30 text-2xl font-semibold">
@@ -81,7 +81,7 @@ export const QuizSummaryRow: React.FC<{
           <ArrowUpCircleIcon className="h-5" />
           High Score
         </div>
-        {getQuizHighScore(quizStats?.totalMarksArr)}
+        {getQuizHighScore(totalMarksArr)}
       </div>
 
       <div className="flex flex-col w-30 text-2xl font-semibold">
@@ -89,7 +89,7 @@ export const QuizSummaryRow: React.FC<{
           <ArrowDownCircleIcon className="h-5" />
           Low Score
         </div>
-        {getQuizLowScore(quizStats?.totalMarksArr)}
+        {getQuizLowScore(totalMarksArr)}
       </div>
 
       <div className="flex flex-col w-30 text-2xl font-semibold">
@@ -97,16 +97,20 @@ export const QuizSummaryRow: React.FC<{
           <ArrowsUpDownIcon className="h-5" />
           Standard Deviation
         </div>
-        {getStdDev(quizStats?.totalMarksArr)}
+        {getStdDev(totalMarksArr)}
       </div>
 
-      <div className="flex flex-col w-30 text-2xl font-semibold">
-        <div className="flex gap-1 items-center text-gray-700 text-base font-light">
-          <ClockIcon className="h-5" />
-          Average Time Taken
+      {quizStats ? (
+        <div className="flex flex-col w-30 text-2xl font-semibold">
+          <div className="flex gap-1 items-center text-gray-700 text-base font-light">
+            <ClockIcon className="h-5" />
+            Average Time Taken
+          </div>
+          {getTimeString(quizStats?.averageTotalTimeTaken)}
         </div>
-        {getTimeString(quizStats?.averageTotalTimeTaken)}
-      </div>
+      ) : (
+        <></>
+      )}
     </div>
   );
 };

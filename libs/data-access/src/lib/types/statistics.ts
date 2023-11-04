@@ -1,3 +1,5 @@
+import { AssignmentData } from './assignment';
+import { AssignmentAttemptData } from './assignmentAttempt';
 import { QuizData } from './quiz';
 
 export interface SingleQuestionStatistics {
@@ -19,4 +21,10 @@ export interface ConsolidatedQuizStatistics {
   averageTotalTimeTaken: number;
   quizDetails: Partial<QuizData>;
   quizQuestions: SingleQuestionStatistics[];
+}
+
+export interface ConsolidatedAssignmentStatistics {
+  totalMarksArr: number[];
+  assignmentDetails: Partial<AssignmentData>;
+  assignmentAttempts: AssignmentAttemptData[];
 }

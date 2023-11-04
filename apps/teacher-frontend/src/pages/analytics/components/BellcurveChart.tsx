@@ -6,16 +6,17 @@ import bellcurve from 'highcharts/modules/histogram-bellcurve';
 
 bellcurve(Highcharts);
 
-export const QuizSummaryBellCurve: React.FC<{
-  quizStats: ConsolidatedQuizStatistics;
+export const BellcurveChart: React.FC<{
+  totalMarksArr: number[];
+  totalMarksPossible: number;
 }> = (props) => {
-  const data = props.quizStats.totalMarksArr;
+  const data = props.totalMarksArr;
   const mean = data.reduce((sum, value) => sum + value, 0) / data.length;
   const stdDeviation = Math.sqrt(
     data.reduce((sum, value) => sum + (value - mean) ** 2, 0) /
       (data.length - 1),
   );
-  const max = props.quizStats.quizDetails.totalMarks;
+  const max = props.totalMarksPossible;
 
   const stdDeviationLines = [-2, -1, 0, 1, 2];
   const deviationLineSeries = stdDeviationLines.map((numDeviations) => ({
