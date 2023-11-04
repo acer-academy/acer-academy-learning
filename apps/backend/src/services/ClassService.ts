@@ -255,6 +255,53 @@ class ClassService {
     }
   }
 
+  public async bookRecurringSession(
+    studentId: string,
+    sessionId: string,
+  ): Promise<Session[]> {
+    const currSession = await SessionService.getSessionBySessionId(sessionId);
+    const sessions = await SessionService.getSessionsByClassId(
+      currSession.classId,
+    );
+    let start = false;
+    const bookedSessions = [];
+    for (const session of sessions) {
+      if (session.id === sessionId) {
+        start = true;
+      }
+      if (start) {
+        const booked = await SessionService.bookSession(studentId, session.id);
+        bookedSessions.push(booked);
+      }
+    }
+    return bookedSessions;
+  }
+
+  public async cancelRecurringBookedSession(
+    studentId: string,
+    sessionId: string,
+  ): Promise<Session[]> {
+    const currSession = await SessionService.getSessionBySessionId(sessionId);
+    const sessions = await SessionService.getSessionsByClassId(
+      currSession.classId,
+    );
+    let start = false;
+    const cancelledSessions = [];
+    for (const session of sessions) {
+      if (session.id === sessionId) {
+        start = true;
+      }
+      if (start) {
+        const cancelled = await SessionService.cancelBookedSession(
+          studentId,
+          session.id,
+        );
+        cancelledSessions.push(cancelled);
+      }
+    }
+    return cancelledSessions;
+  }
+
   public async updateClass(
     id: string,
     data: Prisma.ClassUncheckedUpdateInput,
