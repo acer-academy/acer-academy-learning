@@ -39,33 +39,20 @@ export const AssignmentStatistics: React.FC = () => {
       <div className="flex gap-2 text-2xl py-1 mb-5 font-bold tracking-tight items-center">
         {assignmentStats?.assignmentDetails.title ?? ''}
       </div>
-      {assignmentStats?.assignmentDetails.totalMarks &&
-      assignmentStats.totalMarksArr.length > 0 ? (
+      {assignmentStats?.assignmentDetails.totalMarks ? (
         <div>
           <StatisticsSummaryRow
             totalMarksArr={assignmentStats.totalMarksArr}
             totalMarksPossible={assignmentStats.assignmentDetails.totalMarks}
           />
-          {assignmentStats.totalMarksArr.length > 1 ? (
-            <>
-              <BoxWhiskerChart
-                totalMarksArr={assignmentStats.totalMarksArr}
-                totalMarksPossible={
-                  assignmentStats.assignmentDetails.totalMarks
-                }
-              />
-              <BellcurveChart
-                totalMarksArr={assignmentStats.totalMarksArr}
-                totalMarksPossible={
-                  assignmentStats.assignmentDetails.totalMarks
-                }
-              />{' '}
-            </>
-          ) : (
-            <div className="flex justify-center mt-40 text-gray-700 italic text-center">
-              {`Boxplot and Bellcurve can only be shown for assignments with 2 or more submissions.`}
-            </div>
-          )}
+          <BoxWhiskerChart
+            totalMarksArr={assignmentStats.totalMarksArr}
+            totalMarksPossible={assignmentStats.assignmentDetails.totalMarks}
+          />
+          <BellcurveChart
+            totalMarksArr={assignmentStats.totalMarksArr}
+            totalMarksPossible={assignmentStats.assignmentDetails.totalMarks}
+          />
         </div>
       ) : (
         <div className="flex justify-center my-auto text-gray-700 italic text-center">
