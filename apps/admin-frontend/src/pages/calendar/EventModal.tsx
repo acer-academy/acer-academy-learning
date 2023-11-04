@@ -2,16 +2,11 @@ import React from 'react';
 import moment from 'moment';
 
 interface EventModalProps {
-  isOpen: boolean;
   onClose: () => void;
   event: any;
 }
 
-export const EventModal: React.FC<EventModalProps> = ({
-  isOpen,
-  onClose,
-  event,
-}) => {
+export const EventModal: React.FC<EventModalProps> = ({ onClose, event }) => {
   return (
     <div className="fixed z-10 inset-0 overflow-y-auto">
       <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
@@ -40,17 +35,18 @@ export const EventModal: React.FC<EventModalProps> = ({
                 <strong>Email:</strong> {event?.teacher?.email}
               </p>
               <p>
-                <strong>Subjects:</strong> {event?.subjects?.join(', ')}
+                <strong>Levels:</strong> {event?.levels?.join(', ')}
               </p>
               <p>
-                <strong>Classroom:</strong> {event?.classroom?.name}
+                <strong>Subjects:</strong> {event?.subjects?.join(', ')}
               </p>
               <p>
                 <strong>Centre:</strong> {event?.classroom?.centre?.name}
               </p>
               <p>
-                <strong>Address:</strong> {event?.classroom?.centre?.address}
+                <strong>Classroom:</strong> {event?.classroom?.name}
               </p>
+           
             </div>
           </div>
           <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">

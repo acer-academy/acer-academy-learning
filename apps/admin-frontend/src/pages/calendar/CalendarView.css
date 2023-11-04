@@ -10,3 +10,12 @@
   align-items: center;
   z-index: 9999;
 }
+
+.dropdownMenu {
+  border: 1px solid #ccc;
+  background-color: white;
+  position: absolute;
+  width: 200px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
