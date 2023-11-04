@@ -4,6 +4,7 @@ import { Session, Prisma } from '@prisma/client';
 class SessionService {
   public async createSession(
     data: Prisma.SessionUncheckedCreateInput,
+    studentIdArr: Array<String>,
   ): Promise<Session> {
     const available = await this.checkClassroomAvailability(
       data.classroomId,
@@ -11,6 +12,17 @@ class SessionService {
       data.end.toString(),
     );
     if (!available) {
+      if (studentIdArr.length > 0) {
+        const formattedData = {
+          ...data,
+          students: {
+            connect: studentIdArr?.map((studentId: string) => ({
+              id: studentId,
+            })),
+          },
+        };
+        return await SessionDao.createSession(formattedData);
+      }
       return SessionDao.createSession(data);
     } else {
       throw new Error(
@@ -30,8 +42,20 @@ class SessionService {
   public async updateSession(
     id: string,
     data: Prisma.SessionUncheckedUpdateInput,
+    studentIdArr: Array<String>,
   ): Promise<Session> {
     const session = await this.getSessionBySessionId(id);
+    let formattedData = {};
+    if (studentIdArr.length > 0) {
+      formattedData = {
+        ...data,
+        students: {
+          connect: studentIdArr?.map((studentId: string) => ({
+            id: studentId,
+          })),
+        },
+      };
+    }
     if (
       data.start &&
       data.end &&
@@ -43,13 +67,13 @@ class SessionService {
         data.end.toString(),
       );
       if (!available || available === id) {
-        return await SessionDao.updateSession(id, data);
+        return await SessionDao.updateSession(id, formattedData);
       }
       throw new Error(
         'Unable to update session because another session is already using the classroom.',
       );
     }
-    return SessionDao.updateSession(id, data);
+    return SessionDao.updateSession(id, formattedData);
   }
 
   public async bookSession(
@@ -62,7 +86,7 @@ class SessionService {
       },
     };
 
-    return this.updateSession(sessionId, payload);
+    return this.updateSession(sessionId, payload, []);
   }
 
   public async cancelBookedSession(
@@ -75,7 +99,7 @@ class SessionService {
       },
     };
 
-    return this.updateSession(sessionId, payload);
+    return this.updateSession(sessionId, payload, []);
   }
 
   public async deleteSession(id: string): Promise<Session> {

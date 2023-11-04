@@ -10,7 +10,7 @@ class SessionDao {
   public async createSession(
     data: Prisma.SessionUncheckedCreateInput,
   ): Promise<Session> {
-    return this.prisma.session.create({ data });
+    return this.prisma.session.create({ data, include: { students: true } });
   }
 
   public async getAllSessions(): Promise<Session[]> {
