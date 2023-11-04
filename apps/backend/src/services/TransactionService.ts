@@ -58,6 +58,7 @@ class TransactionService {
       switch (transaction.transactionType) {
         case TransactionType.PURCHASED:
         case TransactionType.ROLLOVER:
+        case TransactionType.CREDIT_REFUND:
           credits += transaction.creditsTransacted;
           break;
         case TransactionType.DEDUCTED:
@@ -81,6 +82,12 @@ class TransactionService {
     id: string,
   ): Promise<Transaction[]> {
     return TransactionDao.getTransactionsByPromotionId(id);
+  }
+
+  public async getTransactionsByAttendanceId(
+    id: string,
+  ): Promise<Transaction[]> {
+    return TransactionDao.getTransactionsByAttendanceId(id);
   }
 
   public async updateTransaction(
