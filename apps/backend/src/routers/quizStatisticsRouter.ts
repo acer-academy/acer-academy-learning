@@ -6,6 +6,7 @@ import {
   validateQuestionQuizTakeExist,
 } from '../middleware/validationMiddleware';
 import { AllTakesStudentParams } from '../types/takes';
+import { QuizQuestionTopicEnum } from '@prisma/client';
 
 const quizStatisticsRouter = Router();
 
@@ -124,11 +125,26 @@ quizStatisticsRouter.get(
     const filter: AllTakesStudentParams = {
       studentId: studentId,
     };
+    const topics = req.query.topics as string | string[];
+    const filteredTopics = Array.isArray(topics)
+      ? topics.filter((topic): topic is QuizQuestionTopicEnum =>
+          Object.values(QuizQuestionTopicEnum).includes(
+            topic as QuizQuestionTopicEnum,
+          ),
+        )
+      : Object.values(QuizQuestionTopicEnum).includes(
+          topics as QuizQuestionTopicEnum,
+        )
+      ? [topics as QuizQuestionTopicEnum]
+      : undefined;
+
+    console.log(filteredTopics);
 
     const result =
       await QuizStatisticsService.getQuizStatisticsStudentSpiderChartDataBy({
         filter: filter,
         onlyAttemptedTopics: false,
+        topics: filteredTopics,
       });
     return res.status(200).json(result);
   },

@@ -1,3 +1,4 @@
+import { QuizQuestionTopicEnum } from '@prisma/client';
 import {
   ConsolidatedQuizStatistics,
   SpiderChartResponse,
@@ -46,8 +47,11 @@ export async function getQuizStatisticsForStudent(data: {
   );
 }
 
-export async function getOverallSpiderChartForStudent(): Promise<
-  AxiosResponse<SpiderChartResponse>
-> {
-  return client.get(`${URL}/spider-chart-student/`);
+export async function getOverallSpiderChartForStudent(data: {
+  topics?: QuizQuestionTopicEnum[];
+}): Promise<AxiosResponse<SpiderChartResponse>> {
+  // format
+  const topicsQuery = data.topics?.join('&topics=');
+
+  return client.get(`${URL}/spider-chart-student?topics=${topicsQuery}`);
 }

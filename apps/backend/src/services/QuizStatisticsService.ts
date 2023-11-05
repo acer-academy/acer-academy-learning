@@ -1,7 +1,12 @@
 import { TakeAnswerService } from './TakeAnswerService';
 import { QuizService } from './QuizService';
 import { QuizQuestionService } from './QuizQuestionService';
-import { QuizQuestionTypeEnum, QuizQuestion, QuizAnswer } from '@prisma/client';
+import {
+  QuizQuestionTypeEnum,
+  QuizQuestion,
+  QuizAnswer,
+  QuizQuestionTopicEnum,
+} from '@prisma/client';
 import { QuizAnswerService } from './QuizAnswerService';
 import { QuizOnQuizQuestionDao } from '../dao/QuizOnQuizQuestionDao';
 import { TakeService } from './TakeService';
@@ -288,6 +293,7 @@ class QuizStatisticsService {
   public async getQuizStatisticsStudentSpiderChartDataBy(data: {
     filter: AllTakesStudentParams;
     onlyAttemptedTopics: boolean;
+    topics?: QuizQuestionTopicEnum[];
   }) {
     const topicsToAverageScoreArrMap = new Map<string, boolean[]>();
     const filter = data.filter;
@@ -309,9 +315,13 @@ class QuizStatisticsService {
       );
     }
     // Group for each question
+    const topics = data.topics;
     const labelsArr = [];
     const dataArr = [];
     topicsToAverageScoreArrMap.forEach((value, key) => {
+      if (topics && !topics.includes(key as QuizQuestionTopicEnum)) {
+        return;
+      }
       labelsArr.push(key);
       const numOfCorrect = value.filter((value) => value);
       dataArr.push((numOfCorrect.length / value.length) * 10);
