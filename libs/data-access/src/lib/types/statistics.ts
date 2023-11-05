@@ -35,3 +35,8 @@ export type StudentStatisticsQuizFormat = {
     marks: number;
   }[];
 };
+
+export type SpiderChartResponse = {
+  labelsArr: string[];
+  dataArr: number[];
+};

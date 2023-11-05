@@ -1,8 +1,8 @@
-import { Router } from 'express';
+import { Response, Router } from 'express';
 import QuizStatisticsService from '../services/QuizStatisticsService';
 import {
+  validateCookiesStudentExist,
   validateParamsQuizExists,
-  validateParamsStudentExist,
   validateQuestionQuizTakeExist,
 } from '../middleware/validationMiddleware';
 import { AllTakesStudentParams } from '../types/takes';
@@ -73,16 +73,17 @@ quizStatisticsRouter.get(
 );
 
 quizStatisticsRouter.get(
-  '/student-quizzes/:quizId/:studentId',
+  '/student-quizzes/:quizId',
   validateParamsQuizExists,
-  validateParamsStudentExist,
-  async (req, res) => {
+  validateCookiesStudentExist,
+  async (req, res: Response<any, { studentId: string }>) => {
     try {
-      const { quizId, studentId } = req.params;
+      const studentId = res.locals.studentId;
+      const { quizId } = req.params;
       const startDate = req.query.startDate;
       const endDate = req.query.endDate;
       const filter: AllTakesStudentParams = {
-        quizId: quizId,
+        quizIds: quizId ? [quizId] : undefined,
         studentId: studentId,
       };
 
@@ -93,12 +94,10 @@ quizStatisticsRouter.get(
       if (endDate && typeof endDate === 'string') {
         filter.endDate = endDate;
       }
-      filter.select = {
-        attemptedAt: true,
-        marks: true,
-      };
       const quizStatistics =
-        await QuizStatisticsService.getQuizStatisticsFilteredBy(filter);
+        await QuizStatisticsService.getQuizStatisticsStudentTakesFilteredBy(
+          filter,
+        );
       const totalMarks = await QuizStatisticsService.getTotalMarksByQuizId(
         quizId,
       );
@@ -107,8 +106,31 @@ quizStatisticsRouter.get(
         totalMarks: totalMarks,
       });
     } catch (error) {
+      console.log(error);
       return res.status(500).json({ error: error.message });
     }
+  },
+);
+
+/**
+ * Based on query params, filter accordingly what to return for the Spider Chart
+ */
+quizStatisticsRouter.get(
+  '/spider-chart-student',
+  validateCookiesStudentExist,
+  async (req, res: Response<any, { studentId: string }>) => {
+    // const { studentId } = req.params;
+    const studentId = res.locals.studentId;
+    const filter: AllTakesStudentParams = {
+      studentId: studentId,
+    };
+
+    const result =
+      await QuizStatisticsService.getQuizStatisticsStudentSpiderChartDataBy({
+        filter: filter,
+        onlyAttemptedTopics: false,
+      });
+    return res.status(200).json(result);
   },
 );
 

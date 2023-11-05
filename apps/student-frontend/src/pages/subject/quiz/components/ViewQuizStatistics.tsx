@@ -1,17 +1,10 @@
-import {
-  GenericHighChart,
-  Spinner,
-  classNames,
-  useAuth,
-} from '@acer-academy-learning/common-ui';
+import { GenericHighChart, classNames } from '@acer-academy-learning/common-ui';
 import { getQuizStatisticsForStudent } from '@acer-academy-learning/data-access';
-import { Student } from 'libs/data-access/src/lib/types/student';
 import React, { useMemo, useState } from 'react';
 import { useQuery } from 'react-query';
 import { Fragment } from 'react';
 import { Menu, Transition } from '@headlessui/react';
 import { ChevronDownIcon } from '@heroicons/react/20/solid';
-
 import { useParams } from 'react-router-dom';
 
 enum Duration {
@@ -42,7 +35,6 @@ export const isLeapYear = (year: number) => {
 };
 
 export const ViewQuizStatistics = () => {
-  const { user } = useAuth<Student>();
   const { quizId } = useParams();
   const [currentDuration, setCurrenDuration] = useState<Duration>(Duration.ALL);
   const startDate = useMemo(() => {
@@ -74,19 +66,19 @@ export const ViewQuizStatistics = () => {
         ) {
           oneYearAgo.setDate(28);
         }
+        oneYearAgo.setHours(0, 0, 0, 0);
         return oneYearAgo.toISOString();
       }
       default:
         break;
     }
   }, [currentDuration]);
-  const { data: quizStats, isLoading } = useQuery(
-    ['student-quiz', user, quizId, startDate],
+  const { data: quizStats } = useQuery(
+    ['student-quiz', quizId, startDate],
     async () => {
-      if (user && quizId) {
+      if (quizId) {
         const res = await getQuizStatisticsForStudent({
           quizId: quizId,
-          studentId: user.id,
           startDate: startDate,
         });
         return res.data;
@@ -115,10 +107,11 @@ export const ViewQuizStatistics = () => {
         {
           name: 'Quiz Performance',
           type: 'spline',
-          data: quizStats?.takes.map(({ attemptedAt, marks }) => [
-            new Date(attemptedAt).getTime(),
-            marks,
-          ]),
+          data:
+            quizStats?.takes.map(({ attemptedAt, marks }) => [
+              new Date(attemptedAt).getTime(),
+              marks,
+            ]) ?? [],
         },
       ],
       lang: {
@@ -130,14 +123,14 @@ export const ViewQuizStatistics = () => {
           fontSize: '15px',
           color: '#666666',
         },
+        position: {
+          align: 'center',
+        },
       },
     }),
     [quizStats, startDate],
   );
 
-  if (isLoading) {
-    return <Spinner />;
-  }
   return (
     <div className="w-full bg-white rounded flex flex-col">
       <Menu as="div" className="relative inline-block text-left self-end p-4">

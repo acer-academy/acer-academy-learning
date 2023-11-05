@@ -7,6 +7,7 @@ import { QuizOnQuizQuestionDao } from '../dao/QuizOnQuizQuestionDao';
 import { TakeService } from './TakeService';
 import { TakeDao } from '../dao/TakeDao';
 import { AllTakesStudentParams } from '../types/takes';
+import { ElementOf, ThenArg } from '../types';
 
 class QuizStatisticsService {
   constructor(
@@ -221,13 +222,105 @@ class QuizStatisticsService {
     };
   }
 
-  public async getQuizStatisticsFilteredBy(filter: AllTakesStudentParams) {
+  public async getQuizStatisticsStudentTakesFilteredBy(
+    filter: AllTakesStudentParams,
+  ) {
     return this.takeDao.getAllTakesOfStudent(filter);
   }
 
   public async getTotalMarksByQuizId(quizId: string) {
     const res = await this.quizService.getQuizById(quizId);
     return res.totalMarks;
+  }
+
+  /**
+   * Pre-cond: takes should already have been filtered by topics contained in subjects
+   * This is just so that they are arranged by subject instead of by topics
+   * this is just
+   * @param takes
+   * @param onlyAttemptedTopics
+   */
+  // private async getSpiderChartDataBySubject(takes: ThenArg<typeof this.getQuizStatisticsStudentTakesFilteredBy>) {
+
+  // }
+
+  private processTakeAnswers(
+    takeAnswers: ElementOf<
+      ThenArg<ReturnType<typeof this.getQuizStatisticsStudentTakesFilteredBy>>
+    >['studentAnswers'],
+    topicsToMarksMap: Map<string, boolean[]>,
+  ) {
+    // 1. Group up answers by questionId
+    const questionIdToAnswerMap = new Map<string, typeof takeAnswers>();
+    takeAnswers.forEach((answer) => {
+      const currentQuestionId = answer.question.id;
+      const currentAnswerArray =
+        questionIdToAnswerMap.get(currentQuestionId) ?? [];
+      currentAnswerArray.push(answer);
+      if (!questionIdToAnswerMap.has(currentQuestionId)) {
+        questionIdToAnswerMap.set(currentQuestionId, currentAnswerArray);
+      }
+    });
+
+    // 2. For each question, check if it is correct and assign in a map based on topics chosen
+    questionIdToAnswerMap.forEach((value) => {
+      const currentQuestion = value[0].question;
+      const correctOptionsByStudent = value.filter((value) => value.isCorrect);
+      const correctOptions = currentQuestion.answers.filter(
+        (value) => value.isCorrect,
+      );
+      const isCorrect =
+        value.length === 1
+          ? value[0].isCorrect
+          : correctOptionsByStudent.length === correctOptions.length;
+      const topics = currentQuestion.topics;
+      topics.map((topic) => {
+        //@TODO: To change if ever refactor topics
+        const currentMarksArr = topicsToMarksMap.get(topic) ?? [];
+        currentMarksArr.push(isCorrect);
+        if (!topicsToMarksMap.has(topic)) {
+          topicsToMarksMap.set(topic, currentMarksArr);
+        }
+      });
+    });
+  }
+
+  public async getQuizStatisticsStudentSpiderChartDataBy(data: {
+    filter: AllTakesStudentParams;
+    onlyAttemptedTopics: boolean;
+  }) {
+    const topicsToAverageScoreArrMap = new Map<string, boolean[]>();
+    const filter = data.filter;
+    const latestDatesByQuizId =
+      await this.takeDao.getLatestAttemptDateOfQuizzesForStudentsWhere(filter);
+    for (const latestDate of latestDatesByQuizId) {
+      const startDate = latestDate._max.attemptedAt;
+      const quizId = latestDate.quizId;
+      filter.startDate = startDate.toISOString();
+      filter.quizIds = [quizId];
+
+      const currentTake = await this.getQuizStatisticsStudentTakesFilteredBy(
+        filter,
+      );
+
+      this.processTakeAnswers(
+        currentTake[0].studentAnswers,
+        topicsToAverageScoreArrMap,
+      );
+    }
+    // Group for each question
+    const labelsArr = [];
+    const dataArr = [];
+    topicsToAverageScoreArrMap.forEach((value, key) => {
+      labelsArr.push(key);
+      const numOfCorrect = value.filter((value) => value);
+      dataArr.push((numOfCorrect.length / value.length) * 10);
+    });
+
+    return {
+      labelsArr: labelsArr,
+      dataArr: dataArr,
+    };
   }
 }
 

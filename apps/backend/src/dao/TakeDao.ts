@@ -80,11 +80,43 @@ export class TakeDao {
     });
   }
 
-  public async getAllTakesOfStudent(filterOptions: AllTakesStudentParams) {
+  public getLatestAttemptDateOfQuizzesForStudentsWhere(
+    filterOptions: AllTakesStudentParams,
+  ) {
+    // Student ID should always be present
     const where: Prisma.TakeWhereInput = {
-      quizId: filterOptions.quizId,
       takenById: filterOptions.studentId,
     };
+
+    const quizIds = filterOptions.quizIds;
+    if (quizIds) {
+      where.quizId = {
+        in: quizIds,
+      };
+    }
+
+    return this.prismaClient.take.groupBy({
+      where: where,
+      by: ['quizId'],
+      _max: {
+        attemptedAt: true,
+      },
+    });
+  }
+
+  public async getAllTakesOfStudent(filterOptions: AllTakesStudentParams) {
+    // Student ID should always be present
+    const where: Prisma.TakeWhereInput = {
+      takenById: filterOptions.studentId,
+    };
+
+    const quizIds = filterOptions.quizIds;
+    if (quizIds) {
+      where.quizId = {
+        in: quizIds,
+      };
+    }
+
     const startDateRange = filterOptions.startDate;
     const endDateRange = filterOptions.endDate;
     if (startDateRange && !endDateRange) {
@@ -92,23 +124,40 @@ export class TakeDao {
         gte: new Date(startDateRange),
       };
     }
-
     if (!startDateRange && endDateRange) {
       where.attemptedAt = {
         lte: new Date(endDateRange),
       };
     }
-
     if (startDateRange && endDateRange) {
       where.attemptedAt = {
         gte: new Date(startDateRange),
         lte: new Date(endDateRange),
       };
     }
+
+    const subjects = filterOptions.subjects;
+    if (subjects) {
+      where.quiz = {
+        subject: {
+          in: subjects,
+        },
+      };
+    }
     return this.prismaClient.take.findMany({
-      select: filterOptions.select,
       where: where,
-      orderBy: { attemptedAt: 'asc' },
+      include: {
+        studentAnswers: {
+          include: {
+            question: {
+              include: {
+                answers: true,
+              },
+            },
+          },
+        },
+      },
+      orderBy: { attemptedAt: 'desc' },
     });
   }
 

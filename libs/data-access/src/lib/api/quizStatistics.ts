@@ -1,5 +1,6 @@
 import {
   ConsolidatedQuizStatistics,
+  SpiderChartResponse,
   StudentStatisticsQuizFormat,
 } from '../types/statistics';
 import client from './client';
@@ -33,7 +34,6 @@ export async function getQuizStatisticsByQuizId(
 
 export async function getQuizStatisticsForStudent(data: {
   quizId: string;
-  studentId: string;
   startDate?: string;
   endDate?: string;
 }): Promise<AxiosResponse<StudentStatisticsQuizFormat>> {
@@ -42,6 +42,12 @@ export async function getQuizStatisticsForStudent(data: {
   const endDate = data.endDate;
   const endDateQuery = endDate ? `endDate=${endDate}` : '';
   return client.get(
-    `${URL}/student-quizzes/${data.quizId}/${data.studentId}?${startDateQuery}&${endDateQuery}`,
+    `${URL}/student-quizzes/${data.quizId}?${startDateQuery}&${endDateQuery}`,
   );
+}
+
+export async function getOverallSpiderChartForStudent(): Promise<
+  AxiosResponse<SpiderChartResponse>
+> {
+  return client.get(`${URL}/spider-chart-student/`);
 }

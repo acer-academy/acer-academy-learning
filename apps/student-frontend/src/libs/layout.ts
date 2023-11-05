@@ -15,6 +15,7 @@ import {
   REWARDS,
   SETTINGS,
   SUBJECTS,
+  SUBJECT_MAIN,
   TAKES,
   VIEW_CLASSES,
   ZOOM_LINK,
@@ -29,6 +30,7 @@ import {
   Cog6ToothIcon,
   QuestionMarkCircleIcon,
   BookOpenIcon,
+  ChartBarIcon,
 } from '@heroicons/react/24/outline';
 export const NAV_SECTIONS: NavigationMenuItem[] = [
   {
@@ -39,6 +41,7 @@ export const NAV_SECTIONS: NavigationMenuItem[] = [
     name: 'SUBJECTS',
     path: SUBJECTS,
     children: [
+      { name: 'Overview', path: SUBJECT_MAIN, icon: ChartBarIcon },
       { name: 'Assignments', path: ASSIGNMENTS, icon: PaperClipIcon },
       {
         name: 'Quizzes',
