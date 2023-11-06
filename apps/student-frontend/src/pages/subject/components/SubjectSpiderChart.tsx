@@ -38,7 +38,7 @@ export const SubjectSpiderChart = () => {
   );
 
   return (
-    <div className="bg-white p-4 rounded flex flex-col h-full">
+    <div className="bg-white p-4 rounded flex flex-col h-full shadow-md">
       <div className="px-2 pb-8">
         <div className="flex justify-between py-4">
           <span className="text-base font-semibold">Filter Topics:</span>
