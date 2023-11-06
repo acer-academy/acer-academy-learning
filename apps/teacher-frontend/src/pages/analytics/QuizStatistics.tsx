@@ -76,14 +76,22 @@ export const QuizStatistics: React.FC = () => {
               totalMarksArr={quizStats.totalMarksArr}
               totalMarksPossible={quizStats.quizDetails.totalMarks}
             />
-            <BoxWhiskerChart
-              totalMarksArr={quizStats.totalMarksArr}
-              totalMarksPossible={quizStats.quizDetails.totalMarks ?? 0}
-            />
-            <BellcurveChart
-              totalMarksArr={quizStats.totalMarksArr}
-              totalMarksPossible={quizStats.quizDetails.totalMarks ?? 0}
-            />
+            {quizStats.totalMarksArr.length > 1 ? (
+              <>
+                <BoxWhiskerChart
+                  totalMarksArr={quizStats.totalMarksArr}
+                  totalMarksPossible={quizStats.quizDetails.totalMarks ?? 0}
+                />
+                <BellcurveChart
+                  totalMarksArr={quizStats.totalMarksArr}
+                  totalMarksPossible={quizStats.quizDetails.totalMarks ?? 0}
+                />
+              </>
+            ) : (
+              <div className="flex justify-center mt-40 text-gray-700 italic text-center">
+                {`Boxplot and Bellcurve can only be shown for quizzes with 2 or more attempts.`}
+              </div>
+            )}
           </div>
         );
     }
