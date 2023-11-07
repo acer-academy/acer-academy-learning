@@ -24,6 +24,8 @@ import { StudentService } from '../services/StudentService';
 import { TakeService } from '../services/TakeService';
 import { TeacherService } from '../services/TeacherService';
 import transactionService from '../services/TransactionService';
+import { TermService } from '../services/TermService';
+import AttendanceService from '../services/AttendanceService';
 import { AssignmentService } from '../services/AssignmentService';
 
 const teacherService = new TeacherService();
@@ -38,6 +40,7 @@ const promotionService = new PromotionService();
 const quizService = new QuizService();
 const takeService = new TakeService();
 const studentService = new StudentService();
+const termService = new TermService();
 const assignmentService = new AssignmentService();
 
 /*
@@ -2239,6 +2242,27 @@ export async function validateQuestionQuizTakeExist(
   }
 }
 
+/** Validates there is a current term */
+export async function validateCurrentTermExist(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const terms = await termService.getCurrentTerms();
+    if (terms.length === 0) {
+      return res.status(400).json({
+        error: 'A current term is needed.',
+      });
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
 /** Validates if a quizId in params exists */
 export async function validateParamsQuizExists(
   req: Request,
@@ -2246,6 +2270,12 @@ export async function validateParamsQuizExists(
   next: NextFunction,
 ) {
   try {
+    const terms = await termService.getCurrentTerms();
+    if (terms.length === 0) {
+      return res.status(400).json({
+        error: 'A current term is needed.',
+      });
+    }
     const { quizId } = req.params;
     if (quizId.length !== 36) {
       return res.status(400).json({
@@ -2259,6 +2289,28 @@ export async function validateParamsQuizExists(
           error: 'Quiz does not exist.',
         });
       }
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+/** Validates there is a current attendance */
+export async function validateAttendanceParamExist(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { id } = req.params;
+    const attendance = await AttendanceService.getAttendanceById(id);
+    if (!attendance) {
+      return res.status(400).json({
+        error: 'Invalid attendance.',
+      });
     }
     next();
   } catch (error) {
@@ -2336,12 +2388,40 @@ export async function validateBodyAssignmentFormatValid(
   }
 }
 
+export async function validateBodySessionExist(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { sessionId } = req.body;
+    const session = await SessionService.getSessionBySessionId(sessionId);
+    if (!session) {
+      return res.status(400).json({
+        error: 'Invalid session provided.',
+      });
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
 export async function validateBodyTeacherExists(
   req: Request,
   res: Response,
   next: NextFunction,
 ) {
   try {
+    const { sessionId } = req.body;
+    const session = await SessionService.getSessionBySessionId(sessionId);
+    if (!session) {
+      return res.status(400).json({
+        error: 'Invalid session provided.',
+      });
+    }
     const { teacherId } = req.body;
     if (teacherId) {
       const validTeacher = await teacherService.getTeacherById(teacherId);
@@ -2350,6 +2430,31 @@ export async function validateBodyTeacherExists(
           error: 'Invalid teacher ID provided.',
         });
       }
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+export async function validateAttendanceNotTaken(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { sessionId, studentId } = req.body;
+    const attendance =
+      await AttendanceService.getAttendanceBySessionAndStudentId(
+        sessionId,
+        studentId,
+      );
+    if (attendance && attendance.length > 0) {
+      return res.status(400).json({
+        error: 'Your attendance has been taken.',
+      });
     }
     next();
   } catch (error) {
@@ -2443,6 +2548,34 @@ export async function validateParamsAssignmentExists(
       if (!validAssignment) {
         return res.status(400).json({
           error: 'Invalid assignment ID provided.',
+        });
+      }
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+export async function validateParamStudentExists(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { studentId } = req.params;
+    if (studentId) {
+      if (studentId.length !== 36) {
+        return res.status(400).json({
+          error: 'Malformed request; studentId is not of valid length.',
+        });
+      }
+      const studentExists = await studentService.getStudentById(studentId);
+      if (!studentExists) {
+        return res.status(400).json({
+          error: 'Student does not exist.',
         });
       }
     }
