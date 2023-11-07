@@ -406,6 +406,7 @@ const generateRandomAssignment = (titleIdx) => {
     levels: randomLevels,
     totalMarks: Math.round(Math.random() * 80) + 20,
     teacherId: placeholderTeacherId,
+    fileName: 'Maths-Refresher-Workbook-1.pdf',
     fileUrl:
       'https://www.jcu.edu.au/__data/assets/pdf_file/0006/115548/Maths-Refresher-Workbook-1.pdf',
     dueDate: '2023-01-14T09:00:05.123Z',
