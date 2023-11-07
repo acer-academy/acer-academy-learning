@@ -39,9 +39,11 @@ model Student {
 
   transaction Transaction[]
 
-  sessions           Session[]
-  quizzes            Quiz[]
-  takes              Take[]
+  sessions Session[]
+  quizzes  Quiz[]
+  takes    Take[]
+
+  attendances Attendance[]
   assignmentAttempts AssignmentAttempt[]
 }
 
@@ -210,6 +212,7 @@ enum TransactionType {
   PURCHASED
   DEDUCTED //attendance
   STRIPE_DEDUCTED //refunded transaction
+  CREDIT_REFUND //cancel attendance
   ROLLOVER
   VOID
 }
@@ -238,6 +241,9 @@ model Transaction {
 
   stripeTransaction   StripeTransaction? @relation(fields: [stripeTransactionId], references: [id])
   stripeTransactionId String?            @db.Uuid
+
+  attendance   Attendance? @relation(fields: [attendanceId], references: [id])
+  attendanceId String?    @db.Uuid
 }
 
 enum StripeTransactionStatus {
@@ -376,6 +382,8 @@ model Session {
 
   class   Class?  @relation(fields: [classId], references: [id])
   classId String? @db.Uuid
+
+  attendances Attendance[]
 }
 
 enum ClassFrequencyEnum {
@@ -451,17 +459,31 @@ model TakeAnswer {
   takeId        String       @db.Uuid
 }
 
+model Attendance {
+  id String @id @default(uuid()) @db.Uuid
+  hasAttended Boolean @default(true)
+
+  student   Student @relation(fields: [studentId], references: [id])
+  studentId String  @db.Uuid
+
+  session   Session @relation(fields: [sessionId], references: [id])
+  sessionId String  @db.Uuid
+
+  transactions Transaction[]
+ }
+ 
 model Assignment {
   id          String      @id @default(uuid()) @db.Uuid
   title       String
   description String      @db.Text
+  fileName    String
   fileUrl     String
   dueDate     DateTime
   totalMarks  Int
   subject     SubjectEnum
   levels      LevelEnum[]
 
-  Teacher   Teacher? @relation(fields: [teacherId], references: [id])
+  teacher   Teacher? @relation(fields: [teacherId], references: [id])
   teacherId String?  @db.Uuid
 
   assignmentAttempts AssignmentAttempt[]

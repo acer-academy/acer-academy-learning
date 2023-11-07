@@ -24,6 +24,8 @@ import { StudentService } from '../services/StudentService';
 import { TakeService } from '../services/TakeService';
 import { TeacherService } from '../services/TeacherService';
 import transactionService from '../services/TransactionService';
+import { TermService } from '../services/TermService';
+import AttendanceService from '../services/AttendanceService';
 import { AssignmentService } from '../services/AssignmentService';
 
 const teacherService = new TeacherService();
@@ -38,6 +40,7 @@ const promotionService = new PromotionService();
 const quizService = new QuizService();
 const takeService = new TakeService();
 const studentService = new StudentService();
+const termService = new TermService();
 const assignmentService = new AssignmentService();
 
 /*
@@ -2239,6 +2242,27 @@ export async function validateQuestionQuizTakeExist(
   }
 }
 
+/** Validates there is a current term */
+export async function validateCurrentTermExist(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const terms = await termService.getCurrentTerms();
+    if (terms.length === 0) {
+      return res.status(400).json({
+        error: 'A current term is needed.',
+      });
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
 /** Validates if a quizId in params exists */
 export async function validateParamsQuizExists(
   req: Request,
@@ -2246,6 +2270,12 @@ export async function validateParamsQuizExists(
   next: NextFunction,
 ) {
   try {
+    const terms = await termService.getCurrentTerms();
+    if (terms.length === 0) {
+      return res.status(400).json({
+        error: 'A current term is needed.',
+      });
+    }
     const { quizId } = req.params;
     if (quizId.length !== 36) {
       return res.status(400).json({
@@ -2268,6 +2298,28 @@ export async function validateParamsQuizExists(
   }
 }
 
+/** Validates there is a current attendance */
+export async function validateAttendanceParamExist(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { id } = req.params;
+    const attendance = await AttendanceService.getAttendanceById(id);
+    if (!attendance) {
+      return res.status(400).json({
+        error: 'Invalid attendance.',
+      });
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
 /** Validates if the format of a create or update assignment request is valid */
 export async function validateBodyAssignmentFormatValid(
   req: Request,
@@ -2278,6 +2330,7 @@ export async function validateBodyAssignmentFormatValid(
     const {
       title,
       description,
+      fileName,
       fileUrl,
       dueDate,
       totalMarks,
@@ -2288,6 +2341,7 @@ export async function validateBodyAssignmentFormatValid(
     const validBody = {
       title,
       description,
+      fileName,
       fileUrl,
       dueDate,
       totalMarks,
@@ -2305,6 +2359,9 @@ export async function validateBodyAssignmentFormatValid(
           (typeof validBody[key] !== 'string' ||
             validBody[key].trim().length === 0)) ||
         (key === 'description' &&
+          (typeof validBody[key] !== 'string' ||
+            validBody[key].trim().length === 0)) ||
+        (key === 'fileName' &&
           (typeof validBody[key] !== 'string' ||
             validBody[key].trim().length === 0)) ||
         (key === 'fileUrl' &&
@@ -2331,12 +2388,40 @@ export async function validateBodyAssignmentFormatValid(
   }
 }
 
+export async function validateBodySessionExist(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { sessionId } = req.body;
+    const session = await SessionService.getSessionBySessionId(sessionId);
+    if (!session) {
+      return res.status(400).json({
+        error: 'Invalid session provided.',
+      });
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
 export async function validateBodyTeacherExists(
   req: Request,
   res: Response,
   next: NextFunction,
 ) {
   try {
+    const { sessionId } = req.body;
+    const session = await SessionService.getSessionBySessionId(sessionId);
+    if (!session) {
+      return res.status(400).json({
+        error: 'Invalid session provided.',
+      });
+    }
     const { teacherId } = req.body;
     if (teacherId) {
       const validTeacher = await teacherService.getTeacherById(teacherId);
@@ -2345,6 +2430,31 @@ export async function validateBodyTeacherExists(
           error: 'Invalid teacher ID provided.',
         });
       }
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+export async function validateAttendanceNotTaken(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { sessionId, studentId } = req.body;
+    const attendance =
+      await AttendanceService.getAttendanceBySessionAndStudentId(
+        sessionId,
+        studentId,
+      );
+    if (attendance && attendance.length > 0) {
+      return res.status(400).json({
+        error: 'Your attendance has been taken.',
+      });
     }
     next();
   } catch (error) {
@@ -2380,7 +2490,7 @@ export async function validateBodyAssignmentAttemptFormatValid(
             validBody[key].trim().length === 0)) ||
         (key === 'submittedOn' && !postgresDatetimeRegex.test(submittedOn)) ||
         (key === 'score' &&
-          (typeof validBody[key] !== 'number' || validBody[key] <= 0)) ||
+          (typeof validBody[key] !== 'number' || validBody[key] < 0)) ||
         (key === 'studentId' &&
           (!validBody[key] || typeof validBody[key] !== 'string')) ||
         (key === 'assignmentId' &&
@@ -2423,8 +2533,33 @@ export async function validateBodyAssignmentExists(
   }
 }
 
-/** Validates if a studentId passed in params exists */
-export async function validateParamsStudentExists(
+/** Validates if a assignmentId passed in params exists */
+export async function validateParamsAssignmentExists(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { assignmentId } = req.params;
+    if (assignmentId) {
+      const validAssignment = await assignmentService.getAssignmentById(
+        assignmentId,
+      );
+      if (!validAssignment) {
+        return res.status(400).json({
+          error: 'Invalid assignment ID provided.',
+        });
+      }
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+export async function validateParamStudentExists(
   req: Request,
   res: Response,
   next: NextFunction,
@@ -2432,6 +2567,11 @@ export async function validateParamsStudentExists(
   try {
     const { studentId } = req.params;
     if (studentId) {
+      if (studentId.length !== 36) {
+        return res.status(400).json({
+          error: 'Malformed request; studentId is not of valid length.',
+        });
+      }
       const studentExists = await studentService.getStudentById(studentId);
       if (!studentExists) {
         return res.status(400).json({

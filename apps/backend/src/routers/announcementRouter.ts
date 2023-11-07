@@ -7,7 +7,7 @@ import {
   validateBodyTeacherExists,
   validateBodyAnnouncementCentresExist,
   validateParamsTeacherExists,
-  validateParamsStudentExists,
+  validateParamStudentExists,
 } from '../middleware/validationMiddleware';
 
 const announcementRouter = Router();
@@ -54,7 +54,7 @@ announcementRouter.get(
 
 announcementRouter.get(
   '/student/:studentId',
-  validateParamsStudentExists,
+  validateParamStudentExists,
   async (req: Request, res: Response) => {
     try {
       const { studentId } = req.params;

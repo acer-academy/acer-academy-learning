@@ -46,3 +46,4 @@ export * from './lib/api/take';
 export * from './lib/types/take';
 export * from './lib/types/takeAnswer';
 export * from './lib/types/statistics';
+export * from './lib/types/assignment';

@@ -26,6 +26,14 @@ export class AssignmentAttemptService {
     );
   }
 
+  public async getAssignmentAttemptsByAssignmentId(
+    assignmentId: string,
+  ): Promise<AssignmentAttempt[]> {
+    return this.assignmentAttemptDao.getAssignmentAttemptsByAssignmentId(
+      assignmentId,
+    );
+  }
+
   public async updateAssignmentAttempt(
     assignmentAttemptId: string,
     assignmentAttemptData: Prisma.AssignmentAttemptUpdateInput,
