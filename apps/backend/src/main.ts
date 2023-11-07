@@ -31,8 +31,10 @@ import takeRouter from './routers/takeRouter';
 import quizStatisticsRouter from './routers/quizStatisticsRouter';
 import takeAnswerRouter from './routers/takeAnswerRouter';
 import messageRouter from './routers/messageRouter';
+import attendanceRouter from './routers/attendanceRouter';
 import assignmentRouter from './routers/assignmentRouter';
 import assignmentAttemptRouter from './routers/assignmentAttemptRouter';
+import announcementRouter from './routers/announcementRouter';
 
 dotenv.config();
 
@@ -111,8 +113,10 @@ app.use('/api/v1/take', takeRouter);
 app.use('/api/v1/quiz-statistics', quizStatisticsRouter);
 app.use('/api/v1/take-answers', takeAnswerRouter);
 app.use('/api/v1/message', messageRouter);
+app.use('/api/v1/attendances', attendanceRouter);
 app.use('/api/v1/assignments', assignmentRouter);
 app.use('/api/v1/assignment-attempts', assignmentAttemptRouter);
+app.use('/api/v1/announcements', announcementRouter);
 
 // Start the server
 const server = app.listen(port, () => {

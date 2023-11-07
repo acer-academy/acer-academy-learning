@@ -52,6 +52,32 @@ class SessionService {
     return SessionDao.updateSession(id, data);
   }
 
+  public async bookSession(
+    studentId: string,
+    sessionId: string,
+  ): Promise<Session> {
+    const payload = {
+      students: {
+        connect: { id: studentId },
+      },
+    };
+
+    return this.updateSession(sessionId, payload);
+  }
+
+  public async cancelBookedSession(
+    studentId: string,
+    sessionId: string,
+  ): Promise<Session> {
+    const payload = {
+      students: {
+        disconnect: { id: studentId },
+      },
+    };
+
+    return this.updateSession(sessionId, payload);
+  }
+
   public async deleteSession(id: string): Promise<Session> {
     return SessionDao.deleteSession(id);
   }

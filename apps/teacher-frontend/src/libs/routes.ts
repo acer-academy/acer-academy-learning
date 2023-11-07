@@ -21,6 +21,13 @@ export const CREATE_QUIZ_QUESTIONS_HASH = 'questions';
 export const CREATE_QUIZ_STUDENTS_HASH = 'students';
 export const UPDATE_QUIZ = `${QUIZZES}/:quizId`;
 
+// Assignments
+export const ASSIGNMENTS = `${SUBJECTS}/:subject/assignments`;
+export const VIEW_ASSIGNMENT = `${ASSIGNMENTS}/:assignmentId`;
+export const CREATE_ASSIGNMENT = `${ASSIGNMENTS}/create`;
+export const EDIT_ASSIGNMENT = `${ASSIGNMENTS}/edit/:assignmentId`;
+export const VIEW_ASSIGNMENT_ATTEMPTS = `${VIEW_ASSIGNMENT}/attempts`;
+
 // Analytics
 export const ANALYTICS = '/analytics';
 export const QUIZ_ANALYTICS_MGMT = `${ANALYTICS}/quizzes`;
@@ -31,7 +38,7 @@ export const VIEW_QUIZ_ANALYTICS_STUDENTS_HASH = `students`;
 export const ASSIGNMENT_ANALYTICS_MGMT = `${ANALYTICS}/assignments/`;
 export const VIEW_ASSIGNMENT_ANALYTICS = `${ANALYTICS}/assignments/:assignmentId`;
 
-//
+// Scheduling
 export const SCHEDULING = '/scheduling';
 export const VIEW_CLASSES = `${SCHEDULING}/view-classes`;
 export const BOOK_CLASSES = `${SCHEDULING}/book-classes`;
