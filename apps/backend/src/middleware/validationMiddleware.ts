@@ -2330,6 +2330,7 @@ export async function validateBodyAssignmentFormatValid(
     const {
       title,
       description,
+      fileName,
       fileUrl,
       dueDate,
       totalMarks,
@@ -2340,6 +2341,7 @@ export async function validateBodyAssignmentFormatValid(
     const validBody = {
       title,
       description,
+      fileName,
       fileUrl,
       dueDate,
       totalMarks,
@@ -2357,6 +2359,9 @@ export async function validateBodyAssignmentFormatValid(
           (typeof validBody[key] !== 'string' ||
             validBody[key].trim().length === 0)) ||
         (key === 'description' &&
+          (typeof validBody[key] !== 'string' ||
+            validBody[key].trim().length === 0)) ||
+        (key === 'fileName' &&
           (typeof validBody[key] !== 'string' ||
             validBody[key].trim().length === 0)) ||
         (key === 'fileUrl' &&
@@ -2485,7 +2490,7 @@ export async function validateBodyAssignmentAttemptFormatValid(
             validBody[key].trim().length === 0)) ||
         (key === 'submittedOn' && !postgresDatetimeRegex.test(submittedOn)) ||
         (key === 'score' &&
-          (typeof validBody[key] !== 'number' || validBody[key] <= 0)) ||
+          (typeof validBody[key] !== 'number' || validBody[key] < 0)) ||
         (key === 'studentId' &&
           (!validBody[key] || typeof validBody[key] !== 'string')) ||
         (key === 'assignmentId' &&
@@ -2510,6 +2515,32 @@ export async function validateBodyAssignmentExists(
 ) {
   try {
     const { assignmentId } = req.body;
+    if (assignmentId) {
+      const validAssignment = await assignmentService.getAssignmentById(
+        assignmentId,
+      );
+      if (!validAssignment) {
+        return res.status(400).json({
+          error: 'Invalid assignment ID provided.',
+        });
+      }
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+/** Validates if a assignmentId passed in params exists */
+export async function validateParamsAssignmentExists(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { assignmentId } = req.params;
     if (assignmentId) {
       const validAssignment = await assignmentService.getAssignmentById(
         assignmentId,

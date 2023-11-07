@@ -475,13 +475,14 @@ model Assignment {
   id          String      @id @default(uuid()) @db.Uuid
   title       String
   description String      @db.Text
+  fileName    String
   fileUrl     String
   dueDate     DateTime
   totalMarks  Int
   subject     SubjectEnum
   levels      LevelEnum[]
 
-  Teacher   Teacher? @relation(fields: [teacherId], references: [id])
+  teacher   Teacher? @relation(fields: [teacherId], references: [id])
   teacherId String?  @db.Uuid
 
   assignmentAttempts AssignmentAttempt[]
