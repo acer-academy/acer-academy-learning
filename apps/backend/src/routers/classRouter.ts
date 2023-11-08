@@ -91,13 +91,15 @@ classRouter.put(
       const input = req.body;
       const classInput: Prisma.ClassUncheckedUpdateInput = input[0];
       const sessionInput: Prisma.SessionUncheckedUpdateInput = input[1];
-      const studentIdArr: Array<String> = input[2];
+      const addStudentIdArr: Array<String> = input[2];
+      const removeStudentIdArr: Array<String> = input[3];
       const session = await ClassService.updateRecurringClass(
         sessionId,
         classId,
         classInput,
         sessionInput,
-        studentIdArr,
+        addStudentIdArr,
+        removeStudentIdArr,
       );
       // Send whatsapp message
       await messageService.sendWhatsappMessage(

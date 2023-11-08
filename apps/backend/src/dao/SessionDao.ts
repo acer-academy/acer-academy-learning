@@ -95,6 +95,9 @@ class SessionDao {
       where: {
         classId,
       },
+      include: {
+        students: true,
+      },
     });
   }
 

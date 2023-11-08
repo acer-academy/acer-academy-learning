@@ -80,7 +80,8 @@ class ClassService {
     classId: string,
     classData: Prisma.ClassUncheckedUpdateInput,
     sessionData: Prisma.SessionUncheckedUpdateInput,
-    studentIdArr: Array<String>,
+    addStudentIdArr: Array<String>,
+    removeStudentIdArr: Array<String>,
   ): Promise<Session[]> {
     const sessions: Session[] = await SessionService.getFutureSessionsOfClass(
       classId,
@@ -132,10 +133,14 @@ class ClassService {
 
     try {
       let payload = {};
-      if (studentIdArr.length > 0) {
+      if (addStudentIdArr.length > 0 || removeStudentIdArr.length > 0) {
         payload = {
+          ...data,
           students: {
-            connect: studentIdArr?.map((studentId: string) => ({
+            connect: addStudentIdArr?.map((studentId: string) => ({
+              id: studentId,
+            })),
+            disconnect: removeStudentIdArr?.map((studentId: string) => ({
               id: studentId,
             })),
           },
@@ -157,6 +162,7 @@ class ClassService {
                 start: currDate,
                 end: eventEndDate,
               },
+              [],
               [],
             );
             updatedSessions.push(updatedSession);
@@ -223,6 +229,7 @@ class ClassService {
           await SessionService.updateSession(
             updatedList[index].id,
             oldData,
+            [],
             [],
           );
         } else if (!updatedList[index]) {

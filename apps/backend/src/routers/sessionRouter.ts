@@ -63,11 +63,13 @@ sessionRouter.put(
     try {
       const { id } = req.params;
       const input: Prisma.SessionUncheckedUpdateInput = req.body[0];
-      const studentIdArr: Array<String> = req.body[1];
+      const addStudentIdArr: Array<String> = req.body[1];
+      const removeStudentIdArr: Array<String> = req.body[2];
       const session = await SessionService.updateSession(
         id,
         input,
-        studentIdArr,
+        addStudentIdArr,
+        removeStudentIdArr,
       );
       // Send whatsapp message
       await messageService.sendWhatsappMessage(
