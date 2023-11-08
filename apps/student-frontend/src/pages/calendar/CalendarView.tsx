@@ -13,8 +13,13 @@ import { ClassroomData } from 'libs/data-access/src/lib/types/classroom';
 import { TeacherData } from 'libs/data-access/src/lib/types/teacher';
 import { EventModal } from './EventModal';
 import MultiSelect from './MultiSelect';
+import { useAuth } from '@acer-academy-learning/common-ui';
+import { Student } from 'libs/data-access/src/lib/types/student';
 
 export default function CalendarView() {
+
+  const { user } = useAuth<Student>();
+
   const [session, setSession] = useState<SessionData>();
   const [readSession, setReadSession] = useState<SessionData>();
   const [sessions, setSessions] = useState<SessionData[]>([]); // Moved state here
@@ -293,6 +298,7 @@ export default function CalendarView() {
         {readSession && (
           <EventModal
             //  isOpen={isModalOpen}
+            studentId = {user?.id}
             onClose={() => setReadSession(null)}
             event={readSession}
           />

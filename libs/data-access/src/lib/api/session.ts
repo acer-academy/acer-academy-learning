@@ -37,3 +37,19 @@ export async function deleteSession(
 ): Promise<AxiosResponse<SessionData>> {
   return client.delete(`${URL}/${id}`);
 }
+
+
+export async function bookSession(
+  sessionId: string,
+  studentId: string,
+): Promise<AxiosResponse<SessionData>> {
+  return client.put(`${URL}/book/${sessionId}/${studentId}`);
+}
+
+export async function cancelSession(
+  sessionId: string,
+  studentId: string,
+): Promise<AxiosResponse<SessionData>> {
+  return client.put(`${URL}/cancel/${sessionId}/${studentId}`);
+}
+

@@ -22,6 +22,7 @@ import {
   deleteSession,
   updateSession,
 } from '@acer-academy-learning/data-access';
+import { Student } from 'libs/data-access/src/lib/types/student';
 
 interface EventFormProps {
   session: SessionData;
@@ -96,7 +97,7 @@ export default function EventForm({
     session.levels || [],
   );
 
-  const { user } = useAuth<Teacher>();
+  const { user } = useAuth<Student>();
 
   const [sessionState, setSessionState] = useState({
     id: session.id,

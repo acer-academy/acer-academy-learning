@@ -29,3 +29,16 @@ import {
     return client.delete(`${URL}/${id}`);
   }
   
+  export async function bookRecurringClass(
+    sessionId: string,
+    studentId: string,
+  ): Promise<AxiosResponse<SessionData>> {
+    return client.put(`${URL}/book-recurring/${sessionId}/${studentId}`);
+  }
+  
+  export async function cancelRecurringClass(
+    sessionId: string,
+    studentId: string,
+  ): Promise<AxiosResponse<SessionData>> {
+    return client.put(`${URL}/cancel-recurring/${sessionId}/${studentId}`);
+  }
