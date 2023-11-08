@@ -105,7 +105,7 @@ export const QuestionBank: React.FC = () => {
               Question Bank
             </span>
             <button
-              className="text-blue-500 hover:text-blue-600"
+              className="text-student-primary-900 hover:text-student-secondary-700"
               onClick={() => setIsFilterVisible(!isFilterVisible)}
             >
               <svg
@@ -118,7 +118,7 @@ export const QuestionBank: React.FC = () => {
             </button>
           </div>
           <button
-            className="inline-flex justify-center px-4 py-2 text-white bg-teacherBlue-500 border border-transparent rounded-md hover:bg-teacherBlue-700"
+            className="inline-flex justify-center px-4 py-2 text-white bg-student-primary-900 border border-transparent rounded-md hover:bg-student-secondary-700"
             onClick={() => {
               navToCreateQuestion();
             }}

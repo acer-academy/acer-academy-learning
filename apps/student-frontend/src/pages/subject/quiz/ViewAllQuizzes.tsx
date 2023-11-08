@@ -115,7 +115,7 @@ export const ViewAllQuizzes = () => {
             {(adaptiveString.includes(searchString.toLowerCase()) && (
               <AdaptiveQuizRow
                 iconStyles="text-student-primary-900"
-                className="hover:bg-student-primary-100"
+                className="hover:bg-student-secondary-100"
               />
             )) || (
               <p className="text-base border-x border-b h-8 w-full flex items-center justify-center py-8 text-gray-600 ">
@@ -201,7 +201,7 @@ export const ViewAllQuizzes = () => {
                 iconStyles="text-student-primary-900"
                 key={quiz.id}
                 quiz={quiz}
-                className="hover:bg-student-primary-100"
+                className="hover:bg-student-secondary-100"
               />
             ))}
             <li>
@@ -299,10 +299,10 @@ export const ViewAllQuizzes = () => {
             )}
             {publicQuizzes?.data?.quizzes?.map((quiz, index) => (
               <QuizRow
-                iconStyles="text-student-primary-600"
+                iconStyles="text-student-primary-900"
                 key={quiz.id}
                 quiz={quiz}
-                className="hover:bg-student-primary-100"
+                className="hover:bg-student-secondary-100"
               />
             ))}
             <li>

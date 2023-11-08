@@ -26,15 +26,16 @@ export const PrimaryDesktopSideBar = ({
                   <DisclosureMenuItem item={item} key={item.name} />
                 )) || (
                   <DisclosureLeafItem
-                    textColor={'text-gray-900'}
-                    textHoverColor={'hover:text-gray-900'}
+                    activeColor={'text-white'}
+                    textColor={getThemeClassName('text', role, true, 700)}
+                    textHoverColor={'hover:text-gray-500'}
                     groupHoverColor={getThemeClassName(
                       'group-hover:text',
                       role,
                       true,
                       700,
                     )}
-                    bgColor={'bg-gray-100'}
+                    bgColor={'bg-gray-900'}
                     bgHoverColor={'hover:bg-gray-100'}
                     item={item}
                     key={item.name}

@@ -243,7 +243,7 @@ export const Filter: React.FC<{
           ))}
         </select>
         <button
-          className="bg-teacherBlue-500 hover:bg-teacherBlue-700 text-white rounded-md px-4 py-2 ml-auto"
+          className="bg-student-primary-900 hover:bg-student-secondary-700 text-white rounded-md px-4 py-2 ml-auto"
           onClick={handleResetAll}
         >
           Reset

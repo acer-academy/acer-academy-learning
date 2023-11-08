@@ -2,10 +2,8 @@ import { useMemo } from 'react';
 import { NavigationMenuItem } from './type';
 import { NavLink, useLocation, useParams } from 'react-router-dom';
 import { classNames } from '../../utils/classNames';
-import { useMenuItem } from '../hooks/useMenuItem';
 import { getThemeClassName } from '../../utils/getThemeClassName';
 import { useThemeContext } from '../contexts/ThemeContext';
-import { LayoutRole } from '../constants';
 
 export type DisclosureChildItem = {
   item: NavigationMenuItem;
@@ -13,6 +11,7 @@ export type DisclosureChildItem = {
   groupHoverColor?: string;
   textHoverColor?: string;
   textColor?: string;
+  activeColor?: string;
   bgColor?: string;
   bgHoverColor?: string;
 };
@@ -23,12 +22,12 @@ export const DisclosureLeafItem = ({
   textColor,
   groupHoverColor,
   textHoverColor,
+  activeColor,
   bgColor,
   bgHoverColor,
 }: DisclosureChildItem) => {
   const location = useLocation();
   const params = useParams();
-  const [isActive] = useMenuItem(item);
   const { role } = useThemeContext();
   const sizeStyles = useMemo(
     () =>
@@ -74,12 +73,10 @@ export const DisclosureLeafItem = ({
         containsPath
           ? `
           ${bgColor ?? getThemeClassName('bg', role, true, 700)} 
-            ${textColor ?? 'text-white'}`
-          : `${
-              role === LayoutRole.Admin
-                ? getThemeClassName('text', role, true, 200)
-                : getThemeClassName('text', role, true, 700)
-            } ${textHoverColor ?? 'hover:text-white'} ${
+            ${activeColor ?? 'text-white'}`
+          : `${textColor ?? getThemeClassName('text', role, true, 600)} ${
+              textHoverColor ?? 'hover:text-white'
+            } ${
               bgHoverColor ?? getThemeClassName('hover:bg', role, true, 700)
             }`,
         sizeStyles,
@@ -88,14 +85,11 @@ export const DisclosureLeafItem = ({
       {item.icon && (
         <item.icon
           className={classNames(
-            isActive
-              ? textColor ?? 'text-white'
-              : `${getThemeClassName(
-                  'text',
-                  role,
-                  true,
-                  role === LayoutRole.Admin ? 200 : 600,
-                )} ${groupHoverColor ?? 'group-hover:text-white'}`,
+            containsPath
+              ? 'text-white'
+              : `${textColor ?? getThemeClassName('text', role, true, 600)} ${
+                  groupHoverColor ?? 'group-hover:text-white'
+                }`,
             'h-6 w-6 shrink-0',
           )}
           aria-hidden="true"

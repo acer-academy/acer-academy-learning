@@ -34,7 +34,7 @@ export const AccountPopover = ({
               <Avatar
                 firstName={firstName}
                 borderStyle={getThemeClassName('border', role, true, 400)}
-                bgStyle={getThemeClassName('bg', role, true, 700)}
+                // bgStyle={getThemeClassName('bg', role, true, 700)}
               />
             </Popover.Button>
             <Transition
@@ -62,13 +62,13 @@ export const AccountPopover = ({
                     <div className={`relative flex flex-col p-4 `}>
                       {menuItems.map((item) => (
                         <DisclosureLeafItem
+                          textColor="text-white"
                           bgColor={getThemeClassName('bg', role, true, 900)}
-                          textColor={'text-gray-300'}
                           bgHoverColor={getThemeClassName(
                             'hover:bg',
                             role,
                             true,
-                            800,
+                            700,
                           )}
                           key={item.name}
                           item={item}

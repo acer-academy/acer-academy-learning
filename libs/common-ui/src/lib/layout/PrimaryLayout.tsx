@@ -53,15 +53,11 @@ export const PrimaryLayout = ({
             <div className="flex items-center gap-x-12">
               <a href="#" className="-m-1.5 p-1.5">
                 <span className="sr-only">Your Company</span>
-                {role === LayoutRole.Student ? (
-                  <img
-                    className={'h-9 w-auto'}
-                    src={logo}
-                    alt="Acer Academy Logo"
-                  />
-                ) : (
-                  <AcerAcademyLogo className="h-8 w-auto" />
-                )}
+                <img
+                  className={'h-9 w-auto'}
+                  src={logo}
+                  alt="Acer Academy Logo"
+                />
               </a>
               <div className="hidden lg:flex lg:gap-x-12">
                 {navigationMenu.map((item) => (
