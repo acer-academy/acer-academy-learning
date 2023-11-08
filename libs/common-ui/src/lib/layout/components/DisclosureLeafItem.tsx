@@ -10,6 +10,8 @@ import { LayoutRole } from '../constants';
 export type DisclosureChildItem = {
   item: NavigationMenuItem;
   isChild?: boolean;
+  groupHoverColor?: string;
+  textHoverColor?: string;
   textColor?: string;
   bgColor?: string;
   bgHoverColor?: string;
@@ -19,17 +21,19 @@ export const DisclosureLeafItem = ({
   item,
   isChild = true,
   textColor,
+  groupHoverColor,
+  textHoverColor,
   bgColor,
   bgHoverColor,
 }: DisclosureChildItem) => {
-  const params = useParams();
   const location = useLocation();
+  const params = useParams();
   const [isActive] = useMenuItem(item);
   const { role } = useThemeContext();
   const sizeStyles = useMemo(
     () =>
       isChild
-        ? 'block rounded-md py-2 pr-2 pl-9 text-sm leading-6'
+        ? 'block rounded-md py-2 pr-2 pl-11 text-sm leading-6'
         : 'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold',
     [isChild],
   );
@@ -55,28 +59,28 @@ export const DisclosureLeafItem = ({
     return finalPath;
   }, [params, item]);
 
+  const containsPath = useMemo(() => {
+    if (!path) {
+      return false;
+    }
+    return location.pathname.includes(path);
+  }, [location, path]);
+
   return (
     <NavLink
       to={`${path}`}
       className={classNames(
         // Needs to be fixed later on
-        isActive
-          ? `${
-              bgColor ??
-              (role === LayoutRole.Teacher
-                ? 'bg-teacher-primary-700'
-                : 'bg-student-primary-700')
-            } text-white`
+        containsPath
+          ? `
+          ${bgColor ?? getThemeClassName('bg', role, true, 700)} 
+            ${textColor ?? 'text-white'}`
           : `${
-              textColor ??
-              (role === LayoutRole.Teacher
-                ? 'text-teacher-primary-200'
-                : 'text-student-primary-200')
-            } hover:text-white ${
-              bgHoverColor ??
-              (role === LayoutRole.Teacher
-                ? 'hover:bg-teacher-primary-700'
-                : 'hover:bg-student-primary-700')
+              role === LayoutRole.Admin
+                ? getThemeClassName('text', role, true, 200)
+                : getThemeClassName('text', role, true, 600)
+            } ${textHoverColor ?? 'hover:text-white'} ${
+              bgHoverColor ?? getThemeClassName('hover:bg', role, true, 700)
             }`,
         sizeStyles,
       )}
@@ -85,13 +89,13 @@ export const DisclosureLeafItem = ({
         <item.icon
           className={classNames(
             isActive
-              ? 'text-white'
+              ? textColor ?? 'text-white'
               : `${getThemeClassName(
                   'text',
                   role,
                   true,
-                  200,
-                )} group-hover:text-white`,
+                  role === LayoutRole.Admin ? 200 : 700,
+                )} ${groupHoverColor ?? 'group-hover:text-white'}`,
             'h-6 w-6 shrink-0',
           )}
           aria-hidden="true"

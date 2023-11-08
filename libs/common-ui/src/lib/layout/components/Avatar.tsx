@@ -1,4 +1,6 @@
 import React, { useMemo } from 'react';
+import { getThemeClassName } from '../../utils/getThemeClassName';
+import { useThemeContext } from '../contexts/ThemeContext';
 
 export type AvatarProps = {
   imageUrl?: string;
@@ -28,6 +30,8 @@ export const Avatar = ({
     [firstName],
   );
 
+  const { role } = useThemeContext();
+
   return (
     <div className="flex items-center flex-1">
       {(imageUrl && (
@@ -42,8 +46,8 @@ export const Avatar = ({
           className={`flex  ${
             size ?? 'lg:h-10 lg:w-10 h-6 w-6'
           } shrink-0 items-center justify-center rounded-lg border ${
-            borderStyle ?? 'border-indigo-400'
-          } ${bgStyle ?? 'bg-admin-primary-500'}  ${
+            borderStyle ?? getThemeClassName('border', role, true, 500)
+          } ${bgStyle ?? getThemeClassName('bg', role, true, 600)}  ${
             textSize ?? 'text-[0.625rem] lg:text-[1rem]'
           } font-medium ${logoTextStyle ?? 'text-text-primary'}`}
         >

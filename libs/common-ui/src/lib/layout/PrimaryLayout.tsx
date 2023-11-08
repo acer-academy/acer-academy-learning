@@ -42,8 +42,8 @@ export const PrimaryLayout = ({
         <header
           className={`fixed z-[1] h-[10vh] w-full ${
             role === LayoutRole.Student
-              ? 'bg-student-secondary-900'
-              : 'bg-teacher-secondary-600'
+              ? 'bg-student-primary-900'
+              : 'bg-teacher-primary-900'
           } flex-2 shadow-bottom `}
         >
           <nav

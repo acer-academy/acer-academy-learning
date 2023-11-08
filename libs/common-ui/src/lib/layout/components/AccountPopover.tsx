@@ -2,9 +2,9 @@ import React, { Fragment } from 'react';
 import { Popover, Transition } from '@headlessui/react';
 import { NavigationMenuItem } from './type';
 import { useThemeContext } from '../contexts/ThemeContext';
-import { LayoutRole } from '../constants';
 import { DisclosureLeafItem } from './DisclosureLeafItem';
 import { Avatar } from './Avatar';
+import { getThemeClassName } from '../../utils/getThemeClassName';
 
 export type AccountPopoverProps = {
   firstName: string;
@@ -24,24 +24,17 @@ export const AccountPopover = ({
             <Popover.Button
               className={`
               ${open ? '' : 'text-opacity-90'}
-              group inline-flex items-center rounded-md ${
-                role === LayoutRole.Student
-                  ? 'bg-student-secondary-900'
-                  : 'bg-teacher-secondary-600'
-              } px-3 py-2 text-base font-medium text-white hover:text-opacity-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75`}
+              group inline-flex items-center rounded-md ${getThemeClassName(
+                'bg',
+                role,
+                true,
+                900,
+              )} px-3 py-2 text-base font-medium text-white hover:text-opacity-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75`}
             >
               <Avatar
                 firstName={firstName}
-                borderStyle={
-                  role === LayoutRole.Student
-                    ? 'border-student-secondary-400'
-                    : 'border-teacher-secondary-400'
-                }
-                bgStyle={
-                  role === LayoutRole.Student
-                    ? 'bg-student-secondary-700'
-                    : 'bg-teacher-secondary-500'
-                }
+                borderStyle={getThemeClassName('border', role, true, 400)}
+                bgStyle={getThemeClassName('bg', role, true, 700)}
               />
             </Popover.Button>
             <Transition
@@ -56,11 +49,12 @@ export const AccountPopover = ({
               {menuItems && (
                 // <Popover.Panel className="absolute left-0 z-10 mt-3 w-screen max-w-xs -translate-x-1/2 transform px-4 sm:px-0 lg:max-w-xs">
                 <Popover.Panel
-                  className={`rounded-md ${
-                    role === LayoutRole.Student
-                      ? 'bg-student-secondary-900'
-                      : 'bg-teacher-secondary-600'
-                  } absolute w-screen max-w-xs right-0 mt-4 
+                  className={`rounded-md ${getThemeClassName(
+                    'bg',
+                    role,
+                    true,
+                    900,
+                  )} absolute w-screen max-w-xs right-0 mt-4 
                   shadow-2xl z-[1]
                 `}
                 >
@@ -68,21 +62,14 @@ export const AccountPopover = ({
                     <div className={`relative flex flex-col p-4 `}>
                       {menuItems.map((item) => (
                         <DisclosureLeafItem
-                          bgColor={
-                            role === LayoutRole.Student
-                              ? 'bg-student-secondary-800'
-                              : 'bg-teacher-secondary-500'
-                          }
-                          textColor={
-                            role === LayoutRole.Student
-                              ? 'text-student-secondary-200'
-                              : 'text-teacher-secondary-200'
-                          }
-                          bgHoverColor={
-                            role === LayoutRole.Student
-                              ? 'hover:bg-student-secondary-800'
-                              : 'hover:bg-teacher-secondary-500'
-                          }
+                          bgColor={getThemeClassName('bg', role, true, 900)}
+                          textColor={'text-gray-300'}
+                          bgHoverColor={getThemeClassName(
+                            'hover:bg',
+                            role,
+                            true,
+                            800,
+                          )}
                           key={item.name}
                           item={item}
                           isChild={false}
