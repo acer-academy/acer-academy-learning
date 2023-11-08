@@ -2270,12 +2270,6 @@ export async function validateParamsQuizExists(
   next: NextFunction,
 ) {
   try {
-    const terms = await termService.getCurrentTerms();
-    if (terms.length === 0) {
-      return res.status(400).json({
-        error: 'A current term is needed.',
-      });
-    }
     const { quizId } = req.params;
     if (quizId.length !== 36) {
       return res.status(400).json({
