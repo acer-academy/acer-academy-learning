@@ -78,7 +78,7 @@ export const DisclosureLeafItem = ({
           : `${
               role === LayoutRole.Admin
                 ? getThemeClassName('text', role, true, 200)
-                : getThemeClassName('text', role, true, 600)
+                : getThemeClassName('text', role, true, 700)
             } ${textHoverColor ?? 'hover:text-white'} ${
               bgHoverColor ?? getThemeClassName('hover:bg', role, true, 700)
             }`,
@@ -94,7 +94,7 @@ export const DisclosureLeafItem = ({
                   'text',
                   role,
                   true,
-                  role === LayoutRole.Admin ? 200 : 700,
+                  role === LayoutRole.Admin ? 200 : 600,
                 )} ${groupHoverColor ?? 'group-hover:text-white'}`,
             'h-6 w-6 shrink-0',
           )}

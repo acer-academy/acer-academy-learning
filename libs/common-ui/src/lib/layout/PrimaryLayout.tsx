@@ -38,7 +38,7 @@ export const PrimaryLayout = ({
 
   return (
     <ThemeProvider role={role}>
-      <div className="h-full flex flex-col bg-slate-100">
+      <div className="h-full flex flex-col">
         <header
           className={`fixed z-[1] h-[10vh] w-full ${
             role === LayoutRole.Student

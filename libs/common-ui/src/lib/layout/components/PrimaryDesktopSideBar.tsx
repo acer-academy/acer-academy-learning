@@ -1,6 +1,5 @@
 import { SideBarProps } from './type';
 import { useThemeContext } from '../contexts/ThemeContext';
-import { LayoutRole } from '../constants';
 import { DisclosureMenuItem } from './DisclosureMenuItem';
 import { DisclosureLeafItem } from './DisclosureLeafItem';
 import { getThemeClassName } from '../../utils/getThemeClassName';
@@ -27,8 +26,8 @@ export const PrimaryDesktopSideBar = ({
                   <DisclosureMenuItem item={item} key={item.name} />
                 )) || (
                   <DisclosureLeafItem
-                    textColor={'text-gray-700'}
-                    textHoverColor={'hover:text-gray-700'}
+                    textColor={'text-gray-900'}
+                    textHoverColor={'hover:text-gray-900'}
                     groupHoverColor={getThemeClassName(
                       'group-hover:text',
                       role,

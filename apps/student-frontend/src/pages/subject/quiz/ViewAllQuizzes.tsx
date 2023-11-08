@@ -18,7 +18,7 @@ import { QuizRow } from './components/QuizRow';
 import { AdaptiveQuizRow } from './components/AdaptiveQuizRow';
 
 const accordionTitleClassName =
-  'px-6 py-4 bg-student-primary-600 text-white hover:bg-student-primary-700';
+  'px-6 py-4 bg-student-primary-900 text-white hover:bg-student-secondary-700';
 
 export const ViewAllQuizzes = () => {
   // Will query all quizzes for now, but will be changed to query quizzes by subject
@@ -114,7 +114,7 @@ export const ViewAllQuizzes = () => {
           <ul>
             {(adaptiveString.includes(searchString.toLowerCase()) && (
               <AdaptiveQuizRow
-                iconStyles="text-student-primary-600"
+                iconStyles="text-student-primary-900"
                 className="hover:bg-student-primary-100"
               />
             )) || (
@@ -198,7 +198,7 @@ export const ViewAllQuizzes = () => {
               )}
             {allocatedQuizzes?.data?.quizzes?.map((quiz, index) => (
               <QuizRow
-                iconStyles="text-student-primary-600"
+                iconStyles="text-student-primary-900"
                 key={quiz.id}
                 quiz={quiz}
                 className="hover:bg-student-primary-100"
