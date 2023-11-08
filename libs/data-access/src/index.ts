@@ -22,6 +22,7 @@ export * from './lib/api/class';
 export * from './lib/api/take';
 export * from './lib/api/takeAnswer';
 export * from './lib/api/quizStatistics';
+export * from './lib/api/assignmentStatistics';
 export * from './lib/api/message';
 export * from './lib/api/assignment';
 export * from './lib/api/assignmentAttempt';

@@ -9,9 +9,9 @@ import {
 } from '@acer-academy-learning/data-access';
 import { useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { QuizSummaryRow } from './components/QuizSummaryRow';
-import { QuizSummaryBellCurve } from './components/QuizSummaryBellCurve';
-import { QuizSummaryBoxWhisker } from './components/QuizSummaryBoxWhisker';
+import { StatisticsSummaryRow } from './components/StatisticsSummaryRow';
+import { BellcurveChart } from './components/BellcurveChart';
+import { BoxWhiskerChart } from './components/BoxWhiskerChart';
 import {
   ChartPieIcon,
   PresentationChartBarIcon,
@@ -71,9 +71,27 @@ export const QuizStatistics: React.FC = () => {
       default:
         return (
           <div>
-            <QuizSummaryRow quizStats={quizStats} />
-            <QuizSummaryBoxWhisker quizStats={quizStats} />
-            <QuizSummaryBellCurve quizStats={quizStats} />
+            <StatisticsSummaryRow
+              quizStats={quizStats}
+              totalMarksArr={quizStats.totalMarksArr}
+              totalMarksPossible={quizStats.quizDetails.totalMarks}
+            />
+            {quizStats.totalMarksArr.length > 1 ? (
+              <>
+                <BoxWhiskerChart
+                  totalMarksArr={quizStats.totalMarksArr}
+                  totalMarksPossible={quizStats.quizDetails.totalMarks ?? 0}
+                />
+                <BellcurveChart
+                  totalMarksArr={quizStats.totalMarksArr}
+                  totalMarksPossible={quizStats.quizDetails.totalMarks ?? 0}
+                />
+              </>
+            ) : (
+              <div className="flex justify-center mt-40 text-gray-700 italic text-center">
+                {`Boxplot and Bellcurve can only be shown for quizzes with 2 or more attempts.`}
+              </div>
+            )}
           </div>
         );
     }

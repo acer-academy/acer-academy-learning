@@ -13,7 +13,7 @@ const assignmentService = new AssignmentService();
 assignmentRouter.post(
   '/',
   validateBodyAssignmentFormatValid,
-  validateBodyTeacherExists,
+  //validateBodyTeacherExists, // this validation has some issues
   async (req, res) => {
     try {
       const assignmentData: Prisma.AssignmentCreateInput = req.body;
@@ -44,6 +44,21 @@ assignmentRouter.get('/:assignmentId', async (req, res) => {
       return res.status(404).json({ error: 'Assignment not found' });
     }
     return res.status(200).json(assignment);
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+});
+
+assignmentRouter.get('/statistics/:assignmentId', async (req, res) => {
+  try {
+    const { assignmentId } = req.params;
+    const statistics = await assignmentService.getAssignmentStatisticsById(
+      assignmentId,
+    );
+    if (!statistics) {
+      return res.status(404).json({ error: 'Assignment not found' });
+    }
+    return res.status(200).json(statistics);
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }

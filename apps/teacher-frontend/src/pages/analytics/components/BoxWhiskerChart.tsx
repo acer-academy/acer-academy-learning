@@ -2,10 +2,11 @@ import { ConsolidatedQuizStatistics } from '@acer-academy-learning/data-access';
 import { MinusCircleIcon } from '@heroicons/react/24/outline';
 import Boxplot, { computeBoxplotStats } from 'react-boxplot';
 
-export const QuizSummaryBoxWhisker: React.FC<{
-  quizStats: ConsolidatedQuizStatistics;
+export const BoxWhiskerChart: React.FC<{
+  totalMarksArr: number[];
+  totalMarksPossible: number;
 }> = (props) => {
-  const { totalMarksArr, quizDetails } = props.quizStats;
+  const { totalMarksArr, totalMarksPossible } = props;
 
   const sortedTotalMarksArr = totalMarksArr.sort((x, y) => x - y);
   const min = sortedTotalMarksArr[0];
@@ -57,17 +58,17 @@ export const QuizSummaryBoxWhisker: React.FC<{
               height={30}
               orientation="horizontal"
               min={0}
-              max={quizDetails.totalMarks ?? 0}
+              max={totalMarksPossible}
               stats={{
                 whiskerLow: 0,
                 quartile1: lowerQuartile,
                 quartile2: median,
                 quartile3: upperQuartile,
-                whiskerHigh: quizDetails.totalMarks ?? 0,
+                whiskerHigh: totalMarksPossible,
                 outliers: [min, max],
               }}
             />
-            {quizDetails.totalMarks ?? '-'}
+            {totalMarksPossible}
           </div>
         </div>
       ) : (
