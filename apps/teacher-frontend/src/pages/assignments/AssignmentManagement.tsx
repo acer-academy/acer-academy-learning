@@ -1,30 +1,48 @@
-import { LexOutput, useAuth, useToast } from '@acer-academy-learning/common-ui';
-import { Teacher, getAllAssignments } from '@acer-academy-learning/data-access';
+import {
+  LexOutput,
+  WarningModal,
+  useAuth,
+  useToast,
+} from '@acer-academy-learning/common-ui';
+import {
+  Teacher,
+  deleteAssignment,
+  getAllAssignments,
+} from '@acer-academy-learning/data-access';
 import {
   DocumentCheckIcon,
   LockClosedIcon,
   LockOpenIcon,
+  PencilSquareIcon,
   PlusCircleIcon,
+  TrashIcon,
   UserGroupIcon,
 } from '@heroicons/react/24/outline';
 import { AssignmentData } from 'libs/data-access/src/lib/types/assignment';
-import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { LevelTag } from '../question-bank/LevelTag';
+import { useMutation } from 'react-query';
+import moment from 'moment';
 
-export const AssignmentStatisticsManagement: React.FC = () => {
+export const AssignmentManagement: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { displayToast, ToastType } = useToast();
+  const { user } = useAuth<Teacher>();
   const { subject } = useParams();
   const [assignments, setAssignments] = useState<AssignmentData[]>([]);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [deleteAssignmentId, setDeleteAssignmentId] = useState('');
   const [searchbarText, setSearchbarText] = useState('');
 
   const fetchAssignments = async () => {
     try {
       const response = await getAllAssignments();
-      setAssignments(response.data);
+      const assignmentsData = response.data.filter(
+        (assignment) => assignment.subject.toLowerCase() === subject,
+      );
+      setAssignments(assignmentsData);
     } catch (error) {
       displayToast(
         'Assignments could not be retrieved from the server.',
@@ -37,6 +55,25 @@ export const AssignmentStatisticsManagement: React.FC = () => {
   const navToSelectedAssignment = (selectedAssignmentId: string) => {
     navigate(`${location.pathname}/${selectedAssignmentId}`);
   };
+  const navToCreateAssignment = () => {
+    navigate(`${location.pathname}/create`);
+  };
+  const navToEditAssignment = (selectedAssignmentId: string) => {
+    navigate(`${location.pathname}/edit/${selectedAssignmentId}`);
+  };
+
+  const { mutate: deleteAssignmentMutate } = useMutation(deleteAssignment, {
+    onSuccess: async () => {
+      await fetchAssignments();
+      displayToast('Successfully deleted assignment', ToastType.SUCCESS);
+    },
+    onError: (error: Error) => {
+      displayToast(
+        'Error deleting assignment: ' + error.message,
+        ToastType.ERROR,
+      );
+    },
+  });
 
   useEffect(() => {
     fetchAssignments();
@@ -73,6 +110,21 @@ export const AssignmentStatisticsManagement: React.FC = () => {
               Assignments
             </span>
           </div>
+          <button
+            className="inline-flex justify-center px-4 py-2 text-white bg-teacherBlue-500 border border-transparent rounded-md hover:bg-teacherBlue-700"
+            onClick={() => {
+              navToCreateAssignment();
+            }}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="mr-2 h-4 w-4 fill-white stroke-2 relative mt-1"
+              viewBox="0 0 16 16"
+            >
+              <path d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z" />
+            </svg>
+            Create Assignment
+          </button>
         </div>
 
         <div className="min-w-max">
@@ -106,13 +158,19 @@ export const AssignmentStatisticsManagement: React.FC = () => {
                       >
                         Level(s)
                       </th>
+                      <th
+                        scope="col"
+                        className="px-3 py-3.5 text-left text-lg font-bold text-gray-900"
+                      >
+                        Actions
+                      </th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200 bg-white">
                     {assignments.length === 0 ? (
                       <tr>
                         <td
-                          colSpan={4}
+                          colSpan={5}
                           className="whitespace-nowrap py-4 px-4 font-light italic text-gray-400 text-center"
                         >
                           No assignments found.
@@ -210,6 +268,33 @@ export const AssignmentStatisticsManagement: React.FC = () => {
                                 })}
                               </div>
                             </td>
+                            <td className="whitespace-nowrap font-medium text-gray-900 space-x-1 w-max pr-3">
+                              {user?.id === assignment.teacher.id && (
+                                <>
+                                  <button
+                                    type="button"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      navToEditAssignment(assignment.id);
+                                    }}
+                                    className="inline-flex items-center rounded-md bg-green-500 px-3 py-2 text-sm font-semibold shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-green-600"
+                                  >
+                                    <PencilSquareIcon className="w-6 h-6 text-white" />
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      setDeleteAssignmentId(assignment.id);
+                                      setDeleteModalOpen(true);
+                                    }}
+                                    className="inline-flex items-center rounded-md bg-red-500 px-3 py-2 text-sm font-semibold shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-red-600"
+                                  >
+                                    <TrashIcon className="w-6 h-6 text-white" />
+                                  </button>
+                                </>
+                              )}
+                            </td>
                           </tr>
                         ))
                     )}
@@ -220,6 +305,17 @@ export const AssignmentStatisticsManagement: React.FC = () => {
           </div>
         </div>
       </div>
+      <WarningModal
+        open={deleteModalOpen}
+        setOpen={setDeleteModalOpen}
+        title={'Delete Assignment'}
+        description={
+          'Are you sure you want to delete this assignment? All student attempts for this assignment will also be removed and cannot be undone.'
+        }
+        confirmContent={'Delete'}
+        dismissContent={'Cancel'}
+        onConfirm={() => deleteAssignmentMutate(deleteAssignmentId)}
+      />
     </div>
   );
 };

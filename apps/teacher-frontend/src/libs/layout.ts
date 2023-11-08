@@ -3,7 +3,6 @@ import {
   ACCOUNT,
   ANALYTICS,
   ASSIGNMENT_ANALYTICS_MGMT,
-  BOOK_CLASSES,
   DASHBOARD,
   PROFILE,
   QUESTION_BANK,
@@ -13,16 +12,14 @@ import {
   SCHEDULING,
   SETTINGS,
   SUBJECTS,
-  VIEW_ASSIGNMENT_ANALYTICS,
   VIEW_CLASSES,
-  VIEW_QUIZ_ANALYTICS,
+  ASSIGNMENTS,
 } from './routes';
 import {
   UserIcon,
   Cog6ToothIcon,
   InboxStackIcon,
   PaperClipIcon,
-  CalculatorIcon,
   DocumentTextIcon,
   CalendarDaysIcon,
 } from '@heroicons/react/24/outline';
@@ -45,6 +42,11 @@ export const NAV_SECTIONS: NavigationMenuItem[] = [
         name: 'Quizzes',
         path: `${QUIZZES}`,
         icon: DocumentTextIcon,
+      },
+      {
+        name: 'Assignments',
+        path: `${ASSIGNMENTS}`,
+        icon: PaperClipIcon,
       },
     ],
   },
