@@ -1,13 +1,14 @@
 import { Disclosure, type DisclosureButtonProps } from '@headlessui/react';
 import { ChevronRightIcon } from '@heroicons/react/24/outline';
 import { NavigationMenuItem } from './type';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import { classNames } from '../../utils/classNames';
 import { DisclosureLeafItem } from './DisclosureLeafItem';
 import { useMenuItem } from '../hooks/useMenuItem';
 import { ElementType, useMemo } from 'react';
 import { getThemeClassName } from '../../utils/getThemeClassName';
 import { useThemeContext } from '../contexts/ThemeContext';
+import { LayoutRole } from '../constants';
 
 export type DisclosureMenuItemProps = {
   item: NavigationMenuItem;
@@ -35,7 +36,9 @@ export const DisclosureMenuItem = ({ item }: DisclosureMenuItemProps) => {
             {...disclosureProps}
             className={classNames(
               isActive
-                ? `${getThemeClassName('bg', role, true, 700)} text-white`
+                ? `${getThemeClassName('bg', role, true, 700)} ${
+                    role === LayoutRole.Admin ? 'text-white' : 'text-gray-700'
+                  }`
                 : // : 'text-admin-primary-200 hover:text-white hover:bg-admin-primary-700',
                   `
                     ${getThemeClassName('text', role, true, 200)}
@@ -45,7 +48,9 @@ export const DisclosureMenuItem = ({ item }: DisclosureMenuItemProps) => {
                      true,
                      700,
                    )}`,
-              'group flex items-center w-full text-left rounded-md p-2 gap-x-3 text-sm leading-6 font-semibold',
+              `group flex items-center w-full text-left ${
+                open ? 'rounded-t-md' : 'rounded-md'
+              } p-2 gap-x-3 text-sm leading-6 font-semibold`,
             )}
           >
             {item.icon && (
@@ -68,7 +73,7 @@ export const DisclosureMenuItem = ({ item }: DisclosureMenuItemProps) => {
             {item.name}
             <ChevronRightIcon
               className={classNames(
-                isActive
+                open
                   ? 'rotate-90 text-white'
                   : `${getThemeClassName(
                       'text',
@@ -81,7 +86,10 @@ export const DisclosureMenuItem = ({ item }: DisclosureMenuItemProps) => {
               aria-hidden="true"
             />
           </Disclosure.Button>
-          <Disclosure.Panel as="ul" className="mt-1 px-2">
+          <Disclosure.Panel
+            as="ul"
+            className={`rounded-b ${getThemeClassName('bg', role, true, 900)}`}
+          >
             {item.children?.map((subItem) => (
               <DisclosureLeafItem key={subItem.name} item={subItem} />
             ))}
