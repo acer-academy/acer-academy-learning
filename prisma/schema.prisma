@@ -43,7 +43,7 @@ model Student {
   quizzes  Quiz[]
   takes    Take[]
 
-  attendances Attendance[]
+  attendances        Attendance[]
   assignmentAttempts AssignmentAttempt[]
 }
 
@@ -243,7 +243,7 @@ model Transaction {
   stripeTransactionId String?            @db.Uuid
 
   attendance   Attendance? @relation(fields: [attendanceId], references: [id])
-  attendanceId String?    @db.Uuid
+  attendanceId String?     @db.Uuid
 }
 
 enum StripeTransactionStatus {
@@ -460,7 +460,7 @@ model TakeAnswer {
 }
 
 model Attendance {
-  id String @id @default(uuid()) @db.Uuid
+  id          String  @id @default(uuid()) @db.Uuid
   hasAttended Boolean @default(true)
 
   student   Student @relation(fields: [studentId], references: [id])
@@ -470,8 +470,8 @@ model Attendance {
   sessionId String  @db.Uuid
 
   transactions Transaction[]
- }
- 
+}
+
 model Assignment {
   id          String      @id @default(uuid()) @db.Uuid
   title       String
