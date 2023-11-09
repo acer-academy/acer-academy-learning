@@ -4,6 +4,7 @@ import {
   useToast,
   LexEditor,
   ErrorField,
+  GenericButton,
 } from '@acer-academy-learning/common-ui';
 import { QuestionTypeSelect } from './QuestionTypeSelect';
 import {
@@ -78,7 +79,7 @@ export const QuestionCard = ({
   return (
     <form
       onSubmit={handleSubmit(handleSubmitForm, handleError)}
-      className="border-b border-gray-200 bg-white px-4 py-5 sm:px-6 rounded shadow space-y-4 flex flex-col"
+      className="border border-gray-200 bg-white px-4 py-5 sm:px-6 rounded shadow space-y-4 flex flex-col"
     >
       <h3 className="text-base font-semibold leading-6 text-gray-900">
         Question:
@@ -140,7 +141,11 @@ export const QuestionCard = ({
           />
         )}
       />
-      <button
+      <GenericButton
+        text="Create Question"
+        className={`bg-student-primary-900 hover:bg-student-secondary-700 inline-flex font-semibold self-center text-center`}
+      />
+      {/* <button
         className="inline-flex items-center gap-x-1.5 rounded-md bg-teacher-primary-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-teacher-primary-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teacher-primary-600 text-center self-center"
         type="submit"
         style={{
@@ -148,7 +153,7 @@ export const QuestionCard = ({
         }}
       >
         {submitText ?? 'Submit'}
-      </button>
+      </button> */}
     </form>
   );
 };

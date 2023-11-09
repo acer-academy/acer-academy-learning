@@ -44,7 +44,7 @@ export const Avatar = ({
         <span
           // @TODO: Definitely nt the best way to do it, will refine if gt time
           className={`flex  ${
-            size ?? 'lg:h-10 lg:w-10 h-6 w-6'
+            size ?? 'lg:h-10 lg:w-10 h-8 w-8 '
           } shrink-0 items-center justify-center rounded-lg border ${
             borderStyle ?? getThemeClassName('border', role, true, 500)
           } ${bgStyle ?? getThemeClassName('bg', role, true, 600)}  ${

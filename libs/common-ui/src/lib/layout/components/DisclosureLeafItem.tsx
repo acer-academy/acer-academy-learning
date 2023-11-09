@@ -32,8 +32,8 @@ export const DisclosureLeafItem = ({
   const sizeStyles = useMemo(
     () =>
       isChild
-        ? 'block rounded-md py-2 pr-2 pl-11 text-sm leading-6'
-        : 'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold',
+        ? 'block rounded-md py-2 pr-2 pl-11 text-base leading-6 flex space-x-1'
+        : 'group flex gap-x-3 rounded-md p-2 text-base leading-6 font-semibold',
     [isChild],
   );
   const path = useMemo(() => {
@@ -74,7 +74,7 @@ export const DisclosureLeafItem = ({
           ? `
           ${bgColor ?? getThemeClassName('bg', role, true, 700)} 
             ${activeColor ?? 'text-white'}`
-          : `${textColor ?? getThemeClassName('text', role, true, 600)} ${
+          : `${textColor ?? getThemeClassName('text', role, true, 200)} ${
               textHoverColor ?? 'hover:text-white'
             } ${
               bgHoverColor ?? getThemeClassName('hover:bg', role, true, 700)

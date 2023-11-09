@@ -161,7 +161,7 @@ export const Filter: React.FC<{
     <>
       <div className="flex gap-5 justify-start sm:flex-wrap">
         <select
-          className=" rounded-md"
+          className="focus:ring-teacher-primary-900 rounded-md"
           value={selectedLevel}
           onChange={(e) => handleLevelPress(e.target.value as LevelEnum)}
         >
@@ -175,7 +175,7 @@ export const Filter: React.FC<{
           ))}
         </select>
         <select
-          className=" rounded-md"
+          className="focus:ring-teacher-primary-900 rounded-md"
           value={selectedTopic}
           onChange={(e) =>
             handleTopicPress(e.target.value as QuizQuestionTopicEnum)
@@ -191,7 +191,7 @@ export const Filter: React.FC<{
           ))}
         </select>
         <select
-          className=" rounded-md"
+          className="focus:ring-teacher-primary-900 rounded-md"
           value={selectedDifficulty}
           onChange={(e) =>
             handleDifficultyPress(e.target.value as QuizQuestionDifficultyEnum)
@@ -210,7 +210,7 @@ export const Filter: React.FC<{
         </select>
         <select
           hidden={isQuizFilter}
-          className="rounded-md"
+          className="focus:ring-teacher-primary-900 rounded-md"
           value={selectedStatus}
           onChange={(e) =>
             handleStatusPress(e.target.value as QuizQuestionStatusEnum)
@@ -227,7 +227,7 @@ export const Filter: React.FC<{
         </select>
         <select
           hidden={isQuizFilter}
-          className="rounded-md"
+          className="focus:ring-teacher-primary-900 rounded-md"
           value={selectedQuestionType}
           onChange={(e) =>
             handleQuestionTypePress(e.target.value as QuizQuestionTypeEnum)

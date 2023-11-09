@@ -63,7 +63,7 @@ export const CreateAssignmentForm = ({
         <GenericButton
           type="submit"
           text={submitText}
-          className="self-center hover:bg-gray-700"
+          className="self-center bg-teacher-primary-900 hover:bg-teacher-secondary-700"
         />
       </form>
     </section>

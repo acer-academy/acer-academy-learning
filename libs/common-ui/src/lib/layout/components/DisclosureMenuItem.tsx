@@ -50,7 +50,7 @@ export const DisclosureMenuItem = ({ item }: DisclosureMenuItemProps) => {
                    )}`,
               `group flex items-center w-full text-left ${
                 open ? 'rounded-t-md' : 'rounded-md'
-              } p-2 gap-x-3 text-sm leading-6 font-semibold`,
+              } p-2 gap-x-3 text-base leading-6 font-semibold`,
             )}
           >
             {item.icon && (
