@@ -49,7 +49,7 @@ const StudentLogin: React.FC = () => {
                 Don't have an account?{' '}
                 <a
                   href="/sign-up"
-                  className="font-semibold text-teacher-primary-900 hover:underline hover:text-teacher-secondary-700"
+                  className="font-semibold text-student-secondary-700 hover:underline hover:text-teacher-secondary-900"
                 >
                   Sign Up
                 </a>
@@ -120,7 +120,7 @@ const StudentLogin: React.FC = () => {
                     <div className="text-sm leading-6">
                       <a
                         href="/forgot-password"
-                        className="font-semibold text-teacher-primary-900 hover:underline hover:text-teacher-secondary-700"
+                        className="font-semibold text-student-secondary-700 hover:underline hover:text-teacher-secondary-900"
                       >
                         Forgot password?
                       </a>
@@ -130,7 +130,7 @@ const StudentLogin: React.FC = () => {
                   <div>
                     <button
                       type="submit"
-                      className="flex w-full justify-center rounded-md bg-teacher-primary-900 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-teacher-secondary-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teacher-primary-600"
+                      className="flex w-full justify-center rounded-md bg-student-primary-900 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-teacher-secondary-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teacher-primary-600"
                     >
                       Sign in
                     </button>
