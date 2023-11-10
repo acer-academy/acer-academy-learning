@@ -34,7 +34,7 @@ export const AssignmentStatistics: React.FC = () => {
   return (
     <div className="flex min-h-full flex-col gap-5">
       <div>
-        <BackButton />
+        <BackButton className="bg-teacher-primary-900 hover:bg-teacher-secondary-700" />
       </div>
       <div className="flex gap-2 text-2xl py-1 mb-5 font-bold tracking-tight items-center">
         {assignmentStats?.assignmentDetails.title ?? ''}

@@ -61,7 +61,7 @@ export const PrimaryLayout = ({
           } flex-2 shadow-bottom `}
         >
           <nav
-            className=" flex  items-center justify-between p-6 lg:px-8"
+            className=" flex h-full items-center justify-between p-6 lg:px-8"
             aria-label="Global"
           >
             <div className="flex items-center gap-x-12">

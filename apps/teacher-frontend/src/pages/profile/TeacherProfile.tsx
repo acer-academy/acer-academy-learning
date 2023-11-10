@@ -138,14 +138,14 @@ const TeacherProfile: React.FC = () => {
             {isEditing ? (
               <button
                 onClick={saveProfile}
-                className="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 mt-6"
+                className="block rounded-md bg-teacher-primary-900 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-teacher-secondary-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teacher-primary-600 mt-6"
               >
                 Save Profile
               </button>
             ) : (
               <button
                 onClick={editProfile}
-                className="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 mt-6"
+                className="block rounded-md bg-teacher-primary-900 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-teacher-secondary-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teacher-primary-600 mt-6"
               >
                 Edit Profile
               </button>
@@ -199,7 +199,7 @@ const TeacherProfile: React.FC = () => {
                 onClick={() => {
                   navigate(CHANGE_PASSWORD);
                 }}
-                className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                className="rounded-md bg-teacher-primary-900 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-teacher-secondary-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teacher-primary-600"
               >
                 Change Password
               </button>

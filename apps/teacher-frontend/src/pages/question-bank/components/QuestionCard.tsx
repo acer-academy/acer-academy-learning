@@ -142,18 +142,9 @@ export const QuestionCard = ({
         )}
       />
       <GenericButton
-        text="Create Question"
+        text={submitText ?? 'Submit'}
         className={`bg-student-primary-900 hover:bg-student-secondary-700 inline-flex font-semibold self-center text-center`}
       />
-      {/* <button
-        className="inline-flex items-center gap-x-1.5 rounded-md bg-teacher-primary-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-teacher-primary-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teacher-primary-600 text-center self-center"
-        type="submit"
-        style={{
-          marginTop: '3rem',
-        }}
-      >
-        {submitText ?? 'Submit'}
-      </button> */}
     </form>
   );
 };

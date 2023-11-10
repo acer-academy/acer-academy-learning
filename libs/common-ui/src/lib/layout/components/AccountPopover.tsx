@@ -17,8 +17,8 @@ export const AccountPopover = ({
 }: AccountPopoverProps) => {
   const { role } = useThemeContext();
   return (
-    <div className="w-full max-w-sm px-4">
-      <Popover className="relative">
+    <div className={` w-full max-w-sm px-4 h-full`}>
+      <Popover className={`relative`}>
         {({ open }) => (
           <>
             <Popover.Button
@@ -29,7 +29,9 @@ export const AccountPopover = ({
                 role,
                 true,
                 900,
-              )} px-3 py-2 text-base font-medium text-white hover:text-opacity-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75`}
+              )} px-3 py-2 text-base font-medium text-white hover:text-opacity-100 outline-none ${
+                open ? 'outline-gray-100' : ''
+              }`}
             >
               <Avatar
                 firstName={firstName}

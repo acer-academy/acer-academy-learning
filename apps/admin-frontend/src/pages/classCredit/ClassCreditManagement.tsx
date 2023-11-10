@@ -199,7 +199,7 @@ export const ClassCreditManagement: React.FC = () => {
   }
 
   return (
-    <div className="h-full bg-gray-50">
+    <div className="h-full">
       <div className="flex min-h-full flex-col gap-7 align-middle py-12 px-12">
         <div className="relative mt-2 rounded-md shadow-sm">
           <input
@@ -441,7 +441,7 @@ export const ClassCreditManagement: React.FC = () => {
                             </td>
                             <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-center text-sm font-medium sm:pr-6">
                               <a
-                                className="text-indigo-600 hover:text-indigo-900 mr-4 cursor-pointer"
+                                className="text-admin-primary-700 hover:text-admin-secondary-900 mr-4 cursor-pointer"
                                 onClick={() => {
                                   setAlertStudentName(
                                     student.firstName + ' ' + student.lastName,
@@ -459,7 +459,7 @@ export const ClassCreditManagement: React.FC = () => {
                             </td>
                             <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-center text-sm font-medium sm:pr-6">
                               <a
-                                className="text-indigo-600 hover:text-indigo-900 cursor-pointer"
+                                className="text-admin-primary-700 hover:text-admin-secondary-900 cursor-pointer"
                                 onClick={() => {
                                   setBlockStudentId(student.id);
                                   setBlockStudentName(
