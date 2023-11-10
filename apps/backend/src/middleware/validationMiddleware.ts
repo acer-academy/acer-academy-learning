@@ -2409,13 +2409,6 @@ export async function validateBodyTeacherExists(
   next: NextFunction,
 ) {
   try {
-    const { sessionId } = req.body;
-    const session = await SessionService.getSessionBySessionId(sessionId);
-    if (!session) {
-      return res.status(400).json({
-        error: 'Invalid session provided.',
-      });
-    }
     const { teacherId } = req.body;
     if (teacherId) {
       const validTeacher = await teacherService.getTeacherById(teacherId);
