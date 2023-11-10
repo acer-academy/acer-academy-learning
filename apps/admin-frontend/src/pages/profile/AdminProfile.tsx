@@ -56,14 +56,14 @@ const AdminProfile: React.FC = () => {
             {isEditing ? (
               <button
                 onClick={onSaveProfile}
-                className="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 mt-6"
+                className="block rounded-md bg-admin-primary-700 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-admin-primary-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-admin-primary-700 mt-6"
               >
                 Save Profile
               </button>
             ) : (
               <button
                 onClick={onEditProfile}
-                className="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 mt-6"
+                className="block rounded-md bg-admin-primary-700 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-admin-primary-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-admin-primary-700 mt-6"
               >
                 Edit Profile
               </button>
@@ -112,7 +112,7 @@ const AdminProfile: React.FC = () => {
                 Change Password:
               </span>
               <button
-                className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                className="rounded-md bg-admin-primary-700 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-admin-primary-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-admin-primary-700"
                 onClick={() => navigate(`${CHANGE_PASSWORD}`)}
               >
                 Change Password

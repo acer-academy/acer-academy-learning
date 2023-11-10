@@ -48,7 +48,7 @@ export const FaqArticleCreateModal: React.FC<FaqArticleCreateModalProps> = ({
                   type="text"
                   name="title"
                   id="title"
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 text-gray-900 focus:ring-adminGreen-500 placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 text-gray-900 focus:ring-admin-primary-700 placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6"
                   placeholder="How does the curriculum fit my child?"
                   value={faqArticleData.title}
                   onChange={(e) => {
@@ -76,7 +76,7 @@ export const FaqArticleCreateModal: React.FC<FaqArticleCreateModalProps> = ({
                   type="text"
                   name="imageUrl"
                   id="imageUrl"
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 text-gray-900 focus:ring-adminGreen-500 placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 text-gray-900 focus:ring-admin-primary-700 placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6"
                   placeholder="Optional"
                   value={faqArticleData.imageUrl}
                   onChange={(e) => {
@@ -103,7 +103,7 @@ export const FaqArticleCreateModal: React.FC<FaqArticleCreateModalProps> = ({
                 <textarea
                   name="body"
                   id="body"
-                  className="block w-full rounded-md break-normal align-left border-0 py-1.5 h-32 text-gray-900 ring-1 ring-inset ring-gray-300 text-gray-900 focus:ring-adminGreen-500 placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md break-normal align-left border-0 py-1.5 h-32 text-gray-900 ring-1 ring-inset ring-gray-300 text-gray-900 focus:ring-admin-primary-700 placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6"
                   placeholder="The curriculum can fit your child’s needs because..."
                   value={faqArticleData.body}
                   onChange={(e) => {
@@ -133,7 +133,7 @@ export const FaqArticleCreateModal: React.FC<FaqArticleCreateModalProps> = ({
                 ${
                   isFaqArticleDataInvalid()
                     ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                    : 'bg-adminGreen-600 hover:bg-adminGreen-500 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-adminGreen-500'
+                    : 'bg-admin-primary-700 hover:bg-admin-primary-900 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-admin-primary-900'
                 }`}
               onClick={() => createFaqArticle(faqArticleData)}
             >

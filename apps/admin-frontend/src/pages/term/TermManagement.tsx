@@ -104,14 +104,14 @@ export const TermManagement: React.FC = () => {
   }, [isDeleteModalOpen, isCreateModalOpen, isUpdateModalOpen]);
 
   return (
-    <div className="h-full bg-gray-50">
+    <div className="h-full">
       <div className="flex min-h-full flex-col gap-7 align-middle py-12 px-12">
         <div className="relative mt-2 rounded-md shadow-sm">
           <input
             type="text"
             name="term-searchbar"
             id="term-searchbar"
-            className="block w-full rounded-md border-0 py-1.5 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-adminGreen-600 sm:text-sm sm:leading-6"
+            className="block w-full rounded-md border-0 py-1.5 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-admin-primary-700 sm:text-sm sm:leading-6"
             placeholder="Search for a Term..."
             value={searchbarText}
             onChange={(e) => {
@@ -132,7 +132,7 @@ export const TermManagement: React.FC = () => {
         <div className="flex justify-between items-center">
           <span className="text-2xl font-bold tracking-tight">Terms</span>
           <button
-            className="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-adminGreen-600 border border-transparent rounded-md hover:bg-adminGreen-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-adminGreen-500"
+            className="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-admin-primary-700 border border-transparent rounded-md hover:bg-admin-primary-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-admin-primary-500"
             onClick={() => {
               setIsCreateModalOpen(true);
             }}
@@ -213,7 +213,7 @@ export const TermManagement: React.FC = () => {
                                 xmlns="http://www.w3.org/2000/svg"
                                 height="1em"
                                 viewBox="0 0 576 512"
-                                className="h-4 w-4 fill-indigo-600 stroke-2 hover:fill-black cursor-pointer"
+                                className="h-4 w-4 fill-admin-primary-700 stroke-2 hover:fill-black cursor-pointer"
                                 onClick={() => {
                                   setUpdateTermId(term.id);
                                   setInitialTerm(term);
@@ -226,7 +226,7 @@ export const TermManagement: React.FC = () => {
                             <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-center text-sm font-medium sm:pr-6">
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
-                                className="h-4 w-4 fill-indigo-600 stroke-2 hover:fill-black cursor-pointer"
+                                className="h-4 w-4 fill-admin-primary-700 stroke-2 hover:fill-black cursor-pointer"
                                 viewBox="0 0 16 16"
                                 onClick={() => {
                                   setDeleteTermId(term.id);

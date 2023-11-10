@@ -106,7 +106,7 @@ export const ClassroomCreateModal: React.FC<ClassroomCreateModalProps> = ({
                     className={`block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ${
                       invalidNameSubmitted
                         ? 'ring-red-300 text-red-900 focus:ring-red-500'
-                        : 'ring-gray-300 text-gray-900 focus:ring-adminGreen-500'
+                        : 'ring-gray-300 text-gray-900 focus:ring-admin-primary-900'
                     } placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6`}
                     placeholder="Classroom 1"
                     value={classroomData.name}
@@ -141,7 +141,7 @@ export const ClassroomCreateModal: React.FC<ClassroomCreateModalProps> = ({
                     min="1"
                     name="capacity"
                     id="capacity"
-                    className={`block w-full rounded-md border-0 py-1.5 ring-1 ring-inset ring-gray-300 text-gray-900 focus:ring-adminGreen-500'
+                    className={`block w-full rounded-md border-0 py-1.5 ring-1 ring-inset ring-gray-300 text-gray-900 focus:ring-admin-primary-900'
                     } placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6`}
                     value={classroomData.capacity}
                     onChange={(e) => {
@@ -163,7 +163,7 @@ export const ClassroomCreateModal: React.FC<ClassroomCreateModalProps> = ({
                     id="available-checkbox"
                     name="available-checkbox"
                     type="checkbox"
-                    className="h-4 w-4 rounded border-gray-300 text-adminGreen-600 focus:ring-adminGreen-600"
+                    className="h-4 w-4 rounded border-gray-300 text-admin-primary-700 focus:ring-admin-primary-700"
                     checked={classroomData.available}
                     onChange={(e) => {
                       setClassroomData({
@@ -199,7 +199,7 @@ export const ClassroomCreateModal: React.FC<ClassroomCreateModalProps> = ({
                   ${
                     classroomData.name.length == 0
                       ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                      : 'bg-adminGreen-600 hover:bg-adminGreen-500 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-adminGreen-500'
+                      : 'bg-admin-primary-700 hover:bg-admin-primary-900 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-admin-primary-900'
                   }`}
                 onClick={() => {
                   handleCreateOrEdit();
