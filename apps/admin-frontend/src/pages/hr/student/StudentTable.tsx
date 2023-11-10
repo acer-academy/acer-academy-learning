@@ -193,7 +193,7 @@ export const StudentTable: React.FC = () => {
                       )}
                     >
                       <div
-                        className="text-indigo-600 hover:text-indigo-900 cursor-pointer"
+                        className="text-admin-primary-700 hover:text-indigo-900 cursor-pointer"
                         onClick={() => handleViewMore(student.id)}
                       >
                         View more
@@ -208,7 +208,7 @@ export const StudentTable: React.FC = () => {
                       )}
                     >
                       <div
-                        className="text-indigo-600 hover:text-indigo-900 cursor-pointer"
+                        className="text-admin-primary-700 hover:text-admin-primary-900 cursor-pointer"
                         onClick={() =>
                           handleOnClick(
                             student.id,

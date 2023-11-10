@@ -170,7 +170,7 @@ export const AdminTable: React.FC = () => {
                       )}
                     >
                       <div
-                        className="text-indigo-600 hover:text-indigo-900 cursor-pointer"
+                        className="text-admin-primary-700 hover:text-admin-primary-900 cursor-pointer"
                         onClick={() => handleViewMore(admin.id)}
                       >
                         View more
@@ -185,7 +185,7 @@ export const AdminTable: React.FC = () => {
                       )}
                     >
                       <div
-                        className="text-indigo-600 hover:text-indigo-900 cursor-pointer"
+                        className="text-admin-primary-700 hover:text-admin-primary-900 cursor-pointer"
                         onClick={() =>
                           handleOnClick(
                             admin.id,
