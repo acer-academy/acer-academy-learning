@@ -3,7 +3,7 @@ import {
   QuizPaginationFilter,
   Teacher,
   getPaginatedFilteredQuizzes as apiGetPaginatedFilteredQuizzes,
-  deleteQuiz,
+  deleteQuiz as apiDeleteQuiz,
 } from '@acer-academy-learning/data-access';
 import { QuizQuestionPaginationFilter } from 'libs/data-access/src/lib/types/question';
 import { useEffect, useState } from 'react';
@@ -28,6 +28,7 @@ import {
   UserGroupIcon,
   LockOpenIcon,
   LockClosedIcon,
+  ArrowUturnLeftIcon,
 } from '@heroicons/react/24/outline';
 import { useMutation } from 'react-query';
 
@@ -44,7 +45,7 @@ export const QuizManagement: React.FC = () => {
   const [totalCount, setTotalCount] = useState(0);
   const [isFilterVisible, setIsFilterVisible] = useState(true);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
-  const [deleteQuestionId, setDeleteQuizId] = useState('');
+  const [deleteQuiz, setDeleteQuiz] = useState<QuizData>();
 
   const getPaginatedFilteredQuizzes = async () => {
     try {
@@ -68,7 +69,7 @@ export const QuizManagement: React.FC = () => {
     }
   };
 
-  const { mutate: deleteQuizMutate } = useMutation(deleteQuiz, {
+  const { mutate: deleteQuizMutate } = useMutation(apiDeleteQuiz, {
     onSuccess: async () => {
       await getPaginatedFilteredQuizzes();
       displayToast('Successfully deleted quiz', ToastType.SUCCESS);
@@ -364,12 +365,16 @@ export const QuizManagement: React.FC = () => {
                                   type="button"
                                   onClick={(e) => {
                                     e.stopPropagation();
-                                    setDeleteQuizId(quiz.id);
+                                    setDeleteQuiz(quiz);
                                     setDeleteModalOpen(true);
                                   }}
                                   className="inline-flex items-center rounded-md bg-red-500 px-3 py-2 text-sm font-semibold shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-red-600"
                                 >
-                                  <TrashIcon className="w-6 h-6 text-white" />
+                                  {quiz.version > 1 ? (
+                                    <ArrowUturnLeftIcon className="w-6 h-6 text-white" />
+                                  ) : (
+                                    <TrashIcon className="w-6 h-6 text-white" />
+                                  )}
                                 </button>
                               </>
                             )}
@@ -449,13 +454,15 @@ export const QuizManagement: React.FC = () => {
       <WarningModal
         open={deleteModalOpen}
         setOpen={setDeleteModalOpen}
-        title={'Delete Quiz'}
-        description={
-          'Are you sure you want to delete this quiz? All student attempts for this quiz will also be removed and cannot be undone.'
-        }
+        title={`${
+          deleteQuiz && deleteQuiz?.version > 1 ? 'Revert' : 'Delete'
+        } Quiz`}
+        description={`Are you sure you want to ${
+          deleteQuiz && deleteQuiz?.version > 1 ? 'revert' : 'delete'
+        } this quiz? All student attempts for this quiz will also be removed and cannot be undone.`}
         confirmContent={'Delete'}
         dismissContent={'Cancel'}
-        onConfirm={() => deleteQuizMutate(deleteQuestionId)}
+        onConfirm={() => deleteQuiz && deleteQuizMutate(deleteQuiz.id)}
       />
     </div>
   );
