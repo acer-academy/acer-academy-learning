@@ -41,6 +41,7 @@ export const QuestionLevelsCombo = () => {
             />
             <GenericComboBox
               options={levelsEnums}
+              hasError={!!errors.levels?.message}
               onChange={onChange}
               selected={value}
               displayValue={(topic) => screamingSnakeToTitleCase(topic)}

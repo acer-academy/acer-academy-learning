@@ -80,14 +80,14 @@ export const FaqTopicManagement: React.FC = () => {
   }, [isDeleteModalOpen, isCreateModalOpen]);
 
   return (
-    <div className="h-full bg-gray-50">
+    <div className="h-full">
       <div className="flex min-h-full flex-col gap-7 align-middle py-12 px-12">
         <div className="relative mt-2 rounded-md shadow-sm">
           <input
             type="text"
             name="faqTopic-searchbar"
             id="faqTopic-searchbar"
-            className="block w-full rounded-md border-0 py-1.5 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-adminGreen-600 sm:text-sm sm:leading-6"
+            className="block w-full rounded-md border-0 py-1.5 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-admin-primary-700 sm:text-sm sm:leading-6"
             placeholder="Search for a FAQ topic..."
             value={searchbarText}
             onChange={(e) => {
@@ -108,7 +108,7 @@ export const FaqTopicManagement: React.FC = () => {
         <div className="flex justify-between items-center">
           <span className="text-2xl font-bold tracking-tight">FAQ Topics</span>
           <button
-            className="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-adminGreen-600 border border-transparent rounded-md hover:bg-adminGreen-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-adminGreen-500"
+            className="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-admin-primary-700 border border-transparent rounded-md hover:bg-admin-primary-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-admin-primary-900"
             onClick={() => {
               setIsCreateModalOpen(true);
             }}
@@ -134,7 +134,7 @@ export const FaqTopicManagement: React.FC = () => {
               .map((faqTopic) => (
                 <div
                   key={faqTopic.id}
-                  className="relative flex items-center space-x-3 rounded-lg border border-gray-300 bg-white px-6 py-5 shadow-sm focus-within:ring-2 focus-within:ring-adminGreen-500 focus-within:ring-offset-2 hover:border-gray-400"
+                  className="relative flex items-center space-x-3 rounded-lg border border-gray-300 bg-white px-6 py-5 shadow-sm focus-within:ring-2 focus-within:ring-admin-primary-900 focus-within:ring-offset-2 hover:border-gray-400"
                 >
                   <div className="min-w-0 flex-1">
                     <a

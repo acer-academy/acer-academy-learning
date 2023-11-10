@@ -17,6 +17,7 @@ const {
   LevelEnum,
   answers,
   answers2,
+  adminURL,
 } = require('./generatorMockData');
 const axios = require('axios');
 
@@ -66,6 +67,14 @@ const getRandomItem = (array) => {
 const setupPrerequisites = async () => {
   try {
     const startTime = Date.now();
+    // Additional super-admin and admin creation
+    const createSuperAdminResponse = await axios.post(`${adminURL}/register`, {
+      email: 'su@su.com',
+      firstName: 'super',
+      lastName: 'admin',
+      password: 'password',
+      type: 'SUPER_ADMIN',
+    });
     const whitelistResponse = await axios.post(whitelistURL, {
       email: 'teacher@teacher.com',
       role: 'TEACHER',

@@ -50,7 +50,7 @@ export const QuestionSelectionModeRadio: React.FC<
                     ? 'rounded-bl-md rounded-br-md'
                     : '',
                   checked
-                    ? 'z-10 border-indigo-200 bg-indigo-50'
+                    ? 'z-10 border-teacher-secondary-200 bg-teacher-secondary-50'
                     : 'border-gray-200',
                   'relative flex cursor-pointer border p-4 focus:outline-none',
                 )
@@ -61,9 +61,11 @@ export const QuestionSelectionModeRadio: React.FC<
                   <span
                     className={classNames(
                       checked
-                        ? 'bg-indigo-600 border-transparent'
+                        ? 'bg-teacher-secondary-700 border-transparent'
                         : 'bg-white border-gray-300',
-                      active ? 'ring-2 ring-offset-2 ring-indigo-600' : '',
+                      active
+                        ? 'ring-2 ring-offset-2 ring-teacher-secondary-700'
+                        : '',
                       'mt-0.5 h-4 w-4 shrink-0 cursor-pointer rounded-full border flex items-center justify-center',
                     )}
                     aria-hidden="true"
@@ -74,7 +76,9 @@ export const QuestionSelectionModeRadio: React.FC<
                     <RadioGroup.Label
                       as="span"
                       className={classNames(
-                        checked ? 'text-indigo-900' : 'text-gray-900',
+                        checked
+                          ? 'text-teacher-secondary-700 font-semibold'
+                          : 'text-gray-900',
                         'block text-sm font-medium',
                       )}
                     >
@@ -83,7 +87,9 @@ export const QuestionSelectionModeRadio: React.FC<
                     <RadioGroup.Description
                       as="span"
                       className={classNames(
-                        checked ? 'text-indigo-700' : 'text-gray-500',
+                        checked
+                          ? 'text-teacher-secondary-700'
+                          : 'text-teacher-primary-500',
                         'block text-sm',
                       )}
                     >
@@ -98,7 +104,7 @@ export const QuestionSelectionModeRadio: React.FC<
       </RadioGroup>
       <div className="flex justify-center">
         <GenericButton
-          className="hover:bg-gray-700"
+          className="bg-teacher-primary-900 hover:bg-teacher-secondary-700"
           onClick={() => handleSelectMode(selected.modeId)}
         />
       </div>

@@ -1,4 +1,5 @@
 const whitelistURL = 'http://localhost:8000/api/v1/whitelist/create';
+const adminURL = 'http://localhost:8000/api/v1/admins';
 const createCentreURL = 'http://localhost:8000/api/v1/centres';
 const createTeacherURL = 'http://localhost:8000/api/v1/teachers';
 const createQuizQuestionURL = 'http://localhost:8000/api/v1/quiz-questions/';
@@ -204,6 +205,7 @@ const answers2 = [
 
 module.exports = {
   whitelistURL,
+  adminURL,
   createCentreURL,
   createTeacherURL,
   createQuizQuestionURL,

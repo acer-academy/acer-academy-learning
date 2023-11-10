@@ -76,7 +76,7 @@ export const AdminHRManagementPage: React.FC = () => {
             <button
               type="button"
               onClick={() => setIsAddWhitelistModalOpen(true)}
-              className="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              className="block rounded-md bg-admin-primary-700 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-admin-primary-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-admin-primary-600"
             >
               Add whitelist
             </button>
@@ -131,7 +131,7 @@ export const AdminHRManagementPage: React.FC = () => {
                           className={`${
                             data.admin
                               ? `text-slate-300`
-                              : `text-indigo-600 hover:text-indigo-900 cursor-pointer`
+                              : `text-admin-primary-700 hover:text-admin-primary-900 cursor-pointer`
                           }`}
                           onClick={() => {
                             if (data.admin) return;

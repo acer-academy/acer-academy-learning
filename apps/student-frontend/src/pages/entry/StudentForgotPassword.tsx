@@ -86,7 +86,7 @@ const StudentForgotPassword: React.FC = () => {
               <div>
                 <button
                   type="submit"
-                  className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                  className="flex w-full justify-center rounded-md bg-student-primary-900 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-student-secondary-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-student-primary-600"
                 >
                   Continue
                 </button>
@@ -95,7 +95,7 @@ const StudentForgotPassword: React.FC = () => {
               <p className="mt-10 text-center text-sm text-gray-500">
                 <a
                   href="/"
-                  className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
+                  className="font-semibold leading-6 text-student-primary-900 hover:text-student-secondary-700 hover:underline"
                 >
                   Return to sign in
                 </a>
@@ -106,7 +106,7 @@ const StudentForgotPassword: React.FC = () => {
             Don't have an account?{' '}
             <a
               href="/sign-up"
-              className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
+              className="font-semibold leading-6 text-student-primary-900 hover:text-student-secondary-700"
             >
               Sign up
             </a>

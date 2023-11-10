@@ -1,12 +1,19 @@
-import React, { useState } from 'react';
+import React, {
+  ButtonHTMLAttributes,
+  DetailedHTMLProps,
+  useEffect,
+  useState,
+} from 'react';
 import { useNavigate } from 'react-router-dom';
 import { GenericButton } from './GenericButton';
 import { ArrowUturnLeftIcon } from '@heroicons/react/24/outline';
 
 export type BackButtonProps = {
   path?: string;
-  className?: string;
-};
+} & DetailedHTMLProps<
+  ButtonHTMLAttributes<HTMLButtonElement>,
+  HTMLButtonElement
+>;
 
 export const BackButton = ({ path, className }: BackButtonProps) => {
   const navigate = useNavigate();
@@ -18,6 +25,10 @@ export const BackButton = ({ path, className }: BackButtonProps) => {
       navigate(-1);
     }
   };
+
+  useEffect(() => {
+    console.log(className);
+  }, [className]);
 
   return (
     <GenericButton

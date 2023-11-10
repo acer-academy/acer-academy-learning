@@ -31,12 +31,6 @@ export const GenericAccordion = ({
                 open ? 'rotate-90 transform' : ''
               } ${arrowClassName}`}
             />
-
-            {/* <ChevronRightIcon
-              className={`${
-                open ? 'rotate-180 transform' : ''
-              } h-5 w-5 text-gray-900`}
-            /> */}
           </Disclosure.Button>
           <Disclosure.Panel
             className={`text-gray-900 text-base md:text-xl ${contentClassName}`}

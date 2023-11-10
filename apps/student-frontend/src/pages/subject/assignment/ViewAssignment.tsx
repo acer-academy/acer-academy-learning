@@ -34,7 +34,7 @@ export const ViewAssignment: React.FC = () => {
 
     return (
       <>
-        <BackButton className="mx-10" />
+        <BackButton className="mx-10 bg-student-primary-900 hover:bg-student-secondary-700" />
         <div className="px-10 pt-5">
           <div className="px-4 sm:px-0 flex flex-row justify-between">
             <h3 className="text-2xl font-semibold leading-7 text-gray-900">
@@ -113,7 +113,7 @@ export const ViewAssignment: React.FC = () => {
                       <div className="ml-4 flex-shrink-0">
                         <a
                           href={assignment.fileUrl}
-                          className="font-medium text-indigo-600 hover:text-indigo-500"
+                          className="font-medium text-student-secondary-700 hover:underline"
                           target="_blank"
                           rel="noopener noreferrer"
                         >

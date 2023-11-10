@@ -111,7 +111,7 @@ export const AssignmentManagement: React.FC = () => {
             </span>
           </div>
           <button
-            className="inline-flex justify-center px-4 py-2 text-white bg-teacherBlue-500 border border-transparent rounded-md hover:bg-teacherBlue-700"
+            className="inline-flex justify-center px-4 py-2 text-white bg-teacher-primary-900 border border-transparent rounded-md hover:bg-teacher-secondary-700"
             onClick={() => {
               navToCreateAssignment();
             }}

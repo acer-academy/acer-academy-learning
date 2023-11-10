@@ -163,7 +163,7 @@ export const CentreDetails: React.FC = () => {
     <div className="h-full bg-gray-50">
       <div className="flex min-h-full flex-col gap-7 align-middle py-12 px-12">
         <a
-          className="hover:text-adminGreen-600 underline"
+          className="hover:text-admin-primary-700 underline"
           href="centre-management"
         >{`< Back`}</a>
         {centre && (
@@ -188,7 +188,7 @@ export const CentreDetails: React.FC = () => {
           {isEditingCentreName ? (
             <input
               name="updatedCentreName"
-              className="flex items-center col-span-1 border-0 rounded bg-transparent ring-1 ring-inset focus:ring-2 focus:ring-inset ring-gray-300 text-gray-900 focus:ring-adminGreen-500"
+              className="flex items-center col-span-1 border-0 rounded bg-transparent ring-1 ring-inset focus:ring-2 focus:ring-inset ring-gray-300 text-gray-900 focus:ring-admin-primary-900"
               placeholder="Acer Academy"
               value={updatedCentreName}
               onChange={(e) => {
@@ -207,7 +207,7 @@ export const CentreDetails: React.FC = () => {
                   setIsEditingCentreName(false);
                   wereUpdatesMade();
                 }}
-                className="text-adminGreen-600 hover:underline"
+                className="text-admin-primary-700 hover:underline"
               >
                 Update
               </button>
@@ -217,7 +217,7 @@ export const CentreDetails: React.FC = () => {
                 onClick={() => setIsEditingCentreName(true)}
                 className={
                   !isEditingCentreAddress
-                    ? 'hover:text-adminGreen-600 underline'
+                    ? 'hover:text-admin-primary-700 underline'
                     : 'text-gray-400'
                 }
               >
@@ -231,7 +231,7 @@ export const CentreDetails: React.FC = () => {
           {isEditingCentreAddress ? (
             <input
               name="updatedCentreAddress"
-              className="flex items-center col-span-1 border-0 rounded bg-transparent ring-1 ring-inset focus:ring-2 focus:ring-inset ring-gray-300 text-gray-900 focus:ring-adminGreen-500"
+              className="flex items-center col-span-1 border-0 rounded bg-transparent ring-1 ring-inset focus:ring-2 focus:ring-inset ring-gray-300 text-gray-900 focus:ring-admin-primary-900"
               placeholder="18 Yishun Ave 9 #01-36"
               value={updatedCentreAddress}
               onChange={(e) => {
@@ -250,7 +250,7 @@ export const CentreDetails: React.FC = () => {
                   setIsEditingCentreAddress(false);
                   wereUpdatesMade();
                 }}
-                className="text-adminGreen-600 hover:underline"
+                className="text-admin-primary-700 hover:underline"
               >
                 Update
               </button>
@@ -260,7 +260,7 @@ export const CentreDetails: React.FC = () => {
                 onClick={() => setIsEditingCentreAddress(true)}
                 className={
                   !isEditingCentreName
-                    ? 'hover:text-adminGreen-600 underline'
+                    ? 'hover:text-admin-primary-700 underline'
                     : 'text-gray-400'
                 }
               >
@@ -271,7 +271,7 @@ export const CentreDetails: React.FC = () => {
         </div>
         <div className="inline-flex justify-end">
           <button
-            className="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-adminGreen-600 border border-transparent rounded-md hover:bg-adminGreen-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-adminGreen-500"
+            className="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-admin-primary-700 border border-transparent rounded-md hover:bg-admin-primary-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-admin-primary-900"
             onClick={() => {
               setIsCreateModalOpen(true);
             }}

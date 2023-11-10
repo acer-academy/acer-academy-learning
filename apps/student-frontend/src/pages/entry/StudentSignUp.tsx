@@ -47,7 +47,7 @@ const InputField: React.FC<InputFieldProps> = ({
       required
       value={value}
       onChange={onChange}
-      className={`w-3/4 block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`}
+      className={`w-3/4 block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-student-secondary-700 sm:text-sm sm:leading-6`}
     />
   </div>
 );
@@ -321,7 +321,7 @@ export default function StudentSignUp() {
                 required
                 value={selectedCentre}
                 onChange={(e) => setSelectedCentre(e.target.value)}
-                className="mt-2 block w-3/4 space-y-2 rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                className="mt-2 block w-3/4 space-y-2 rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-student-secondary-600 sm:text-sm sm:leading-6"
               >
                 <option value="" disabled>
                   Select a centre
@@ -349,7 +349,7 @@ export default function StudentSignUp() {
                         type="checkbox"
                         checked={selectedSubjects.includes(subject.value)}
                         onChange={() => handleSubjectChange(subject.value)}
-                        className="h-5 w-5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                        className="h-5 w-5 rounded border-gray-300 text-student-secondary-700 focus:ring-student-secondary-600"
                       />
                       <span className="ml-2 text-gray-700">
                         {subject.label}
@@ -373,7 +373,7 @@ export default function StudentSignUp() {
                 required
                 value={selectedLevel}
                 onChange={(e) => setSelectedLevel(e.target.value)}
-                className="mt-2 block w-3/4 space-y-2 rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                className="mt-2 block w-3/4 space-y-2 rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-student-secondary-700 sm:text-sm sm:leading-6"
               >
                 <option value="" disabled>
                   Select a level
@@ -438,7 +438,7 @@ export default function StudentSignUp() {
                   <button
                     type="button"
                     onClick={() => setShowParent2(true)}
-                    className="text-indigo-600"
+                    className="text-student-primary-900 hover:text-student-secondary-700"
                   >
                     + Add Another Parent
                   </button>
@@ -456,7 +456,7 @@ export default function StudentSignUp() {
             <div>
               <button
                 type="submit"
-                className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                className="flex w-full justify-center rounded-md bg-student-primary-900 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-student-secondary-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-student-primary-900"
               >
                 Register
               </button>
@@ -467,7 +467,7 @@ export default function StudentSignUp() {
             Have an account?{' '}
             <a
               href="#"
-              className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
+              className="font-semibold leading-6 text-student-secondary-700 hover:text-student-secondary-900 hover:underline"
             >
               Login
             </a>

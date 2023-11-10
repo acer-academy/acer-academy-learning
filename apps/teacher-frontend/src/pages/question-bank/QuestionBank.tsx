@@ -24,7 +24,6 @@ import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { useMutation } from 'react-query';
 
 export const QuestionBank: React.FC = () => {
-  const location = useLocation();
   const { displayToast, ToastType } = useToast();
   const { mutate: deleteQuizQuestionMutate } = useMutation(deleteQuizQuestion, {
     onSuccess: async () => {
@@ -105,20 +104,20 @@ export const QuestionBank: React.FC = () => {
               Question Bank
             </span>
             <button
-              className="text-blue-500 hover:text-blue-600"
+              className="text-student-primary-900 hover:text-student-secondary-700 transition-colors"
               onClick={() => setIsFilterVisible(!isFilterVisible)}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
-                className="w-7 h-7 fill-teacherBlue-500 hover:fill-teacherBlue-700 transition-colors"
+                className="w-7 h-7 fill-teacher-primary-900 hover:fill-teacher-secondary-700 transition-colors"
               >
                 <path d="M18.75 12.75h1.5a.75.75 0 000-1.5h-1.5a.75.75 0 000 1.5zM12 6a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5A.75.75 0 0112 6zM12 18a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5A.75.75 0 0112 18zM3.75 6.75h1.5a.75.75 0 100-1.5h-1.5a.75.75 0 000 1.5zM5.25 18.75h-1.5a.75.75 0 010-1.5h1.5a.75.75 0 010 1.5zM3 12a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5A.75.75 0 013 12zM9 3.75a2.25 2.25 0 100 4.5 2.25 2.25 0 000-4.5zM12.75 12a2.25 2.25 0 114.5 0 2.25 2.25 0 01-4.5 0zM9 15.75a2.25 2.25 0 100 4.5 2.25 2.25 0 000-4.5z" />
               </svg>
             </button>
           </div>
           <button
-            className="inline-flex justify-center px-4 py-2 text-white bg-teacherBlue-500 border border-transparent rounded-md hover:bg-teacherBlue-700"
+            className="inline-flex justify-center px-4 py-2 text-white bg-student-primary-900 border border-transparent rounded-md hover:bg-student-secondary-700 ease-in-out duration-75"
             onClick={() => {
               navToCreateQuestion();
             }}
@@ -130,7 +129,7 @@ export const QuestionBank: React.FC = () => {
             >
               <path d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z" />
             </svg>
-            Add Question
+            Create Question
           </button>
         </div>
 
