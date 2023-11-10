@@ -11,7 +11,7 @@ import { Student } from 'libs/data-access/src/lib/types/student';
 import { AssignmentRow } from './AssignmentRow';
 
 const accordionTitleClassName =
-  'px-6 py-4 bg-student-primary-600 text-white hover:bg-student-primary-700';
+  'px-6 py-4 bg-student-primary-900 text-white hover:bg-student-secondary-700';
 
 export const ViewAllAssignments: React.FC = () => {
   const { displayToast, ToastType } = useToast();
@@ -70,7 +70,7 @@ export const ViewAllAssignments: React.FC = () => {
             type="text"
             name="assignment-searchbar"
             id="assignment-searchbar"
-            className="block w-full rounded-md border-0 py-1.5 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-adminGreen-600 sm:text-sm sm:leading-6"
+            className="block w-full rounded-md border-0 py-1.5 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-student-secondary-700 sm:text-sm sm:leading-6"
             placeholder="Search for an assignment..."
             value={searchbarText}
             onChange={(e) => {
@@ -114,11 +114,11 @@ export const ViewAllAssignments: React.FC = () => {
                 )
                 .map((assignment) => (
                   <AssignmentRow
-                    iconStyles="text-student-primary-600"
+                    iconStyles="text-student-primary-900"
                     key={assignment.id}
                     assignment={assignment}
                     studentId={user?.id ?? ''}
-                    className="hover:bg-student-primary-100"
+                    className="hover:bg-student-secondary-700"
                   />
                 ))}
             </ul>
@@ -144,11 +144,11 @@ export const ViewAllAssignments: React.FC = () => {
                 )
                 .map((assignment) => (
                   <AssignmentRow
-                    iconStyles="text-student-primary-600"
+                    iconStyles="text-student-primary-900"
                     key={assignment.id}
                     assignment={assignment}
                     studentId={user?.id ?? ''}
-                    className="hover:bg-student-primary-100"
+                    className="hover:bg-student-secondary-100"
                   />
                 ))}
             </ul>

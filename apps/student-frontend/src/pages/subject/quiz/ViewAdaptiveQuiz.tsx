@@ -60,7 +60,7 @@ export const ViewAdaptiveQuiz = () => {
       onSubmit={formMethods.handleSubmit(onSubmit, onError)}
       className="flex flex-col space-y-4 relative h-full"
     >
-      <BackButton className="bg-student-primary-600 hover:bg-student-primary-700 self-start" />
+      <BackButton className="bg-student-primary-900 hover:bg-student-secondary-700 self-start" />
       <h1 className="text-3xl font-bold tracking-tight ">Adaptive Quiz</h1>
       <Divider lineClassName="border-gray-900" />
       <h1 className="text-3xl font-bold tracking-tight ">Description</h1>
@@ -107,7 +107,7 @@ export const ViewAdaptiveQuiz = () => {
         )}
       />
       <GenericButton
-        className="bg-student-primary-600 hover:bg-student-primary-700 self-center absolute bottom-0"
+        className="bg-student-primary-900 hover:bg-student-secondary-700 self-center absolute bottom-0"
         text="Start Adaptive Quiz"
       />
     </form>

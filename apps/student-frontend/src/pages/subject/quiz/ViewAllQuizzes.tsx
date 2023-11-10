@@ -96,8 +96,8 @@ export const ViewAllQuizzes = () => {
       <div className="relative">
         <input
           type="text"
-          className="h-14 w-96 pr-8 pl-5 rounded z-0 focus:shadow focus:outline-none focus:ring-student-primary-600"
-          placeholder="Search anything..."
+          className="h-14 w-96 pr-8 pl-5 rounded z-0 focus:shadow focus:outline-none focus:ring-student-secondary-700"
+          placeholder="Search for a quiz...(Ex: Adaptive Quiz)"
           onChange={(e) => setSearchString(e.target.value)}
           value={searchString}
         />

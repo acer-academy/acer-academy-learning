@@ -39,7 +39,7 @@ export const ViewQuiz = () => {
   return (
     (!isLoading && quiz && (
       <div className="space-y-4 flex flex-col h-full">
-        <BackButton className="bg-student-primary-600 hover:bg-student-primary-700 self-start" />
+        <BackButton className="bg-student-primary-900 hover:bg-student-secondary-700 self-start" />
         <h1 className="text-3xl font-bold tracking-tight ">{quiz.title}</h1>
         <Divider lineClassName="border-gray-900" />
         <div className="flex justify-around">
@@ -75,7 +75,7 @@ export const ViewQuiz = () => {
           type="button"
           text={'Start Quiz'}
           onClick={() => navigate('take#1')}
-          className="bg-student-primary-600 hover:bg-student-primary-700 self-center"
+          className="bg-student-primary-900 hover:bg-student-secondary-700 self-center"
         />
       </div>
     )) || <FullscreenSpinner />

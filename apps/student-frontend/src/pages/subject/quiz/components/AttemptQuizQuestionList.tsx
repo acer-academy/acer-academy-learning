@@ -29,7 +29,7 @@ const QuestionRow = ({ answer, questionNumber }: QuestionRowProps) => {
   return (
     <Link
       to={`#${questionNumber}`}
-      className="underline text-student-primary-600 hover:no-underline"
+      className="underline text-student-primary-900 hover:no-underline hover:text-student-secondary-900"
     >
       {hasFilledInAnswer ? '✅ ' : '❌ '}
       Question {questionNumber}
