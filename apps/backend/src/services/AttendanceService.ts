@@ -26,6 +26,22 @@ class AttendanceService {
     return { attendance: attendance, transaction: transaction };
   }
 
+  public async markMultipleAttendances(
+    studentsArr: Array<string>,
+    sessionId: string,
+  ): Promise<Attendance[]> {
+    const allAttendances = [];
+    for (const studentId of studentsArr) {
+      const attendance: Prisma.AttendanceUncheckedCreateInput = {
+        studentId: studentId,
+        sessionId: sessionId,
+      };
+      const created = await this.createAttendance(attendance);
+      allAttendances.push(created);
+    }
+    return allAttendances;
+  }
+
   public async revertAttendance(
     attendanceId,
   ): Promise<{ attendance: Attendance; transaction: Transaction }> {
