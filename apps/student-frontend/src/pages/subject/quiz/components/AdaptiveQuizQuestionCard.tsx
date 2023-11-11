@@ -86,7 +86,7 @@ export const AdaptiveQuizQuestionCard = ({
           {answerOptions}
         </div>
         {/* To remove */}
-        <GenericButton
+        {/* <GenericButton
           className="bg-student-primary-900 hover:bg-student-secondary-700 mt-4"
           text="Toggle For Demo"
           type="button"
@@ -106,7 +106,7 @@ export const AdaptiveQuizQuestionCard = ({
                 <LexOutput key={answer.id} editorStateStr={answer.answer} />
               ))}
           </div>
-        </div>
+        </div> */}
       </div>
       <div className="hidden">
         <QuizTimer<CreateAdaptiveTakeSchema>
