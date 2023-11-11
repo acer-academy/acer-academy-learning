@@ -9,9 +9,9 @@ import {
 } from '@acer-academy-learning/data-access';
 import { useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { QuizSummaryRow } from './components/QuizSummaryRow';
-import { QuizSummaryBellCurve } from './components/QuizSummaryBellCurve';
-import { QuizSummaryBoxWhisker } from './components/QuizSummaryBoxWhisker';
+import { StatisticsSummaryRow } from './components/StatisticsSummaryRow';
+import { BellcurveChart } from './components/BellcurveChart';
+import { BoxWhiskerChart } from './components/BoxWhiskerChart';
 import {
   ChartPieIcon,
   PresentationChartBarIcon,
@@ -25,12 +25,22 @@ import {
 } from '../../libs/routes';
 import { QuizStudentMasquerade } from './components/QuizStudentMasquerade';
 
+const hashes = {
+  overview: '',
+  items: 'items',
+  students: 'students',
+};
+
 export const QuizStatistics: React.FC = () => {
   const { quizId } = useParams();
   const { displayToast, ToastType } = useToast();
   const [quizStats, setQuizStats] = useState<ConsolidatedQuizStatistics>();
   const location = useLocation();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    console.log(location.hash);
+  }, [location]);
 
   useEffect(() => {
     if (quizId) {
@@ -71,9 +81,19 @@ export const QuizStatistics: React.FC = () => {
       default:
         return (
           <div>
-            <QuizSummaryRow quizStats={quizStats} />
-            <QuizSummaryBoxWhisker quizStats={quizStats} />
-            <QuizSummaryBellCurve quizStats={quizStats} />
+            <StatisticsSummaryRow
+              quizStats={quizStats}
+              totalMarksArr={quizStats.totalMarksArr}
+              totalMarksPossible={quizStats.quizDetails.totalMarks}
+            />
+            <BoxWhiskerChart
+              totalMarksArr={quizStats.totalMarksArr}
+              totalMarksPossible={quizStats.quizDetails.totalMarks ?? 0}
+            />
+            <BellcurveChart
+              totalMarksArr={quizStats.totalMarksArr}
+              totalMarksPossible={quizStats.quizDetails.totalMarks ?? 0}
+            />
           </div>
         );
     }
@@ -82,12 +102,16 @@ export const QuizStatistics: React.FC = () => {
   return (
     <div className="flex min-h-full flex-col gap-5">
       <div>
-        <BackButton />
+        <BackButton className="bg-teacher-primary-900 hover:bg-teacher-secondary-700" />
       </div>
       <div className="flex gap-2 text-2xl py-1 mb-5 font-bold tracking-tight items-center">
         {quizStats?.quizDetails.title}
         <GenericButton
-          className="ml-auto"
+          className={`ml-auto hover:bg-teacher-secondary-700 ${
+            location.hash.length === 0
+              ? 'bg-teacher-secondary-700'
+              : 'bg-teacher-primary-900'
+          }`}
           text="Overview"
           icon={<PresentationChartBarIcon className="h-5" />}
           onClick={() => {
@@ -95,6 +119,11 @@ export const QuizStatistics: React.FC = () => {
           }}
         ></GenericButton>
         <GenericButton
+          className={`hover:bg-teacher-secondary-700 ${
+            location.hash === `#${hashes.items}`
+              ? 'bg-teacher-secondary-700'
+              : 'bg-teacher-primary-900'
+          }`}
           text="Item Analysis"
           icon={<ChartPieIcon className="h-5" />}
           onClick={() => {
@@ -102,6 +131,11 @@ export const QuizStatistics: React.FC = () => {
           }}
         ></GenericButton>
         <GenericButton
+          className={` hover:bg-teacher-secondary-700 ${
+            location.hash === `#${hashes.students}`
+              ? 'bg-teacher-secondary-700'
+              : 'bg-teacher-primary-900'
+          }`}
           text="Student Analysis"
           icon={<UsersIcon className="h-5" />}
           onClick={() => {

@@ -201,7 +201,7 @@ export const SelectedQuestionsTable: React.FC<SelectedQuestionsTableProps> = (
             ) : (
               <div>
                 <GenericButton
-                  className="hover:bg-gray-700"
+                  className="bg-teacher-primary-900 hover:bg-teacher-secondary-700"
                   type="button"
                   text="Edit Question Order"
                   onClick={() => {

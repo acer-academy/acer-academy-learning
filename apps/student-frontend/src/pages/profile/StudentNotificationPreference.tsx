@@ -160,7 +160,7 @@ export const StudentNotificationPreference: React.FC = () => {
                           type="checkbox"
                           checked={selectedSubjects.includes(subject.value)}
                           onChange={() => handleSubjectChange(subject.value)}
-                          className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                          className="h-4 w-4 rounded border-gray-300 text-student-secondary-700 focus:ring-student-secondary-700"
                         />
                       </div>
                       <div className="text-sm leading-6">
@@ -185,7 +185,7 @@ export const StudentNotificationPreference: React.FC = () => {
                             type="checkbox"
                             checked={selectedLevels.includes(level.value)}
                             onChange={() => handleLevelChange(level.value)}
-                            className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                            className="h-4 w-4 rounded border-gray-300 text-student-secondary-700 focus:ring-student-secondary-700"
                           />
                         </div>
                         <div className="text-sm leading-6">
@@ -210,7 +210,7 @@ export const StudentNotificationPreference: React.FC = () => {
                           type="checkbox"
                           checked={selectedCentres.includes(centre.id)}
                           onChange={() => handleCentreChange(centre.id)}
-                          className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                          className="h-4 w-4 rounded border-gray-300 text-student-secondary-700 focus:ring-student-secondary-700"
                         />
                       </div>
                       <div className="text-sm leading-6">
@@ -232,7 +232,7 @@ export const StudentNotificationPreference: React.FC = () => {
                       type="radio"
                       checked={!hasUnsubscribed}
                       onChange={() => setHasUnsubscribed(false)}
-                      className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                      className="h-4 w-4 border-gray-300 text-student-secondary-700 focus:ring-student-secondary-700"
                     />
                     <label
                       htmlFor="push-everything"
@@ -248,7 +248,7 @@ export const StudentNotificationPreference: React.FC = () => {
                       checked={hasUnsubscribed}
                       onChange={() => setHasUnsubscribed(true)}
                       type="radio"
-                      className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                      className="h-4 w-4 border-gray-300 text-student-secondary-700 focus:ring-student-secondary-700"
                     />
                     <label
                       htmlFor="push-email"
@@ -266,7 +266,7 @@ export const StudentNotificationPreference: React.FC = () => {
         <div className="mt-6 flex items-center justify-end gap-x-6">
           <button
             type="submit"
-            className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            className="rounded-md bg-student-primary-900 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-student-secondary-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-student-primary-600"
           >
             Save Changes
           </button>

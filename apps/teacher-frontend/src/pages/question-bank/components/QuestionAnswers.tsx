@@ -6,6 +6,7 @@ import {
 } from '@acer-academy-learning/data-access';
 import {
   ErrorField,
+  GenericButton,
   LexFloatingEditor,
   LexOutput,
 } from '@acer-academy-learning/common-ui';
@@ -153,13 +154,14 @@ export const QuestionAnswers = () => {
         name="answers"
         render={({ message }) => <ErrorField message={message} />}
       />
-      <button
-        className="inline-flex items-center gap-x-1.5 rounded-md bg-teacher-primary-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-teacher-primary-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teacher-primary-600 w-fit"
-        type="button"
-        onClick={() => append(DEFAULT_QUESTION_ANSWER)}
-      >
-        Add Answer Option
-      </button>
+      {watchQuestionType !== QuizQuestionTypeEnum.TFQ && (
+        <GenericButton
+          type="button"
+          className={`bg-teacher-primary-900 hover:bg-teacher-secondary-700 w-fit`}
+          onClick={() => append(DEFAULT_QUESTION_ANSWER)}
+          text="Add Answer Option"
+        />
+      )}
     </fieldset>
   );
 };

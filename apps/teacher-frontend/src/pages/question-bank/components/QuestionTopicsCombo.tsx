@@ -43,6 +43,7 @@ export const QuestionTopicsCombo = () => {
               options={topicEnums}
               onChange={onChange}
               selected={value}
+              hasError={!!errors.topics?.message}
               displayValue={(topic) => screamingSnakeToTitleCase(topic)}
             />
           </>

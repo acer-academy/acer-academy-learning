@@ -176,7 +176,7 @@ export default function TeacherSignUp() {
                 required
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
-                className="w-3/4 block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                className="w-3/4 block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-teacher-secondary-700 sm:text-sm sm:leading-6"
               />
             </div>
 
@@ -194,7 +194,7 @@ export default function TeacherSignUp() {
                 required
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
-                className="w-3/4 block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                className="w-3/4 block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-teacher-secondary-700 sm:text-sm sm:leading-6"
               />
             </div>
 
@@ -213,7 +213,7 @@ export default function TeacherSignUp() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className=" w-3/4 block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                className=" w-3/4 block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-teacher-secondary-700 sm:text-sm sm:leading-6"
               />
             </div>
 
@@ -232,7 +232,7 @@ export default function TeacherSignUp() {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-3/4 block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                className="w-3/4 block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-teacher-secondary-700 sm:text-sm sm:leading-6"
               />
             </div>
 
@@ -250,7 +250,7 @@ export default function TeacherSignUp() {
                 required
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                className="w-3/4 block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                className="w-3/4 block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-teacher-secondary-700 sm:text-sm sm:leading-6"
               />
             </div>
 
@@ -267,7 +267,7 @@ export default function TeacherSignUp() {
                 required
                 value={selectedCentre}
                 onChange={(e) => setSelectedCentre(e.target.value)}
-                className="mt-2 block w-3/4 space-y-2 rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                className="mt-2 block w-3/4 space-y-2 rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-teacher-primary-600 sm:text-sm sm:leading-6"
               >
                 <option value="" disabled>
                   Select a centre
@@ -295,7 +295,7 @@ export default function TeacherSignUp() {
                         type="checkbox"
                         checked={selectedSubjects.includes(subject.value)}
                         onChange={() => handleSubjectChange(subject.value)}
-                        className="h-5 w-5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                        className="h-5 w-5 rounded border-gray-300 text-teacher-secondary-700 focus:ring-teacher-secondary-700"
                       />
                       <span className="ml-2 text-gray-700">
                         {subject.label}
@@ -322,7 +322,7 @@ export default function TeacherSignUp() {
                           type="checkbox"
                           checked={selectedLevels.includes(level)}
                           onChange={() => handleLevelChange(level)}
-                          className="h-5 w-5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                          className="h-5 w-5 rounded border-gray-300 text-teacher-secondary-700 focus:ring-indigo-600"
                         />
                         <span className="ml-2 text-gray-700">{level}</span>
                       </label>
@@ -335,7 +335,7 @@ export default function TeacherSignUp() {
             <div>
               <button
                 type="submit"
-                className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                className="flex w-full justify-center rounded-md bg-teacher-primary-900 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-teacher-secondary-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teacher-secondary-600"
               >
                 Register
               </button>
@@ -346,7 +346,7 @@ export default function TeacherSignUp() {
             Have an account?{' '}
             <a
               href="#"
-              className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
+              className="font-semibold leading-6 text-teacher-secondary-700 hover:text-teacher-secondary-900 hover:underline"
             >
               Login
             </a>

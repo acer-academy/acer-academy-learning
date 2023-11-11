@@ -624,7 +624,7 @@ export default function EventForm({
                 required
                 value={selectedCentre}
                 onChange={(e) => setSelectedCentre(e.target.value)}
-                className="mt-2 block w-3/4 space-y-2 rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                className="mt-2 block w-3/4 space-y-2 rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-teacher-primary-900 sm:text-sm sm:leading-6"
               >
                 <option value="" disabled>
                   Select a centre
@@ -656,7 +656,7 @@ export default function EventForm({
                 required
                 value={selectedClassroom}
                 onChange={(e) => setSelectedClassroom(e.target.value)}
-                className="mt-2 block w-3/4 space-y-2 rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                className="mt-2 block w-3/4 space-y-2 rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-teacher-primary-900 sm:text-sm sm:leading-6"
               >
                 <option value="" disabled>
                   Select a classroom
@@ -689,7 +689,7 @@ export default function EventForm({
                         type="checkbox"
                         checked={selectedLevels.includes(level)}
                         onChange={() => handleLevelChange(level)}
-                        className="h-5 w-5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                        className="h-5 w-5 rounded border-gray-300 text-teacher-primary-900 focus:ring-teacher-primary-900"
                       />
                       <span className="ml-2 text-gray-700">{level}</span>
                     </label>
@@ -717,7 +717,7 @@ export default function EventForm({
                       type="checkbox"
                       checked={selectedSubjects.includes(subject.value)}
                       onChange={() => handleSubjectChange(subject.value)}
-                      className="h-5 w-5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                      className="h-5 w-5 rounded border-gray-300 text-teacher-primary-900 focus:ring-teacher-primary-900"
                     />
                     <span className="ml-2 text-gray-700">{subject.label}</span>
                   </label>
@@ -830,7 +830,7 @@ export default function EventForm({
 
             <button
               type="button"
-              className="bg-green-500 text-white rounded-md px-4 py-2 hover:bg-green-600"
+              className="bg-teacher-primary-900 text-white rounded-md px-4 py-2 hover:bg-teacher-secondary-700"
               onClick={handleSubmit}
             >
               {label}

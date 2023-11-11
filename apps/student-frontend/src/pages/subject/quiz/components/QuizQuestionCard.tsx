@@ -72,7 +72,7 @@ export const QuizQuestionCard = ({
     <>
       <div className={`${className}`}>
         <div
-          className={`bg-gray-200 px-4 py-2 text-left font-bold text-gray-900 focus:outline-none focus-visible:ring focus-visible:ring-gray-500 focus-visible:ring-opacity-75 text-base border border-gray-400 rounded-t flex justify-between ${bannerClassName}`}
+          className={`bg-student-primary-900 px-4 py-2 text-left font-bold text-gray-900 focus:outline-none focus-visible:ring focus-visible:ring-gray-500 focus-visible:ring-opacity-75 text-base border border-gray-400 rounded-t flex justify-between ${bannerClassName}`}
         >
           <span>Question {questionNumber}</span>
           <span>

@@ -127,7 +127,7 @@ export const StudentsSection: React.FC<{
                 }
                 ${
                   checked
-                    ? 'z-10 border-indigo-200 bg-indigo-50'
+                    ? 'z-10 border-teacher-secondary-200 bg-teacher-secondary-50'
                     : 'border-gray-200'
                 }
                 relative flex cursor-pointer border p-4 focus:outline-none
@@ -139,10 +139,14 @@ export const StudentsSection: React.FC<{
                       className={`
                       ${
                         checked
-                          ? 'bg-indigo-600 border-transparent'
+                          ? 'bg-teacher-secondary-700 border-transparent'
                           : 'bg-white border-gray-300'
                       }
-                      ${active ? 'ring-2 ring-offset-2 ring-indigo-600' : ''}
+                      ${
+                        active
+                          ? 'ring-2 ring-offset-2 ring-teacher-secondary-600'
+                          : ''
+                      }
                       mt-0.5 h-4 w-4 shrink-0 cursor-pointer rounded-full border flex items-center justify-center
                     `}
                       aria-hidden="true"
@@ -153,7 +157,11 @@ export const StudentsSection: React.FC<{
                       <RadioGroup.Label
                         as="span"
                         className={`
-                        ${checked ? 'text-indigo-900' : 'text-gray-900'}
+                        ${
+                          checked
+                            ? 'text-teacher-secondary-700'
+                            : 'text-gray-900'
+                        }
                         block text-sm font-medium
                       `}
                       >
@@ -162,7 +170,11 @@ export const StudentsSection: React.FC<{
                       <RadioGroup.Description
                         as="span"
                         className={`
-                        ${checked ? 'text-indigo-700' : 'text-gray-500'}
+                        ${
+                          checked
+                            ? 'text-teacher-secondary-700'
+                            : 'text-gray-500'
+                        }
                         block text-sm
                       `}
                       >

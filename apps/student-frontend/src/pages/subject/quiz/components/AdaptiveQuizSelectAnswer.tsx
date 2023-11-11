@@ -26,7 +26,7 @@ export const AdaptiveQuizSelectAnswer = ({
             }
           >
             <input
-              className="text-student-primary-600 focus:ring-student-primary-600"
+              className="text-student-secondary-700 focus:ring-student-secondary-700"
               type={type}
               value={answer.answer}
               disabled={true}

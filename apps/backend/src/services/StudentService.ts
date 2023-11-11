@@ -64,7 +64,7 @@ export class StudentService {
     input: Prisma.StudentUpdateInput,
   ): Promise<Student> {
     if (input.password) {
-      input.password = await bcrypt.hash(input.password, 10);
+      input.password = await bcrypt.hash(input.password as string, 10);
     }
     return StudentDao.updateStudent(id, input);
   }

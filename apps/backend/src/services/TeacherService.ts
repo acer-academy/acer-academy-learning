@@ -66,7 +66,10 @@ export class TeacherService {
     teacherData: Prisma.TeacherUpdateInput,
   ): Promise<Teacher | null> {
     if (teacherData.password) {
-      teacherData.password = await bcrypt.hash(teacherData.password, 10);
+      teacherData.password = await bcrypt.hash(
+        teacherData.password as string,
+        10,
+      );
     }
     return this.teacherDao.updateTeacher(teacherId, teacherData);
   }

@@ -73,7 +73,7 @@ export const AdaptiveQuizQuestionCard = ({
     <>
       <div className={`${className}`}>
         <div
-          className={`bg-gray-200 px-4 py-2 text-left font-bold text-gray-900 focus:outline-none focus-visible:ring focus-visible:ring-gray-500 focus-visible:ring-opacity-75 text-base border border-gray-400 rounded-t flex justify-between ${bannerClassName}`}
+          className={`bg-student-primary-900 px-4 py-2 text-left font-bold text-gray-900 focus:outline-none focus-visible:ring focus-visible:ring-gray-500 focus-visible:ring-opacity-75 text-base border border-gray-400 rounded-t flex justify-between ${bannerClassName}`}
         >
           <span>Question {questionNumber}</span>
           <span>
@@ -86,8 +86,8 @@ export const AdaptiveQuizQuestionCard = ({
           {answerOptions}
         </div>
         {/* To remove */}
-        <GenericButton
-          className="bg-student-primary-600 hover:bg-student-primary-700 mt-4"
+        {/* <GenericButton
+          className="bg-student-primary-900 hover:bg-student-secondary-700 mt-4"
           text="Toggle For Demo"
           type="button"
           onClick={() => setShowDemo((prev) => !prev)}
@@ -106,7 +106,7 @@ export const AdaptiveQuizQuestionCard = ({
                 <LexOutput key={answer.id} editorStateStr={answer.answer} />
               ))}
           </div>
-        </div>
+        </div> */}
       </div>
       <div className="hidden">
         <QuizTimer<CreateAdaptiveTakeSchema>
