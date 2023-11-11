@@ -35,11 +35,11 @@ export const QuizSelectAnswerOptions = ({
     <>
       {answers.map((answer, index) => (
         <label
-          className="border border-gray-400 bg-white p-3 text-base rounded hover:border-student-primary-600 flex items-center space-x-3 cursor-pointer"
+          className="border border-gray-400 bg-white p-3 text-base rounded hover:border-student-secondary-700 flex items-center space-x-3 cursor-pointer"
           key={answer.id}
         >
           <input
-            className="text-student-primary-600 focus:ring-student-primary-600"
+            className="text-student-secondary-700 focus:ring-student-secondary-700"
             type={type}
             value={answer.answer}
             {...register(
