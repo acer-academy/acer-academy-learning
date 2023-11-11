@@ -42,10 +42,10 @@ export const SubjectSpiderChart = () => {
     <GenericAccordion
       title="Spider Chart Analysis"
       titleClassName="bg-student-primary-900 hover:bg-student-secondary-700 text-white"
-      contentClassName="h-full"
+      contentClassName="h-fit"
       arrowClassName="text-white"
       content={
-        <div className="bg-white p-4 rounded-b flex flex-col h-full shadow-md border-gray-200 border-[1px]">
+        <div className="bg-white h-[90vh] p-4 rounded-b flex flex-col shadow-md border-gray-200 border-[1px]">
           <div className="px-2 pb-8">
             <div className="flex justify-between py-4">
               <span className="text-base font-semibold">Filter Topics:</span>

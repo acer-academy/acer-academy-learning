@@ -19,7 +19,7 @@ export const GenericAccordion = ({
   return (
     <Disclosure defaultOpen>
       {({ open }) => (
-        <div className="h-full">
+        <div className="flex flex-col">
           <Disclosure.Button
             className={`flex items-center w-full ${
               open ? 'rounded-t-lg' : 'rounded-lg'

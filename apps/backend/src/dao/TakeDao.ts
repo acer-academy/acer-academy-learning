@@ -156,6 +156,13 @@ export class TakeDao {
             },
           },
         },
+        quiz: {
+          select: {
+            id: true,
+            topics: true,
+            totalMarks: true,
+          },
+        },
       },
       orderBy: { attemptedAt: 'desc' },
     });

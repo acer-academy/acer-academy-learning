@@ -40,3 +40,10 @@ export type SpiderChartResponse = {
   labelsArr: string[];
   dataArr: number[];
 };
+
+export enum Duration {
+  PAST_FOURTEEN_DAYS = 'Past 2 Weeks',
+  PAST_THREE_MONTHS = 'Past 3 Months',
+  PAST_YEAR = 'Past Year',
+  ALL = 'All',
+}

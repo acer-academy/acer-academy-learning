@@ -27,6 +27,7 @@ export * from './lib/api/message';
 export * from './lib/api/assignment';
 export * from './lib/api/assignmentAttempt';
 export * from './lib/api/attendance';
+export * from './lib/api/statistics';
 
 // Object.freeze(api);
 

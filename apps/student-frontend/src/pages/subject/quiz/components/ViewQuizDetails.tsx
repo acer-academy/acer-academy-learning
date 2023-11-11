@@ -6,7 +6,6 @@ import {
   screamingSnakeToTitleCase,
 } from '@acer-academy-learning/common-ui';
 import { QuizData } from '@acer-academy-learning/data-access';
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export type ViewQuizDetailsProps = {

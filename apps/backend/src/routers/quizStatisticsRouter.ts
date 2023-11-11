@@ -120,33 +120,36 @@ quizStatisticsRouter.get(
   '/spider-chart-student',
   validateCookiesStudentExist,
   async (req, res: Response<any, { studentId: string }>) => {
-    // const { studentId } = req.params;
-    const studentId = res.locals.studentId;
-    const filter: AllTakesStudentParams = {
-      studentId: studentId,
-    };
-    const topics = req.query.topics as string | string[];
-    const filteredTopics = Array.isArray(topics)
-      ? topics.filter((topic): topic is QuizQuestionTopicEnum =>
-          Object.values(QuizQuestionTopicEnum).includes(
-            topic as QuizQuestionTopicEnum,
-          ),
-        )
-      : Object.values(QuizQuestionTopicEnum).includes(
-          topics as QuizQuestionTopicEnum,
-        )
-      ? [topics as QuizQuestionTopicEnum]
-      : undefined;
+    try {
+      // const { studentId } = req.params;
+      const studentId = res.locals.studentId;
+      const filter: AllTakesStudentParams = {
+        studentId: studentId,
+      };
+      const topics = req.query.topics as string | string[];
+      const filteredTopics = Array.isArray(topics)
+        ? topics.filter((topic): topic is QuizQuestionTopicEnum =>
+            Object.values(QuizQuestionTopicEnum).includes(
+              topic as QuizQuestionTopicEnum,
+            ),
+          )
+        : Object.values(QuizQuestionTopicEnum).includes(
+            topics as QuizQuestionTopicEnum,
+          )
+        ? [topics as QuizQuestionTopicEnum]
+        : undefined;
 
-    console.log(filteredTopics);
-
-    const result =
-      await QuizStatisticsService.getQuizStatisticsStudentSpiderChartDataBy({
-        filter: filter,
-        onlyAttemptedTopics: false,
-        topics: filteredTopics,
-      });
-    return res.status(200).json(result);
+      const result =
+        await QuizStatisticsService.getQuizStatisticsStudentSpiderChartDataBy({
+          filter: filter,
+          onlyAttemptedTopics: false,
+          topics: filteredTopics,
+        });
+      return res.status(200).json(result);
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ error: error.message });
+    }
   },
 );
 

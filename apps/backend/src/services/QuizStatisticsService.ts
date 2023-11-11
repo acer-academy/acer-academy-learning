@@ -332,6 +332,7 @@ class QuizStatisticsService {
       dataArr: dataArr,
     };
   }
+
 }
 
 export default new QuizStatisticsService();
