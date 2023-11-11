@@ -41,7 +41,12 @@ export const NAV_SECTIONS: NavigationMenuItem[] = [
     name: 'SUBJECTS',
     path: SUBJECTS,
     children: [
-      { name: 'Overview', path: SUBJECT_MAIN, icon: ChartBarIcon },
+      {
+        name: 'Overview',
+        path: SUBJECT_MAIN,
+        icon: ChartBarIcon,
+        isStrict: true,
+      },
       { name: 'Assignments', path: ASSIGNMENTS, icon: PaperClipIcon },
       {
         name: 'Quizzes',

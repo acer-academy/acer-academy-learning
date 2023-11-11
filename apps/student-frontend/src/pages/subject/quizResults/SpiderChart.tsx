@@ -21,9 +21,16 @@ ChartJS.register(
 export type SpiderChartType = {
   subjectArr: string[];
   averageScoreArr: number[];
+  backgroundColor?: string;
+  borderColor?: string;
 };
 
-const SpiderChart = ({ subjectArr, averageScoreArr }: SpiderChartType) => {
+const SpiderChart = ({
+  subjectArr,
+  averageScoreArr,
+  backgroundColor,
+  borderColor,
+}: SpiderChartType) => {
   const options = {
     responsive: true,
     maintainAspectRatio: false,
@@ -42,8 +49,8 @@ const SpiderChart = ({ subjectArr, averageScoreArr }: SpiderChartType) => {
       {
         label: 'Mastery of Topics',
         data: averageScoreArr,
-        backgroundColor: 'rgba(255, 99, 132, 0.2)',
-        borderColor: 'rgba(255, 99, 132, 1)',
+        backgroundColor: backgroundColor ?? 'rgba(255, 99, 132, 0.2)',
+        borderColor: borderColor ?? 'rgba(255, 99, 132, 1)',
         borderWidth: 1,
       },
     ],

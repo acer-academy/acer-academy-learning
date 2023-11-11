@@ -55,7 +55,7 @@ export const ViewQuizDetails = ({
         type="button"
         text={'Start Quiz'}
         onClick={() => navigate('take#1')}
-        className="bg-student-primary-600 hover:bg-student-primary-700 self-center"
+        className="bg-student-primary-900 hover:bg-student-secondary-700 self-center"
       />
     </>
   );

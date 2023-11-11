@@ -62,8 +62,10 @@ export const DisclosureLeafItem = ({
     if (!path) {
       return false;
     }
-    return location.pathname.includes(path);
-  }, [location, path]);
+    return item.isStrict
+      ? location.pathname === path
+      : location.pathname.includes(path);
+  }, [location, path, item]);
 
   return (
     <NavLink
