@@ -14,6 +14,12 @@ export async function getAllSessions(): Promise<AxiosResponse<SessionData[]>> {
   return client.get(`${URL}`);
 }
 
+export async function getSessionsInPastWeekByTeacherId(
+  teacherId: string,
+): Promise<AxiosResponse<SessionData[]>> {
+  return client.get(`${URL}/week/${teacherId}`);
+}
+
 export async function getSessionById(id: string): Promise<SessionData> {
   return client.get(`${URL}/${id}`);
 }
@@ -23,7 +29,6 @@ export async function createSession(
 ): Promise<SessionData> {
   return client.post(`${URL}`, input);
 }
-
 
 export async function updateSession(
   id: string,

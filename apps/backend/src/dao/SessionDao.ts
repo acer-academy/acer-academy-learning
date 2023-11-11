@@ -29,6 +29,45 @@ class SessionDao {
     });
   }
 
+  public async getSessionsInPastWeekByTeacherId(
+    teacherId: string,
+  ): Promise<Session[]> {
+    const start = new Date();
+    start.setDate(start.getDate() - 7);
+    const end = new Date();
+    end.setDate(end.getDate() + 1);
+    return this.prisma.session.findMany({
+      where: {
+        teacherId,
+        start: { gte: new Date(start) },
+        end: { lte: new Date(end) },
+      },
+      include: {
+        students: true,
+        teacher: true,
+      },
+      orderBy: [{ start: 'desc' }],
+    });
+  }
+
+  public async getSessionsInPastWeek(): Promise<Session[]> {
+    const start = new Date();
+    start.setDate(start.getDate() - 7);
+    const end = new Date();
+    end.setDate(end.getDate() + 1);
+    return this.prisma.session.findMany({
+      where: {
+        start: { gte: new Date(start) },
+        end: { lte: new Date(end) },
+      },
+      include: {
+        students: true,
+        teacher: true,
+      },
+      orderBy: [{ start: 'desc' }],
+    });
+  }
+
   public async checkClassroomAvailability(
     classroomId: string,
     startDateTime: Date,

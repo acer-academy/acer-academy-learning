@@ -34,6 +34,29 @@ sessionRouter.get('/:id', async (req, res) => {
   }
 });
 
+sessionRouter.get('/week/:teacherId', async (req, res) => {
+  try {
+    const { teacherId } = req.params;
+    const sessions = await SessionService.getSessionsInPastWeekByTeacherId(
+      teacherId,
+    );
+    return res.status(200).json(sessions);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: error.message });
+  }
+});
+
+sessionRouter.get('/week/', async (req, res) => {
+  try {
+    const sessions = await SessionService.getSessionsInPastWeek();
+    return res.status(200).json(sessions);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: error.message });
+  }
+});
+
 sessionRouter.post(
   '/',
   validateClassTeacherClassroomExist,

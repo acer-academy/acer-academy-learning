@@ -52,6 +52,7 @@ import {
   CREATE_ASSIGNMENT,
   EDIT_ASSIGNMENT,
   VIEW_ASSIGNMENT_ATTEMPTS,
+  SESSIONS_FOR_ATTENDANCE,
 } from '../libs/routes';
 import { CreateQuestion } from '../pages/question-bank/CreateQuestion';
 import { QueryClient, QueryClientProvider } from 'react-query';
@@ -72,6 +73,7 @@ import { ViewAssignment } from '../pages/assignments/ViewAssignment';
 import { CreateAssignment } from '../pages/assignments/CreateAssignment';
 import { EditAssignmentWrapper } from '../pages/assignments/EditAssignmentWrapper';
 import { AssignmentAttemptManagement } from '../pages/assignments/AssignmentAttemptManagement';
+import { AttendanceManagement } from '../pages/attendances/AttendanceManagement';
 
 export function App() {
   const queryClient = new QueryClient();
@@ -167,6 +169,10 @@ export function App() {
                 <Route path={SCHEDULING}>
                   <Route path={VIEW_CLASSES} element={<CalendarPage />} />
                   <Route path={BOOK_CLASSES} element={<Calendar />} />
+                  <Route
+                    path={SESSIONS_FOR_ATTENDANCE}
+                    element={<AttendanceManagement />}
+                  />
                 </Route>
                 {/* Rewards routes */}
                 <Route path={REWARDS} />
