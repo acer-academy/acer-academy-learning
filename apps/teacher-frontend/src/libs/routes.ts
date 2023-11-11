@@ -42,7 +42,9 @@ export const VIEW_ASSIGNMENT_ANALYTICS = `${ANALYTICS}/assignments/:assignmentId
 export const SCHEDULING = '/scheduling';
 export const VIEW_CLASSES = `${SCHEDULING}/view-classes`;
 export const BOOK_CLASSES = `${SCHEDULING}/book-classes`;
+
 export const SESSIONS_FOR_ATTENDANCE = `${SCHEDULING}/attendance`;
+export const MARK_ATTENDANCE = `${SCHEDULING}/mark-attendance/:sessionId`;
 
 export const REWARDS = '/rewards';
 

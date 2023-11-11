@@ -13,7 +13,6 @@ export const AttendanceManagement: React.FC = () => {
 
   const getSessionsInPastWeekByTeacherId = async () => {
     try {
-      console.log('teacherId', user?.id);
       const response = await apiGetSessionInPastWeek(user?.id || '');
       const allSessions: SessionData[] = response.data;
       setSessions(allSessions);
@@ -33,10 +32,6 @@ export const AttendanceManagement: React.FC = () => {
   return (
     <div className="h-full ">
       <div className="flex min-h-full flex-col gap-7 align-middle py-12 px-12">
-        {/* <div className="flex justify-center items-center bg-slate-500 min-w-full h-80">
-            <span className="text-lg font-bold">MAP HERE</span>
-          </div> */}
-
         <div className="flex justify-between items-center">
           <span className="text-2xl font-bold tracking-tight">Sessions</span>
         </div>
@@ -49,7 +44,7 @@ export const AttendanceManagement: React.FC = () => {
               >
                 <div className="min-w-0 flex-1">
                   <a
-                    href={`mark-attendance/${session.id}`}
+                    href={`/scheduling/mark-attendance/${session.id}`}
                     className="focus:outline-none"
                   >
                     <span className="absolute inset-0" aria-hidden="true" />
