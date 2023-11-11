@@ -58,7 +58,6 @@ attendanceRouter.post(
   validateCurrentTermExist,
   async (req, res) => {
     try {
-      console.log('inside');
       const { sessionId } = req.params;
       const studentIdArr: Array<string> = req.body;
       const attendances = await AttendanceService.markMultipleAttendances(
