@@ -347,12 +347,39 @@ const generateRandomQuiz = (titleIdx) => {
       : studentIdsArray.slice(Math.random() * studentIdsArray.length),
     timeAllowed: Math.max(Math.floor(Math.random() * 7200) + 1, 600),
     quizQuestions: quizQuestions,
+    createdAt: getRandomPastOrFutureDate(),
   };
   if (Math.random() > 0.2) {
     return quizData;
   }
   const { timeAllowed, ...rest } = quizData;
   return rest;
+};
+
+const getRandomPastOrFutureDate = (dateToBeCurrent, isFuture) => {
+  const currentDate = dateToBeCurrent ? new Date(dateToBeCurrent) : new Date();
+
+  // Get a random number of years, weeks, and days to subtract
+  const yearsAgo = Math.floor(Math.random() * 10); // Adjust the range as needed
+  const weeksAgo = Math.floor(Math.random() * 52); // 52 weeks in a year
+  const daysAgo = Math.floor(Math.random() * 7); // 7 days in a week
+
+  // Calculate the total milliseconds to subtract
+  const totalMillisecondsAgo =
+    yearsAgo * 365 * 24 * 60 * 60 * 1000 + // Years to milliseconds
+    weeksAgo * 7 * 24 * 60 * 60 * 1000 + // Weeks to milliseconds
+    daysAgo * 24 * 60 * 60 * 1000; // Days to milliseconds
+
+  // Calculate the random past date
+  const randomPastOrFutureDate = isFuture
+    ? currentDate.getTime() + totalMillisecondsAgo
+    : currentDate.getTime() - totalMillisecondsAgo;
+  const now = Date.now();
+  const randomPastDate = new Date(
+    randomPastOrFutureDate > now ? now : randomPastOrFutureDate,
+  );
+
+  return randomPastDate;
 };
 
 const generateRandomTake = () => {
@@ -392,6 +419,7 @@ const generateRandomTake = () => {
     takenById: getRandomItem(studentIdsArray),
     quizId: quizToTake.id,
     studentAnswers: studentAnswers,
+    attemptedAt: getRandomPastOrFutureDate(quizToTake.createdAt, true),
   };
   return takeData;
 };
@@ -442,7 +470,7 @@ const generateRandomAssignmentAttempt = () => {
     feedback = 'Student has a good understanding of topics tested';
   }
   const assignmentAttemptData = {
-    submittedOn: '2023-01-14T09:00:05.123Z',
+    submittedOn: getRandomPastOrFutureDate(),
     score: score,
     feedback: feedback,
     assignmentId: assignmentToTake.id,

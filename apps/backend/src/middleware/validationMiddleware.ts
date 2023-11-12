@@ -1569,7 +1569,6 @@ export async function validateBodyQuizFormatValid(
         throw Error(`${key} is missing or has an invalid format.`);
       }
     }
-    req.body = validBody;
     next();
   } catch (error) {
     return res.status(500).json({
@@ -1952,7 +1951,6 @@ export async function validateBodyTakeFormatValid(
         throw Error(`${key} is missing or has an invalid format.`);
       }
     }
-    req.body = validBody;
     next();
   } catch (error) {
     return res.status(500).json({
