@@ -9,6 +9,8 @@ const createTakeURL = 'http://localhost:8000/api/v1/take';
 const createAssignmentURL = 'http://localhost:8000/api/v1/assignments';
 const createAssignmentAttemptURL =
   'http://localhost:8000/api/v1/assignment-attempts';
+const getStudentByIdURL =
+  'http://localhost:8000/api/v1/students/getStudentById';
 
 const randomFirstNames = [
   'John',
@@ -211,6 +213,7 @@ module.exports = {
   createQuizQuestionURL,
   createQuizURL,
   createStudentURL,
+  getStudentByIdURL,
   createTakeURL,
   createAssignmentURL,
   createAssignmentAttemptURL,

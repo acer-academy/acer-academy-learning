@@ -20,7 +20,11 @@ export const ViewQuizStatistics = () => {
           quizId: quizId,
           startDate: startDate,
         });
-        return res.data;
+        const stats = res.data;
+        stats.takes.sort((take, anotherTake) =>
+          take.attemptedAt.localeCompare(anotherTake.attemptedAt),
+        );
+        return stats;
       }
     },
   );
