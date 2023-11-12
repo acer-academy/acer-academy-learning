@@ -109,7 +109,15 @@ export const BellcurveChart: React.FC<{
       <span className="ml-10 text-gray-700 text-base font-light">
         Bell Curve
       </span>
-      <HighchartsReact highcharts={Highcharts} options={options} />
+      {data && data.length > 1 ? (
+        <HighchartsReact highcharts={Highcharts} options={options} />
+      ) : (
+        <div className="flex justify-center text-center">
+          <span className="italic text-gray-700">
+            Insufficient data to render bellcurve
+          </span>
+        </div>
+      )}
     </div>
   );
 };

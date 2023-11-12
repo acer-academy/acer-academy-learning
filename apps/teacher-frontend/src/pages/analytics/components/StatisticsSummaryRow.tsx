@@ -15,7 +15,7 @@ export const StatisticsSummaryRow: React.FC<{
   const { quizStats, totalMarksArr, totalMarksPossible } = props;
 
   const getQuizAverageScore = (marksArr?: number[]) => {
-    if (!marksArr) return '-';
+    if (!marksArr || marksArr.length == 0) return '-';
     return `${Math.round(
       (marksArr.reduce((x, y) => x + y, 0) /
         marksArr.length /
@@ -25,7 +25,7 @@ export const StatisticsSummaryRow: React.FC<{
   };
 
   const getQuizHighScore = (marksArr?: number[]) => {
-    if (!marksArr) return '-';
+    if (!marksArr || marksArr.length == 0) return '-';
     return `${Math.round(
       (marksArr.reduce((x, y) => (x > y ? x : y), 0) /
         (totalMarksPossible ?? 1)) *
@@ -34,7 +34,7 @@ export const StatisticsSummaryRow: React.FC<{
   };
 
   const getQuizLowScore = (marksArr?: number[]) => {
-    if (!marksArr) return '-';
+    if (!marksArr || marksArr.length == 0) return '-';
     return `${Math.round(
       (marksArr.reduce((x, y) => (x < y ? x : y)) / (totalMarksPossible ?? 1)) *
         100,

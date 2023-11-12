@@ -39,7 +39,8 @@ export const AssignmentStatistics: React.FC = () => {
       <div className="flex gap-2 text-2xl py-1 mb-5 font-bold tracking-tight items-center">
         {assignmentStats?.assignmentDetails.title ?? ''}
       </div>
-      {assignmentStats?.assignmentDetails.totalMarks ? (
+      {assignmentStats?.totalMarksArr &&
+      assignmentStats.totalMarksArr.length > 0 ? (
         <div>
           <StatisticsSummaryRow
             totalMarksArr={assignmentStats.totalMarksArr}
@@ -47,11 +48,15 @@ export const AssignmentStatistics: React.FC = () => {
           />
           <BoxWhiskerChart
             totalMarksArr={assignmentStats.totalMarksArr}
-            totalMarksPossible={assignmentStats.assignmentDetails.totalMarks}
+            totalMarksPossible={
+              assignmentStats.assignmentDetails.totalMarks ?? 0
+            }
           />
           <BellcurveChart
             totalMarksArr={assignmentStats.totalMarksArr}
-            totalMarksPossible={assignmentStats.assignmentDetails.totalMarks}
+            totalMarksPossible={
+              assignmentStats.assignmentDetails.totalMarks ?? 0
+            }
           />
         </div>
       ) : (
