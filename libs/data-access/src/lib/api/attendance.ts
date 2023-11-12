@@ -19,5 +19,18 @@ export async function createAttendance(
 export async function revertAttendance(
   attendanceId: string,
 ): Promise<AxiosResponse<AttendanceData>> {
-  return client.post(`${URL}/revert/${attendanceId}`);
+  return client.put(`${URL}/revert/${attendanceId}`);
+}
+
+export async function getAttendanceBySessionAndStudentId(
+  sessionId: string,
+  studentId: string,
+): Promise<AxiosResponse<AttendanceData>> {
+  return client.get(`${URL}/${sessionId}/${studentId}`);
+}
+
+export async function getAttendancesBySessionId(
+  sessionId: string,
+): Promise<AxiosResponse<AttendanceData[]>> {
+  return client.get(`${URL}/session/${sessionId}`);
 }
