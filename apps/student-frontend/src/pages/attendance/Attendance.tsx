@@ -63,6 +63,7 @@ export const Attendance: React.FC = () => {
 
   useEffect(() => {
     getSession();
+    getAttendance();
   }, []);
 
   return (
@@ -83,20 +84,27 @@ export const Attendance: React.FC = () => {
             session.end,
           ).toLocaleTimeString()}`}
         </p>
-        {attendance ? (
-          <button
-            onClick={() => markAttendance()}
-            className="flex w-80 items-center justify-center rounded-md bg-student-primary-900 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-student-secondary-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-student-secondary-600"
-          >
-            I'm here
-          </button>
+        {session.students?.some((student) => student.id === user?.id) ? (
+          attendance ? (
+            <button
+              onClick={() => markAttendance()}
+              className="flex w-80 items-center justify-center rounded-md bg-student-primary-900 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-student-secondary-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-student-secondary-600"
+            >
+              I'm here
+            </button>
+          ) : (
+            <button
+              disabled={true}
+              className="inline-flex w-80 justify-center px-4 py-2 text-sm font-medium text-white rounded-md focus:outline-none bg-gray-300 text-gray-500 cursor-not-allowed"
+            >
+              Attendance marked
+            </button>
+          )
         ) : (
-          <button
-            disabled={true}
-            className="inline-flex w-80 justify-center px-4 py-2 text-sm font-medium text-white rounded-md focus:outline-none bg-gray-300 text-gray-500 cursor-not-allowed"
-          >
-            Marked
-          </button>
+          <p>
+            Seems like you have not booked the session. Please book the session
+            before marking your attendance.
+          </p>
         )}
       </div>
     )) || <FullscreenSpinner />

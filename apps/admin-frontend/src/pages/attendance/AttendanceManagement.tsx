@@ -1,19 +1,16 @@
 import { SessionData } from 'libs/data-access/src/lib/types/session';
-import { Teacher } from '@acer-academy-learning/data-access';
 import { useEffect, useState } from 'react';
 import { useToast } from '@acer-academy-learning/common-ui';
-import { getSessionsInPastWeekByTeacherId as apiGetSessionInPastWeek } from '@acer-academy-learning/data-access';
-import { useAuth } from '@acer-academy-learning/common-ui';
+import { getSessionsInPastWeek as apiSessionsPastWeek } from '@acer-academy-learning/data-access';
 
 export const AttendanceManagement: React.FC = () => {
   const [sessions, setSessions] = useState<SessionData[]>([]);
-  const { user } = useAuth<Teacher>();
 
   const { displayToast, ToastType } = useToast();
 
   const getSessionsInPastWeekByTeacherId = async () => {
     try {
-      const response = await apiGetSessionInPastWeek(user?.id || '');
+      const response = await apiSessionsPastWeek();
       const allSessions: SessionData[] = response.data;
       setSessions(allSessions);
     } catch (error) {
@@ -44,7 +41,7 @@ export const AttendanceManagement: React.FC = () => {
               >
                 <div className="min-w-0 flex-1">
                   <a
-                    href={`/scheduling/attendance/mark/${session.id}`}
+                    href={`/scheduling-resources/attendance/mark/${session.id}`}
                     className="focus:outline-none"
                   >
                     <span className="absolute inset-0" aria-hidden="true" />

@@ -12,7 +12,6 @@ import {
   AttendanceCreateData,
 } from 'libs/data-access/src/lib/types/attendance';
 import { useParams } from 'react-router-dom';
-import { QrModal } from './GenerateQrCode';
 
 export const MarkAttendance: React.FC = () => {
   const { displayToast, ToastType } = useToast();
@@ -20,7 +19,6 @@ export const MarkAttendance: React.FC = () => {
   const [session, setSession] = useState<SessionData>();
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [attendances, setAttendances] = useState<AttendanceData[]>([]);
-  const [generateQrCode, setGenerateQrCode] = useState(false);
 
   const getSession = async () => {
     try {
@@ -78,24 +76,16 @@ export const MarkAttendance: React.FC = () => {
       <div className="flex min-h-full flex-col gap-7 align-middle ">
         <a
           className="hover:text-admin-primary-700 underline"
-          href="scheduling/attendance"
+          href="scheduling-resources/attendance"
         >{`< Back`}</a>
-        <div className="flex justify-between px-5">
+        <div>
           <h1 className="text-2xl font-bold tracking-tight">Attendance</h1>
-          <button
-            className="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-teacher-primary-700 border border-transparent rounded-md hover:bg-admin-primary-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-admin-primary-500"
-            onClick={() => {
-              setGenerateQrCode(true);
-            }}
-          >
-            Generate QrCode
-          </button>
         </div>
       </div>
 
       <div className="flex items-center">
         {(session && session.students && session?.students.length) || 0 > 0 ? (
-          <table className="min-w-full divide-y divide-gray-300">
+          <table className="min-w-full divide-y divide-gray-300 ">
             <thead className="bg-gray-50">
               <tr>
                 <th
@@ -145,7 +135,7 @@ export const MarkAttendance: React.FC = () => {
                           >
                             <button
                               disabled={true}
-                              className="inline-flex justify-center px-4 py-2 text-sm font-medium text-white rounded-md focus:outline-none bg-gray-300 text-gray-500 cursor-not-allowed"
+                              className="inline-flex justify-center px-10 py-2 text-sm font-medium text-white rounded-md focus:outline-none bg-gray-300 text-gray-500 cursor-not-allowed"
                             >
                               Reverted
                             </button>
@@ -170,12 +160,6 @@ export const MarkAttendance: React.FC = () => {
           <span>No students in this session</span>
         )}
       </div>
-      {generateQrCode && (
-        <QrModal
-          setIsModalOpen={setGenerateQrCode}
-          sessionId={sessionId || ''}
-        />
-      )}
     </div>
   );
 };

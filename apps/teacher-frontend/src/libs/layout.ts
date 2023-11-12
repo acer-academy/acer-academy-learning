@@ -14,6 +14,7 @@ import {
   SUBJECTS,
   VIEW_CLASSES,
   ASSIGNMENTS,
+  SESSIONS_FOR_ATTENDANCE,
 } from './routes';
 import {
   UserIcon,
@@ -22,6 +23,7 @@ import {
   PaperClipIcon,
   DocumentTextIcon,
   CalendarDaysIcon,
+  ClockIcon,
 } from '@heroicons/react/24/outline';
 
 export const NAV_SECTIONS: NavigationMenuItem[] = [
@@ -72,6 +74,7 @@ export const NAV_SECTIONS: NavigationMenuItem[] = [
     children: [
       { name: 'View Classes', path: VIEW_CLASSES, icon: CalendarDaysIcon },
       // { name: 'Book Classes', path: BOOK_CLASSES, icon: CalculatorIcon },
+      { name: 'Attendance', path: SESSIONS_FOR_ATTENDANCE, icon: ClockIcon },
     ],
   },
   {
