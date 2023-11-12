@@ -41,3 +41,6 @@ export const PROFILE = `${ACCOUNT}/profile`;
 export const NOTIFICATIONS = `${ACCOUNT}/notifications`;
 export const SETTINGS = `${ACCOUNT}/settings`;
 export const FAQ = `${ACCOUNT}/faq`;
+
+//Attendance
+export const ATTENDANCE = `/attendance/:sessionId`;

@@ -45,6 +45,7 @@ import {
   ATTEMPT_ADAPTIVE_QUIZ,
   VIEW_ADAPTIVE_QUIZ,
   VIEW_ASSIGNMENT,
+  ATTENDANCE,
 } from '../libs/routes';
 import { ToastContainer } from 'react-toastify';
 import { StudentNotificationPreference } from '../pages/profile/StudentNotificationPreference';
@@ -69,6 +70,7 @@ import { ViewAdaptiveQuiz } from '../pages/subject/quiz/ViewAdaptiveQuiz';
 import { AttemptAdaptiveQuiz } from '../pages/subject/quiz/AttemptAdaptiveQuiz';
 import { ViewAllAssignments } from '../pages/subject/assignment/ViewAllAssignments';
 import { ViewAssignment } from '../pages/subject/assignment/ViewAssignment';
+import { Attendance } from '../pages/attendance/Attendance';
 
 export function App() {
   const queryClient = new QueryClient();
@@ -147,6 +149,7 @@ export function App() {
                   />
                 </Route>
                 <Route path={REWARDS} element={<div>Home</div>} />
+                <Route path={ATTENDANCE} element={<Attendance />} />
                 <Route path={ACCOUNT}>
                   <Route path={PROFILE} element={<StudentProfile />} />
                   <Route
