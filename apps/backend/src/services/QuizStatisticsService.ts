@@ -249,7 +249,7 @@ class QuizStatisticsService {
 
   // }
 
-  private processTakeAnswers(
+  private processTakeAnswersForAverageScore(
     takeAnswers: ElementOf<
       ThenArg<ReturnType<typeof this.getQuizStatisticsStudentTakesFilteredBy>>
     >['studentAnswers'],
@@ -275,9 +275,7 @@ class QuizStatisticsService {
         (value) => value.isCorrect,
       );
       const isCorrect =
-        value.length === 1
-          ? value[0].isCorrect
-          : correctOptionsByStudent.length === correctOptions.length;
+        correctOptionsByStudent.length === correctOptions.length;
       const topics = currentQuestion.topics;
       topics.map((topic) => {
         //@TODO: To change if ever refactor topics
@@ -309,7 +307,7 @@ class QuizStatisticsService {
         filter,
       );
 
-      this.processTakeAnswers(
+      this.processTakeAnswersForAverageScore(
         currentTake[0].studentAnswers,
         topicsToAverageScoreArrMap,
       );
@@ -332,7 +330,6 @@ class QuizStatisticsService {
       dataArr: dataArr,
     };
   }
-
 }
 
 export default new QuizStatisticsService();

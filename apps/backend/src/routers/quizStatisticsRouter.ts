@@ -3,6 +3,7 @@ import QuizStatisticsService from '../services/QuizStatisticsService';
 import {
   validateCookiesStudentExist,
   validateParamsQuizExists,
+  validateQueryTopicsExist,
   validateQuestionQuizTakeExist,
 } from '../middleware/validationMiddleware';
 import { AllTakesStudentParams } from '../types/takes';
@@ -119,26 +120,19 @@ quizStatisticsRouter.get(
 quizStatisticsRouter.get(
   '/spider-chart-student',
   validateCookiesStudentExist,
-  async (req, res: Response<any, { studentId: string }>) => {
+  validateQueryTopicsExist,
+  async (
+    req,
+    res: Response<any, { studentId: string; topics: QuizQuestionTopicEnum[] }>,
+  ) => {
     try {
       // const { studentId } = req.params;
       const studentId = res.locals.studentId;
       const filter: AllTakesStudentParams = {
         studentId: studentId,
       };
-      const topics = req.query.topics as string | string[];
-      const filteredTopics = Array.isArray(topics)
-        ? topics.filter((topic): topic is QuizQuestionTopicEnum =>
-            Object.values(QuizQuestionTopicEnum).includes(
-              topic as QuizQuestionTopicEnum,
-            ),
-          )
-        : Object.values(QuizQuestionTopicEnum).includes(
-            topics as QuizQuestionTopicEnum,
-          )
-        ? [topics as QuizQuestionTopicEnum]
-        : undefined;
 
+      const filteredTopics = res.locals.topics;
       const result =
         await QuizStatisticsService.getQuizStatisticsStudentSpiderChartDataBy({
           filter: filter,

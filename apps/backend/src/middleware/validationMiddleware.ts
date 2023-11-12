@@ -2723,3 +2723,31 @@ export async function validateCookiesStudentExist(
     });
   }
 }
+
+export async function validateQueryTopicsExist(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const topics = req.query.topics as string | string[];
+    const filteredTopics = Array.isArray(topics)
+      ? topics.filter((topic): topic is QuizQuestionTopicEnum =>
+          Object.values(QuizQuestionTopicEnum).includes(
+            topic as QuizQuestionTopicEnum,
+          ),
+        )
+      : Object.values(QuizQuestionTopicEnum).includes(
+          topics as QuizQuestionTopicEnum,
+        )
+      ? [topics as QuizQuestionTopicEnum]
+      : undefined;
+
+    res.locals.topics = filteredTopics;
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
