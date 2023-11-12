@@ -20,10 +20,6 @@ export type QuizQuestionRowProps = {
   marks: number;
 };
 
-/**
- * Quiz question card component
- * @returns {JSX.Element}
- */
 export const QuizQuestionRow = ({
   questionId,
   takeId,
@@ -65,7 +61,7 @@ export const QuizQuestionRow = ({
     fetchTakeAnswers();
     fetchStatistics();
     setLoading(false);
-  }, []);
+  }, [questionId, takeId, questionNumber, marks]);
 
   const answerOptions = useMemo(() => {
     switch (question?.questionType) {
@@ -151,7 +147,7 @@ export const QuizQuestionRow = ({
           </>
         );
     }
-  }, [question, questionNumber]);
+  }, [question, questionNumber, takeAnswer]);
 
   if (loading) {
     return <Spinner />;
@@ -160,11 +156,20 @@ export const QuizQuestionRow = ({
   return (
     <div className="opacity-100 transition-opacity duration-300">
       <div
-        className={`px-4 py-2 text-left font-bold focus:outline-none focus-visible:ring focus-visible:ring-gray-500 focus-visible:ring-opacity-75 text-base border border-gray-400 rounded-t flex justify-between bg-teacher-primary-900 text-white`}
+        className={`px-4 py-2 text-left font-bold focus:outline-none focus-visible:ring focus-visible:ring-gray-500 focus-visible:ring-opacity-75 text-base border border-gray-400 rounded-t flex justify-between ${
+          takeAnswer?.map((x) => x.isCorrect).reduce((a, b) => a && b)
+            ? 'bg-teacher-primary-900'
+            : 'bg-red-800'
+        } text-white`}
       >
         <span>Question {questionNumber}</span>
         <span>
-          {marks} mark{marks > 1 ? 's' : ''}
+          {`${
+            takeAnswer?.map((x) => x.isCorrect).reduce((a, b) => a && b)
+              ? marks
+              : 0
+          } / ${marks}`}{' '}
+          mark{marks > 1 ? 's' : ''}
         </span>
       </div>
       <div className="rounded-b border-b border-x border-gray-200 bg-white px-4 py-5 sm:px-6 shadow space-y-4 flex flex-col">

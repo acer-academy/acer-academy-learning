@@ -23,7 +23,7 @@ export const BoxWhiskerChart: React.FC<{
 
   return (
     <div className="my-10">
-      {totalMarksArr ? (
+      {totalMarksArr && totalMarksArr.length > 1 ? (
         <div className="flex flex-col items-center">
           <div className="flex gap-5 mb-5">
             <div className="flex gap-1 items-center text-gray-700 text-base font-light">
@@ -74,7 +74,7 @@ export const BoxWhiskerChart: React.FC<{
       ) : (
         <div className="flex justify-center text-center">
           <span className="italic text-gray-700">
-            No data to render box-and-whisker plot
+            Insufficient data to render box-and-whisker plot
           </span>
         </div>
       )}
