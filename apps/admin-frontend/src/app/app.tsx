@@ -43,7 +43,9 @@ import {
   CLASS_CREDITS,
   SCHEDULING_RESOURCES,
   VIEW_CLASSES,
-  BOOK_CLASSES
+  BOOK_CLASSES,
+  MARK_ATTENDANCE,
+  SESSIONS_FOR_ATTENDANCE,
 } from '../libs/routes';
 import AdminForgotPassword from '../pages/entry/AdminForgotPassword';
 import AdminResetPassword from '../pages/entry/AdminResetPassword';
@@ -54,6 +56,8 @@ import TransactionsComponent from '../pages/transaction/TransactionManagement';
 import { CreditBundleManagement } from '../pages/creditBundle/CreditBundleManagement';
 import { ClassCreditManagement } from '../pages/classCredit/ClassCreditManagement';
 import CalendarPage from '../pages/calendar/CalendarPage';
+import { AttendanceManagement } from '../pages/attendance/AttendanceManagement';
+import { MarkAttendance } from '../pages/attendance/MarkAttendance';
 
 export default function App() {
   return (
@@ -102,14 +106,13 @@ export default function App() {
               </Route>
 
               <Route path={SCHEDULING_RESOURCES} element={<Outlet />}>
+                <Route path={VIEW_CLASSES} element={<CalendarPage />} />
+                <Route path={BOOK_CLASSES} element={<p>hello</p>} />
                 <Route
-                  path={VIEW_CLASSES}
-                  element={<CalendarPage />}
+                  path={SESSIONS_FOR_ATTENDANCE}
+                  element={<AttendanceManagement />}
                 />
-                <Route
-                  path={BOOK_CLASSES}
-                  element={<p>hello</p>}
-                />
+                <Route path={MARK_ATTENDANCE} element={<MarkAttendance />} />
               </Route>
 
               <Route path={`${CENTRE}`} element={<CentreManagement />} />
