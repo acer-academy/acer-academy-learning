@@ -518,7 +518,7 @@ const createMultipleTakesForStudents = async (count) => {
     }
     const end = Date.now();
     console.log(
-      `${count} takes (to view in quizzes) created successfully for ${
+      `${count} takes (to view in quiz analytics) created successfully for ${
         student.firstName
       } (${end - start} ms).`,
     );
