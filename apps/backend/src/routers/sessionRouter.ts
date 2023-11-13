@@ -23,11 +23,34 @@ sessionRouter.get('/', async (req, res) => {
   }
 });
 
+sessionRouter.get('/week/', async (req, res) => {
+  try {
+    const sessions = await SessionService.getSessionsInPastWeek();
+    return res.status(200).json(sessions);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: error.message });
+  }
+});
+
 sessionRouter.get('/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const session = await SessionService.getSessionBySessionId(id);
     return res.status(200).json(session);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: error.message });
+  }
+});
+
+sessionRouter.get('/week/:teacherId', async (req, res) => {
+  try {
+    const { teacherId } = req.params;
+    const sessions = await SessionService.getSessionsInPastWeekByTeacherId(
+      teacherId,
+    );
+    return res.status(200).json(sessions);
   } catch (error) {
     console.log(error);
     return res.status(500).json({ error: error.message });
@@ -41,8 +64,9 @@ sessionRouter.post(
   validateSessionDate,
   async (req, res) => {
     try {
-      const input: Prisma.SessionUncheckedCreateInput = req.body;
-      const session = await SessionService.createSession(input);
+      const input: Prisma.SessionUncheckedCreateInput = req.body[0];
+      const studentIdArr: Array<String> = req.body[1];
+      const session = await SessionService.createSession(input, studentIdArr);
       // Send whatsapp message
       await messageService.sendWhatsappMessage(MessageTemplate.NEW_CLASS_ALERT);
       return res.status(200).json(session);
@@ -61,8 +85,15 @@ sessionRouter.put(
   async (req, res) => {
     try {
       const { id } = req.params;
-      const input: Prisma.SessionUncheckedUpdateInput = req.body;
-      const session = await SessionService.updateSession(id, input);
+      const input: Prisma.SessionUncheckedUpdateInput = req.body[0];
+      const addStudentIdArr: Array<String> = req.body[1];
+      const removeStudentIdArr: Array<String> = req.body[2];
+      const session = await SessionService.updateSession(
+        id,
+        input,
+        addStudentIdArr,
+        removeStudentIdArr,
+      );
       // Send whatsapp message
       await messageService.sendWhatsappMessage(
         MessageTemplate.UPDATE_CLASS_ALERT,

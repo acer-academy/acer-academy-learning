@@ -80,7 +80,7 @@ export const CreditBundleUpdateModal: React.FC<
                   className={`block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ${
                     isCreditBundleNameInvalid(creditBundleData.name)
                       ? 'ring-red-300 text-red-900 focus:ring-red-500'
-                      : 'ring-gray-300 text-gray-900 focus:ring-adminGreen-500'
+                      : 'ring-gray-300 text-gray-900 focus:ring-admin-primary-700'
                   } placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6`}
                   placeholder="Lower Primary 12 Classes"
                   value={creditBundleData.name}
@@ -115,7 +115,7 @@ export const CreditBundleUpdateModal: React.FC<
                   type="text"
                   name="description"
                   id="description"
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 text-gray-900 focus:ring-adminGreen-500 placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 text-gray-900 focus:ring-admin-primary-700 placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6"
                   placeholder="Optional"
                   value={creditBundleData.description}
                   onChange={(e) => {
@@ -144,7 +144,7 @@ export const CreditBundleUpdateModal: React.FC<
                   className={`block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ${
                     isCreditBundleNumCreditsInvalid(creditBundleData.numCredits)
                       ? 'ring-red-300 text-red-900 focus:ring-red-500'
-                      : 'ring-gray-300 text-gray-900 focus:ring-adminGreen-500'
+                      : 'ring-gray-300 text-gray-900 focus:ring-admin-primary-700'
                   } placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6`}
                   placeholder="12"
                   value={creditBundleData.numCredits}
@@ -180,7 +180,7 @@ export const CreditBundleUpdateModal: React.FC<
                 <select
                   id="level"
                   name="level"
-                  className="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-admin-primary-700 sm:text-sm sm:leading-6"
                   value={creditBundleData.level}
                   onChange={(e) => {
                     creditBundleData.level = e.target.value as LevelEnum;
@@ -210,7 +210,7 @@ export const CreditBundleUpdateModal: React.FC<
                   className={`block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ${
                     isCreditBundleBasePriceInvalid(creditBundleData.basePrice)
                       ? 'ring-red-300 text-red-900 focus:ring-red-500'
-                      : 'ring-gray-300 text-gray-900 focus:ring-adminGreen-500'
+                      : 'ring-gray-300 text-gray-900 focus:ring-admin-primary-700'
                   } placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6`}
                   placeholder="12"
                   value={convertIntToFloat(creditBundleData.basePrice)}
@@ -247,7 +247,7 @@ export const CreditBundleUpdateModal: React.FC<
                 ${
                   isCreditBundleDataInvalid()
                     ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                    : 'bg-adminGreen-600 hover:bg-adminGreen-500 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-adminGreen-500'
+                    : 'bg-admin-primary-700 hover:bg-admin-primary-900 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-admin-primary-500'
                 }`}
               onClick={() =>
                 updateCreditBundle(currentCreditBundle.id, creditBundleData)

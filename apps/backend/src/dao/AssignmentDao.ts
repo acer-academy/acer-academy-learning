@@ -1,4 +1,13 @@
-import { Prisma, PrismaClient, Assignment } from '@prisma/client';
+import {
+  Prisma,
+  PrismaClient,
+  Assignment,
+  AssignmentAttempt,
+} from '@prisma/client';
+
+export type AssignmentIncludeAttempts = Assignment & {
+  assignmentAttempts: AssignmentAttempt[];
+};
 
 export class AssignmentDao {
   constructor(private prismaClient: PrismaClient = new PrismaClient()) {}
@@ -12,15 +21,21 @@ export class AssignmentDao {
   }
 
   public async getAllAssignments(): Promise<Assignment[]> {
-    return this.prismaClient.assignment.findMany();
+    return this.prismaClient.assignment.findMany({
+      include: {
+        teacher: true,
+        assignmentAttempts: true,
+      },
+    });
   }
 
   public async getAssignmentById(
     assignmentId: string,
-  ): Promise<Assignment | null> {
+  ): Promise<AssignmentIncludeAttempts | null> {
     return this.prismaClient.assignment.findUnique({
       where: { id: assignmentId },
       include: {
+        teacher: true,
         assignmentAttempts: true,
       },
     });

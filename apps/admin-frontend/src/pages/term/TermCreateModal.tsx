@@ -60,7 +60,7 @@ export const TermCreateModal: React.FC<TermCreateModalProps> = ({
                     name="name"
                     id="name"
                     placeholder="Term 1"
-                    className={`block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6`}
+                    className={`block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6 focus:ring-admin-primary-700`}
                     value={termData.name}
                     onChange={(e) => {
                       setTermData({
@@ -88,7 +88,7 @@ export const TermCreateModal: React.FC<TermCreateModalProps> = ({
                     className={`block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ${
                       isStartDateInvalid(termData.startDate)
                         ? 'ring-red-300 text-red-900 focus:ring-red-500'
-                        : 'ring-gray-300 text-gray-900 focus:ring-adminGreen-500'
+                        : 'ring-gray-300 text-gray-900 focus:ring-admin-primary-700'
                     } placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6`}
                     value={termData.startDate.substring(0, 10)}
                     onChange={(e) => {
@@ -125,7 +125,7 @@ export const TermCreateModal: React.FC<TermCreateModalProps> = ({
                     className={`block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ${
                       isDatesInvalid(termData.startDate, termData.endDate)
                         ? 'ring-red-300 text-red-900 focus:ring-red-500'
-                        : 'ring-gray-300 text-gray-900 focus:ring-adminGreen-500'
+                        : 'ring-gray-300 text-gray-900 focus:ring-admin-primary-700'
                     } placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6`}
                     value={termData.endDate.substring(0, 10)}
                     onChange={(e) => {
@@ -161,7 +161,7 @@ export const TermCreateModal: React.FC<TermCreateModalProps> = ({
                     ${
                       isTermDataInvalid()
                         ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                        : 'bg-adminGreen-600 hover:bg-adminGreen-500 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-adminGreen-500'
+                        : 'bg-admin-primary-700 hover:bg-admin-primary-900 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-admin-primary-900'
                     }`}
                 onClick={() => createTerm(termData)}
               >

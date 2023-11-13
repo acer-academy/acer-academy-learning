@@ -63,7 +63,7 @@ export const TermUpdateModal: React.FC<TermUpdateModalProps> = ({
                     type="text"
                     name="name"
                     id="name"
-                    className={`block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6`}
+                    className={`block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6 focus:ring-admin-primary-700`}
                     placeholder="AcerAcademy"
                     value={termData.name}
                     onChange={(e) => {
@@ -89,7 +89,7 @@ export const TermUpdateModal: React.FC<TermUpdateModalProps> = ({
                     type="date"
                     name="startDate"
                     id="startDate"
-                    className={`block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6`}
+                    className={`block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6 focus:ring-admin-primary-700`}
                     value={
                       termData.startDate === undefined
                         ? undefined
@@ -121,7 +121,7 @@ export const TermUpdateModal: React.FC<TermUpdateModalProps> = ({
                     className={`block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ${
                       isDatesInvalid(termData.startDate, termData.endDate)
                         ? 'ring-red-300 text-red-900 focus:ring-red-500'
-                        : 'ring-gray-300 text-gray-900 focus:ring-adminGreen-500'
+                        : 'ring-gray-300 text-gray-900 focus:ring-admin-primary-700'
                     } placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6`}
                     value={
                       termData.endDate === undefined
@@ -161,7 +161,7 @@ export const TermUpdateModal: React.FC<TermUpdateModalProps> = ({
                     ${
                       isTermDataInvalid()
                         ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                        : 'bg-adminGreen-600 hover:bg-adminGreen-500 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-adminGreen-500'
+                        : 'bg-admin-primary-700 hover:bg-admin-primary-900 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-admin-primary-500'
                     }`}
                 onClick={() => updateTerm(updateId, termData)}
               >

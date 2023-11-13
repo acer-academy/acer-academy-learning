@@ -96,7 +96,7 @@ class AdminService {
       throw new Error(`Admin not found for id: ${id}`);
     }
     if (data.password) {
-      data.password = await bcrypt.hash(data.password, 10);
+      data.password = await bcrypt.hash(data.password as string, 10);
     }
 
     return AdminDao.updateAdmin(id, data);

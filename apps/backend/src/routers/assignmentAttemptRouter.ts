@@ -6,6 +6,7 @@ import {
   validateBodyAssignmentAttemptFormatValid,
   validateBodyAssignmentExists,
   validateBodyStudentExists,
+  validateParamsAssignmentExists,
 } from '../middleware/validationMiddleware';
 
 const assignmentAttemptRouter = Router();
@@ -56,6 +57,23 @@ assignmentAttemptRouter.get('/:assignmentAttemptId', async (req, res) => {
     return res.status(500).json({ error: error.message });
   }
 });
+
+assignmentAttemptRouter.get(
+  '/assignment/:assignmentId',
+  validateParamsAssignmentExists,
+  async (req, res) => {
+    try {
+      const { assignmentId } = req.params;
+      const assignmentAttempt =
+        await assignmentAttemptService.getAssignmentAttemptsByAssignmentId(
+          assignmentId,
+        );
+      return res.status(200).json(assignmentAttempt);
+    } catch (error) {
+      return res.status(500).json({ error: error.message });
+    }
+  },
+);
 
 assignmentAttemptRouter.put(
   '/:assignmentAttemptId',

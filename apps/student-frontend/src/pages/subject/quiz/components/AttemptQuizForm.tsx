@@ -229,7 +229,7 @@ export const AttemptQuizForm = ({
                   text="Previous"
                   onClick={handlePrevPage}
                   type="button"
-                  className="bg-student-primary-600 hover:bg-student-primary-700 text-white self-center w-24"
+                  className="bg-student-primary-900 hover:bg-student-secondary-700 text-white self-center w-24"
                 />
               )}
               {canNavigateNext && (
@@ -237,14 +237,14 @@ export const AttemptQuizForm = ({
                   text="Next"
                   type="button"
                   onClick={handleNextPage}
-                  className="bg-student-primary-600 hover:bg-student-primary-700 text-white self-center w-24"
+                  className="bg-student-primary-900 hover:bg-student-secondary-700 text-white self-center w-24"
                 />
               )}
             </nav>
             <nav className="rounded bg-white border border-gray-200 absolute bottom-0 space-x-4 w-full p-2 flex justify-end">
               <GenericButton
                 type="submit"
-                className="bg-student-primary-600 hover:bg-student-primary-700 text-white self-center w-24"
+                className="bg-student-primary-900 hover:bg-student-secondary-700 text-white self-center w-24"
               />
             </nav>
           </section>
@@ -277,7 +277,7 @@ export const AttemptQuizForm = ({
               }}
               type="submit"
               text="Ok"
-              className={`bg-student-primary-600 hover:bg-student-primary-700 w-24 self-center mt-4`}
+              className={`bg-student-primary-900 hover:bg-student-secondary-700 w-24 self-center mt-4`}
             />
           </GenericModal>
           <WarningModal

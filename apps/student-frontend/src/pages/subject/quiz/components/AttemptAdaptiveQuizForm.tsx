@@ -236,7 +236,7 @@ export const AttemptAdaptiveQuizForm = ({
             >
               <GenericButton
                 type="submit"
-                className="bg-student-primary-600 hover:bg-student-primary-700 text-white self-center w-24"
+                className="bg-student-primary-900 hover:bg-student-secondary-700 text-white self-center w-24"
               />
             </nav>
           </>

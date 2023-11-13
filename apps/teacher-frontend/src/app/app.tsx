@@ -47,6 +47,13 @@ import {
   QUIZ_ANALYTICS_MGMT,
   ASSIGNMENT_ANALYTICS_MGMT,
   VIEW_ASSIGNMENT_ANALYTICS,
+  ASSIGNMENTS,
+  VIEW_ASSIGNMENT,
+  CREATE_ASSIGNMENT,
+  EDIT_ASSIGNMENT,
+  VIEW_ASSIGNMENT_ATTEMPTS,
+  SESSIONS_FOR_ATTENDANCE,
+  MARK_ATTENDANCE,
 } from '../libs/routes';
 import { CreateQuestion } from '../pages/question-bank/CreateQuestion';
 import { QueryClient, QueryClientProvider } from 'react-query';
@@ -62,6 +69,13 @@ import { QuizStatistics } from '../pages/analytics/QuizStatistics';
 import { QuizStatisticsManagement } from '../pages/analytics/QuizStatisticsManagement';
 import { AssignmentStatisticsManagement } from '../pages/analytics/AssignmentStatisticsManagement';
 import { AssignmentStatistics } from '../pages/analytics/AssignmentStatistics';
+import { AssignmentManagement } from '../pages/assignments/AssignmentManagement';
+import { ViewAssignment } from '../pages/assignments/ViewAssignment';
+import { CreateAssignment } from '../pages/assignments/CreateAssignment';
+import { EditAssignmentWrapper } from '../pages/assignments/EditAssignmentWrapper';
+import { AssignmentAttemptManagement } from '../pages/assignments/AssignmentAttemptManagement';
+import { AttendanceManagement } from '../pages/attendances/AttendanceManagement';
+import { MarkAttendance } from '../pages/attendances/MarkAttendance';
 
 export function App() {
   const queryClient = new QueryClient();
@@ -110,6 +124,29 @@ export function App() {
                     <Route path={CREATE_QUIZ} element={<CreateQuiz />} />
                     <Route path={UPDATE_QUIZ} element={<ModifyQuizWrapper />} />
                   </Route>
+                  {/* Assignments routes */}
+                  <Route path={ASSIGNMENTS}>
+                    <Route
+                      path={ASSIGNMENTS}
+                      element={<AssignmentManagement />}
+                    />
+                    <Route
+                      path={CREATE_ASSIGNMENT}
+                      element={<CreateAssignment />}
+                    />
+                    <Route
+                      path={VIEW_ASSIGNMENT}
+                      element={<ViewAssignment />}
+                    />
+                    <Route
+                      path={EDIT_ASSIGNMENT}
+                      element={<EditAssignmentWrapper />}
+                    />
+                    <Route
+                      path={VIEW_ASSIGNMENT_ATTEMPTS}
+                      element={<AssignmentAttemptManagement />}
+                    />
+                  </Route>
                 </Route>
                 {/* Analytics routes */}
                 <Route path={ANALYTICS}>
@@ -134,6 +171,11 @@ export function App() {
                 <Route path={SCHEDULING}>
                   <Route path={VIEW_CLASSES} element={<CalendarPage />} />
                   <Route path={BOOK_CLASSES} element={<Calendar />} />
+                  <Route
+                    path={SESSIONS_FOR_ATTENDANCE}
+                    element={<AttendanceManagement />}
+                  />
+                  <Route path={MARK_ATTENDANCE} element={<MarkAttendance />} />
                 </Route>
                 {/* Rewards routes */}
                 <Route path={REWARDS} />

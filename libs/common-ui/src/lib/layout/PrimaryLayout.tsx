@@ -15,6 +15,10 @@ import logo from '../assets/acer-academy-logo-white.png';
 import { LogoutButton } from './components/LogoutButton';
 import { useAuth } from '../wrapper/AuthContext';
 import { Admin, Student, Teacher } from '@prisma/client';
+import { DisclosureMenuItem } from './components/DisclosureMenuItem';
+import { DisclosureLeafItem } from './components/DisclosureLeafItem';
+import { getThemeClassName } from '../utils/getThemeClassName';
+import { useToast } from '../wrapper/ToastProvider';
 
 export type PrimaryLayoutProps = {
   accountNavigation: NavigationMenuItem;
@@ -29,39 +33,45 @@ export const PrimaryLayout = ({
   accountNavigation,
   routesWithoutSidebar,
 }: PrimaryLayoutProps) => {
+  const { displayToast, ToastType } = useToast();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const secondaryMenu = useGetSecondaryMenu([
     ...navigationMenu,
     accountNavigation,
   ]);
-  const { user } = useAuth<Admin | Student | Teacher>();
+  const { user, logout } = useAuth<Admin | Student | Teacher>();
+  const handleLogout = async () => {
+    try {
+      await logout();
+      // To handle separately once tested
+      displayToast('Successfully logged out!', ToastType.SUCCESS);
+    } catch (error) {
+      console.error('Logout failed', error);
+    }
+  };
 
   return (
     <ThemeProvider role={role}>
-      <div className="h-full flex flex-col bg-slate-100">
+      <div className="h-full flex flex-col">
         <header
           className={`fixed z-[1] h-[10vh] w-full ${
             role === LayoutRole.Student
-              ? 'bg-student-secondary-900'
-              : 'bg-teacher-secondary-600'
+              ? 'bg-student-primary-900'
+              : 'bg-teacher-primary-900'
           } flex-2 shadow-bottom `}
         >
           <nav
-            className=" flex  items-center justify-between p-6 lg:px-8"
+            className=" flex h-full items-center justify-between p-6 lg:px-8"
             aria-label="Global"
           >
             <div className="flex items-center gap-x-12">
-              <a href="#" className="-m-1.5 p-1.5">
+              <a href="/" className="-m-1.5 p-1.5">
                 <span className="sr-only">Your Company</span>
-                {role === LayoutRole.Student ? (
-                  <img
-                    className={'h-9 w-auto'}
-                    src={logo}
-                    alt="Acer Academy Logo"
-                  />
-                ) : (
-                  <AcerAcademyLogo className="h-8 w-auto" />
-                )}
+                <img
+                  className={'h-9 w-auto'}
+                  src={logo}
+                  alt="Acer Academy Logo"
+                />
               </a>
               <div className="hidden lg:flex lg:gap-x-12">
                 {navigationMenu.map((item) => (
@@ -73,7 +83,7 @@ export const PrimaryLayout = ({
                         isActive
                           ? `font-bold underline shadow-bottom`
                           : 'font-semibold',
-                        `text-sm leading-6 text-white`,
+                        `text-sm leading-6 text-white hover:underline`,
                       )
                     }
                   >
@@ -109,13 +119,14 @@ export const PrimaryLayout = ({
             <div className="fixed inset-0 z-10" />
             <Dialog.Panel className="fixed inset-y-0 right-0 z-10 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
               <div className="flex items-center justify-between">
-                <a href="#" className="-m-1.5 p-1.5">
+                <a href="/" className="-m-1.5 p-1.5">
                   <span className="sr-only">Your Company</span>
-                  <img
-                    className="h-8 w-auto"
-                    src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-                    alt=""
-                  />
+                  <AcerAcademyLogo className="h-9 w-auto" />
+                  {/* <img
+                    className={'h-9 w-auto'}
+                    src={logo}
+                    alt="Acer Academy Logo"
+                  /> */}
                 </a>
                 <button
                   type="button"
@@ -127,25 +138,39 @@ export const PrimaryLayout = ({
                 </button>
               </div>
               <div className="mt-6 flow-root">
-                <div className="-my-6 divide-y divide-gray-500/10">
+                <div className={`-my-6 divide-y bg-white divide-white-500/10`}>
                   <div className="space-y-2 py-6">
-                    {[...navigationMenu, accountNavigation].map((item) => (
-                      <a
-                        key={item.name}
-                        href={item.path}
-                        className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
-                      >
-                        {item.name.toUpperCase()}
-                      </a>
-                    ))}
+                    {[...navigationMenu, accountNavigation].map(
+                      (item) =>
+                        (item.children && (
+                          <DisclosureMenuItem item={item} key={item.name} />
+                        )) || (
+                          <DisclosureLeafItem
+                            activeColor={'text-white'}
+                            textColor={'text-student-primary-700'}
+                            textHoverColor={'hover:text-gray-500'}
+                            groupHoverColor={getThemeClassName(
+                              'group-hover:text',
+                              role,
+                              true,
+                              700,
+                            )}
+                            bgColor={'bg-gray-900'}
+                            bgHoverColor={'hover:bg-gray-100'}
+                            item={item}
+                            key={item.name}
+                            isChild={false}
+                          />
+                        ),
+                    )}
                   </div>
                   <div className="py-6">
-                    <a
-                      href="#"
+                    <button
                       className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                      onClick={handleLogout}
                     >
                       Sign Out
-                    </a>
+                    </button>
                   </div>
                 </div>
               </div>

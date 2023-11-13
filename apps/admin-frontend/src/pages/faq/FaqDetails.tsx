@@ -114,7 +114,7 @@ export const FaqTopicDetails: React.FC = () => {
     <div className="h-full bg-gray-50">
       <div className="flex min-h-full flex-col gap-7 align-middle py-12 px-12">
         <a
-          className="hover:text-adminGreen-600 underline"
+          className="hover:text-admin-primary-700 underline"
           href="faq-management"
         >{`< Back`}</a>
         {faqTopic && (
@@ -139,7 +139,7 @@ export const FaqTopicDetails: React.FC = () => {
           {isEditingFaqTopicTitle ? (
             <input
               name="updatedFaqTopicName"
-              className="flex items-center col-span-1 border-0 rounded bg-transparent ring-1 ring-inset focus:ring-2 focus:ring-inset ring-gray-300 text-gray-900 focus:ring-adminGreen-500"
+              className="flex items-center col-span-1 border-0 rounded bg-transparent ring-1 ring-inset focus:ring-2 focus:ring-inset ring-gray-300 text-gray-900 focus:ring-admin-primary-900"
               placeholder="Curriculum"
               value={updatedFaqTopicTitle}
               onChange={(e) => {
@@ -158,14 +158,14 @@ export const FaqTopicDetails: React.FC = () => {
                   setIsEditingFaqTopicTitle(false);
                   wereUpdatesMade();
                 }}
-                className="text-adminGreen-600 hover:underline"
+                className="text-admin-primary-700 hover:underline"
               >
                 Update
               </button>
             ) : (
               <button
                 onClick={() => setIsEditingFaqTopicTitle(true)}
-                className="hover:text-adminGreen-600 underline"
+                className="hover:text-admin-primary-700 underline"
               >
                 Edit
               </button>

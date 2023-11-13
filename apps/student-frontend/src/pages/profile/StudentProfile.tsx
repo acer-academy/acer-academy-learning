@@ -375,7 +375,7 @@ export const StudentProfile = () => {
                   onClick={handleStudentFirstNameSubmit((values) =>
                     handleSubmitForm(values, setFirstNameOnEdit, 'First Name'),
                   )}
-                  className="max-w-sm rounded self-center justify-self-center bg-indigo-600 px-2 py-1 font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                  className="max-w-sm rounded self-center justify-self-center bg-student-primary-600 px-2 py-1 font-semibold text-white shadow-sm hover:bg-student-primary-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-student-primary-600"
                 >
                   Save
                 </button>
@@ -430,7 +430,7 @@ export const StudentProfile = () => {
                   onClick={handleStuLastNameSubmit((values) =>
                     handleSubmitForm(values, setLastNameOnEdit, 'Last Name'),
                   )}
-                  className="max-w-sm rounded self-center justify-self-center bg-indigo-600 px-2 py-1 font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                  className="max-w-sm rounded self-center justify-self-center bg-student-primary-600 px-2 py-1 font-semibold text-white shadow-sm hover:bg-student-primary-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-student-primary-600"
                 >
                   Save
                 </button>
@@ -469,7 +469,7 @@ export const StudentProfile = () => {
                           {...studentSubjectRegister('subjects')}
                           // checked={selectedSubjects.includes(subject.value)}
                           // onChange={() => handleSubjectChange(subject.value)}
-                          className="h-5 w-5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                          className="h-5 w-5 rounded border-gray-300 text-student-primary-600 focus:ring-student-primary-600"
                           value={subject.value}
                         />
                         <span className="ml-2 text-gray-700 text-sm">
@@ -485,7 +485,7 @@ export const StudentProfile = () => {
                   onClick={handleStudentSubjectSubmit((values) =>
                     handleSubmitForm(values, setSubjectsOnEdit, 'Subjects'),
                   )}
-                  className="max-w-sm rounded self-center justify-self-center bg-indigo-600 px-2 py-1 font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                  className="max-w-sm rounded self-center justify-self-center bg-student-primary-900 px-2 py-1 font-semibold text-white shadow-sm hover:bg-student-secondary-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-student-primary-600"
                 >
                   Save
                 </button>
@@ -542,7 +542,7 @@ export const StudentProfile = () => {
                   onClick={handleStudentSchoolSubmit((values) =>
                     handleSubmitForm(values, setSchoolOnEdit, 'School'),
                   )}
-                  className="max-w-sm rounded self-center justify-self-center bg-indigo-600 px-2 py-1 font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                  className="max-w-sm rounded self-center justify-self-center bg-student-primary-600 px-2 py-1 font-semibold text-white shadow-sm hover:bg-student-primary-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-student-primary-600"
                 >
                   Save
                 </button>
@@ -595,7 +595,7 @@ export const StudentProfile = () => {
                       'Phone Number',
                     ),
                   )}
-                  className="max-w-sm rounded self-center justify-self-center bg-indigo-600 px-2 py-1 font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                  className="max-w-sm rounded self-center justify-self-center bg-student-primary-600 px-2 py-1 font-semibold text-white shadow-sm hover:bg-student-primary-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-student-primary-600"
                 >
                   Save
                 </button>
@@ -621,7 +621,7 @@ export const StudentProfile = () => {
               type="button"
               onClick={() => setChangePasswordModaIsOpen(true)}
               // className="text-student-primary-600 hover:underline"
-              className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              className="rounded-md bg-student-primary-900 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-student-secondary-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-student-primary-600"
             >
               Change Password
             </button>
@@ -630,7 +630,7 @@ export const StudentProfile = () => {
             <button
               onClick={handleAddParent}
               type="button"
-              className="ml-2 rounded-full bg-indigo-600 p-1.5 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              className="ml-2 rounded-full bg-student-primary-900 p-1.5 text-white shadow-sm hover:bg-student-secondary-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-student-primary-600"
             >
               <PlusIcon className="h-3 w-3" aria-hidden="true" />
             </button>
@@ -678,7 +678,7 @@ export const StudentProfile = () => {
                 ),
               )}
               // className="text-student-primary-600 hover:underline"
-              className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              className="rounded-md bg-student-primary-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-student-primary-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-student-primary-600"
             >
               Change Password
             </button>
@@ -713,7 +713,7 @@ export const StudentProfile = () => {
               errorMessage={parentErrors.phoneNumber?.message}
             />
             <button
-              className="ml-2 rounded-full bg-indigo-600 p-1.5 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              className="ml-2 rounded-full bg-student-primary-900 p-1.5 text-white shadow-sm hover:bg-student-secondary-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-student-primary-600"
               type="button"
               onClick={handleParentSubmit((values) =>
                 handleCreateParentSubmitForm(

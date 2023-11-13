@@ -89,7 +89,7 @@ export const QuizQuestionStatistics: React.FC<{
           On average, students spent
           <span className="font-bold text-black">{` ${getTimeString()} `}</span>{' '}
           on this question, and
-          <span className="font-bold text-black">{` ${correctRate}% `}</span>of
+          <span className="font-bold text-black">{` ${correctRate}% `}</span>
           of them answered correctly.
         </span>
       </div>

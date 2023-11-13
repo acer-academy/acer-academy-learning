@@ -103,7 +103,7 @@ export const PromotionUpdateModal: React.FC<PromotionUpdateModalProps> = ({
                     className={`block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ${
                       isPromoCodeInvalid(promotionData.promoCode)
                         ? 'ring-red-300 text-red-900 focus:ring-red-500'
-                        : 'ring-gray-300 text-gray-900 focus:ring-adminGreen-500'
+                        : 'ring-gray-300 text-gray-900 focus:ring-admin-primary-700'
                     } placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6`}
                     placeholder="AcerAcademy"
                     value={promotionData.promoCode}
@@ -144,7 +144,7 @@ export const PromotionUpdateModal: React.FC<PromotionUpdateModalProps> = ({
                         promotionData.percentageDiscount,
                       )
                         ? 'ring-red-300 text-red-900 focus:ring-red-500'
-                        : 'ring-gray-300 text-gray-900 focus:ring-adminGreen-500'
+                        : 'ring-gray-300 text-gray-900 focus:ring-admin-primary-700'
                     } placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6`}
                     placeholder="5.25"
                     value={promotionData.percentageDiscount}
@@ -181,7 +181,7 @@ export const PromotionUpdateModal: React.FC<PromotionUpdateModalProps> = ({
                     type="text"
                     name="description"
                     id="description"
-                    className={`block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6`}
+                    className={`block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6 focus:ring-admin-primary-700`}
                     placeholder="For new students"
                     value={promotionData.description}
                     onChange={(e) => {
@@ -242,7 +242,7 @@ export const PromotionUpdateModal: React.FC<PromotionUpdateModalProps> = ({
                         promotionData.endDate,
                       )
                         ? 'ring-red-300 text-red-900 focus:ring-red-500'
-                        : 'ring-gray-300 text-gray-900 focus:ring-adminGreen-500'
+                        : 'ring-gray-300 text-gray-900 focus:ring-admin-primary-700'
                     } placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6`}
                     value={
                       promotionData.endDate === undefined
@@ -285,7 +285,7 @@ export const PromotionUpdateModal: React.FC<PromotionUpdateModalProps> = ({
                   ${
                     isPromotionDataInvalid()
                       ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                      : 'bg-adminGreen-600 hover:bg-adminGreen-500 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-adminGreen-500'
+                      : 'bg-admin-primary-700 hover:bg-admin-primary-900 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-admin-primary-700'
                   }`}
                 onClick={() => updatePromotion(updateId, promotionData)}
               >

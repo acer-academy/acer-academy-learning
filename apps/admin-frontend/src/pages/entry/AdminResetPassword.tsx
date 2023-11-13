@@ -82,7 +82,7 @@ const AdminResetPassword: React.FC = () => {
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-admin-primary-700 sm:text-sm sm:leading-6"
                   />
                 </div>
               </div>
@@ -101,7 +101,7 @@ const AdminResetPassword: React.FC = () => {
                     required
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
-                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-admin-primary-700 sm:text-sm sm:leading-6"
                   />
                 </div>
               </div>
@@ -109,7 +109,7 @@ const AdminResetPassword: React.FC = () => {
               <div>
                 <button
                   type="submit"
-                  className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                  className="flex w-full justify-center rounded-md bg-admin-primary-700 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-admin-primary-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-admin-primary-600"
                 >
                   Continue
                 </button>
@@ -118,7 +118,7 @@ const AdminResetPassword: React.FC = () => {
               <p className="mt-10 text-center text-sm text-gray-500">
                 <a
                   href="/"
-                  className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
+                  className="font-semibold leading-6 text-admin-primary-700 hover:text-admin-primary-900 hover:underline"
                 >
                   Return to sign in
                 </a>
@@ -129,7 +129,7 @@ const AdminResetPassword: React.FC = () => {
             Don't have an account?{' '}
             <a
               href="/sign-up"
-              className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
+              className="font-semibold leading-6 text-admin-primary-700 hover:text-admin-primary-900 hover:underline"
             >
               Sign up
             </a>

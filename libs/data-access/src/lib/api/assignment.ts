@@ -1,11 +1,11 @@
-import { AssignmentCreateData, AssignmentData } from '../types/assignment';
+import { CreateAssignmentType, AssignmentData } from '../types/assignment';
 import client from './client';
 import { AxiosResponse } from 'axios';
 
 const URL = '/assignments';
 
 export async function createAssignment(
-  assignmentData: AssignmentCreateData,
+  assignmentData: CreateAssignmentType,
 ): Promise<AxiosResponse<AssignmentData>> {
   return client.post(`${URL}`, assignmentData);
 }
@@ -24,7 +24,7 @@ export async function getAssignmentById(
 
 export async function updateAssignment(
   assignmentId: string,
-  assignmentData: AssignmentCreateData,
+  assignmentData: CreateAssignmentType,
 ): Promise<AxiosResponse<AssignmentData>> {
   return client.put(`${URL}/${assignmentId}`, assignmentData);
 }

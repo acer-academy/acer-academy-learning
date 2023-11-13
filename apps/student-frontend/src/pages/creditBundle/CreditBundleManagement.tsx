@@ -83,7 +83,7 @@ export const CreditBundleManagement: React.FC = () => {
   }, []);
 
   return (
-    <div className="h-full bg-gray-50">
+    <div className="h-full">
       <CreditsBar />
       <div className="flex min-h-full flex-col gap-7 align-middle py-12 px-12">
         <div className="relative mt-2 rounded-md shadow-sm">
@@ -91,7 +91,7 @@ export const CreditBundleManagement: React.FC = () => {
             type="text"
             name="creditBundle-searchbar"
             id="creditBundle-searchbar"
-            className="block w-full rounded-md border-0 py-1.5 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-adminGreen-600 sm:text-sm sm:leading-6"
+            className="block w-full rounded-md border-0 py-1.5 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-student-secondary-700 sm:text-sm sm:leading-6"
             placeholder="Search for a credit bundle..."
             value={searchbarText}
             onChange={(e) => {
@@ -115,12 +115,12 @@ export const CreditBundleManagement: React.FC = () => {
           </span>
           <div className="relative group -m-2 flex items-center p-2">
             <ShoppingCartIcon
-              className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
+              className="h-6 w-6 flex-shrink-0 text-student-secondary-700 group-hover:text-student-secondary-900 cursor-pointer"
               aria-hidden="true"
               onClick={toggleCart}
             />
             {cart.length > 0 && (
-              <span className="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white transform translate-x-1/2 -translate-y-1/2 bg-indigo-600 rounded-full">
+              <span className="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white transform translate-x-1/2 -translate-y-1/2 bg-teacher-primary-900 rounded-full">
                 {cart.length}
               </span>
             )}
@@ -215,7 +215,7 @@ export const CreditBundleManagement: React.FC = () => {
                             </td>
                             <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-center text-sm font-medium sm:pr-6">
                               <a
-                                className="text-indigo-600 hover:text-indigo-900 mr-4 cursor-pointer"
+                                className="text-student-primary-900 hover:text-student-secondary-700 mr-4 cursor-pointer"
                                 onClick={() => addToCart(creditBundle)}
                               >
                                 Add To Cart

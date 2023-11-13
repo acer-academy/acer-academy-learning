@@ -69,7 +69,7 @@ export const CentreCreateModal: React.FC<CentreCreateModalProps> = ({
                     className={`block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ${
                       isCentreNameInvalid(centreData.name)
                         ? 'ring-red-300 text-red-900 focus:ring-red-500'
-                        : 'ring-gray-300 text-gray-900 focus:ring-adminGreen-500'
+                        : 'ring-gray-300 text-gray-900 focus:ring-admin-primary-900'
                     } placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6`}
                     placeholder="Acer Academy"
                     value={centreData.name}
@@ -107,7 +107,7 @@ export const CentreCreateModal: React.FC<CentreCreateModalProps> = ({
                     className={`block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ${
                       isCentreAddressInvalid(centreData.address)
                         ? 'ring-red-300 text-red-900 focus:ring-red-500'
-                        : 'ring-gray-300 text-gray-900 focus:ring-adminGreen-500'
+                        : 'ring-gray-300 text-gray-900 focus:ring-admin-primary-900'
                     } placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6`}
                     placeholder="18 Yishun Ave 9 #01-36"
                     value={centreData.address}
@@ -144,7 +144,7 @@ export const CentreCreateModal: React.FC<CentreCreateModalProps> = ({
                 ${
                   isCentreDataInvalid()
                     ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                    : 'bg-adminGreen-600 hover:bg-adminGreen-500 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-adminGreen-500'
+                    : 'bg-admin-primary-700 hover:bg-admin-primary-900 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-admin-primary-900'
                 }`}
                 onClick={() => createCentre(centreData)}
               >

@@ -25,7 +25,8 @@ import {
   CLASS_CREDITS,
   VIEW_CLASSES,
   BOOK_CLASSES,
-  SCHEDULING_RESOURCES
+  SCHEDULING_RESOURCES,
+  SESSIONS_FOR_ATTENDANCE,
 } from './routes';
 export const NAV_SECTIONS: NavigationMenuItem[] = [
   {
@@ -58,8 +59,9 @@ export const NAV_SECTIONS: NavigationMenuItem[] = [
         path: SCHEDULING_RESOURCES,
         icon: CalendarDaysIcon,
         children: [
-          { name: 'View Classes', path: VIEW_CLASSES},
-          { name: 'Book Classes', path: BOOK_CLASSES},
+          { name: 'View Classes', path: VIEW_CLASSES },
+          { name: 'Book Classes', path: BOOK_CLASSES },
+          { name: 'Attendance', path: SESSIONS_FOR_ATTENDANCE },
         ],
       },
       // { name: 'Scheduling', path: '/scheduling', icon: CalendarDaysIcon },

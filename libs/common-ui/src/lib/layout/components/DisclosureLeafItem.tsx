@@ -2,15 +2,16 @@ import { useMemo } from 'react';
 import { NavigationMenuItem } from './type';
 import { NavLink, useLocation, useParams } from 'react-router-dom';
 import { classNames } from '../../utils/classNames';
-import { useMenuItem } from '../hooks/useMenuItem';
 import { getThemeClassName } from '../../utils/getThemeClassName';
 import { useThemeContext } from '../contexts/ThemeContext';
-import { LayoutRole } from '../constants';
 
 export type DisclosureChildItem = {
   item: NavigationMenuItem;
   isChild?: boolean;
+  groupHoverColor?: string;
+  textHoverColor?: string;
   textColor?: string;
+  activeColor?: string;
   bgColor?: string;
   bgHoverColor?: string;
 };
@@ -19,18 +20,20 @@ export const DisclosureLeafItem = ({
   item,
   isChild = true,
   textColor,
+  groupHoverColor,
+  textHoverColor,
+  activeColor,
   bgColor,
   bgHoverColor,
 }: DisclosureChildItem) => {
-  const params = useParams();
   const location = useLocation();
-  const [isActive] = useMenuItem(item);
+  const params = useParams();
   const { role } = useThemeContext();
   const sizeStyles = useMemo(
     () =>
       isChild
-        ? 'block rounded-md py-2 pr-2 pl-9 text-sm leading-6'
-        : 'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold',
+        ? 'block rounded-md py-2 pr-2 pl-11 text-base leading-6 flex space-x-1'
+        : 'group flex gap-x-3 rounded-md p-2 text-base leading-6 font-semibold',
     [isChild],
   );
   const path = useMemo(() => {
@@ -55,28 +58,26 @@ export const DisclosureLeafItem = ({
     return finalPath;
   }, [params, item]);
 
+  const containsPath = useMemo(() => {
+    if (!path) {
+      return false;
+    }
+    return location.pathname.includes(path);
+  }, [location, path]);
+
   return (
     <NavLink
       to={`${path}`}
       className={classNames(
         // Needs to be fixed later on
-        isActive
-          ? `${
-              bgColor ??
-              (role === LayoutRole.Teacher
-                ? 'bg-teacher-primary-700'
-                : 'bg-student-primary-700')
-            } text-white`
-          : `${
-              textColor ??
-              (role === LayoutRole.Teacher
-                ? 'text-teacher-primary-200'
-                : 'text-student-primary-200')
-            } hover:text-white ${
-              bgHoverColor ??
-              (role === LayoutRole.Teacher
-                ? 'hover:bg-teacher-primary-700'
-                : 'hover:bg-student-primary-700')
+        containsPath
+          ? `
+          ${bgColor ?? getThemeClassName('bg', role, true, 700)} 
+            ${activeColor ?? 'text-white'}`
+          : `${textColor ?? getThemeClassName('text', role, true, 200)} ${
+              textHoverColor ?? 'hover:text-white'
+            } ${
+              bgHoverColor ?? getThemeClassName('hover:bg', role, true, 700)
             }`,
         sizeStyles,
       )}
@@ -84,14 +85,11 @@ export const DisclosureLeafItem = ({
       {item.icon && (
         <item.icon
           className={classNames(
-            isActive
+            containsPath
               ? 'text-white'
-              : `${getThemeClassName(
-                  'text',
-                  role,
-                  true,
-                  200,
-                )} group-hover:text-white`,
+              : `${textColor ?? getThemeClassName('text', role, true, 600)} ${
+                  groupHoverColor ?? 'group-hover:text-white'
+                }`,
             'h-6 w-6 shrink-0',
           )}
           aria-hidden="true"

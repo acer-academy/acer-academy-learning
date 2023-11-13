@@ -3,7 +3,7 @@ import {
   QuizPaginationFilter,
   Teacher,
   getPaginatedFilteredQuizzes as apiGetPaginatedFilteredQuizzes,
-  deleteQuiz,
+  deleteQuiz as apiDeleteQuiz,
 } from '@acer-academy-learning/data-access';
 import { QuizQuestionPaginationFilter } from 'libs/data-access/src/lib/types/question';
 import { useEffect, useState } from 'react';
@@ -28,6 +28,7 @@ import {
   UserGroupIcon,
   LockOpenIcon,
   LockClosedIcon,
+  ArrowUturnLeftIcon,
 } from '@heroicons/react/24/outline';
 import { useMutation } from 'react-query';
 
@@ -44,7 +45,7 @@ export const QuizManagement: React.FC = () => {
   const [totalCount, setTotalCount] = useState(0);
   const [isFilterVisible, setIsFilterVisible] = useState(true);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
-  const [deleteQuestionId, setDeleteQuizId] = useState('');
+  const [deleteQuiz, setDeleteQuiz] = useState<QuizData>();
 
   const getPaginatedFilteredQuizzes = async () => {
     try {
@@ -68,7 +69,7 @@ export const QuizManagement: React.FC = () => {
     }
   };
 
-  const { mutate: deleteQuizMutate } = useMutation(deleteQuiz, {
+  const { mutate: deleteQuizMutate } = useMutation(apiDeleteQuiz, {
     onSuccess: async () => {
       await getPaginatedFilteredQuizzes();
       displayToast('Successfully deleted quiz', ToastType.SUCCESS);
@@ -125,14 +126,14 @@ export const QuizManagement: React.FC = () => {
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
-                className="w-7 h-7 fill-teacherBlue-500 hover:fill-teacherBlue-700 transition-colors"
+                className="w-7 h-7 fill-teacher-primary-900 hover:fill-teacher-secondary-700 transition-colors"
               >
                 <path d="M18.75 12.75h1.5a.75.75 0 000-1.5h-1.5a.75.75 0 000 1.5zM12 6a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5A.75.75 0 0112 6zM12 18a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5A.75.75 0 0112 18zM3.75 6.75h1.5a.75.75 0 100-1.5h-1.5a.75.75 0 000 1.5zM5.25 18.75h-1.5a.75.75 0 010-1.5h1.5a.75.75 0 010 1.5zM3 12a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5A.75.75 0 013 12zM9 3.75a2.25 2.25 0 100 4.5 2.25 2.25 0 000-4.5zM12.75 12a2.25 2.25 0 114.5 0 2.25 2.25 0 01-4.5 0zM9 15.75a2.25 2.25 0 100 4.5 2.25 2.25 0 000-4.5z" />
               </svg>
             </button>
           </div>
           <button
-            className="inline-flex justify-center px-4 py-2 text-white bg-teacherBlue-500 border border-transparent rounded-md hover:bg-teacherBlue-700"
+            className="inline-flex justify-center px-4 py-2 text-white bg-teacher-primary-900 border border-transparent rounded-md hover:bg-teacher-secondary-700"
             onClick={() => {
               navToCreateQuiz();
             }}
@@ -364,12 +365,16 @@ export const QuizManagement: React.FC = () => {
                                   type="button"
                                   onClick={(e) => {
                                     e.stopPropagation();
-                                    setDeleteQuizId(quiz.id);
+                                    setDeleteQuiz(quiz);
                                     setDeleteModalOpen(true);
                                   }}
                                   className="inline-flex items-center rounded-md bg-red-500 px-3 py-2 text-sm font-semibold shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-red-600"
                                 >
-                                  <TrashIcon className="w-6 h-6 text-white" />
+                                  {quiz.version > 1 ? (
+                                    <ArrowUturnLeftIcon className="w-6 h-6 text-white" />
+                                  ) : (
+                                    <TrashIcon className="w-6 h-6 text-white" />
+                                  )}
                                 </button>
                               </>
                             )}
@@ -449,13 +454,15 @@ export const QuizManagement: React.FC = () => {
       <WarningModal
         open={deleteModalOpen}
         setOpen={setDeleteModalOpen}
-        title={'Delete Quiz'}
-        description={
-          'Are you sure you want to delete this quiz? All student attempts for this quiz will also be removed and cannot be undone.'
-        }
+        title={`${
+          deleteQuiz && deleteQuiz?.version > 1 ? 'Revert' : 'Delete'
+        } Quiz`}
+        description={`Are you sure you want to ${
+          deleteQuiz && deleteQuiz?.version > 1 ? 'revert' : 'delete'
+        } this quiz? All student attempts for this quiz will also be removed and cannot be undone.`}
         confirmContent={'Delete'}
         dismissContent={'Cancel'}
-        onConfirm={() => deleteQuizMutate(deleteQuestionId)}
+        onConfirm={() => deleteQuiz && deleteQuizMutate(deleteQuiz.id)}
       />
     </div>
   );

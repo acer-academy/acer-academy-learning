@@ -39,9 +39,11 @@ model Student {
 
   transaction Transaction[]
 
-  sessions           Session[]
-  quizzes            Quiz[]
-  takes              Take[]
+  sessions Session[]
+  quizzes  Quiz[]
+  takes    Take[]
+
+  attendances Attendance[]
   assignmentAttempts AssignmentAttempt[]
 }
 
@@ -94,19 +96,19 @@ enum LevelEnum {
 }
 
 model Teacher {
-  id          String        @id @default(uuid()) @db.Uuid
-  email       String        @unique
-  firstName   String
-  lastName    String
-  password    String
-  levels      LevelEnum[]
-  subjects    SubjectEnum[]
-  centre      Centre        @relation(fields: [centreId], references: [id])
-  centreId    String        @db.Uuid
+  id            String         @id @default(uuid()) @db.Uuid
+  email         String         @unique
+  firstName     String
+  lastName      String
+  password      String
+  levels        LevelEnum[]
+  subjects      SubjectEnum[]
+  centre        Centre         @relation(fields: [centreId], references: [id])
+  centreId      String         @db.Uuid
   // sessions Session[]
-  // announcements Announcement[]
-  assignments Assignment[]
-  quizzes     Quiz[]
+  announcements Announcement[]
+  assignments   Assignment[]
+  quizzes       Quiz[]
 
   whitelistItem   WhitelistItem @relation(fields: [whitelistItemId], references: [id])
   whitelistItemId String        @unique @db.Uuid
@@ -127,12 +129,13 @@ model NotificationPreference {
 }
 
 model Centre {
-  id         String      @id @default(uuid()) @db.Uuid
-  name       String      @unique
-  address    String      @unique
-  teachers   Teacher[]
-  student    Student[]
-  classrooms Classroom[]
+  id           String         @id @default(uuid()) @db.Uuid
+  name         String         @unique
+  address      String         @unique
+  teachers     Teacher[]
+  student      Student[]
+  classrooms   Classroom[]
+  announcement Announcement[]
 }
 
 model Classroom {
@@ -209,6 +212,7 @@ enum TransactionType {
   PURCHASED
   DEDUCTED //attendance
   STRIPE_DEDUCTED //refunded transaction
+  CREDIT_REFUND //cancel attendance
   ROLLOVER
   VOID
 }
@@ -237,6 +241,9 @@ model Transaction {
 
   stripeTransaction   StripeTransaction? @relation(fields: [stripeTransactionId], references: [id])
   stripeTransactionId String?            @db.Uuid
+
+  attendance   Attendance? @relation(fields: [attendanceId], references: [id])
+  attendanceId String?    @db.Uuid
 }
 
 enum StripeTransactionStatus {
@@ -375,6 +382,8 @@ model Session {
 
   class   Class?  @relation(fields: [classId], references: [id])
   classId String? @db.Uuid
+
+  attendances Attendance[]
 }
 
 enum ClassFrequencyEnum {
@@ -450,17 +459,31 @@ model TakeAnswer {
   takeId        String       @db.Uuid
 }
 
+model Attendance {
+  id String @id @default(uuid()) @db.Uuid
+  hasAttended Boolean @default(true)
+
+  student   Student @relation(fields: [studentId], references: [id])
+  studentId String  @db.Uuid
+
+  session   Session @relation(fields: [sessionId], references: [id])
+  sessionId String  @db.Uuid
+
+  transactions Transaction[]
+ }
+ 
 model Assignment {
   id          String      @id @default(uuid()) @db.Uuid
   title       String
   description String      @db.Text
+  fileName    String
   fileUrl     String
   dueDate     DateTime
   totalMarks  Int
   subject     SubjectEnum
   levels      LevelEnum[]
 
-  Teacher   Teacher? @relation(fields: [teacherId], references: [id])
+  teacher   Teacher? @relation(fields: [teacherId], references: [id])
   teacherId String?  @db.Uuid
 
   assignmentAttempts AssignmentAttempt[]
@@ -477,4 +500,18 @@ model AssignmentAttempt {
 
   student   Student @relation(fields: [studentId], references: [id])
   studentId String  @db.Uuid
+}
+
+model Announcement {
+  id             String        @id @default(uuid()) @db.Uuid
+  title          String
+  message        String        @db.Text
+  createdAt      DateTime
+  targetSubjects SubjectEnum[]
+  targetLevels   LevelEnum[]
+
+  targetCentres Centre[]
+
+  teacher   Teacher @relation(fields: [teacherId], references: [id])
+  teacherId String  @db.Uuid
 }

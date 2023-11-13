@@ -12,6 +12,7 @@ export const SUBJECTS = '/subjects';
 export const TAKES = `${SUBJECTS}/:subject/takes`;
 export const SUBJECT_MAIN = `${SUBJECTS}/:subject`;
 export const ASSIGNMENTS = `${SUBJECT_MAIN}/assignments`;
+export const VIEW_ASSIGNMENT = `${SUBJECT_MAIN}/assignments/:assignmentId`;
 
 // Quizzes
 export const QUIZZES = `${SUBJECT_MAIN}/quizzes`;
@@ -40,3 +41,6 @@ export const PROFILE = `${ACCOUNT}/profile`;
 export const NOTIFICATIONS = `${ACCOUNT}/notifications`;
 export const SETTINGS = `${ACCOUNT}/settings`;
 export const FAQ = `${ACCOUNT}/faq`;
+
+//Attendance
+export const ATTENDANCE = `/attendance/:sessionId`;

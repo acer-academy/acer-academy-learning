@@ -1,6 +1,11 @@
-import { AssignmentDao } from '../dao/AssignmentDao';
-import { Assignment, Prisma } from '@prisma/client';
+import { AssignmentDao, AssignmentIncludeAttempts } from '../dao/AssignmentDao';
+import { Assignment, AssignmentAttempt, Prisma } from '@prisma/client';
 
+type ConsolidatedAssignmentStatistics = {
+  assignmentDetails: Partial<Assignment>;
+  assignmentAttempts: AssignmentAttempt[];
+  totalMarksArr: number[];
+};
 export class AssignmentService {
   constructor(private assignmentDao: AssignmentDao = new AssignmentDao()) {}
 
@@ -16,8 +21,23 @@ export class AssignmentService {
 
   public async getAssignmentById(
     assignmentId: string,
-  ): Promise<Assignment | null> {
+  ): Promise<AssignmentIncludeAttempts | null> {
     return this.assignmentDao.getAssignmentById(assignmentId);
+  }
+
+  public async getAssignmentStatisticsById(
+    assignmentId: string,
+  ): Promise<ConsolidatedAssignmentStatistics> {
+    const { assignmentAttempts, ...rest } = await this.getAssignmentById(
+      assignmentId,
+    );
+    return {
+      assignmentDetails: {
+        ...rest,
+      },
+      assignmentAttempts: assignmentAttempts,
+      totalMarksArr: assignmentAttempts.map(({ score }) => score),
+    };
   }
 
   public async updateAssignment(

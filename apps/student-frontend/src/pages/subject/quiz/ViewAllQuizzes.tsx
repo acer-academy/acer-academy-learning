@@ -18,7 +18,7 @@ import { QuizRow } from './components/QuizRow';
 import { AdaptiveQuizRow } from './components/AdaptiveQuizRow';
 
 const accordionTitleClassName =
-  'px-6 py-4 bg-student-primary-600 text-white hover:bg-student-primary-700';
+  'px-6 py-4 bg-student-primary-900 text-white hover:bg-student-secondary-700';
 
 export const ViewAllQuizzes = () => {
   // Will query all quizzes for now, but will be changed to query quizzes by subject
@@ -96,8 +96,8 @@ export const ViewAllQuizzes = () => {
       <div className="relative">
         <input
           type="text"
-          className="h-14 w-96 pr-8 pl-5 rounded z-0 focus:shadow focus:outline-none focus:ring-student-primary-600"
-          placeholder="Search anything..."
+          className="h-14 w-96 pr-8 pl-5 rounded z-0 focus:shadow focus:outline-none focus:ring-student-secondary-700"
+          placeholder="Search for a quiz...(Ex: Adaptive Quiz)"
           onChange={(e) => setSearchString(e.target.value)}
           value={searchString}
         />
@@ -114,8 +114,8 @@ export const ViewAllQuizzes = () => {
           <ul>
             {(adaptiveString.includes(searchString.toLowerCase()) && (
               <AdaptiveQuizRow
-                iconStyles="text-student-primary-600"
-                className="hover:bg-student-primary-100"
+                iconStyles="text-student-primary-900"
+                className="hover:bg-student-secondary-100"
               />
             )) || (
               <p className="text-base border-x border-b h-8 w-full flex items-center justify-center py-8 text-gray-600 ">
@@ -198,10 +198,10 @@ export const ViewAllQuizzes = () => {
               )}
             {allocatedQuizzes?.data?.quizzes?.map((quiz, index) => (
               <QuizRow
-                iconStyles="text-student-primary-600"
+                iconStyles="text-student-primary-900"
                 key={quiz.id}
                 quiz={quiz}
-                className="hover:bg-student-primary-100"
+                className="hover:bg-student-secondary-100"
               />
             ))}
             <li>
@@ -299,10 +299,10 @@ export const ViewAllQuizzes = () => {
             )}
             {publicQuizzes?.data?.quizzes?.map((quiz, index) => (
               <QuizRow
-                iconStyles="text-student-primary-600"
+                iconStyles="text-student-primary-900"
                 key={quiz.id}
                 quiz={quiz}
-                className="hover:bg-student-primary-100"
+                className="hover:bg-student-secondary-100"
               />
             ))}
             <li>

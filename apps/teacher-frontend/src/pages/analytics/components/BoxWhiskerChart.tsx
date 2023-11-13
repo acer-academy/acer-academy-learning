@@ -2,10 +2,11 @@ import { ConsolidatedQuizStatistics } from '@acer-academy-learning/data-access';
 import { MinusCircleIcon } from '@heroicons/react/24/outline';
 import Boxplot, { computeBoxplotStats } from 'react-boxplot';
 
-export const QuizSummaryBoxWhisker: React.FC<{
-  quizStats: ConsolidatedQuizStatistics;
+export const BoxWhiskerChart: React.FC<{
+  totalMarksArr: number[];
+  totalMarksPossible: number;
 }> = (props) => {
-  const { totalMarksArr, quizDetails } = props.quizStats;
+  const { totalMarksArr, totalMarksPossible } = props;
 
   const sortedTotalMarksArr = totalMarksArr.sort((x, y) => x - y);
   const min = sortedTotalMarksArr[0];
@@ -22,7 +23,7 @@ export const QuizSummaryBoxWhisker: React.FC<{
 
   return (
     <div className="my-10">
-      {totalMarksArr ? (
+      {totalMarksArr && totalMarksArr.length > 1 ? (
         <div className="flex flex-col items-center">
           <div className="flex gap-5 mb-5">
             <div className="flex gap-1 items-center text-gray-700 text-base font-light">
@@ -57,23 +58,23 @@ export const QuizSummaryBoxWhisker: React.FC<{
               height={30}
               orientation="horizontal"
               min={0}
-              max={quizDetails.totalMarks ?? 0}
+              max={totalMarksPossible}
               stats={{
                 whiskerLow: 0,
                 quartile1: lowerQuartile,
                 quartile2: median,
                 quartile3: upperQuartile,
-                whiskerHigh: quizDetails.totalMarks ?? 0,
+                whiskerHigh: totalMarksPossible,
                 outliers: [min, max],
               }}
             />
-            {quizDetails.totalMarks ?? '-'}
+            {totalMarksPossible}
           </div>
         </div>
       ) : (
         <div className="flex justify-center text-center">
           <span className="italic text-gray-700">
-            No data to render box-and-whisker plot
+            Insufficient data to render box-and-whisker plot
           </span>
         </div>
       )}

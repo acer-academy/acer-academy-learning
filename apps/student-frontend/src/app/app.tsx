@@ -44,6 +44,8 @@ import {
   QUIZ_RESULT,
   ATTEMPT_ADAPTIVE_QUIZ,
   VIEW_ADAPTIVE_QUIZ,
+  VIEW_ASSIGNMENT,
+  ATTENDANCE,
 } from '../libs/routes';
 import { ToastContainer } from 'react-toastify';
 import { StudentNotificationPreference } from '../pages/profile/StudentNotificationPreference';
@@ -67,6 +69,9 @@ import {
 import { ViewAdaptiveQuiz } from '../pages/subject/quiz/ViewAdaptiveQuiz';
 import { AttemptAdaptiveQuiz } from '../pages/subject/quiz/AttemptAdaptiveQuiz';
 import CalendarPage from '../pages/calendar/CalendarPage';
+import { ViewAllAssignments } from '../pages/subject/assignment/ViewAllAssignments';
+import { ViewAssignment } from '../pages/subject/assignment/ViewAssignment';
+import { Attendance } from '../pages/attendance/Attendance';
 
 export function App() {
   const queryClient = new QueryClient();
@@ -103,7 +108,17 @@ export function App() {
                 <Route path={SUBJECTS}>
                   <Route path={SUBJECTS} element={<Subjects />} />
                   <Route path={SUBJECT_MAIN} element={<Subject />} />
-                  <Route path={ASSIGNMENTS} element={<div>Home</div>} />
+                  <Route path={ASSIGNMENTS}>
+                    <Route
+                      path={ASSIGNMENTS}
+                      element={<ViewAllAssignments />}
+                    />
+                    <Route
+                      path={VIEW_ASSIGNMENT}
+                      element={<ViewAssignment />}
+                    />
+                  </Route>
+
                   <Route path={TAKES} element={<TakeViewAll />} />
                   <Route path={QUIZZES}>
                     <Route path={QUIZZES} element={<ViewAllQuizzes />} />
@@ -135,6 +150,7 @@ export function App() {
                   />
                 </Route>
                 <Route path={REWARDS} element={<div>Home</div>} />
+                <Route path={ATTENDANCE} element={<Attendance />} />
                 <Route path={ACCOUNT}>
                   <Route path={PROFILE} element={<StudentProfile />} />
                   <Route

@@ -22,9 +22,11 @@ export * from './lib/api/class';
 export * from './lib/api/take';
 export * from './lib/api/takeAnswer';
 export * from './lib/api/quizStatistics';
+export * from './lib/api/assignmentStatistics';
 export * from './lib/api/message';
 export * from './lib/api/assignment';
 export * from './lib/api/assignmentAttempt';
+export * from './lib/api/attendance';
 
 // Object.freeze(api);
 
@@ -46,3 +48,4 @@ export * from './lib/api/take';
 export * from './lib/types/take';
 export * from './lib/types/takeAnswer';
 export * from './lib/types/statistics';
+export * from './lib/types/assignment';
