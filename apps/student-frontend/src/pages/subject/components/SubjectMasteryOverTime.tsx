@@ -10,6 +10,7 @@ import {
   screamingSnakeToTitleCase,
   useDebounceValue,
   useDurationStartDate,
+  useToast,
 } from '@acer-academy-learning/common-ui';
 import {
   CustomHighChartsPoint,
@@ -18,11 +19,10 @@ import {
   SubjectEnum,
   getSubjectWiseStatistics,
 } from '@acer-academy-learning/data-access';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useQuery } from 'react-query';
 import { useParams } from 'react-router-dom';
 import { DurationDropdown } from './DurationDropdown';
-import { QuizQuestionRow } from '../quizResults/QuizQuestionRow';
 import { QuestionsAnalysisForTopic } from './QuestionsAnalysisForTopic';
 
 const topics = Object.values(QuizQuestionTopicEnum);
@@ -52,7 +52,6 @@ export const SubjectMasteryOverTime = () => {
         topics: debouncedSelectedTopics,
         subject: subjectEnum,
       });
-      console.log(res);
       const chartData: Array<CustomSeriesOptionsType> = Object.keys(
         res.data,
       ).map((key) => ({
@@ -70,8 +69,6 @@ export const SubjectMasteryOverTime = () => {
           events: {
             click: function () {
               const currentPoint = this as CustomHighChartsPoint;
-              console.log('Clicked');
-              console.log(currentPoint);
               if (
                 currentPoint.metaData &&
                 !Object.values(SubjectEnum).includes(key as SubjectEnum)
@@ -183,8 +180,17 @@ export const SubjectMasteryOverTime = () => {
             />
           </div>
           <GenericHighChart options={options} />
-          <Divider containerClassName="my-4" lineClassName="border-gray-900" />
-          <QuestionsAnalysisForTopic metaData={selectedDataPoint?.metaData} />
+          {selectedTopics.length > 0 && (
+            <>
+              <Divider
+                containerClassName="my-4"
+                lineClassName="border-gray-900"
+              />
+              <QuestionsAnalysisForTopic
+                metaData={selectedDataPoint?.metaData}
+              />
+            </>
+          )}
         </div>
       }
     />
