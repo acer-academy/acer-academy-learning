@@ -72,7 +72,10 @@ export const SubjectMasteryOverTime = () => {
               const currentPoint = this as CustomHighChartsPoint;
               console.log('Clicked');
               console.log(currentPoint);
-              if (currentPoint.metaData) {
+              if (
+                currentPoint.metaData &&
+                !Object.values(SubjectEnum).includes(key as SubjectEnum)
+              ) {
                 setSelectedDataPoint(currentPoint);
               }
             },
@@ -181,7 +184,7 @@ export const SubjectMasteryOverTime = () => {
           </div>
           <GenericHighChart options={options} />
           <Divider containerClassName="my-4" lineClassName="border-gray-900" />
-          <QuestionsAnalysisForTopic dataPoint={selectedDataPoint} />
+          <QuestionsAnalysisForTopic metaData={selectedDataPoint?.metaData} />
         </div>
       }
     />

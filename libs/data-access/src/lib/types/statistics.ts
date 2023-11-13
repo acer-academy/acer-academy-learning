@@ -40,6 +40,7 @@ export type StudentStatisticsQuizFormat = {
 export type SpiderChartResponse = {
   labelsArr: string[];
   dataArr: number[];
+  metaDataArr: { [key: string]: string }[];
 };
 
 export enum Duration {

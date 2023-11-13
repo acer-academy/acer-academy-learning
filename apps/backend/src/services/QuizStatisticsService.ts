@@ -13,6 +13,7 @@ import { TakeService } from './TakeService';
 import { TakeDao } from '../dao/TakeDao';
 import { AllTakesStudentParams } from '../types/takes';
 import { ElementOf, ThenArg } from '../types';
+import { SubjectWiseMetaData } from '../types/statistics';
 
 class QuizStatisticsService {
   constructor(
@@ -238,23 +239,14 @@ class QuizStatisticsService {
     return res.totalMarks;
   }
 
-  /**
-   * Pre-cond: takes should already have been filtered by topics contained in subjects
-   * This is just so that they are arranged by subject instead of by topics
-   * this is just
-   * @param takes
-   * @param onlyAttemptedTopics
-   */
-  // private async getSpiderChartDataBySubject(takes: ThenArg<typeof this.getQuizStatisticsStudentTakesFilteredBy>) {
-
-  // }
-
   private processTakeAnswersForAverageScore(
-    takeAnswers: ElementOf<
+    take: ElementOf<
       ThenArg<ReturnType<typeof this.getQuizStatisticsStudentTakesFilteredBy>>
-    >['studentAnswers'],
-    topicsToMarksMap: Map<string, boolean[]>,
+    >,
+    topicToMetadataMap: Map<string, SubjectWiseMetaData>,
+    questionIdToPreviousMarksMap: Map<string, number>,
   ) {
+    const takeAnswers = take.studentAnswers;
     // 1. Group up answers by questionId
     const questionIdToAnswerMap = new Map<string, typeof takeAnswers>();
     takeAnswers.forEach((answer) => {
@@ -279,12 +271,33 @@ class QuizStatisticsService {
       const topics = currentQuestion.topics;
       topics.map((topic) => {
         //@TODO: To change if ever refactor topics
-        const currentMarksArr = topicsToMarksMap.get(topic) ?? [];
-        currentMarksArr.push(isCorrect);
-        if (!topicsToMarksMap.has(topic)) {
-          topicsToMarksMap.set(topic, currentMarksArr);
+        const currentMetaData = topicToMetadataMap.get(topic) ?? {
+          marksAchieved: 0,
+          totalMarks: 0,
+          questionIdToTakeIdMap: {},
+        };
+        currentMetaData.marksAchieved += isCorrect ? 1 : 0;
+        currentMetaData.totalMarks++;
+        if (isCorrect) {
+          delete currentMetaData.questionIdToTakeIdMap[currentQuestion.id];
+        } else {
+          currentMetaData.questionIdToTakeIdMap[currentQuestion.id] = take.id;
+        }
+
+        // Remove previous marks recorded if encountered before
+        if (questionIdToPreviousMarksMap.has(currentQuestion.id)) {
+          currentMetaData.marksAchieved -= questionIdToPreviousMarksMap.get(
+            currentQuestion.id,
+          );
+          currentMetaData.totalMarks--;
+        }
+
+        if (!topicToMetadataMap.has(topic)) {
+          topicToMetadataMap.set(topic, currentMetaData);
         }
       });
+      // Update previous marks to new
+      questionIdToPreviousMarksMap.set(currentQuestion.id, isCorrect ? 1 : 0);
     });
   }
 
@@ -293,7 +306,8 @@ class QuizStatisticsService {
     onlyAttemptedTopics: boolean;
     topics?: QuizQuestionTopicEnum[];
   }) {
-    const topicsToAverageScoreArrMap = new Map<string, boolean[]>();
+    const topicToMetaDataMap = new Map<string, SubjectWiseMetaData>();
+    const questionIdToPreviousMarksMap = new Map<string, number>();
     const filter = data.filter;
     const latestDatesByQuizId =
       await this.takeDao.getLatestAttemptDateOfQuizzesForStudentsWhere(filter);
@@ -308,26 +322,33 @@ class QuizStatisticsService {
       );
 
       this.processTakeAnswersForAverageScore(
-        currentTake[0].studentAnswers,
-        topicsToAverageScoreArrMap,
+        currentTake[0],
+        topicToMetaDataMap,
+        questionIdToPreviousMarksMap,
       );
     }
     // Group for each question
     const topics = data.topics;
     const labelsArr = [];
     const dataArr = [];
-    topicsToAverageScoreArrMap.forEach((value, key) => {
-      if (topics && !topics.includes(key as QuizQuestionTopicEnum)) {
-        return;
-      }
-      labelsArr.push(key);
-      const numOfCorrect = value.filter((value) => value);
-      dataArr.push((numOfCorrect.length / value.length) * 10);
-    });
+    const metaDataArr = [];
+    // Datasets are identified by index
+    [...topicToMetaDataMap.keys()]
+      .sort((topic, anotherTopic) => topic.localeCompare(anotherTopic))
+      .forEach((topic) => {
+        if (topics && !topics.includes(topic as QuizQuestionTopicEnum)) {
+          return;
+        }
+        const value = topicToMetaDataMap.get(topic);
+        labelsArr.push(topic);
+        dataArr.push((value.marksAchieved / value.totalMarks) * 10);
+        metaDataArr.push(value.questionIdToTakeIdMap ?? {});
+      });
 
     return {
       labelsArr: labelsArr,
       dataArr: dataArr,
+      metaDataArr: metaDataArr,
     };
   }
 }

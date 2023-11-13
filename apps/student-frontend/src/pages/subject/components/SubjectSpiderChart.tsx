@@ -5,8 +5,9 @@ import {
 import React, { useState } from 'react';
 import { useQuery } from 'react-query';
 import { useParams } from 'react-router-dom';
-import SpiderChart from '../quizResults/SpiderChart';
+import SpiderChart, { SpiderChartType } from '../quizResults/SpiderChart';
 import {
+  Divider,
   GenericAccordion,
   GenericBadges,
   GenericButton,
@@ -14,6 +15,7 @@ import {
   screamingSnakeToTitleCase,
   useDebounceValue,
 } from '@acer-academy-learning/common-ui';
+import { QuestionsAnalysisForTopic } from './QuestionsAnalysisForTopic';
 
 const topics = Object.values(QuizQuestionTopicEnum);
 
@@ -22,10 +24,14 @@ export const SubjectSpiderChart = () => {
   const [selectedTopics, setSelectedTopics] = useState<QuizQuestionTopicEnum[]>(
     [],
   );
+  const [selectedMetaData, setSelectedMetaData] = useState<{
+    [key: string]: string;
+  }>();
   const debouncedSelectedTopics = useDebounceValue<QuizQuestionTopicEnum[]>(
     selectedTopics,
     300,
   );
+
   const { data } = useQuery(
     ['spider-chart', subject, debouncedSelectedTopics],
     async () => {
@@ -38,6 +44,15 @@ export const SubjectSpiderChart = () => {
     },
   );
 
+  const onSpiderChartClick: SpiderChartType['onClickHandler'] = (elems) => {
+    if (elems.length === 1) {
+      const elem = elems[0];
+      const indexOfMetaData = elem.index;
+      const metaData = data?.metaDataArr[indexOfMetaData];
+      setSelectedMetaData(metaData);
+    }
+  };
+
   return (
     <GenericAccordion
       title="Spider Chart Analysis"
@@ -45,7 +60,7 @@ export const SubjectSpiderChart = () => {
       contentClassName="h-fit"
       arrowClassName="text-white"
       content={
-        <div className="bg-white h-[90vh] p-4 rounded-b flex flex-col shadow-md border-gray-200 border-[1px]">
+        <div className="bg-white p-4 rounded-b flex flex-col shadow-md border-gray-200 border-[1px]">
           <div className="px-2 pb-8">
             <div className="flex justify-between py-4">
               <span className="text-base font-semibold">Filter Topics:</span>
@@ -70,9 +85,10 @@ export const SubjectSpiderChart = () => {
               onChange={(topics) => setSelectedTopics(topics)}
             />
           </div>
-          <div className="flex-1">
+          <div className="flex-1 min-h-[70vh]">
             {data && (
               <SpiderChart
+                onClickHandler={onSpiderChartClick}
                 backgroundColor="rgba(14, 165, 233, 0.2)"
                 borderColor="rgba(14, 165, 233, 1)"
                 subjectArr={data.labelsArr}
@@ -80,6 +96,8 @@ export const SubjectSpiderChart = () => {
               />
             )}
           </div>
+          <Divider containerClassName="my-4" lineClassName="border-gray-900" />
+          <QuestionsAnalysisForTopic metaData={selectedMetaData} />
         </div>
       }
     />

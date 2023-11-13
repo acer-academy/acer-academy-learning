@@ -2,21 +2,12 @@ import { QuizQuestionTopicEnum } from '@prisma/client';
 import { AssignmentAttemptDao } from '../dao/AssignmentAttemptDao';
 import { TakeDao } from '../dao/TakeDao';
 import { ElementOf, ThenArg } from '../types';
-import { SubjectWiseAnalyticsServiceParams } from '../types/statistics';
+import {
+  CustomPointOptionsObject,
+  SubjectWiseAnalyticsServiceParams,
+  SubjectWiseMetaData,
+} from '../types/statistics';
 import { AllTakesStudentParams } from '../types/takes';
-import type { PointOptionsObject } from 'highcharts';
-
-type SubjectWiseMetaDataPerTakeOrAssignment = {
-  marksAchieved: number;
-  totalMarks: number;
-  questionIdToTakeIdMap: {
-    [key: string]: string;
-  };
-};
-
-type CustomPointOptionsObject = {
-  metaData?: { [key: string]: string };
-} & PointOptionsObject;
 
 class SubjectStatisticsService {
   constructor(
@@ -137,10 +128,7 @@ class SubjectStatisticsService {
     );
 
     const questionOrAssignmentIdToMarksMap = new Map<string, number>();
-    const topicsOrSubjectToMarksMap = new Map<
-      string,
-      SubjectWiseMetaDataPerTakeOrAssignment
-    >();
+    const topicsOrSubjectToMarksMap = new Map<string, SubjectWiseMetaData>();
     // Initialise entry for subject since it must always exist
     topicsOrSubjectToMarksMap.set(subject, {
       marksAchieved: 0,

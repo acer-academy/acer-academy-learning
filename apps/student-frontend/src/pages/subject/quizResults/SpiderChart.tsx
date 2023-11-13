@@ -7,7 +7,8 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
-import { Radar } from 'react-chartjs-2';
+import React, { useRef } from 'react';
+import { Radar, getElementAtEvent } from 'react-chartjs-2';
 
 ChartJS.register(
   RadialLinearScale,
@@ -23,6 +24,7 @@ export type SpiderChartType = {
   averageScoreArr: number[];
   backgroundColor?: string;
   borderColor?: string;
+  onClickHandler?: (elements: ReturnType<typeof getElementAtEvent>) => void;
 };
 
 const SpiderChart = ({
@@ -30,16 +32,27 @@ const SpiderChart = ({
   averageScoreArr,
   backgroundColor,
   borderColor,
+  onClickHandler,
 }: SpiderChartType) => {
-  const options = {
+  const chartRef = useRef();
+  const options: React.ComponentProps<typeof Radar>['options'] = {
     responsive: true,
     maintainAspectRatio: false,
-    scale: {
+    scales: {
       r: {
         beginAtZero: true,
         max: 10,
         min: 0,
       },
+    },
+    hover: {
+      mode: 'nearest',
+    },
+    onHover: (event, chartElements) => {
+      if (event.native) {
+        const canvasElement = event.native.target as HTMLCanvasElement;
+        canvasElement.style.cursor = chartElements[0] ? 'pointer' : 'default';
+      }
     },
   };
 
@@ -56,7 +69,16 @@ const SpiderChart = ({
     ],
   };
 
-  return <Radar data={data} options={options} />;
+  const onClick: React.MouseEventHandler<HTMLCanvasElement> = (event) => {
+    if (chartRef.current) {
+      const elems = getElementAtEvent(chartRef.current, event);
+      onClickHandler?.(elems);
+    }
+  };
+
+  return (
+    <Radar ref={chartRef} onClick={onClick} data={data} options={options} />
+  );
 };
 
 export default SpiderChart;

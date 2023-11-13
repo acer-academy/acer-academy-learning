@@ -158,7 +158,7 @@ export const QuizQuestionRow = ({
   }
 
   return (
-    <div className="opacity-100 transition-opacity duration-300">
+    <div className="opacity-100 transition-opacity duration-300 w-full">
       <div
         className={`bg-gray-200 px-4 py-2 text-left font-bold text-gray-900 focus:outline-none focus-visible:ring focus-visible:ring-gray-500 focus-visible:ring-opacity-75 text-base border border-gray-400 rounded-t flex justify-between bg-student-primary-900 text-white`}
       >
