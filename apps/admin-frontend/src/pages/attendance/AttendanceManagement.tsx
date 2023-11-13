@@ -8,7 +8,7 @@ export const AttendanceManagement: React.FC = () => {
 
   const { displayToast, ToastType } = useToast();
 
-  const getSessionsInPastWeekByTeacherId = async () => {
+  const getSessionsInPastWeek = async () => {
     try {
       const response = await apiSessionsPastWeek();
       const allSessions: SessionData[] = response.data;
@@ -23,7 +23,7 @@ export const AttendanceManagement: React.FC = () => {
   };
 
   useEffect(() => {
-    getSessionsInPastWeekByTeacherId();
+    getSessionsInPastWeek();
   }, []);
 
   return (

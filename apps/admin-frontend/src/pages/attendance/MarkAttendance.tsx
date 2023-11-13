@@ -123,7 +123,7 @@ export const MarkAttendance: React.FC = () => {
                           >
                             <button
                               onClick={() => revertAttendance(attendance.id)}
-                              className="flex justify-center rounded-md bg-teacher-primary-900 px-10 py-2 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-teacher-secondary-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teacher-secondary-600"
+                              className="flex justify-center rounded-md bg-admin-primary-900 px-10 py-2 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-admin-secondary-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-admin-secondary-600"
                             >
                               Revert
                             </button>
@@ -146,7 +146,7 @@ export const MarkAttendance: React.FC = () => {
                     <td className="flex items-center justify-center px-20 py-2">
                       <button
                         onClick={() => markAttendance(student.id)}
-                        className="inline-flex justify-center rounded-md bg-teacher-secondary-900 px-10 py-2 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-teacher-primary-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teacher-secondary-600"
+                        className="inline-flex justify-center rounded-md bg-admin-secondary-900 px-10 py-2 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-admin-primary-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-admin-secondary-600"
                       >
                         Mark
                       </button>
