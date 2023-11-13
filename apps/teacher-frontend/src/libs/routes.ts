@@ -43,6 +43,9 @@ export const SCHEDULING = '/scheduling';
 export const VIEW_CLASSES = `${SCHEDULING}/view-classes`;
 export const BOOK_CLASSES = `${SCHEDULING}/book-classes`;
 
+export const SESSIONS_FOR_ATTENDANCE = `${SCHEDULING}/attendance`;
+export const MARK_ATTENDANCE = `${SCHEDULING}/attendance/mark/:sessionId`;
+
 export const REWARDS = '/rewards';
 
 // Acccount

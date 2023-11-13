@@ -5,6 +5,7 @@ import {
   QuizQuestionStatusEnum,
   QuizQuestionTopicEnum,
   QuizQuestionTypeEnum,
+  StudentStatusEnum,
   SubjectEnum,
   TransactionType,
 } from '@prisma/client';
@@ -2403,6 +2404,27 @@ export async function validateBodySessionExist(
   }
 }
 
+export async function validateParamSessionExist(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { sessionId } = req.params;
+    const session = await SessionService.getSessionBySessionId(sessionId);
+    if (!session) {
+      return res.status(400).json({
+        error: 'Invalid session provided.',
+      });
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
 export async function validateBodyTeacherExists(
   req: Request,
   res: Response,
@@ -2560,9 +2582,18 @@ export async function validateParamStudentExists(
         });
       }
       const studentExists = await studentService.getStudentById(studentId);
-      if (!studentExists) {
+      if (
+        !studentExists ||
+        studentExists.status === StudentStatusEnum.INACTIVE
+      ) {
         return res.status(400).json({
           error: 'Student does not exist.',
+        });
+      }
+      if (studentExists.status === StudentStatusEnum.BLOCKED) {
+        return res.status(400).json({
+          error:
+            'Student cannot book sessions because they have been blocked. Please contact admin.',
         });
       }
     }

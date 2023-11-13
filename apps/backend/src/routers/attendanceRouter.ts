@@ -8,6 +8,8 @@ import {
   validateCurrentTermExist,
   validateAttendanceNotTaken,
   validateClassAndSessionExist,
+  validateParamStudentExists,
+  validateParamSessionExist,
 } from '../middleware/validationMiddleware';
 
 const attendanceRouter = Router();
@@ -32,6 +34,42 @@ attendanceRouter.get('/:id', validateAttendanceParamExist, async (req, res) => {
     return res.status(500).json({ error: error.message });
   }
 });
+
+attendanceRouter.get(
+  '/session/:sessionId',
+  validateParamSessionExist,
+  async (req, res) => {
+    try {
+      const { sessionId } = req.params;
+      const attendance = await AttendanceService.getAttendancesBySessionId(
+        sessionId,
+      );
+      return res.status(200).json(attendance);
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({ error: error.message });
+    }
+  },
+);
+
+attendanceRouter.get(
+  '/:sessionId/:studentId',
+  validateParamStudentExists,
+  async (req, res) => {
+    try {
+      const { sessionId, studentId } = req.params;
+      const attendance =
+        await AttendanceService.getAttendanceBySessionAndStudentId(
+          sessionId,
+          studentId,
+        );
+      return res.status(200).json(attendance);
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({ error: error.message });
+    }
+  },
+);
 
 attendanceRouter.post(
   '/',
