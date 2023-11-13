@@ -20,6 +20,7 @@ class ClassService {
   public async createRecurringClass(
     classData: Prisma.ClassUncheckedCreateInput,
     sessionData: Prisma.SessionUncheckedCreateInput,
+    studentIdArr: Array<String>,
   ): Promise<Session[]> {
     let currDate = new Date(sessionData.start);
     let eventEndDate = new Date(sessionData.end);
@@ -33,13 +34,27 @@ class ClassService {
     const sessions: Session[] = [];
 
     try {
+      let payload = {};
+      if (studentIdArr.length > 0) {
+        payload = {
+          students: {
+            connect: studentIdArr?.map((studentId: string) => ({
+              id: studentId,
+            })),
+          },
+        };
+      }
       while (currDate <= endDate) {
-        const session = await SessionService.createSession({
-          ...sessionData,
-          start: currDate,
-          end: eventEndDate,
-          classId: newClass.id,
-        });
+        const session = await SessionService.createSession(
+          {
+            ...sessionData,
+            ...payload,
+            start: currDate,
+            end: eventEndDate,
+            classId: newClass.id,
+          },
+          [],
+        );
         sessions.push(session);
         const newDates = this.getNextDates(
           classData.frequency,
@@ -65,6 +80,8 @@ class ClassService {
     classId: string,
     classData: Prisma.ClassUncheckedUpdateInput,
     sessionData: Prisma.SessionUncheckedUpdateInput,
+    addStudentIdArr: Array<String>,
+    removeStudentIdArr: Array<String>,
   ): Promise<Session[]> {
     const sessions: Session[] = await SessionService.getFutureSessionsOfClass(
       classId,
@@ -115,6 +132,20 @@ class ClassService {
     let start = false;
 
     try {
+      let payload = {};
+      if (addStudentIdArr.length > 0 || removeStudentIdArr.length > 0) {
+        payload = {
+          ...data,
+          students: {
+            connect: addStudentIdArr?.map((studentId: string) => ({
+              id: studentId,
+            })),
+            disconnect: removeStudentIdArr?.map((studentId: string) => ({
+              id: studentId,
+            })),
+          },
+        };
+      }
       for (const index in sessions) {
         if (sessions[index].id === sessionId) {
           start = true;
@@ -127,9 +158,12 @@ class ClassService {
               sessions[index].id,
               {
                 ...data,
+                ...payload,
                 start: currDate,
                 end: eventEndDate,
               },
+              [],
+              [],
             );
             updatedSessions.push(updatedSession);
             if (updatedSession.start >= endRecurringDate) {
@@ -149,11 +183,15 @@ class ClassService {
 
       //Check: Not enough existing sessions - either frequency increased or endRecurringDate increased
       while (currDate <= endRecurringDate) {
-        const session = await SessionService.createSession({
-          ...data,
-          start: currDate,
-          end: eventEndDate,
-        });
+        const session = await SessionService.createSession(
+          {
+            ...data,
+            ...payload,
+            start: currDate,
+            end: eventEndDate,
+          },
+          [],
+        );
         updatedSessions.push(session);
         const newDates = this.getNextDates(newFrequncy, currDate, eventEndDate);
         currDate = newDates[0];
@@ -188,9 +226,14 @@ class ClassService {
           end: sessions[index].end,
         };
         if (updatedList[index] && updatedList[index] !== sessions[index]) {
-          await SessionService.updateSession(updatedList[index].id, oldData);
+          await SessionService.updateSession(
+            updatedList[index].id,
+            oldData,
+            [],
+            [],
+          );
         } else if (!updatedList[index]) {
-          await SessionService.createSession(oldData);
+          await SessionService.createSession(oldData, []);
         }
       }
       for (let i = sessions.length - 1; i < updatedList.length; i++) {

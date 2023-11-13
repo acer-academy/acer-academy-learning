@@ -5,6 +5,7 @@ import {
   QuizQuestionStatusEnum,
   QuizQuestionTopicEnum,
   QuizQuestionTypeEnum,
+  StudentStatusEnum,
   SubjectEnum,
   TransactionType,
 } from '@prisma/client';
@@ -2581,9 +2582,18 @@ export async function validateParamStudentExists(
         });
       }
       const studentExists = await studentService.getStudentById(studentId);
-      if (!studentExists) {
+      if (
+        !studentExists ||
+        studentExists.status === StudentStatusEnum.INACTIVE
+      ) {
         return res.status(400).json({
           error: 'Student does not exist.',
+        });
+      }
+      if (studentExists.status === StudentStatusEnum.BLOCKED) {
+        return res.status(400).json({
+          error:
+            'Student cannot book sessions because they have been blocked. Please contact admin.',
         });
       }
     }
