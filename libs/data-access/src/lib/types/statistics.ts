@@ -1,3 +1,4 @@
+import { Point, SeriesOptionsType } from 'highcharts';
 import { AssignmentData } from './assignment';
 import { AssignmentAttemptData } from './assignmentAttempt';
 import { QuizData } from './quiz';
@@ -47,3 +48,11 @@ export enum Duration {
   PAST_YEAR = 'Past Year',
   ALL = 'All',
 }
+
+export type CustomSeriesOptionsType = {
+  metaData?: { [key: string]: string };
+} & SeriesOptionsType;
+
+export type CustomHighChartsPoint = {
+  metaData?: { [key: string]: string };
+} & Point;

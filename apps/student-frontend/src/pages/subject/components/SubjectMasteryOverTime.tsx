@@ -1,4 +1,6 @@
+/* eslint-disable @typescript-eslint/no-this-alias */
 import {
+  Divider,
   GenericAccordion,
   GenericBadges,
   GenericButton,
@@ -10,6 +12,8 @@ import {
   useDurationStartDate,
 } from '@acer-academy-learning/common-ui';
 import {
+  CustomHighChartsPoint,
+  CustomSeriesOptionsType,
   QuizQuestionTopicEnum,
   SubjectEnum,
   getSubjectWiseStatistics,
@@ -18,7 +22,8 @@ import { useEffect, useMemo, useState } from 'react';
 import { useQuery } from 'react-query';
 import { useParams } from 'react-router-dom';
 import { DurationDropdown } from './DurationDropdown';
-import { SeriesOptionsType } from 'highcharts';
+import { QuizQuestionRow } from '../quizResults/QuizQuestionRow';
+import { QuestionsAnalysisForTopic } from './QuestionsAnalysisForTopic';
 
 const topics = Object.values(QuizQuestionTopicEnum);
 
@@ -34,6 +39,8 @@ export const SubjectMasteryOverTime = () => {
   const [selectedTopics, setSelectedTopics] = useState<QuizQuestionTopicEnum[]>(
     [],
   );
+  const [selectedDataPoint, setSelectedDataPoint] =
+    useState<CustomHighChartsPoint>();
   const debouncedSelectedTopics = useDebounceValue<QuizQuestionTopicEnum[]>(
     selectedTopics,
     300,
@@ -46,30 +53,60 @@ export const SubjectMasteryOverTime = () => {
         subject: subjectEnum,
       });
       console.log(res);
-      const chartData: Array<SeriesOptionsType> = Object.keys(res.data).map(
-        (key) => ({
-          name: `${
-            Object.values(SubjectEnum).includes(key as SubjectEnum)
-              ? `Overall ${screamingSnakeToTitleCase(key)}`
-              : screamingSnakeToTitleCase(key)
-          }`,
-          type: 'spline',
-          data: res.data[key],
-        }),
-      );
+      const chartData: Array<CustomSeriesOptionsType> = Object.keys(
+        res.data,
+      ).map((key) => ({
+        name: `${
+          Object.values(SubjectEnum).includes(key as SubjectEnum)
+            ? `Overall ${screamingSnakeToTitleCase(key)}`
+            : screamingSnakeToTitleCase(key)
+        }`,
+        type: 'spline',
+        data: res.data[key],
+        marker: {
+          enabled: true,
+        },
+        point: {
+          events: {
+            click: function () {
+              const currentPoint = this as CustomHighChartsPoint;
+              console.log('Clicked');
+              console.log(currentPoint);
+              if (currentPoint.metaData) {
+                setSelectedDataPoint(currentPoint);
+              }
+            },
+            mouseOver: function () {
+              if (
+                this.graphic &&
+                !Object.values(SubjectEnum).includes(key as SubjectEnum)
+              ) {
+                this.graphic.element.style.cursor = 'pointer';
+              }
+            },
+            mouseOut: function () {
+              if (this.graphic) {
+                this.graphic.element.style.cursor = 'default';
+              }
+            },
+          },
+        },
+      }));
       return chartData;
     }
   });
 
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
   const { startDate, currentDuration, setCurrenDuration, Duration } =
     useDurationStartDate();
   const options: Highcharts.Options = useMemo(
     () => ({
       chart: {
         type: 'spline',
+      },
+      plotOptions: {
+        spline: {
+          clip: false,
+        },
       },
       title: {
         text: `${formattedSubject} Mastery`,
@@ -82,7 +119,7 @@ export const SubjectMasteryOverTime = () => {
         title: {
           text: 'Performance (in %)',
         },
-        max: 110,
+        max: 100,
         min: 0,
       },
       series: data,
@@ -110,7 +147,7 @@ export const SubjectMasteryOverTime = () => {
       arrowClassName="text-white"
       contentClassName="rounded-b"
       content={
-        <div className="border-gray-200 border-[1px] rounded-b">
+        <div className="border-gray-200 border-[1px] rounded-b p-4 flex flex-col">
           <div className="px-2 pb-8">
             <div className="flex justify-between py-4">
               <span className="text-base font-semibold">Filter Topics:</span>
@@ -143,6 +180,8 @@ export const SubjectMasteryOverTime = () => {
             />
           </div>
           <GenericHighChart options={options} />
+          <Divider containerClassName="my-4" lineClassName="border-gray-900" />
+          <QuestionsAnalysisForTopic dataPoint={selectedDataPoint} />
         </div>
       }
     />

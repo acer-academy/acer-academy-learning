@@ -32,7 +32,7 @@ export const QuizSelectAnswer = ({
             }
           >
             <input
-              className="text-student-primary-600 focus:ring-student-primary-600"
+              className="text-student-secondary-700 focus:ring-student-primary-900"
               type={type}
               value={answer.answer}
               disabled={true}

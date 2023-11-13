@@ -6,6 +6,18 @@ import { SubjectWiseAnalyticsServiceParams } from '../types/statistics';
 import { AllTakesStudentParams } from '../types/takes';
 import type { PointOptionsObject } from 'highcharts';
 
+type SubjectWiseMetaDataPerTakeOrAssignment = {
+  marksAchieved: number;
+  totalMarks: number;
+  questionIdToTakeIdMap: {
+    [key: string]: string;
+  };
+};
+
+type CustomPointOptionsObject = {
+  metaData?: { [key: string]: string };
+} & PointOptionsObject;
+
 class SubjectStatisticsService {
   constructor(
     private assignmentAttemptDao = new AssignmentAttemptDao(),
@@ -99,7 +111,10 @@ class SubjectStatisticsService {
     subject,
   }: SubjectWiseAnalyticsServiceParams): Promise<{
     [key: string]: Array<
-      number | [number | string, number | null] | null | PointOptionsObject
+      | number
+      | [number | string, number | null]
+      | null
+      | CustomPointOptionsObject
     >;
   }> {
     // 0. Query all takes where time and sorted by time asc, all assignments by time asc
@@ -124,12 +139,13 @@ class SubjectStatisticsService {
     const questionOrAssignmentIdToMarksMap = new Map<string, number>();
     const topicsOrSubjectToMarksMap = new Map<
       string,
-      { marksAchieved: number; totalMarks: number }
+      SubjectWiseMetaDataPerTakeOrAssignment
     >();
     // Initialise entry for subject since it must always exist
     topicsOrSubjectToMarksMap.set(subject, {
       marksAchieved: 0,
       totalMarks: 0,
+      questionIdToTakeIdMap: {},
     });
     // 2. For every take (and attempt)
     const res = takesAndAttemptsSorted.reduce((curr, takeOrAttempt) => {
@@ -181,6 +197,7 @@ class SubjectStatisticsService {
               const marks = topicsOrSubjectToMarksMap.get(topic) ?? {
                 marksAchieved: 0,
                 totalMarks: 0,
+                questionIdToTakeIdMap: {},
               };
               if (questionOrAssignmentIdToMarksMap.has(currentQuestion.id)) {
                 marks.marksAchieved -= questionOrAssignmentIdToMarksMap.get(
@@ -191,6 +208,13 @@ class SubjectStatisticsService {
               marks.marksAchieved += isCorrect ? 1 : 0;
               marks.totalMarks++;
               topicsOrSubjectToMarksMap.set(topic, marks);
+              // Remove questionId from object if it exists
+              if (isCorrect) {
+                delete marks.questionIdToTakeIdMap[currentQuestion.id];
+              } else {
+                marks.questionIdToTakeIdMap[currentQuestion.id] =
+                  takeOrAttempt.id;
+              }
             }
           });
           subjectMarks.totalMarks++;
@@ -206,11 +230,12 @@ class SubjectStatisticsService {
       topicsForTake.forEach((topic) => {
         const marks = topicsOrSubjectToMarksMap.get(topic);
         if (!marks) return;
-        const newEntry: PointOptionsObject = {
+        const newEntry: CustomPointOptionsObject = {
           x: this.isAssignmentAttempt(takeOrAttempt)
             ? takeOrAttempt.submittedOn.getTime()
             : takeOrAttempt.attemptedAt.getTime(),
           y: (marks.marksAchieved / marks.totalMarks) * 100,
+          metaData: { ...marks.questionIdToTakeIdMap },
         };
         const currentData = curr[topic] ?? [];
         currentData.push(newEntry);
@@ -218,7 +243,7 @@ class SubjectStatisticsService {
           curr[topic] = currentData;
         }
       });
-      const newEntry: PointOptionsObject = {
+      const newEntry: CustomPointOptionsObject = {
         x: this.isAssignmentAttempt(takeOrAttempt)
           ? takeOrAttempt.submittedOn.getTime()
           : takeOrAttempt.attemptedAt.getTime(),
