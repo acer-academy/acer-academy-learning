@@ -4,12 +4,14 @@ import {
   GenericButton,
   GenericComboBox,
   GenericHighChart,
+  getSubjectEnumFromPathParam,
   screamingSnakeToTitleCase,
   useDebounceValue,
   useDurationStartDate,
 } from '@acer-academy-learning/common-ui';
 import {
   QuizQuestionTopicEnum,
+  SubjectEnum,
   getSubjectWiseStatistics,
 } from '@acer-academy-learning/data-access';
 import { useEffect, useMemo, useState } from 'react';
@@ -37,22 +39,26 @@ export const SubjectMasteryOverTime = () => {
     300,
   );
   const { data } = useQuery([subject, debouncedSelectedTopics], async () => {
-    const res = await getSubjectWiseStatistics({
-      topics: debouncedSelectedTopics,
-    });
-    console.log(res);
-    const chartData: Array<SeriesOptionsType> = Object.keys(res.data).map(
-      (key) => ({
-        name: `${
-          key === 'subject'
-            ? `Overall ${formattedSubject}`
-            : screamingSnakeToTitleCase(key)
-        }`,
-        type: 'spline',
-        data: res.data[key],
-      }),
-    );
-    return chartData;
+    const subjectEnum = getSubjectEnumFromPathParam(subject ?? '');
+    if (subjectEnum) {
+      const res = await getSubjectWiseStatistics({
+        topics: debouncedSelectedTopics,
+        subject: subjectEnum,
+      });
+      console.log(res);
+      const chartData: Array<SeriesOptionsType> = Object.keys(res.data).map(
+        (key) => ({
+          name: `${
+            Object.values(SubjectEnum).includes(key as SubjectEnum)
+              ? `Overall ${screamingSnakeToTitleCase(key)}`
+              : screamingSnakeToTitleCase(key)
+          }`,
+          type: 'spline',
+          data: res.data[key],
+        }),
+      );
+      return chartData;
+    }
   });
 
   useEffect(() => {
@@ -136,7 +142,6 @@ export const SubjectMasteryOverTime = () => {
               setCurrenDuration={setCurrenDuration}
             />
           </div>
-
           <GenericHighChart options={options} />
         </div>
       }
