@@ -73,7 +73,6 @@ export const SubjectMasteryOverTime = () => {
               }
             },
             mouseOver: function () {
-              console.log(this.graphic);
               if (!Object.values(SubjectEnum).includes(key as SubjectEnum)) {
                 this.series.chart.container.style.cursor = 'pointer';
               }
