@@ -395,25 +395,21 @@ export default function EventForm({
         }
       }
     } else {
-
-      // get original ids from session.students
-      const initialStudents =  session.students ? session.students.map(student => student.id) : []
-      // get latest student ids from allocatedStudents
-      const latestStudents = allocatedStudents
-
-      const addStudentIdArr = latestStudents.filter(student => !initialStudents.includes(student));
-      const removeStudentIdArr = initialStudents.filter(student => !latestStudents.includes(student));
-
       if (!isRecurring) {
-        await handleUpdateSession(session.id, sessionState, addStudentIdArr, removeStudentIdArr);
+        await handleUpdateSession(session.id, sessionState);
       } else {
         setShowUpdateModal(true);
       }
     }
   };
 
-  const handleUpdateSession = async (sessionId: string, sessionState: any, addStudentIdArr: Array<string>, removeStudentIdArr: Array<string>) => {
+  const handleUpdateSession = async (sessionId: string, sessionState: any) => {
     try {
+      const initialStudents =  session.students ? session.students.map(student => student.id) : []
+      const latestStudents = allocatedStudents
+      const addStudentIdArr = latestStudents.filter(student => !initialStudents.includes(student));
+      const removeStudentIdArr = initialStudents.filter(student => !latestStudents.includes(student));
+
       const response = await updateSession(session.id, sessionState, addStudentIdArr, removeStudentIdArr);
       if (response) {
         onClose();

@@ -162,94 +162,6 @@ export default function EventForm({
     selectedSubjects: null,
   });
 
-  // useEffect(() => {
-  //   if (sessionState.end <= sessionState.start) {
-  //     setFormErrors((prevErrors) => ({
-  //       ...prevErrors,
-  //       dateError: 'Start date needs to be before end date',
-  //     }));
-  //   } else {
-  //     setFormErrors((prevErrors) => ({
-  //       ...prevErrors,
-  //       dateError: null,
-  //     }));
-  //   }
-
-  //   if (recurringState.endRecurringDate <= sessionState.end) {
-  //     setFormErrors((prevErrors) => ({
-  //       ...prevErrors,
-  //       recurringEndDateError:
-  //         'Recurring end date needs to be after end time date',
-  //     }));
-  //   } else {
-  //     setFormErrors((prevErrors) => ({
-  //       ...prevErrors,
-  //       recurringEndDateError: null,
-  //     }));
-  //   }
-
-  //   // Check selectedCentre
-  //   if (!selectedCentre) {
-  //     setFormErrors((prevErrors) => ({
-  //       ...prevErrors,
-  //       selectedCentre: 'Centre needs to be selected',
-  //     }));
-  //   } else {
-  //     setFormErrors((prevErrors) => ({
-  //       ...prevErrors,
-  //       selectedCentre: null,
-  //     }));
-  //   }
-
-  //   // Check selectedClassroom
-  //   if (!selectedClassroom) {
-  //     setFormErrors((prevErrors) => ({
-  //       ...prevErrors,
-  //       selectedClassroom: 'Classroom needs to be selected',
-  //     }));
-  //   } else {
-  //     setFormErrors((prevErrors) => ({
-  //       ...prevErrors,
-  //       selectedClassroom: null,
-  //     }));
-  //   }
-
-  //   // Check selectedLevels
-  //   if (selectedLevels.length === 0) {
-  //     setFormErrors((prevErrors) => ({
-  //       ...prevErrors,
-  //       selectedLevels: 'At least one level needs to be selected',
-  //     }));
-  //   } else {
-  //     setFormErrors((prevErrors) => ({
-  //       ...prevErrors,
-  //       selectedLevels: null,
-  //     }));
-  //   }
-
-  //   // Check selectedSubjects
-  //   if (selectedSubjects.length === 0) {
-  //     setFormErrors((prevErrors) => ({
-  //       ...prevErrors,
-  //       selectedSubjects: 'At least one subject needs to be selected',
-  //     }));
-  //   } else {
-  //     setFormErrors((prevErrors) => ({
-  //       ...prevErrors,
-  //       selectedSubjects: null,
-  //     }));
-  //   }
-
-  //   // You can add similar conditions for `start` and `end` if needed.
-  // }, [
-  //   sessionState,
-  //   selectedCentre,
-  //   selectedClassroom,
-  //   selectedLevels,
-  //   selectedSubjects,
-  //   recurringState,
-  // ]);
-
   const validateForm = () => {
     const newErrors = {
       ...formErrors, // retain any other previous errors not checked here
@@ -446,25 +358,21 @@ export default function EventForm({
         }
       }
     } else {
-      
-      // get original ids from session.students
-      const initialStudents =  session.students ? session.students.map(student => student.id) : []
-      // get latest student ids from allocatedStudents
-      const latestStudents = allocatedStudents
-
-      const addStudentIdArr = latestStudents.filter(student => !initialStudents.includes(student));
-      const removeStudentIdArr = initialStudents.filter(student => !latestStudents.includes(student));
-
       if (!isRecurring) {
-        await handleUpdateSession(session.id, sessionState, addStudentIdArr, removeStudentIdArr);
+        await handleUpdateSession(session.id, sessionState);
       } else {
         setShowUpdateModal(true);
       }
     }
   };
 
-  const handleUpdateSession = async (sessionId: string, sessionState: any, addStudentIdArr: Array<string>, removeStudentIdArr: Array<string>) => {
+  const handleUpdateSession = async (sessionId: string, sessionState: any) => {
     try {
+      const initialStudents =  session.students ? session.students.map(student => student.id) : []
+      const latestStudents = allocatedStudents
+      const addStudentIdArr = latestStudents.filter(student => !initialStudents.includes(student));
+      const removeStudentIdArr = initialStudents.filter(student => !latestStudents.includes(student));
+
       const response = await updateSession(session.id, sessionState, addStudentIdArr, removeStudentIdArr);
       if (response) {
         onClose();
