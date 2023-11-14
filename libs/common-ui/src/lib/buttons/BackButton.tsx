@@ -7,15 +7,17 @@ import React, {
 import { useNavigate } from 'react-router-dom';
 import { GenericButton } from './GenericButton';
 import { ArrowUturnLeftIcon } from '@heroicons/react/24/outline';
+import { LayoutRole } from '../layout';
 
 export type BackButtonProps = {
+  role?: LayoutRole;
   path?: string;
 } & DetailedHTMLProps<
   ButtonHTMLAttributes<HTMLButtonElement>,
   HTMLButtonElement
 >;
 
-export const BackButton = ({ path, className }: BackButtonProps) => {
+export const BackButton = ({ role, path, className }: BackButtonProps) => {
   const navigate = useNavigate();
 
   const handleOnClick = () => {
@@ -26,12 +28,9 @@ export const BackButton = ({ path, className }: BackButtonProps) => {
     }
   };
 
-  useEffect(() => {
-    console.log(className);
-  }, [className]);
-
   return (
     <GenericButton
+      role={role}
       text="Back"
       type="button"
       icon={<ArrowUturnLeftIcon className="h-4 w-4" />}
