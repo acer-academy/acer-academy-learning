@@ -404,14 +404,6 @@ export default function EventForm({
       const addStudentIdArr = latestStudents.filter(student => !initialStudents.includes(student));
       const removeStudentIdArr = initialStudents.filter(student => !latestStudents.includes(student));
 
-
-      console.log("addStudentIdArr")
-      console.log(addStudentIdArr)
-      console.log("removeStudentIdArr")
-      console.log(removeStudentIdArr)
-      // addStudentIdArr,
-      // removeStudentIdArr
-
       if (!isRecurring) {
         await handleUpdateSession(session.id, sessionState, addStudentIdArr, removeStudentIdArr);
       } else {
@@ -466,7 +458,8 @@ export default function EventForm({
         }
       }
     } catch (err) {
-      // setError(err);
+      onClose();
+      displayToast(`${err.response.data.error}`, ToastType.ERROR);
     } finally {
       // setLoading(false);
     }
@@ -506,8 +499,6 @@ export default function EventForm({
   useEffect(() => {
     getAllStudents();
   }, []);
-
-  console.log(allocatedStudents);
 
   return (
     <div className="modal">
