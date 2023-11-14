@@ -4,7 +4,7 @@ import { Session, Prisma } from '@prisma/client';
 class SessionService {
   public async createSession(
     data: Prisma.SessionUncheckedCreateInput,
-    studentIdArr: Array<String>,
+    studentIdArr: Array<string>,
   ): Promise<Session> {
     const available = await this.checkClassroomAvailability(
       data.classroomId,
@@ -59,8 +59,8 @@ class SessionService {
   public async updateSession(
     id: string,
     data: Prisma.SessionUncheckedUpdateInput,
-    addStudentIdArr: Array<String>,
-    removeStudentIdArr: Array<String>,
+    addStudentIdArr: Array<string>,
+    removeStudentIdArr: Array<string>,
   ): Promise<Session> {
     const session = await this.getSessionBySessionId(id);
     let formattedData = { ...data };

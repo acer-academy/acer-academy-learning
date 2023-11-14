@@ -109,7 +109,9 @@ export default function EventForm({
   );
 
   //remark
-  const [allocatedStudents, setAllocatedStudents] = useState<string[]>([]);
+  const [allocatedStudents, setAllocatedStudents] = useState<string[]>(
+    session.students ? session.students.map(student => student.id) : []
+  );
 
   const { user } = useAuth<Admin>();
 
@@ -126,6 +128,7 @@ export default function EventForm({
     end: sessionData.end,
     teacherId: selectedTeacher,
     classId: null,
+    students: session.students
   });
 
   interface FormErrors {
@@ -219,7 +222,7 @@ export default function EventForm({
         .map((subject) => SubjectEnum[subject as keyof typeof SubjectEnum]),
       classroomId: selectedClassroom,
       teacherId: selectedTeacher,
-      students:allocatedStudents,
+      //students:allocatedStudents,
       // ... any other fields you want to watch
     }));
   }, [
@@ -228,7 +231,7 @@ export default function EventForm({
     selectedLevels,
     selectedSubjects,
     selectedTeacher,
-    allocatedStudents
+    //allocatedStudents
   ]);
 
   const label = session?.id ? 'Update' : 'Create';
@@ -363,7 +366,8 @@ export default function EventForm({
     if (!session.id) {
       if (!isRecurring) {
         try {
-          const response = await createSession(sessionState);
+          const response = await createSession(sessionState, allocatedStudents);
+          console.log(response)
           if (response) {
             onClose();
             await fetchSessions();
@@ -378,6 +382,7 @@ export default function EventForm({
           const response = await createRecurringClass([
             recurringState,
             sessionState,
+            allocatedStudents
           ]);
           if (response) {
             onClose();
@@ -390,17 +395,34 @@ export default function EventForm({
         }
       }
     } else {
+
+      // get original ids from session.students
+      const initialStudents =  session.students ? session.students.map(student => student.id) : []
+      // get latest student ids from allocatedStudents
+      const latestStudents = allocatedStudents
+
+      const addStudentIdArr = latestStudents.filter(student => !initialStudents.includes(student));
+      const removeStudentIdArr = initialStudents.filter(student => !latestStudents.includes(student));
+
+
+      console.log("addStudentIdArr")
+      console.log(addStudentIdArr)
+      console.log("removeStudentIdArr")
+      console.log(removeStudentIdArr)
+      // addStudentIdArr,
+      // removeStudentIdArr
+
       if (!isRecurring) {
-        await handleUpdateSession(session.id, sessionState);
+        await handleUpdateSession(session.id, sessionState, addStudentIdArr, removeStudentIdArr);
       } else {
         setShowUpdateModal(true);
       }
     }
   };
 
-  const handleUpdateSession = async (sessionId: string, sessionState: any) => {
+  const handleUpdateSession = async (sessionId: string, sessionState: any, addStudentIdArr: Array<string>, removeStudentIdArr: Array<string>) => {
     try {
-      const response = await updateSession(session.id, sessionState);
+      const response = await updateSession(session.id, sessionState, addStudentIdArr, removeStudentIdArr);
       if (response) {
         onClose();
         await fetchSessions();
@@ -421,10 +443,20 @@ export default function EventForm({
   ) => {
     try {
       if (session.class) {
+
+          // get original ids from session.students
+      const initialStudents =  session.students ? session.students.map(student => student.id) : []
+      // get latest student ids from allocatedStudents
+      const latestStudents = allocatedStudents
+
+      const addStudentIdArr = latestStudents.filter(student => !initialStudents.includes(student));
+      const removeStudentIdArr = initialStudents.filter(student => !latestStudents.includes(student));
         //is recurring
         const response = await updateRecurringClass(sessionId, classId, [
           recurringState,
           sessionState,
+          addStudentIdArr,
+          removeStudentIdArr
         ]);
         if (response) {
           setShowUpdateModal(false);
@@ -686,7 +718,7 @@ export default function EventForm({
                       badge={`${student.firstName} ${student.lastName}`}
                       onRemove={() =>
                         setAllocatedStudents(
-                          allocatedStudents.filter((id) => id != student.id),
+                          allocatedStudents.filter((id) => id !== student.id),
                         )
                       }
                     ></GenericBadge>

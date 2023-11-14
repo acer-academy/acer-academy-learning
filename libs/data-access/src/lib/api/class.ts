@@ -10,7 +10,7 @@ import {
   const URL = '/classes';
   
   export async function createRecurringClass(
-    input: [ClassCreateData, SessionCreateData],
+    input: [ClassCreateData, SessionCreateData, Array<string>],
   ): Promise<SessionData[]> {
     return client.post(`${URL}/recurring/`, input);
   }
@@ -18,7 +18,7 @@ import {
   export async function updateRecurringClass(
     sessionId: string,
     classId: string,
-    input: [ClassCreateData, SessionUpdateData],
+    input: [ClassCreateData, SessionUpdateData, Array<string>, Array<string>],
   ): Promise<SessionData> {
     return client.put(`${URL}/recurring/${sessionId}/${classId}`, input);
   }

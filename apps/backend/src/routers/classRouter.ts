@@ -62,7 +62,7 @@ classRouter.post(
       const input = req.body;
       const classInput: Prisma.ClassUncheckedCreateInput = input[0];
       const sessionInput: Prisma.SessionUncheckedCreateInput = input[1];
-      const studentIdArr: Array<String> = input[2];
+      const studentIdArr: Array<string> = input[2];
       const sessions = await ClassService.createRecurringClass(
         classInput,
         sessionInput,
@@ -91,8 +91,8 @@ classRouter.put(
       const input = req.body;
       const classInput: Prisma.ClassUncheckedUpdateInput = input[0];
       const sessionInput: Prisma.SessionUncheckedUpdateInput = input[1];
-      const addStudentIdArr: Array<String> = input[2];
-      const removeStudentIdArr: Array<String> = input[3];
+      const addStudentIdArr: Array<string> = input[2];
+      const removeStudentIdArr: Array<string> = input[3];
       const session = await ClassService.updateRecurringClass(
         sessionId,
         classId,
