@@ -54,6 +54,7 @@ import {
   VIEW_ASSIGNMENT_ATTEMPTS,
   SESSIONS_FOR_ATTENDANCE,
   MARK_ATTENDANCE,
+  ANNOUNCEMENTS,
 } from '../libs/routes';
 import { CreateQuestion } from '../pages/question-bank/CreateQuestion';
 import { QueryClient, QueryClientProvider } from 'react-query';
@@ -76,6 +77,7 @@ import { EditAssignmentWrapper } from '../pages/assignments/EditAssignmentWrappe
 import { AssignmentAttemptManagement } from '../pages/assignments/AssignmentAttemptManagement';
 import { AttendanceManagement } from '../pages/attendances/AttendanceManagement';
 import { MarkAttendance } from '../pages/attendances/MarkAttendance';
+import { AnnouncementManagement } from '../pages/announcements/AnnouncementManagement';
 
 export function App() {
   const queryClient = new QueryClient();
@@ -102,6 +104,13 @@ export function App() {
                   path={DASHBOARD}
                   element={<div>Welcome to AcerTech!</div>}
                 />
+                {/* Announcement routes */}
+                <Route path={ANNOUNCEMENTS}>
+                  <Route
+                    path={ANNOUNCEMENTS}
+                    element={<AnnouncementManagement />}
+                  />
+                </Route>
                 {/* Subject routes */}
                 <Route path={SUBJECTS}>
                   <Route path={SUBJECTS} element={<Subjects />} />

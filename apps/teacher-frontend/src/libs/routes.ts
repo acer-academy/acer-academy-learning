@@ -28,6 +28,11 @@ export const CREATE_ASSIGNMENT = `${ASSIGNMENTS}/create`;
 export const EDIT_ASSIGNMENT = `${ASSIGNMENTS}/edit/:assignmentId`;
 export const VIEW_ASSIGNMENT_ATTEMPTS = `${VIEW_ASSIGNMENT}/attempts`;
 
+// Announcements
+export const ANNOUNCEMENTS = '/announcements';
+export const CREATE_ANNOUNCEMENT = `${ANNOUNCEMENTS}/create`;
+export const UPDATE_ANNOUNCEMENT = `${ANNOUNCEMENTS}/:announcementId`;
+
 // Analytics
 export const ANALYTICS = '/analytics';
 export const QUIZ_ANALYTICS_MGMT = `${ANALYTICS}/quizzes`;
