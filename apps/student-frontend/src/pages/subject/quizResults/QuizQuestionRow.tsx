@@ -138,20 +138,20 @@ export const QuizQuestionRow = ({
               )}
             </div>
             <Divider lineClassName="border-student-primary-900" />
-            <span className="font-bold">Correct Answer</span>
-            <LexOutput editorStateStr={question?.answers[0].answer || '-'} />
-            {question?.answers[0].explanation ? (
-              <div className="bg-white px-2 py-2 align-middle sm:px-2 lg:px-2 border border-gray">
-                <span className="font-bold">Explanation</span>
-                <LexOutput editorStateStr={question?.answers[0].explanation} />
-              </div>
-            ) : (
-              <></>
-            )}
+            <span className="font-bold">
+              Correct Answer{question?.answers?.length || 0 > 1 ? 's' : ''}
+            </span>
+            {question?.answers?.map((answer) => (
+              <LexOutput editorStateStr={answer.answer} />
+            ))}
+            <span className="font-bold">Explanation</span>
+            {question?.answers.map((answer) => (
+              <LexOutput editorStateStr={answer.answer} />
+            ))}
           </>
         );
     }
-  }, [question, questionNumber]);
+  }, [question, takeAnswer]);
 
   if (loading) {
     return <Spinner />;

@@ -1,8 +1,6 @@
 import { LexOutput } from '@acer-academy-learning/common-ui';
 import React from 'react';
-import { Divider } from '@acer-academy-learning/common-ui';
 import { QuizAnswer, TakeAnswerData } from '@acer-academy-learning/data-access';
-import { useState } from 'react';
 
 export type MCQAnswerOptions = {
   answers: QuizAnswer[];

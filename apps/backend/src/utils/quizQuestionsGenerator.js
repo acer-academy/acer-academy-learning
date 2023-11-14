@@ -408,27 +408,41 @@ const generateRandomTake = (customQuizToTake, customStudentIdToTake) => {
   const quizToTake = customQuizToTake ?? getRandomItem(quizDataArray);
   let studentAnswers = [];
   for (const quizQuestion of quizToTake.quizQuestions) {
+    const wrongOpenEndedAnswer =
+      '{"root":{"children":[{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"Sample incorrect open-ended answer","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1}],"direction":"ltr","format":"","indent":0,"type":"root","version":1}}';
     const wrongAnswer =
-      '{"root":{"children":[{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"Sample incorrect answer","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1}],"direction":"ltr","format":"","indent":0,"type":"root","version":1}}';
+      quizQuestion.quizQuestion.questionType ===
+      QuizQuestionTypeEnum.SHORT_ANSWER
+        ? wrongOpenEndedAnswer
+        : quizQuestion.quizQuestion.answers.filter((x) => !x.isCorrect)?.[0]
+            ?.answer;
     const correctAnswers = quizQuestion.quizQuestion.answers.filter(
       (x) => x.isCorrect,
     ); //[0].answer;
     if (correctAnswers.length > 1) {
       for (const correctAnswer of correctAnswers) {
+        const inputCorrectAnswer = Math.random() > 0.1;
+        if (!inputCorrectAnswer || wrongAnswer) {
+          studentAnswers.push({
+            questionId: quizQuestion.quizQuestionId,
+            timeTaken: Math.round(Math.random() * 30) + 30,
+            studentAnswer: inputCorrectAnswer
+              ? correctAnswer.answer
+              : wrongAnswer,
+          });
+        }
+      }
+    } else {
+      const inputCorrectAnswer = Math.random() > 0.3;
+      if (!inputCorrectAnswer || wrongAnswer) {
         studentAnswers.push({
           questionId: quizQuestion.quizQuestionId,
           timeTaken: Math.round(Math.random() * 30) + 30,
-          studentAnswer:
-            Math.random() > 0.1 ? correctAnswer.answer : wrongAnswer,
+          studentAnswer: inputCorrectAnswer
+            ? correctAnswers[0].answer
+            : wrongAnswer,
         });
       }
-    } else {
-      studentAnswers.push({
-        questionId: quizQuestion.quizQuestionId,
-        timeTaken: Math.round(Math.random() * 30) + 30,
-        studentAnswer:
-          Math.random() > 0.3 ? correctAnswers[0].answer : wrongAnswer,
-      });
     }
   }
   const takeData = {
