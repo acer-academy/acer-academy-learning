@@ -10,7 +10,6 @@ import {
   screamingSnakeToTitleCase,
   useDebounceValue,
   useDurationStartDate,
-  useToast,
 } from '@acer-academy-learning/common-ui';
 import {
   CustomHighChartsPoint,
@@ -62,9 +61,6 @@ export const SubjectMasteryOverTime = () => {
         }`,
         type: 'spline',
         data: res.data[key],
-        marker: {
-          enabled: true,
-        },
         point: {
           events: {
             click: function () {
@@ -77,17 +73,13 @@ export const SubjectMasteryOverTime = () => {
               }
             },
             mouseOver: function () {
-              if (
-                this.graphic &&
-                !Object.values(SubjectEnum).includes(key as SubjectEnum)
-              ) {
-                this.graphic.element.style.cursor = 'pointer';
+              console.log(this.graphic);
+              if (!Object.values(SubjectEnum).includes(key as SubjectEnum)) {
+                this.series.chart.container.style.cursor = 'pointer';
               }
             },
             mouseOut: function () {
-              if (this.graphic) {
-                this.graphic.element.style.cursor = 'default';
-              }
+              this.series.chart.container.style.cursor = 'default';
             },
           },
         },
@@ -117,7 +109,7 @@ export const SubjectMasteryOverTime = () => {
       },
       yAxis: {
         title: {
-          text: 'Performance (in %)',
+          text: 'Mastery (in %)',
         },
         max: 100,
         min: 0,
@@ -135,6 +127,12 @@ export const SubjectMasteryOverTime = () => {
         position: {
           align: 'center',
         },
+      },
+      tooltip: {
+        enabled: false,
+      },
+      credits: {
+        enabled: false,
       },
     }),
     [data, startDate, formattedSubject],
