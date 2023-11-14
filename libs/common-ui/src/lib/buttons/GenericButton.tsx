@@ -1,7 +1,9 @@
-import React, { ButtonHTMLAttributes, DetailedHTMLProps } from 'react';
+import React, { ButtonHTMLAttributes, DetailedHTMLProps, useMemo } from 'react';
 import { Transition } from '@headlessui/react';
+import { LayoutRole } from '../layout';
 
 export type GenericButtonProps = {
+  role?: LayoutRole;
   text?: string | React.ReactNode;
   icon?: React.ReactNode;
   isLoading?: boolean;
@@ -33,6 +35,7 @@ const LoadingElement = () => {
 };
 
 export const GenericButton = ({
+  role,
   text,
   icon,
   type,
@@ -41,11 +44,24 @@ export const GenericButton = ({
   isLoading,
   className,
 }: GenericButtonProps) => {
+  const roleButtonStyle = useMemo(() => {
+    if (!role) return;
+    switch (role) {
+      case LayoutRole.Admin:
+        return 'bg-admin-primary-700 hover:bg-admin-primary-900';
+      case LayoutRole.Student:
+        return 'bg-student-primary-900 hover:bg-student-secondary-700';
+      case LayoutRole.Teacher:
+        return 'bg-teacher-primary-900 hover:bg-teacher-secondary-700';
+      default:
+        return 'bg-teacher-primary-900 hover:bg-teacher-secondary-700';
+    }
+  }, [role]);
   return (
     <button
       className={`inline-flex items-center gap-x-1.5 rounded-md ${
         isLoading ? 'bg-gray-400' : 'bg-gray-600'
-      } px-3 py-2 text-sm font-semibold text-white shadow-sm  focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600 justify-center ${className}`}
+      } px-3 py-2 text-sm font-semibold text-white shadow-sm  focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600 justify-center ${roleButtonStyle} ${className}`}
       type={type}
       onClick={onClick}
       onBlur={onBlur}

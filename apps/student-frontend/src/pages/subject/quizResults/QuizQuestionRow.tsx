@@ -137,30 +137,30 @@ export const QuizQuestionRow = ({
                 <></>
               )}
             </div>
-            <Divider lineClassName="border-student-primary-600" />
-            <span className="font-bold">Correct Answer</span>
-            <LexOutput editorStateStr={question?.answers[0].answer || '-'} />
-            {question?.answers[0].explanation ? (
-              <div className="bg-white px-2 py-2 align-middle sm:px-2 lg:px-2 border border-gray">
-                <span className="font-bold">Explanation</span>
-                <LexOutput editorStateStr={question?.answers[0].explanation} />
-              </div>
-            ) : (
-              <></>
-            )}
+            <Divider lineClassName="border-student-primary-900" />
+            <span className="font-bold">
+              Correct Answer{question?.answers?.length || 0 > 1 ? 's' : ''}
+            </span>
+            {question?.answers?.map((answer) => (
+              <LexOutput editorStateStr={answer.answer} />
+            ))}
+            <span className="font-bold">Explanation</span>
+            {question?.answers.map((answer) => (
+              <LexOutput editorStateStr={answer.answer} />
+            ))}
           </>
         );
     }
-  }, [question, questionNumber]);
+  }, [question, takeAnswer]);
 
   if (loading) {
     return <Spinner />;
   }
 
   return (
-    <div className="opacity-100 transition-opacity duration-300">
+    <div className="opacity-100 transition-opacity duration-300 w-full">
       <div
-        className={`bg-gray-200 px-4 py-2 text-left font-bold text-gray-900 focus:outline-none focus-visible:ring focus-visible:ring-gray-500 focus-visible:ring-opacity-75 text-base border border-gray-400 rounded-t flex justify-between bg-student-primary-600 text-white`}
+        className={`bg-gray-200 px-4 py-2 text-left font-bold text-gray-900 focus:outline-none focus-visible:ring focus-visible:ring-gray-500 focus-visible:ring-opacity-75 text-base border border-gray-400 rounded-t flex justify-between bg-student-primary-900 text-white`}
       >
         <span>Question {questionNumber}</span>
         <span>
@@ -169,7 +169,7 @@ export const QuizQuestionRow = ({
       </div>
       <div className="rounded-b border-b border-x border-gray-200 bg-white px-4 py-5 sm:px-6 shadow space-y-4 flex flex-col">
         <LexOutput editorStateStr={question?.questionText || ''} />
-        <Divider lineClassName="border-student-primary-600" />
+        <Divider lineClassName="border-student-primary-900" />
         {answerOptions}
         <div className="bg-gray-100 px-3 py-3 sm:px-3 shadow space-y-2 flex flex-col">
           <span className="font-bold">Time Analysis</span>

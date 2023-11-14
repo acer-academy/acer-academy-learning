@@ -7,7 +7,8 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
-import { Radar } from 'react-chartjs-2';
+import React, { useRef } from 'react';
+import { Radar, getElementAtEvent } from 'react-chartjs-2';
 
 ChartJS.register(
   RadialLinearScale,
@@ -21,18 +22,37 @@ ChartJS.register(
 export type SpiderChartType = {
   subjectArr: string[];
   averageScoreArr: number[];
+  backgroundColor?: string;
+  borderColor?: string;
+  onClickHandler?: (elements: ReturnType<typeof getElementAtEvent>) => void;
 };
 
-const SpiderChart = ({ subjectArr, averageScoreArr }: SpiderChartType) => {
-  const options = {
+const SpiderChart = ({
+  subjectArr,
+  averageScoreArr,
+  backgroundColor,
+  borderColor,
+  onClickHandler,
+}: SpiderChartType) => {
+  const chartRef = useRef();
+  const options: React.ComponentProps<typeof Radar>['options'] = {
     responsive: true,
     maintainAspectRatio: false,
-    scale: {
+    scales: {
       r: {
         beginAtZero: true,
         max: 10,
         min: 0,
       },
+    },
+    hover: {
+      mode: 'nearest',
+    },
+    onHover: (event, chartElements) => {
+      if (event.native) {
+        const canvasElement = event.native.target as HTMLCanvasElement;
+        canvasElement.style.cursor = chartElements[0] ? 'pointer' : 'default';
+      }
     },
   };
 
@@ -42,14 +62,23 @@ const SpiderChart = ({ subjectArr, averageScoreArr }: SpiderChartType) => {
       {
         label: 'Mastery of Topics',
         data: averageScoreArr,
-        backgroundColor: 'rgba(255, 99, 132, 0.2)',
-        borderColor: 'rgba(255, 99, 132, 1)',
+        backgroundColor: backgroundColor ?? 'rgba(255, 99, 132, 0.2)',
+        borderColor: borderColor ?? 'rgba(255, 99, 132, 1)',
         borderWidth: 1,
       },
     ],
   };
 
-  return <Radar data={data} options={options} />;
+  const onClick: React.MouseEventHandler<HTMLCanvasElement> = (event) => {
+    if (chartRef.current) {
+      const elems = getElementAtEvent(chartRef.current, event);
+      onClickHandler?.(elems);
+    }
+  };
+
+  return (
+    <Radar ref={chartRef} onClick={onClick} data={data} options={options} />
+  );
 };
 
 export default SpiderChart;

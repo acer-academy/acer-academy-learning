@@ -10,6 +10,8 @@ export type GenericComboBoxProps<T> = {
   hasError?: boolean;
   placeholder?: string;
   containerStyle?: string;
+  inputStyle?: string;
+  optionActiveStyle?: string;
 };
 
 export const GenericComboBox = <T,>({
@@ -20,6 +22,8 @@ export const GenericComboBox = <T,>({
   hasError,
   placeholder,
   containerStyle,
+  inputStyle,
+  optionActiveStyle,
 }: GenericComboBoxProps<T>) => {
   const [query, setQuery] = useState('');
 
@@ -42,7 +46,10 @@ export const GenericComboBox = <T,>({
         <div className="relative w-full cursor-default overflow-hidden rounded-lg bg-white text-left focus-visible:ring-inset focus-visible:ring-1 focus-visible:ring-gray-900 sm:text-sm">
           <Combobox.Button className={`w-full`}>
             <Combobox.Input<T[]>
-              className={`placeholder-gray-400 placeholder:text-sm w-full border-none py-2 pl-3 pr-10 text-sm leading-5 text-gray-900 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-gray-600 break-normal ring-1 ring-inset ${
+              className={`placeholder-gray-400 placeholder:text-sm w-full border-none py-2 pl-3 pr-10 text-sm leading-5 ${
+                inputStyle ??
+                'text-gray-900 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-gray-600'
+              } break-normal ring-1 ring-inset ${
                 hasError ? 'ring-red-500' : 'ring-gray-300'
               }
               rounded-lg`}
@@ -78,7 +85,8 @@ export const GenericComboBox = <T,>({
                   className={({ active }) =>
                     `relative cursor-default select-none py-2 pl-10 pr-4 ${
                       active
-                        ? 'bg-teacher-primary-600 text-white'
+                        ? optionActiveStyle ??
+                          'bg-teacher-primary-600 text-white'
                         : 'text-gray-900'
                     }`
                   }

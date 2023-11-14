@@ -1,6 +1,7 @@
 import {
   BackButton,
   FullscreenSpinner,
+  LayoutRole,
   getSubjectEnumFromPathParam,
   useAuth,
   useToast,
@@ -74,7 +75,7 @@ export const UpdateUnpublishedQuiz = ({ quiz }: UpdateUnpublishedQuizProps) => {
   return (
     <FormProvider {...formMethods}>
       <section className="space-y-4">
-        <BackButton />
+        <BackButton role={LayoutRole.Teacher} />
         <QuizCard onSubmitForm={onSubmit} submitText="Update Quiz" />
       </section>
     </FormProvider>

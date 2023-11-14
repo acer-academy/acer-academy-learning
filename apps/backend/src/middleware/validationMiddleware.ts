@@ -1,3 +1,4 @@
+import jwt from 'jsonwebtoken';
 import {
   ClassFrequencyEnum,
   LevelEnum,
@@ -28,6 +29,8 @@ import transactionService from '../services/TransactionService';
 import { TermService } from '../services/TermService';
 import AttendanceService from '../services/AttendanceService';
 import { AssignmentService } from '../services/AssignmentService';
+import { JWT_SECRET_KEY } from '../config/config';
+import { StudentJWTPayload } from '../types';
 
 const teacherService = new TeacherService();
 const centreService = new CentreService();
@@ -54,6 +57,7 @@ const assignmentService = new AssignmentService();
  * Type:
  * - Body: For validators that operate on the request body.
  * - Params: For validators that operate on request parameters.
+ * - Cookies: For validators that oeprate on request cookies
  *
  * Entity Name (Optional, for disambiguation):
  * - Example: "validateBodyTeacherEmailUnique" vs "validateBodyStudentEmailUnique"
@@ -1565,7 +1569,6 @@ export async function validateBodyQuizFormatValid(
         throw Error(`${key} is missing or has an invalid format.`);
       }
     }
-    req.body = validBody;
     next();
   } catch (error) {
     return res.status(500).json({
@@ -1948,7 +1951,6 @@ export async function validateBodyTakeFormatValid(
         throw Error(`${key} is missing or has an invalid format.`);
       }
     }
-    req.body = validBody;
     next();
   } catch (error) {
     return res.status(500).json({
@@ -2576,7 +2578,8 @@ export async function validateParamStudentExists(
   try {
     const { studentId } = req.params;
     if (studentId) {
-      if (studentId.length !== 36) {
+      const validStudent = await studentService.getStudentById(studentId);
+      if (!validStudent) {
         return res.status(400).json({
           error: 'Malformed request; studentId is not of valid length.',
         });
@@ -2683,6 +2686,64 @@ export async function validateBodyAnnouncementCentresExist(
         }
       }
     }
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+export async function validateCookiesStudentExist(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const token = req.cookies.jwtToken_Student;
+    if (token) {
+      const decoded = jwt.verify(token, JWT_SECRET_KEY) as StudentJWTPayload;
+      const studentId = decoded.id;
+      const validStudent = await studentService.getStudentById(studentId);
+      if (!validStudent) {
+        return res.status(400).json({
+          error: 'Invalid student ID provided.',
+        });
+      }
+      res.locals.studentId = studentId;
+      next();
+    } else {
+      return res.status(400).json({
+        error: 'No Authentication Token Found',
+      });
+    }
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+}
+
+export async function validateQueryTopicsExist(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const topics = req.query.topics as string | string[];
+    const filteredTopics = Array.isArray(topics)
+      ? topics.filter((topic): topic is QuizQuestionTopicEnum =>
+          Object.values(QuizQuestionTopicEnum).includes(
+            topic as QuizQuestionTopicEnum,
+          ),
+        )
+      : Object.values(QuizQuestionTopicEnum).includes(
+          topics as QuizQuestionTopicEnum,
+        )
+      ? [topics as QuizQuestionTopicEnum]
+      : undefined;
+
+    res.locals.topics = filteredTopics;
     next();
   } catch (error) {
     return res.status(500).json({

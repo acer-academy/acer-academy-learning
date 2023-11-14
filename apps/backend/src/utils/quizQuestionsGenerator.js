@@ -5,6 +5,7 @@ const {
   createQuizQuestionURL,
   createQuizURL,
   createStudentURL,
+  getStudentByIdURL,
   createTakeURL,
   createAssignmentAttemptURL,
   createAssignmentURL,
@@ -38,6 +39,10 @@ const numberOfQuizzesToCreate = setArgumentValue('--quizzes', 100);
 const numberOfTakesToCreate = setArgumentValue('--takes', 500);
 const numberOfAssignmentsToCreate = setArgumentValue('--assignments', 100);
 const numberOfAssignmentAttemptsToCreate = setArgumentValue('--attempts', 500);
+const numberOfTakesToCreateForStudents = setArgumentValue(
+  '--takesForStudents',
+  10,
+);
 
 console.log(
   `
@@ -347,6 +352,7 @@ const generateRandomQuiz = (titleIdx) => {
       : studentIdsArray.slice(Math.random() * studentIdsArray.length),
     timeAllowed: Math.max(Math.floor(Math.random() * 7200) + 1, 600),
     quizQuestions: quizQuestions,
+    createdAt: getRandomPastOrFutureDate(),
   };
   if (Math.random() > 0.2) {
     return quizData;
@@ -355,31 +361,88 @@ const generateRandomQuiz = (titleIdx) => {
   return rest;
 };
 
-const generateRandomTake = () => {
-  const quizToTake = getRandomItem(quizDataArray);
+const getRandomPastOrFutureDate = (dateToBeCurrent, isFuture) => {
+  const millisecondsPerDay = 24 * 60 * 60 * 1000;
+  const millisecondsPerWeek = 7 * millisecondsPerDay;
+  const millisecondsPerYear = 365 * millisecondsPerDay;
+  const currentDate = dateToBeCurrent ? new Date(dateToBeCurrent) : new Date();
+  const now = Date.now();
+  const diffInMilliseconds = Math.abs(now - currentDate.getTime());
+  const daysRange = isFuture
+    ? Math.min(Math.floor(diffInMilliseconds / millisecondsPerDay), 7)
+    : 7;
+  const weeksRange = isFuture
+    ? Math.min(Math.floor(diffInMilliseconds / millisecondsPerWeek), 52)
+    : 52;
+  const yearRange = isFuture
+    ? Math.min(Math.floor(diffInMilliseconds / millisecondsPerYear), 10)
+    : 10;
+
+  const randomValue = Math.random();
+  const shouldBeWithinYear = isFuture ? randomValue > 0.3 : false;
+
+  // Get a random number of years, weeks, and days to subtract (or add)
+  const yearsAgo = shouldBeWithinYear
+    ? yearRange
+    : Math.floor(Math.random() * yearRange);
+  const weeksAgo = Math.floor(Math.random() * weeksRange); // 52 weeks in a year
+  const daysAgo = Math.floor(Math.random() * daysRange); // 7 days in a week
+
+  // Calculate the total milliseconds to subtract
+  const totalMillisecondsAgo =
+    yearsAgo * millisecondsPerYear + // Years to milliseconds
+    weeksAgo * millisecondsPerWeek + // Weeks to milliseconds
+    daysAgo * millisecondsPerDay; // Days to milliseconds
+
+  // Calculate the random past date
+  const randomPastOrFutureDate = isFuture
+    ? currentDate.getTime() + totalMillisecondsAgo
+    : currentDate.getTime() - totalMillisecondsAgo;
+
+  const randomPastDate = new Date(randomPastOrFutureDate);
+
+  return randomPastDate;
+};
+
+const generateRandomTake = (customQuizToTake, customStudentIdToTake) => {
+  const quizToTake = customQuizToTake ?? getRandomItem(quizDataArray);
   let studentAnswers = [];
   for (const quizQuestion of quizToTake.quizQuestions) {
+    const wrongOpenEndedAnswer =
+      '{"root":{"children":[{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"Sample incorrect open-ended answer","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1}],"direction":"ltr","format":"","indent":0,"type":"root","version":1}}';
     const wrongAnswer =
-      '{"root":{"children":[{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"Sample incorrect answer","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1}],"direction":"ltr","format":"","indent":0,"type":"root","version":1}}';
+      quizQuestion.quizQuestion.questionType ===
+      QuizQuestionTypeEnum.SHORT_ANSWER
+        ? wrongOpenEndedAnswer
+        : quizQuestion.quizQuestion.answers.filter((x) => !x.isCorrect)?.[0]
+            ?.answer;
     const correctAnswers = quizQuestion.quizQuestion.answers.filter(
       (x) => x.isCorrect,
     ); //[0].answer;
     if (correctAnswers.length > 1) {
       for (const correctAnswer of correctAnswers) {
+        const inputCorrectAnswer = Math.random() > 0.1;
+        if (!inputCorrectAnswer || wrongAnswer) {
+          studentAnswers.push({
+            questionId: quizQuestion.quizQuestionId,
+            timeTaken: Math.round(Math.random() * 30) + 30,
+            studentAnswer: inputCorrectAnswer
+              ? correctAnswer.answer
+              : wrongAnswer,
+          });
+        }
+      }
+    } else {
+      const inputCorrectAnswer = Math.random() > 0.3;
+      if (!inputCorrectAnswer || wrongAnswer) {
         studentAnswers.push({
           questionId: quizQuestion.quizQuestionId,
           timeTaken: Math.round(Math.random() * 30) + 30,
-          studentAnswer:
-            Math.random() > 0.1 ? correctAnswer.answer : wrongAnswer,
+          studentAnswer: inputCorrectAnswer
+            ? correctAnswers[0].answer
+            : wrongAnswer,
         });
       }
-    } else {
-      studentAnswers.push({
-        questionId: quizQuestion.quizQuestionId,
-        timeTaken: Math.round(Math.random() * 30) + 30,
-        studentAnswer:
-          Math.random() > 0.3 ? correctAnswers[0].answer : wrongAnswer,
-      });
     }
   }
   const takeData = {
@@ -389,9 +452,10 @@ const generateRandomTake = () => {
           Math.round(Math.random() * quizToTake.timeAllowed),
         )
       : 3600,
-    takenById: getRandomItem(studentIdsArray),
+    takenById: customStudentIdToTake ?? getRandomItem(studentIdsArray),
     quizId: quizToTake.id,
     studentAnswers: studentAnswers,
+    attemptedAt: getRandomPastOrFutureDate(quizToTake.createdAt, true),
   };
   return takeData;
 };
@@ -442,7 +506,7 @@ const generateRandomAssignmentAttempt = () => {
     feedback = 'Student has a good understanding of topics tested';
   }
   const assignmentAttemptData = {
-    submittedOn: '2023-01-14T09:00:05.123Z',
+    submittedOn: getRandomPastOrFutureDate(),
     score: score,
     feedback: feedback,
     assignmentId: assignmentToTake.id,
@@ -451,11 +515,36 @@ const generateRandomAssignmentAttempt = () => {
   return assignmentAttemptData;
 };
 
+const createMultipleTakesForStudents = async (count) => {
+  for (const studentId of studentIdsArray) {
+    const start = Date.now();
+    const response = await axios.get(`${getStudentByIdURL}/${studentId}`);
+    const student = response.data.student;
+    const studentLevel = student.level;
+    const quizToTake = quizDataArray.find((quiz) =>
+      quiz.levels.includes(studentLevel),
+    );
+    if (quizToTake) {
+      for (let i = 0; i < count ?? 10; i++) {
+        const takeData = generateRandomTake(quizToTake, student.id);
+        await axios.post(createTakeURL, takeData);
+      }
+    }
+    const end = Date.now();
+    console.log(
+      `${count} takes (to view in quiz analytics) created successfully for ${
+        student.firstName
+      } (${end - start} ms).`,
+    );
+  }
+};
+
 const main = async () => {
   await setupPrerequisites();
   await createRandomQuestions(numberOfQuestionsToCreate);
   await createRandomQuizzes(numberOfQuizzesToCreate);
   await createRandomTakes(numberOfTakesToCreate);
+  await createMultipleTakesForStudents(numberOfTakesToCreateForStudents);
   await createRandomAssignments(numberOfAssignmentsToCreate);
   await createRandomAssignmentAttempts(numberOfAssignmentAttemptsToCreate);
 };

@@ -1,4 +1,5 @@
 import { Prisma, PrismaClient, Take } from '@prisma/client';
+import { AllTakesStudentParams } from '../types/takes';
 
 export class TakeDao {
   constructor(private prismaClient: PrismaClient = new PrismaClient()) {}
@@ -75,6 +76,94 @@ export class TakeDao {
       where: filterOptions,
       skip: offset,
       take: pageSize,
+      orderBy: { attemptedAt: 'desc' },
+    });
+  }
+
+  public getLatestAttemptDateOfQuizzesForStudentsWhere(
+    filterOptions: AllTakesStudentParams,
+  ) {
+    // Student ID should always be present
+    const where: Prisma.TakeWhereInput = {
+      takenById: filterOptions.studentId,
+    };
+
+    const quizIds = filterOptions.quizIds;
+    if (quizIds) {
+      where.quizId = {
+        in: quizIds,
+      };
+    }
+
+    return this.prismaClient.take.groupBy({
+      where: where,
+      by: ['quizId'],
+      _max: {
+        attemptedAt: true,
+      },
+    });
+  }
+
+  public async getAllTakesOfStudent(filterOptions: AllTakesStudentParams) {
+    // Student ID should always be present
+    const where: Prisma.TakeWhereInput = {
+      takenById: filterOptions.studentId,
+    };
+
+    const quizIds = filterOptions.quizIds;
+    if (quizIds) {
+      where.quizId = {
+        in: quizIds,
+      };
+    }
+
+    const startDateRange = filterOptions.startDate;
+    const endDateRange = filterOptions.endDate;
+    if (startDateRange && !endDateRange) {
+      where.attemptedAt = {
+        gte: new Date(startDateRange),
+      };
+    }
+    if (!startDateRange && endDateRange) {
+      where.attemptedAt = {
+        lte: new Date(endDateRange),
+      };
+    }
+    if (startDateRange && endDateRange) {
+      where.attemptedAt = {
+        gte: new Date(startDateRange),
+        lte: new Date(endDateRange),
+      };
+    }
+
+    const subjects = filterOptions.subjects;
+    if (subjects) {
+      where.quiz = {
+        subject: {
+          in: subjects,
+        },
+      };
+    }
+    return this.prismaClient.take.findMany({
+      where: where,
+      include: {
+        studentAnswers: {
+          include: {
+            question: {
+              include: {
+                answers: true,
+              },
+            },
+          },
+        },
+        quiz: {
+          select: {
+            id: true,
+            topics: true,
+            totalMarks: true,
+          },
+        },
+      },
       orderBy: { attemptedAt: 'desc' },
     });
   }

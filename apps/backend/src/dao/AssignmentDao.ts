@@ -10,7 +10,7 @@ export type AssignmentIncludeAttempts = Assignment & {
 };
 
 export class AssignmentDao {
-  constructor(private prismaClient: PrismaClient = new PrismaClient()) {}
+    constructor(private prismaClient: PrismaClient = new PrismaClient()) {}
 
   public async createAssignment(
     answerData: Prisma.AssignmentCreateInput,

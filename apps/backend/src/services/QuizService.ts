@@ -60,7 +60,7 @@ export class QuizService {
     const aggregatedDifficulty = await this.calculateAggregatedDifficulty(
       quizQuestions,
     );
-    const formattedQuizData = {
+    const formattedQuizData: Prisma.QuizCreateInput = {
       title: quizData.title,
       description: quizData.description,
       subject: quizData.subject,
@@ -90,6 +90,10 @@ export class QuizService {
         },
       },
     };
+
+    if (quizData.createdAt) {
+      formattedQuizData.createdAt = quizData.createdAt;
+    }
     return this.quizDao.createQuiz(formattedQuizData);
   }
 
