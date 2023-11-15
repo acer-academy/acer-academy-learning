@@ -33,16 +33,19 @@ export async function getSessionById(
 }
 
 export async function createSession(
-  input: SessionCreateData,
+  input: SessionCreateData, 
+  studentIdArr: Array<string>,
 ): Promise<AxiosResponse<SessionData>> {
-  return client.post(`${URL}`, input);
+  return client.post(`${URL}`, [input,studentIdArr]);
 }
 
 export async function updateSession(
   id: string,
   input: SessionUpdateData,
+  addStudentIdArr: Array<string>,
+  removeStudentIdArr: Array<string>,
 ): Promise<AxiosResponse<SessionData>> {
-  return client.put(`${URL}/${id}`, input);
+  return client.put(`${URL}/${id}`, [input, addStudentIdArr, removeStudentIdArr]);
 }
 
 export async function deleteSession(
@@ -50,3 +53,19 @@ export async function deleteSession(
 ): Promise<AxiosResponse<SessionData>> {
   return client.delete(`${URL}/${id}`);
 }
+
+
+export async function bookSession(
+  sessionId: string,
+  studentId: string,
+): Promise<AxiosResponse<SessionData>> {
+  return client.put(`${URL}/book/${sessionId}/${studentId}`);
+}
+
+export async function cancelSession(
+  sessionId: string,
+  studentId: string,
+): Promise<AxiosResponse<SessionData>> {
+  return client.put(`${URL}/cancel/${sessionId}/${studentId}`);
+}
+

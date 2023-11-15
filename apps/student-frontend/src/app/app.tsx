@@ -68,6 +68,7 @@ import {
 } from '../libs/layout';
 import { ViewAdaptiveQuiz } from '../pages/subject/quiz/ViewAdaptiveQuiz';
 import { AttemptAdaptiveQuiz } from '../pages/subject/quiz/AttemptAdaptiveQuiz';
+import CalendarPage from '../pages/calendar/CalendarPage';
 import { ViewAllAssignments } from '../pages/subject/assignment/ViewAllAssignments';
 import { ViewAssignment } from '../pages/subject/assignment/ViewAssignment';
 import { Attendance } from '../pages/attendance/Attendance';
@@ -137,7 +138,7 @@ export function App() {
                   <Route path={ZOOM_LINK} element={<div>Home</div>} />
                 </Route>
                 <Route path={BOOKING}>
-                  <Route path={VIEW_CLASSES} element={<div>Home</div>} />
+                  <Route path={VIEW_CLASSES} element={<CalendarPage />} />
                   <Route path={BOOK_CLASSES} element={<div>Home</div>} />
                   <Route
                     path={BUY_CREDITS}
