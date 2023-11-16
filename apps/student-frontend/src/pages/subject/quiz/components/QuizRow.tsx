@@ -40,6 +40,9 @@ export const QuizRow = ({ quiz, className, iconStyles }: QuizRowProps) => {
             <small className={`${smallDataClassName}`}>
               {quiz.quizQuestions.length} Questions
             </small>
+            <small className={`${smallDataClassName}`}>
+              {quiz.takes.length} Attempts
+            </small>
           </div>
         </div>
       </button>
