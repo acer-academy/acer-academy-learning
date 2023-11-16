@@ -27,7 +27,6 @@ export const ZOOM_LINK = `${SUBJECT_MAIN}/zoom-link`;
 
 // Booking routes
 export const BOOKING = '/booking';
-export const VIEW_CLASSES = `${BOOKING}/view-classes`;
 export const BOOK_CLASSES = `${BOOKING}/book-classes`;
 export const BUY_CREDITS = `${BOOKING}/buy-credits`;
 export const PAST_TRANSACTIONS = `${BOOKING}/past-transactions`;
