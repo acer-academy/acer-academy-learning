@@ -1,4 +1,4 @@
-import { Session, Prisma, PrismaClient } from '@prisma/client';
+import { Session, Student, Prisma, PrismaClient } from '@prisma/client';
 
 class SessionDao {
   private prisma: PrismaClient;
@@ -144,6 +144,18 @@ class SessionDao {
     return this.prisma.session.findUnique({
       where: { id },
       include: { teacher: true, class: true, classroom: true, students: true },
+    });
+  }
+
+  public async getStudentsInSession(sessionId: string): Promise<Student[]> {
+    return this.prisma.student.findMany({
+      where: {
+        sessions: {
+          some: {
+            id: sessionId,
+          },
+        },
+      },
     });
   }
 

@@ -1,7 +1,10 @@
 import SessionDao from '../dao/SessionDao';
-import { Session, Prisma } from '@prisma/client';
+import { Session, Prisma, Student } from '@prisma/client';
+import { ClassroomService } from './ClassroomService';
 
 class SessionService {
+  private classroomService = new ClassroomService();
+
   public async createSession(
     data: Prisma.SessionUncheckedCreateInput,
     studentIdArr: Array<string>,
@@ -11,17 +14,27 @@ class SessionService {
       data.start.toString(),
       data.end.toString(),
     );
+    const classroom = await this.classroomService.getClassroomById(
+      data.classroomId,
+    );
+
     if (!available) {
       if (studentIdArr.length > 0) {
-        const formattedData = {
-          ...data,
-          students: {
-            connect: studentIdArr?.map((studentId: string) => ({
-              id: studentId,
-            })),
-          },
-        };
-        return await SessionDao.createSession(formattedData);
+        if (studentIdArr.length <= classroom.capacity) {
+          const formattedData = {
+            ...data,
+            students: {
+              connect: studentIdArr?.map((studentId: string) => ({
+                id: studentId,
+              })),
+            },
+          };
+          return await SessionDao.createSession(formattedData);
+        } else {
+          throw new Error(
+            'Unable to create because number of students is more than classroom capacity.',
+          );
+        }
       }
       return SessionDao.createSession(data);
     } else {
@@ -75,6 +88,16 @@ class SessionService {
           })),
         },
       };
+      const available = await this.checkCapacityAvailability(
+        id,
+        session.classroomId,
+        addStudentIdArr.length - removeStudentIdArr.length,
+      );
+      if (!available) {
+        throw new Error(
+          'Unable to update session because classroom has hit its maximum capacity.',
+        );
+      }
     }
     if (
       data.start &&
@@ -132,6 +155,20 @@ class SessionService {
 
   public async getAllSessions(): Promise<Session[]> {
     return SessionDao.getAllSessions();
+  }
+
+  private async getStudentsInSession(sessionId: string): Promise<Student[]> {
+    return SessionDao.getStudentsInSession(sessionId);
+  }
+
+  public async checkCapacityAvailability(
+    sessionId: string,
+    classroomId: string,
+    adding: number,
+  ) {
+    const students = await this.getStudentsInSession(sessionId);
+    const classroom = await this.classroomService.getClassroomById(classroomId);
+    return classroom.capacity >= students.length + adding;
   }
 
   private async checkClassroomAvailability(

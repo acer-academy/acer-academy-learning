@@ -1821,6 +1821,27 @@ export async function validateClassAndSessionExist(
     });
   }
 }
+
+export async function validateEnoughCapacity(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  const { sessionId } = req.params;
+  const session = await SessionService.getSessionBySessionId(sessionId);
+  const availableCapacity = await SessionService.checkCapacityAvailability(
+    sessionId,
+    session.classroomId,
+    1,
+  );
+  if (!availableCapacity) {
+    return res.status(400).json({
+      error: 'The classroom has reached its maximum capacity.',
+    });
+  }
+  next();
+}
+
 /** Validates if the format of a create TakeAnswer request is valid. */
 export async function validateBodyTakeAnswerFormatValid(
   req: Request,

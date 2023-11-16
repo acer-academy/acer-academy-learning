@@ -7,6 +7,7 @@ import {
   validateSessionDate,
   validateClassAndSessionExist,
   validateParamStudentExists,
+  validateEnoughCapacity,
 } from '../middleware/validationMiddleware';
 import { MessageService, MessageTemplate } from '../services/MessageService';
 
@@ -109,6 +110,7 @@ sessionRouter.put(
 sessionRouter.put(
   '/book/:sessionId/:studentId',
   validateClassAndSessionExist,
+  validateEnoughCapacity,
   validateParamStudentExists,
   async (req, res) => {
     try {
