@@ -170,6 +170,9 @@ export const EventModal: React.FC<EventModalProps> = ({
                   ?.map((student) => student.firstName)
                   .join(', ')}
               </p>
+              <p>
+              <strong>Available slots:</strong> {session?.classroom.capacity - session?.students.length}
+              </p>
             </div>
           </div>
           <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">

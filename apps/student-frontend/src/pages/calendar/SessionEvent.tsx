@@ -9,14 +9,14 @@ export default function SessionEvent({ session }: { session: SessionData }) {
     <div className="h-full text-black">
        <div className="flex items-center justify-between">
         <div className="flex">
-          <p className="text-xs">Signed up: {students.length}</p>
+          <p className="text-xs">Available slots: {classroom.capacity-students.length}</p>
         </div>
       </div>
-      <div className="flex items-center justify-between">
+      {/* <div className="flex items-center justify-between">
         <div className="flex">
           <p className="text-xs">Capacity: {classroom.capacity}</p>
         </div>
-      </div>
+      </div> */}
       <div className="flex">
         <p className="text-xs">Teacher: {teacher.firstName}</p>
       </div>
@@ -28,6 +28,9 @@ export default function SessionEvent({ session }: { session: SessionData }) {
       </div>
       <div className="flex">
         <p className="text-xs">Centre: {classroom.centre.name}</p>
+      </div>
+      <div className="flex">
+        <p className="text-xs">Classroom: {classroom.name}</p>
       </div>
       <div className="mt-4"></div>
     </div>
