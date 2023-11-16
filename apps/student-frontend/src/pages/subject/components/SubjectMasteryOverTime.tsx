@@ -127,9 +127,6 @@ export const SubjectMasteryOverTime = () => {
           align: 'center',
         },
       },
-      tooltip: {
-        enabled: false,
-      },
       credits: {
         enabled: false,
       },
