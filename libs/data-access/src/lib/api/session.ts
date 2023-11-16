@@ -54,7 +54,6 @@ export async function deleteSession(
   return client.delete(`${URL}/${id}`);
 }
 
-
 export async function bookSession(
   sessionId: string,
   studentId: string,
