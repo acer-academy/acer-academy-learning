@@ -1,7 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import moment from 'moment';
 import { on } from 'events';
-import { bookSession, cancelSession, getSessionById } from '@acer-academy-learning/data-access';
+import {
+  bookSession,
+  cancelSession,
+  getSessionById,
+  getCentreById
+} from '@acer-academy-learning/data-access';
+import { useToast } from '@acer-academy-learning/common-ui';
 
 interface EventModalProps {
   onClose: () => void;
@@ -16,15 +22,15 @@ export const EventModal: React.FC<EventModalProps> = ({
   studentId,
   fetchSessions,
 }) => {
-
-
   const [session, setSession] = useState(null);
+  const { displayToast, ToastType } = useToast();  
+  const [centreData, setCentreData] = useState(null);
 
   useEffect(() => {
     const fetchSession = async () => {
       try {
         const sessionData = await getSessionById(event.id);
-        console.log(sessionData.data)
+        console.log(sessionData.data);
         setSession(sessionData.data);
       } catch (error) {
         console.error('Error fetching session details:', error);
@@ -32,7 +38,19 @@ export const EventModal: React.FC<EventModalProps> = ({
       }
     };
 
+    const fetchCentre = async () => {
+      try {
+        const centreData = await getCentreById(event.classroom.centreId);
+        setCentreData(centreData.data);
+        console.log(centreData)
+      } catch (error) {
+        console.error('Error fetching session details:', error);
+        // Optional: Handle error, e.g., show error message
+      }
+    };
+
     fetchSession();
+    fetchCentre();
   }, [event.id]);
 
   console.log(event);
@@ -43,28 +61,27 @@ export const EventModal: React.FC<EventModalProps> = ({
   async function handleSubmit() {
     try {
       const response = await bookSession(event.id, studentId);
-      if (response) {
-        console.log('success');
+      if (response.status === 200) {
+        displayToast('Successfully booked.', ToastType.SUCCESS);  
         // onClose();
         await fetchSessions();
         const fetchSession = async () => {
           try {
             const sessionData = await getSessionById(event.id);
-            console.log(sessionData.data)
+            console.log(sessionData.data);
             setSession(sessionData.data);
           } catch (error) {
             console.error('Error fetching session details:', error);
             // Optional: Handle error, e.g., show error message
           }
         };
-    
+
         fetchSession();
         // displayToast('Session created successfully!', ToastType.SUCCESS);
       }
     } catch (err) {
-      console.log('error');
       // onClose();
-      // displayToast(`${err.response.data.error}`, ToastType.ERROR);
+      displayToast(`${err.response.data.error}`, ToastType.ERROR);
     }
 
     // console.log(studentId, event.id)
@@ -75,29 +92,29 @@ export const EventModal: React.FC<EventModalProps> = ({
   const handleUnbook = async () => {
     try {
       const response = await cancelSession(event.id, studentId);
-      if (response) {
-        console.log('success unbooked');
+      if (response.status === 200) {
+        displayToast('Successfully unbooked.', ToastType.SUCCESS);  
         // onClose();
         await fetchSessions();
 
         const fetchSession = async () => {
           try {
             const sessionData = await getSessionById(event.id);
-            console.log(sessionData.data)
+            console.log(sessionData.data);
             setSession(sessionData.data);
           } catch (error) {
             console.error('Error fetching session details:', error);
             // Optional: Handle error, e.g., show error message
           }
         };
-    
+
         fetchSession();
         // displayToast('Session created successfully!', ToastType.SUCCESS);
       }
     } catch (err) {
       console.log('error');
       // onClose();
-      // displayToast(`${err.response.data.error}`, ToastType.ERROR);
+      displayToast(`${err.response.data.error}`, ToastType.ERROR);
     }
   };
 
@@ -115,36 +132,43 @@ export const EventModal: React.FC<EventModalProps> = ({
             <div className="mt-2">
               <p>
                 <strong>Start:</strong>{' '}
-                {moment(session?.start).format('MMMM Do YYYY, h:mm:ss a')}
+                {moment(session?.start).format('MMMM Do YYYY, h:mm a')}
               </p>
               <p>
                 <strong>End:</strong>{' '}
-                {moment(session?.end).format('MMMM Do YYYY, h:mm:ss a')}
+                {moment(session?.end).format('MMMM Do YYYY, h:mm a')}
+              </p>
+              <div className="w-full border-t border-gray-300 mt-2 mb-2" />
+              <p>
+                <strong>Centre:</strong> {centreData?.name}
               </p>
               <p>
-                <strong>Teacher:</strong> {session?.teacher?.firstName}{' '}
-                {session?.data?.session?.teacher?.lastName}
+                <strong>Address:</strong> {centreData?.address}
               </p>
               <p>
-                <strong>Email:</strong> {session?.teacher?.email}
+                <strong>Classroom:</strong> {session?.classroom?.name}
               </p>
-              <p>
-                <strong>Students:</strong>{' '}
-                {session?.students
-                  ?.map((student) => student.firstName)
-                  .join(', ')}
-              </p>
+              <div className="w-full border-t border-gray-300 mt-2 mb-2" />
               <p>
                 <strong>Levels:</strong> {session?.levels?.join(', ')}
               </p>
               <p>
                 <strong>Subjects:</strong> {session?.subjects?.join(', ')}
               </p>
+              <div className="w-full border-t border-gray-300 mt-2 mb-2" />
               <p>
-                <strong>Centre:</strong> {session?.classroom?.centre?.name}
+                <strong>Teacher:</strong> {session?.teacher?.firstName}{' '}
+                {session?.data?.session?.teacher?.lastName}
               </p>
+              {/* <p>
+                <strong>Teacher's Email:</strong> {session?.teacher?.email}
+              </p> */}
+              <div className="w-full border-t border-gray-300 mt-2 mb-2" />
               <p>
-                <strong>Classroom:</strong> {session?.classroom?.name}
+                <strong>Students:</strong>{' '}
+                {session?.students
+                  ?.map((student) => student.firstName)
+                  .join(', ')}
               </p>
             </div>
           </div>
