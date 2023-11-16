@@ -5,7 +5,7 @@ import {
   bookSession,
   cancelSession,
   getSessionById,
-  getCentreById
+  getCentreById,
 } from '@acer-academy-learning/data-access';
 import { useToast } from '@acer-academy-learning/common-ui';
 
@@ -23,7 +23,7 @@ export const EventModal: React.FC<EventModalProps> = ({
   fetchSessions,
 }) => {
   const [session, setSession] = useState(null);
-  const { displayToast, ToastType } = useToast();  
+  const { displayToast, ToastType } = useToast();
   const [centreData, setCentreData] = useState(null);
 
   useEffect(() => {
@@ -42,7 +42,7 @@ export const EventModal: React.FC<EventModalProps> = ({
       try {
         const centreData = await getCentreById(event.classroom.centreId);
         setCentreData(centreData.data);
-        console.log(centreData)
+        console.log(centreData);
       } catch (error) {
         console.error('Error fetching session details:', error);
         // Optional: Handle error, e.g., show error message
@@ -62,7 +62,7 @@ export const EventModal: React.FC<EventModalProps> = ({
     try {
       const response = await bookSession(event.id, studentId);
       if (response.status === 200) {
-        displayToast('Successfully booked.', ToastType.SUCCESS);  
+        displayToast('Successfully booked.', ToastType.SUCCESS);
         // onClose();
         await fetchSessions();
         const fetchSession = async () => {
@@ -93,7 +93,7 @@ export const EventModal: React.FC<EventModalProps> = ({
     try {
       const response = await cancelSession(event.id, studentId);
       if (response.status === 200) {
-        displayToast('Successfully unbooked.', ToastType.SUCCESS);  
+        displayToast('Successfully unbooked.', ToastType.SUCCESS);
         // onClose();
         await fetchSessions();
 
@@ -153,16 +153,19 @@ export const EventModal: React.FC<EventModalProps> = ({
                 <strong>Levels:</strong> {session?.levels?.join(', ')}
               </p>
               <p>
-                <strong>Subjects:</strong> {session?.subjects?.join(', ')}
+                <strong>Subjects:</strong>{' '}
+                {session?.subjects
+                  ?.map(
+                    (subject) =>
+                      subject.charAt(0) + subject.slice(1).toLowerCase(),
+                  )
+                  .join(', ')}
               </p>
               <div className="w-full border-t border-gray-300 mt-2 mb-2" />
               <p>
                 <strong>Teacher:</strong> {session?.teacher?.firstName}{' '}
                 {session?.data?.session?.teacher?.lastName}
               </p>
-              {/* <p>
-                <strong>Teacher's Email:</strong> {session?.teacher?.email}
-              </p> */}
               <div className="w-full border-t border-gray-300 mt-2 mb-2" />
               <p>
                 <strong>Students:</strong>{' '}
@@ -171,7 +174,8 @@ export const EventModal: React.FC<EventModalProps> = ({
                   .join(', ')}
               </p>
               <p>
-              <strong>Available slots:</strong> {session?.classroom.capacity - session?.students.length}
+                <strong>Available slots:</strong>{' '}
+                {session?.classroom.capacity - session?.students.length}
               </p>
             </div>
           </div>
