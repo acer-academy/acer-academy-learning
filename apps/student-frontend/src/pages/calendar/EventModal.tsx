@@ -1,36 +1,122 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import moment from 'moment';
 import { on } from 'events';
-import { bookSession } from '@acer-academy-learning/data-access';
+import {
+  bookSession,
+  cancelSession,
+  getSessionById,
+  getCentreById
+} from '@acer-academy-learning/data-access';
+import { useToast } from '@acer-academy-learning/common-ui';
 
 interface EventModalProps {
   onClose: () => void;
   studentId: string;
   event: any;
+  fetchSessions: () => Promise<void>;
 }
 
-export const EventModal: React.FC<EventModalProps> = ({ onClose, event, studentId }) => {
+export const EventModal: React.FC<EventModalProps> = ({
+  onClose,
+  event,
+  studentId,
+  fetchSessions,
+}) => {
+  const [session, setSession] = useState(null);
+  const { displayToast, ToastType } = useToast();  
+  const [centreData, setCentreData] = useState(null);
+
+  useEffect(() => {
+    const fetchSession = async () => {
+      try {
+        const sessionData = await getSessionById(event.id);
+        console.log(sessionData.data);
+        setSession(sessionData.data);
+      } catch (error) {
+        console.error('Error fetching session details:', error);
+        // Optional: Handle error, e.g., show error message
+      }
+    };
+
+    const fetchCentre = async () => {
+      try {
+        const centreData = await getCentreById(event.classroom.centreId);
+        setCentreData(centreData.data);
+        console.log(centreData)
+      } catch (error) {
+        console.error('Error fetching session details:', error);
+        // Optional: Handle error, e.g., show error message
+      }
+    };
+
+    fetchSession();
+    fetchCentre();
+  }, [event.id]);
+
+  console.log(event);
+  const isStudentBooked = () => {
+    return session?.students.some((student) => student.id === studentId);
+  };
 
   async function handleSubmit() {
-
-
     try {
-      const response = await bookSession(event.id, studentId)
-      if (response) {
-        console.log("success")
+      const response = await bookSession(event.id, studentId);
+      if (response.status === 200) {
+        displayToast('Successfully booked.', ToastType.SUCCESS);  
         // onClose();
-        // await fetchSessions();
+        await fetchSessions();
+        const fetchSession = async () => {
+          try {
+            const sessionData = await getSessionById(event.id);
+            console.log(sessionData.data);
+            setSession(sessionData.data);
+          } catch (error) {
+            console.error('Error fetching session details:', error);
+            // Optional: Handle error, e.g., show error message
+          }
+        };
+
+        fetchSession();
         // displayToast('Session created successfully!', ToastType.SUCCESS);
       }
     } catch (err) {
-      console.log("error")
       // onClose();
-      // displayToast(`${err.response.data.error}`, ToastType.ERROR);
+      displayToast(`${err.response.data.error}`, ToastType.ERROR);
     }
 
     // console.log(studentId, event.id)
     // await bookSession(event.id, studentId)
   }
+
+  // Function to handle unbooking
+  const handleUnbook = async () => {
+    try {
+      const response = await cancelSession(event.id, studentId);
+      if (response.status === 200) {
+        displayToast('Successfully unbooked.', ToastType.SUCCESS);  
+        // onClose();
+        await fetchSessions();
+
+        const fetchSession = async () => {
+          try {
+            const sessionData = await getSessionById(event.id);
+            console.log(sessionData.data);
+            setSession(sessionData.data);
+          } catch (error) {
+            console.error('Error fetching session details:', error);
+            // Optional: Handle error, e.g., show error message
+          }
+        };
+
+        fetchSession();
+        // displayToast('Session created successfully!', ToastType.SUCCESS);
+      }
+    } catch (err) {
+      console.log('error');
+      // onClose();
+      displayToast(`${err.response.data.error}`, ToastType.ERROR);
+    }
+  };
 
   return (
     <div className="fixed z-10 inset-0 overflow-y-auto">
@@ -46,45 +132,67 @@ export const EventModal: React.FC<EventModalProps> = ({ onClose, event, studentI
             <div className="mt-2">
               <p>
                 <strong>Start:</strong>{' '}
-                {moment(event?.start).format('MMMM Do YYYY, h:mm:ss a')}
+                {moment(session?.start).format('MMMM Do YYYY, h:mm a')}
               </p>
               <p>
                 <strong>End:</strong>{' '}
-                {moment(event?.end).format('MMMM Do YYYY, h:mm:ss a')}
+                {moment(session?.end).format('MMMM Do YYYY, h:mm a')}
+              </p>
+              <div className="w-full border-t border-gray-300 mt-2 mb-2" />
+              <p>
+                <strong>Centre:</strong> {centreData?.name}
               </p>
               <p>
-                <strong>Teacher:</strong> {event?.teacher?.firstName}{' '}
-                {event?.data?.session?.teacher?.lastName}
+                <strong>Address:</strong> {centreData?.address}
               </p>
               <p>
-                <strong>Email:</strong> {event?.teacher?.email}
+                <strong>Classroom:</strong> {session?.classroom?.name}
+              </p>
+              <div className="w-full border-t border-gray-300 mt-2 mb-2" />
+              <p>
+                <strong>Levels:</strong> {session?.levels?.join(', ')}
               </p>
               <p>
-                <strong>Students:</strong> {event?.students?.map((student) => student.firstName).join(', ')}
+                <strong>Subjects:</strong> {session?.subjects?.join(', ')}
+              </p>
+              <div className="w-full border-t border-gray-300 mt-2 mb-2" />
+              <p>
+                <strong>Teacher:</strong> {session?.teacher?.firstName}{' '}
+                {session?.data?.session?.teacher?.lastName}
+              </p>
+              {/* <p>
+                <strong>Teacher's Email:</strong> {session?.teacher?.email}
+              </p> */}
+              <div className="w-full border-t border-gray-300 mt-2 mb-2" />
+              <p>
+                <strong>Students:</strong>{' '}
+                {session?.students
+                  ?.map((student) => student.firstName)
+                  .join(', ')}
               </p>
               <p>
-                <strong>Levels:</strong> {event?.levels?.join(', ')}
+              <strong>Available slots:</strong> {session?.classroom.capacity - session?.students.length}
               </p>
-              <p>
-                <strong>Subjects:</strong> {event?.subjects?.join(', ')}
-              </p>
-              <p>
-                <strong>Centre:</strong> {event?.classroom?.centre?.name}
-              </p>
-              <p>
-                <strong>Classroom:</strong> {event?.classroom?.name}
-              </p>
-           
             </div>
           </div>
           <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-          <button
-              onClick={handleSubmit}
-              type="button"
-              className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto sm:text-sm"
-            >
-              Book
-            </button>
+            {isStudentBooked() ? (
+              <button
+                onClick={handleUnbook}
+                type="button"
+                className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
+              >
+                Unbook
+              </button>
+            ) : (
+              <button
+                onClick={handleSubmit}
+                type="button"
+                className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:ml-3 sm:w-auto sm:text-sm"
+              >
+                Book
+              </button>
+            )}
             <button
               onClick={onClose}
               type="button"

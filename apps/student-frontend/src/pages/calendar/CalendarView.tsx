@@ -288,17 +288,18 @@ export default function CalendarView() {
 
       {/* EventForm */}
       <div className="flex-grow flex-basis-1/2">
-        {session && (
+        {/* {session && (
           <EventForm
             session={session}
             fetchSessions={fetchSessions}
             onClose={() => setSession(null)} // Close the modal by setting session to null
           />
-        )}
+        )} */}
         {readSession && (
           <EventModal
             //  isOpen={isModalOpen}
             studentId = {user?.id}
+            fetchSessions={fetchSessions}
             onClose={() => setReadSession(null)}
             event={readSession}
           />

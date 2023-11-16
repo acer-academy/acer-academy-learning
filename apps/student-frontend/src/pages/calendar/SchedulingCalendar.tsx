@@ -79,18 +79,7 @@ export const SchedulingCalendar = ({
   };
 
   return (
-    <>
-      {/* View: {view} */}
-      {/* <EventModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        event={selectedEvent}
-      /> */}
-      <DndCalendar
-        onSelectSlot={({ start, end }) => {
-          onShowSessionView({ start, end });
-        }}
-        // onSelectEvent={onSelectEvent}
+    <DndCalendar
         onDoubleClickEvent={(event) => {
           const session = event?.data?.session;
           if (session) {
@@ -127,6 +116,5 @@ export const SchedulingCalendar = ({
         messages={{ year: 'Year' } as any}
         {...initProps}
       />
-    </>
   );
 };
