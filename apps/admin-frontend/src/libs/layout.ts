@@ -60,7 +60,6 @@ export const NAV_SECTIONS: NavigationMenuItem[] = [
         icon: CalendarDaysIcon,
         children: [
           { name: 'View Classes', path: VIEW_CLASSES },
-          { name: 'Book Classes', path: BOOK_CLASSES },
           { name: 'Attendance', path: SESSIONS_FOR_ATTENDANCE },
         ],
       },

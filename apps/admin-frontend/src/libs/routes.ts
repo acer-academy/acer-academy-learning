@@ -29,7 +29,6 @@ export const CLASS_CREDITS = `${CREDIT_RESOURCES}/class-credits`;
 //Schedule Routes
 export const SCHEDULING_RESOURCES = '/scheduling-resources';
 export const VIEW_CLASSES = `${SCHEDULING_RESOURCES}/view-classes`;
-export const BOOK_CLASSES = `${SCHEDULING_RESOURCES}/book-classes`;
 
 export const SESSIONS_FOR_ATTENDANCE = `${SCHEDULING_RESOURCES}/attendance`;
 export const MARK_ATTENDANCE = `${SCHEDULING_RESOURCES}/attendance/mark/:sessionId`;

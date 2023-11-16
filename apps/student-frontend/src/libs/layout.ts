@@ -62,7 +62,6 @@ export const NAV_SECTIONS: NavigationMenuItem[] = [
     name: 'BOOKING',
     path: BOOKING,
     children: [
-      { name: 'View Classes', path: VIEW_CLASSES, icon: PaperClipIcon },
       { name: 'Book Classes', path: BOOK_CLASSES, icon: CalculatorIcon },
       { name: 'Buy Credits', path: BUY_CREDITS, icon: VideoCameraIcon },
       { name: 'Past Transactions', path: PAST_TRANSACTIONS, icon: LinkIcon },

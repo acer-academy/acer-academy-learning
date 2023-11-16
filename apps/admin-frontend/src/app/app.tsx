@@ -107,7 +107,6 @@ export default function App() {
 
               <Route path={SCHEDULING_RESOURCES} element={<Outlet />}>
                 <Route path={VIEW_CLASSES} element={<CalendarPage />} />
-                <Route path={BOOK_CLASSES} element={<p>hello</p>} />
                 <Route
                   path={SESSIONS_FOR_ATTENDANCE}
                   element={<AttendanceManagement />}
