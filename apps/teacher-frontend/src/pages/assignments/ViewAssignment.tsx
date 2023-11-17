@@ -1,6 +1,7 @@
 import {
   BackButton,
   FullscreenSpinner,
+  GenericButton,
   LexOutput,
   useAuth,
 } from '@acer-academy-learning/common-ui';
@@ -44,15 +45,11 @@ export const ViewAssignment: React.FC = () => {
               {assignment.title}
             </h3>
             {!!user && user.id === assignment.teacher.id && (
-              <button
-                className="inline-flex justify-center px-4 py-2 text-white bg-teacherBlue-500 border border-transparent rounded-md hover:bg-teacherBlue-700"
-                onClick={() => {
-                  navToEditAssignment();
-                }}
-              >
-                <PencilSquareIcon className="h-5 w-5 mr-2" />
-                Edit Assignment
-              </button>
+              <GenericButton
+                onClick={navToEditAssignment}
+                text="Edit Assignment"
+                leftIcon={<PencilSquareIcon className="h-5 w-5 mr-2" />}
+              />
             )}
           </div>
           <div className="mt-6 border-t border-gray-100">
@@ -121,7 +118,7 @@ export const ViewAssignment: React.FC = () => {
                     {assignment.assignmentAttempts.length}
                     <a
                       href={location.pathname + '/attempts'}
-                      className="divide-y divide-gray-100 rounded-md border border-gray-300 py-1 px-4 ml-4 flex-shrink-0 font-medium text-indigo-600 bg-slate-50 hover:bg-slate-200 hover:text-indigo-900"
+                      className="divide-y divide-gray-100 rounded-md border border-gray-300 py-1 px-4 ml-4 flex-shrink-0 font-medium text-teacher-secondary-700 bg-slate-50 hover:bg-slate-200 hover:text-teacher-secondary-900"
                     >
                       View All
                     </a>
@@ -154,7 +151,7 @@ export const ViewAssignment: React.FC = () => {
                       <div className="ml-4 flex-shrink-0">
                         <a
                           href={assignment.fileUrl}
-                          className="font-medium text-indigo-600 hover:text-indigo-500"
+                          className="font-medium text-teacher-secondary-700 hover:text-teacher-secondary-500"
                           target="_blank"
                           rel="noopener noreferrer"
                         >

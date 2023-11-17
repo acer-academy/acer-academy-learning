@@ -1,11 +1,12 @@
 import React, { ButtonHTMLAttributes, DetailedHTMLProps, useMemo } from 'react';
 import { Transition } from '@headlessui/react';
-import { LayoutRole } from '../layout';
+import { LayoutRole, useThemeContext } from '../layout';
 
 export type GenericButtonProps = {
   role?: LayoutRole;
   text?: string | React.ReactNode;
-  icon?: React.ReactNode;
+  leftIcon?: React.ReactNode;
+  rightIcon?: React.ReactNode;
   isLoading?: boolean;
 } & DetailedHTMLProps<
   ButtonHTMLAttributes<HTMLButtonElement>,
@@ -35,15 +36,16 @@ const LoadingElement = () => {
 };
 
 export const GenericButton = ({
-  role,
   text,
-  icon,
+  leftIcon,
+  rightIcon,
   type,
   onClick,
   onBlur,
   isLoading,
   className,
 }: GenericButtonProps) => {
+  const { role } = useThemeContext();
   const roleButtonStyle = useMemo(() => {
     if (!role) return;
     switch (role) {
@@ -67,6 +69,7 @@ export const GenericButton = ({
       onBlur={onBlur}
       disabled={isLoading}
     >
+      {!isLoading && leftIcon}
       <Transition
         show={isLoading ?? false}
         enter="transition-opacity duration-200"
@@ -78,7 +81,7 @@ export const GenericButton = ({
       >
         <LoadingElement />
       </Transition>
-      {!isLoading && icon}
+      {!isLoading && rightIcon}
       {text ?? 'Submit'}
     </button>
   );

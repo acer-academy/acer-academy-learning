@@ -35,16 +35,11 @@ export const AdaptiveQuizResults = ({
                 {`Adaptive Quiz Results`}
               </span>
               <div className="flex align-left gap-4">
-                {currentStageNumberOfCorrect !==
-                  currentStageTotalNumberOfQuestions && (
-                  <span className="text-2xl py-1 font-bold tracking-tight">
-                    Quiz Results:{' '}
-                    {`${currentStageNumberOfCorrect}/ ${currentStageTotalNumberOfQuestions} for ${screamingSnakeToTitleCase(
-                      currentDifficulty,
-                    )} Stage.`}
-                  </span>
-                )}
                 <span className="text-2xl py-1 font-bold tracking-tight">
+                  Quiz Results:{' '}
+                  {`${currentStageNumberOfCorrect}/ ${currentStageTotalNumberOfQuestions} for ${screamingSnakeToTitleCase(
+                    currentDifficulty,
+                  )} Stage. `}
                   {currentStageTotalNumberOfQuestions ===
                   currentStageNumberOfCorrect
                     ? 'Well done! You scored full marks!'

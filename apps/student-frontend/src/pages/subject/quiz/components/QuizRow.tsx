@@ -1,6 +1,8 @@
+import { useAuth } from '@acer-academy-learning/common-ui';
 import { QuizData } from '@acer-academy-learning/data-access';
 import { AcademicCapIcon } from '@heroicons/react/24/solid';
-import React from 'react';
+import { Student } from 'libs/data-access/src/lib/types/student';
+import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export type QuizRowProps = {
@@ -16,6 +18,11 @@ export type QuizRowProps = {
 const smallDataClassName = `text-xs px-2`;
 export const QuizRow = ({ quiz, className, iconStyles }: QuizRowProps) => {
   const navigate = useNavigate();
+  const { user } = useAuth<Student>();
+  const attemptsForStudent = useMemo(
+    () => quiz.takes.filter((take) => take.takenById === user?.id).length,
+    [user, quiz],
+  );
   return (
     <li
       className={` hover:bg-blue-100 border-x border-b border-gray-400 ${className}`}
@@ -41,7 +48,7 @@ export const QuizRow = ({ quiz, className, iconStyles }: QuizRowProps) => {
               {quiz.quizQuestions.length} Questions
             </small>
             <small className={`${smallDataClassName}`}>
-              {quiz.takes.length} Attempts
+              {attemptsForStudent} Attempts
             </small>
           </div>
         </div>

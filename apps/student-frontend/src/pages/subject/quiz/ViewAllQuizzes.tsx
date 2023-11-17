@@ -1,5 +1,6 @@
 import {
   GenericAccordion,
+  GenericInput,
   Spinner,
   getSubjectPathFrom,
   useAuth,
@@ -16,6 +17,7 @@ import { useQuery } from 'react-query';
 import { useParams } from 'react-router-dom';
 import { QuizRow } from './components/QuizRow';
 import { AdaptiveQuizRow } from './components/AdaptiveQuizRow';
+import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 
 const accordionTitleClassName =
   'px-6 py-4 bg-student-primary-900 text-white hover:bg-student-secondary-700';
@@ -93,19 +95,13 @@ export const ViewAllQuizzes = () => {
 
   return (
     <div className="flex flex-col space-y-4">
-      <div className="relative">
-        <input
-          type="text"
-          className="h-14 w-96 pr-8 pl-5 rounded z-0 focus:shadow focus:outline-none focus:ring-student-secondary-700"
-          placeholder="Search for a quiz...(Ex: Adaptive Quiz)"
-          onChange={(e) => setSearchString(e.target.value)}
-          value={searchString}
-        />
-
-        <div className="absolute top-4 right-3">
-          <i className="fa fa-search text-gray-400 z-20 hover:text-gray-500"></i>
-        </div>
-      </div>
+      <GenericInput
+        type="text"
+        placeholder="Search for a quiz"
+        rightIcon={<MagnifyingGlassIcon className="h-5 w-5" />}
+        onChange={(e) => setSearchString(e.target.value)}
+        value={searchString}
+      />
       <GenericAccordion
         title="Special Quizzes"
         titleClassName={accordionTitleClassName}
