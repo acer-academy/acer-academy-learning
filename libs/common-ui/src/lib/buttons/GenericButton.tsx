@@ -1,6 +1,6 @@
 import React, { ButtonHTMLAttributes, DetailedHTMLProps, useMemo } from 'react';
 import { Transition } from '@headlessui/react';
-import { LayoutRole } from '../layout';
+import { LayoutRole, useThemeContext } from '../layout';
 
 export type GenericButtonProps = {
   role?: LayoutRole;
@@ -35,7 +35,6 @@ const LoadingElement = () => {
 };
 
 export const GenericButton = ({
-  role,
   text,
   icon,
   type,
@@ -44,6 +43,7 @@ export const GenericButton = ({
   isLoading,
   className,
 }: GenericButtonProps) => {
+  const { role } = useThemeContext();
   const roleButtonStyle = useMemo(() => {
     if (!role) return;
     switch (role) {
