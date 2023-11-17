@@ -528,7 +528,7 @@ model Reward {
 
 model Redemption {
   id         String   @id @default(uuid()) @db.Uuid
-  createdAt  DateTime
+  createdAt  DateTime @default(now())
   isRedeemed Boolean  @default(false)
 
   reward   Reward @relation(fields: [rewardId], references: [id])

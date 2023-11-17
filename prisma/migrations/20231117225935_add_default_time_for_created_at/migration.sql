@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Redemption" ALTER COLUMN "createdAt" SET DEFAULT CURRENT_TIMESTAMP;
