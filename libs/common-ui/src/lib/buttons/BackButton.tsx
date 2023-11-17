@@ -25,9 +25,8 @@ export const BackButton = ({ path, className }: BackButtonProps) => {
     <GenericButton
       text="Back"
       type="button"
-      icon={<ArrowUturnLeftIcon className="h-4 w-4" />}
+      leftIcon={<ArrowUturnLeftIcon className="h-4 w-4" />}
       onClick={handleOnClick}
-      className={className ?? 'hover:bg-gray-700'}
     />
   );
 };

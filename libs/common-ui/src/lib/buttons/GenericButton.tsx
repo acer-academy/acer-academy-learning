@@ -5,7 +5,8 @@ import { LayoutRole, useThemeContext } from '../layout';
 export type GenericButtonProps = {
   role?: LayoutRole;
   text?: string | React.ReactNode;
-  icon?: React.ReactNode;
+  leftIcon?: React.ReactNode;
+  rightIcon?: React.ReactNode;
   isLoading?: boolean;
 } & DetailedHTMLProps<
   ButtonHTMLAttributes<HTMLButtonElement>,
@@ -36,7 +37,8 @@ const LoadingElement = () => {
 
 export const GenericButton = ({
   text,
-  icon,
+  leftIcon,
+  rightIcon,
   type,
   onClick,
   onBlur,
@@ -67,6 +69,7 @@ export const GenericButton = ({
       onBlur={onBlur}
       disabled={isLoading}
     >
+      {!isLoading && leftIcon}
       <Transition
         show={isLoading ?? false}
         enter="transition-opacity duration-200"
@@ -78,7 +81,7 @@ export const GenericButton = ({
       >
         <LoadingElement />
       </Transition>
-      {!isLoading && icon}
+      {!isLoading && rightIcon}
       {text ?? 'Submit'}
     </button>
   );

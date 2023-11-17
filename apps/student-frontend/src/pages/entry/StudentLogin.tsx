@@ -7,10 +7,12 @@ import {
 import { useAuth } from '@acer-academy-learning/common-ui';
 import { DASHBOARD } from '../../libs/routes';
 import { useToast } from '@acer-academy-learning/common-ui';
+import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/solid';
 
 const StudentLogin: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
   const navigate = useNavigate();
   const { login } = useAuth();
@@ -87,17 +89,28 @@ const StudentLogin: React.FC = () => {
                     >
                       Password
                     </label>
-                    <div className="mt-2">
+                    <div className="mt-2 relative">
                       <input
                         id="password"
                         name="password"
-                        type="password"
+                        type={showPassword ? 'text' : 'password'}
                         autoComplete="current-password"
                         required
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         className="block w-full rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-teacher-secondary-700 sm:text-sm sm:leading-6"
                       />
+                      <button
+                        onClick={() => setShowPassword((prev) => !prev)}
+                        type="button"
+                        className="absolute top-0 bottom-0 my-auto right-0 mr-1 md:h-6 md:w-6 text-teacher-primary-600"
+                      >
+                        {(showPassword && (
+                          <EyeSlashIcon className="hover:text-teacher-primary-900" />
+                        )) || (
+                          <EyeIcon className="hover:text-teacher-primary-900" />
+                        )}
+                      </button>
                     </div>
                   </div>
 

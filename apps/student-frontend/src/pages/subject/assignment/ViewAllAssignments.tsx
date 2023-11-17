@@ -1,5 +1,6 @@
 import {
   GenericAccordion,
+  GenericInput,
   useAuth,
   useToast,
 } from '@acer-academy-learning/common-ui';
@@ -9,6 +10,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Student } from 'libs/data-access/src/lib/types/student';
 import { AssignmentRow } from './AssignmentRow';
+import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 
 const accordionTitleClassName =
   'px-6 py-4 bg-student-primary-900 text-white hover:bg-student-secondary-700';
@@ -65,28 +67,13 @@ export const ViewAllAssignments: React.FC = () => {
   return (
     <div className="h-full">
       <div className="flex min-h-full flex-col gap-7 align-middle">
-        <div className="relative mt-2 rounded-md shadow-sm">
-          <input
-            type="text"
-            name="assignment-searchbar"
-            id="assignment-searchbar"
-            className="block w-full rounded-md border-0 py-1.5 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-student-secondary-700 sm:text-sm sm:leading-6"
-            placeholder="Search for an assignment..."
-            value={searchbarText}
-            onChange={(e) => {
-              setSearchbarText(e.target.value);
-            }}
-          />
-          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-4 w-4 fill-gray-400 stroke-2"
-              viewBox="0 0 16 16"
-            >
-              <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
-            </svg>
-          </div>
-        </div>
+        <GenericInput
+          type="text"
+          placeholder="Search for an assignment"
+          rightIcon={<MagnifyingGlassIcon className="h-5 w-5" />}
+          onChange={(e) => setSearchbarText(e.target.value)}
+          value={searchbarText}
+        />
         <div className="flex align-middle justify-between">
           <div className="flex align-middle gap-4">
             <span className="text-2xl py-1 font-bold tracking-tight">
