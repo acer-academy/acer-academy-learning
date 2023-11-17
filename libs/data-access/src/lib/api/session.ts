@@ -14,6 +14,12 @@ export async function getAllSessions(): Promise<AxiosResponse<SessionData[]>> {
   return client.get(`${URL}`);
 }
 
+export async function getSessionsByStudentId(
+  studentId: string,
+): Promise<AxiosResponse<SessionData[]>> {
+  return client.get(`${URL}/student/${studentId}`);
+}
+
 export async function getSessionsInPastWeekByTeacherId(
   teacherId: string,
 ): Promise<AxiosResponse<SessionData[]>> {

@@ -59,6 +59,18 @@ export const EventModal: React.FC<EventModalProps> = ({
   };
 
   async function handleSubmit() {
+
+    const givenDateTime = new Date(event.start);
+    const currentDateTime = new Date();
+
+    // console.log(givenDateTime)
+    // console.log(currentDateTime)
+
+    if (currentDateTime >= givenDateTime) {
+      displayToast(`Unable to book classes in the past.`, ToastType.ERROR);
+      return;
+    }
+
     try {
       const response = await bookSession(event.id, studentId);
       if (response.status === 200) {
@@ -90,6 +102,19 @@ export const EventModal: React.FC<EventModalProps> = ({
 
   // Function to handle unbooking
   const handleUnbook = async () => {
+
+
+    const givenDateTime = new Date(event.start);
+    const currentDateTime = new Date();
+
+    // console.log(givenDateTime)
+    // console.log(currentDateTime)
+
+    if (currentDateTime >= givenDateTime) {
+      displayToast(`Unable to unbook classes in the past.`, ToastType.ERROR);
+      return;
+    }
+
     try {
       const response = await cancelSession(event.id, studentId);
       if (response.status === 200) {

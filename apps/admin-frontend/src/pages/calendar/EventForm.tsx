@@ -410,7 +410,9 @@ export default function EventForm({
       const addStudentIdArr = latestStudents.filter(student => !initialStudents.includes(student));
       const removeStudentIdArr = initialStudents.filter(student => !latestStudents.includes(student));
 
-      const response = await updateSession(session.id, sessionState, addStudentIdArr, removeStudentIdArr);
+      const {students, ...sessionStateWithoutStudents} = sessionState;
+
+      const response = await updateSession(session.id, sessionStateWithoutStudents, addStudentIdArr, removeStudentIdArr);
       if (response) {
         onClose();
         await fetchSessions();

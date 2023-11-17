@@ -52,6 +52,12 @@ class SessionService {
     return SessionDao.getSessionsInPastWeek();
   }
 
+  public async getSessionsByStudentIdBeforeToday(
+    studentId: string,
+  ): Promise<Session[]> {
+    return SessionDao.getSessionsByStudentIdBeforeToday(studentId);
+  }
+
   public async getSessionsInPastWeekByTeacherId(
     teacherId: string,
   ): Promise<Session[]> {
