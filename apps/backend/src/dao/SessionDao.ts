@@ -29,9 +29,14 @@ class SessionDao {
     });
   }
 
-  public async getSessionsByStudentId(studentId: string): Promise<Session[]> {
+  public async getSessionsByStudentIdBeforeToday(studentId: string): Promise<Session[]> {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Set to start of today
     return this.prisma.session.findMany({
       where: {
+        start: {
+          lt: today,
+        },
         students: {
           some: {
             id: studentId,

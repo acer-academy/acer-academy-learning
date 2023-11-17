@@ -48,7 +48,7 @@ sessionRouter.get('/:id', async (req, res) => {
 sessionRouter.get('/student/:studentId', async (req, res) => {
   try {
     const { studentId } = req.params;
-    const sessions = await SessionService.getSessionsByStudentId(
+    const sessions = await SessionService.getSessionsByStudentIdBeforeToday(
       studentId,
     );
     return res.status(200).json(sessions);

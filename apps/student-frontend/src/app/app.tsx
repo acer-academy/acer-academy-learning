@@ -46,6 +46,7 @@ import {
   VIEW_ADAPTIVE_QUIZ,
   VIEW_ASSIGNMENT,
   ATTENDANCE,
+  PAST_ATTENDANCE,
 } from '../libs/routes';
 import { ToastContainer } from 'react-toastify';
 import { StudentNotificationPreference } from '../pages/profile/StudentNotificationPreference';
@@ -72,6 +73,7 @@ import CalendarPage from '../pages/calendar/CalendarPage';
 import { ViewAllAssignments } from '../pages/subject/assignment/ViewAllAssignments';
 import { ViewAssignment } from '../pages/subject/assignment/ViewAssignment';
 import { Attendance } from '../pages/attendance/Attendance';
+import { AttendanceManagement } from '../pages/attendance/AttendanceManagement';
 
 export function App() {
   const queryClient = new QueryClient();
@@ -139,6 +141,7 @@ export function App() {
                 </Route>
                 <Route path={BOOKING}>
                   <Route path={BOOK_CLASSES} element={<CalendarPage />} />
+                  <Route path={PAST_ATTENDANCE} element={<AttendanceManagement />} />
                   <Route
                     path={BUY_CREDITS}
                     element={<CreditBundleManagement />}
