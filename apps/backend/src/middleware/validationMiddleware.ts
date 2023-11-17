@@ -2615,7 +2615,6 @@ export async function validateBodyAnnouncementFormatValid(
     const {
       title,
       message,
-      createdAt,
       targetSubjects,
       targetLevels,
       targetCentres,
@@ -2624,7 +2623,6 @@ export async function validateBodyAnnouncementFormatValid(
     const validBody = {
       title,
       message,
-      createdAt,
       targetSubjects,
       targetLevels,
       targetCentres,
@@ -2642,7 +2640,6 @@ export async function validateBodyAnnouncementFormatValid(
         (key === 'message' &&
           (typeof validBody[key] !== 'string' ||
             validBody[key].trim().length === 0)) ||
-        (key === 'createdAt' && !postgresDatetimeRegex.test(createdAt)) ||
         (key === 'targetSubjects' &&
           (!Array.isArray(validBody[key]) || validBody[key].length === 0)) ||
         (key === 'targetLevels' &&

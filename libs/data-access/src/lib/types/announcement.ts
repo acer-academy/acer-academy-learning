@@ -12,6 +12,7 @@ export interface AnnouncementData {
   targetSubjects: SubjectEnum[];
   targetLevels: LevelEnum[];
   targetCentres: CentreData[];
+  createdAt: Date;
 }
 
 export type CreateAnnouncementType = z.infer<typeof createAnnouncementSchema>;

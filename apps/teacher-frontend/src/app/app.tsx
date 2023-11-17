@@ -55,6 +55,7 @@ import {
   SESSIONS_FOR_ATTENDANCE,
   MARK_ATTENDANCE,
   ANNOUNCEMENTS,
+  CREATE_ANNOUNCEMENT,
 } from '../libs/routes';
 import { CreateQuestion } from '../pages/question-bank/CreateQuestion';
 import { QueryClient, QueryClientProvider } from 'react-query';
@@ -78,6 +79,7 @@ import { AssignmentAttemptManagement } from '../pages/assignments/AssignmentAtte
 import { AttendanceManagement } from '../pages/attendances/AttendanceManagement';
 import { MarkAttendance } from '../pages/attendances/MarkAttendance';
 import { AnnouncementManagement } from '../pages/announcements/AnnouncementManagement';
+import { CreateAnnouncement } from '../pages/announcements/CreateAnnouncement';
 
 export function App() {
   const queryClient = new QueryClient();
@@ -110,6 +112,10 @@ export function App() {
                     path={ANNOUNCEMENTS}
                     element={<AnnouncementManagement />}
                   />
+                  <Route
+                    path={CREATE_ANNOUNCEMENT}
+                    element={<CreateAnnouncement />}
+                  />{' '}
                 </Route>
                 {/* Subject routes */}
                 <Route path={SUBJECTS}>
