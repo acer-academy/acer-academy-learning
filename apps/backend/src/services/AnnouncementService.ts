@@ -14,7 +14,6 @@ export class AnnouncementService {
     const formattedAnnouncementData: Prisma.AnnouncementCreateInput = {
       title: announcementData.title,
       message: announcementData.message,
-      createdAt: announcementData.createdAt,
       targetSubjects: announcementData.targetSubjects,
       targetLevels: announcementData.targetLevels,
       teacher: {

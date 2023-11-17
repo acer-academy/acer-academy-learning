@@ -15,6 +15,7 @@ import {
   VIEW_CLASSES,
   ASSIGNMENTS,
   SESSIONS_FOR_ATTENDANCE,
+  ANNOUNCEMENTS,
 } from './routes';
 import {
   UserIcon,
@@ -30,6 +31,10 @@ export const NAV_SECTIONS: NavigationMenuItem[] = [
   {
     name: 'DASHBOARD',
     path: DASHBOARD,
+  },
+  {
+    name: 'ANNOUNCEMENTS',
+    path: ANNOUNCEMENTS,
   },
   {
     name: 'SUBJECTS',
