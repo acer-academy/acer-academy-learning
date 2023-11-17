@@ -29,6 +29,8 @@ export * from './lib/api/assignmentAttempt';
 export * from './lib/api/attendance';
 export * from './lib/api/announcement';
 export * from './lib/api/statistics';
+export * from './lib/api/reward';
+export * from './lib/api/redemption';
 
 // Object.freeze(api);
 
@@ -52,3 +54,5 @@ export * from './lib/types/takeAnswer';
 export * from './lib/types/statistics';
 export * from './lib/types/assignment';
 export * from './lib/types/announcement';
+export * from './lib/types/redemption';
+export * from './lib/types/reward';
