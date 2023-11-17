@@ -45,6 +45,7 @@ model Student {
 
   attendances        Attendance[]
   assignmentAttempts AssignmentAttempt[]
+  redemptions        Redemption[]
 }
 
 model Parent {
@@ -514,4 +515,25 @@ model Announcement {
 
   teacher   Teacher @relation(fields: [teacherId], references: [id])
   teacherId String  @db.Uuid
+}
+
+model Reward {
+  id           String  @id @default(uuid()) @db.Uuid
+  name         String
+  pointsNeeded Int
+  isActive     Boolean @default(true)
+
+  redemptions Redemption[]
+}
+
+model Redemption {
+  id         String   @id @default(uuid()) @db.Uuid
+  createdAt  DateTime
+  isRedeemed Boolean  @default(false)
+
+  reward   Reward @relation(fields: [rewardId], references: [id])
+  rewardId String @db.Uuid
+
+  student   Student @relation(fields: [studentId], references: [id])
+  studentId String  @db.Uuid
 }
