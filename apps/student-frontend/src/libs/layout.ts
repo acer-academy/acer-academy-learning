@@ -17,7 +17,7 @@ import {
   SUBJECTS,
   SUBJECT_MAIN,
   TAKES,
-  VIEW_CLASSES,
+  PAST_ATTENDANCE,
   ZOOM_LINK,
 } from './routes';
 import {
@@ -71,6 +71,7 @@ export const NAV_SECTIONS: NavigationMenuItem[] = [
     path: BOOKING,
     children: [
       { name: 'Book Classes', path: BOOK_CLASSES, icon: CalculatorIcon },
+      { name: 'View Past Attendance', path: PAST_ATTENDANCE, icon: PaperClipIcon },
       { name: 'Buy Credits', path: BUY_CREDITS, icon: VideoCameraIcon },
       { name: 'Past Transactions', path: PAST_TRANSACTIONS, icon: LinkIcon },
     ],

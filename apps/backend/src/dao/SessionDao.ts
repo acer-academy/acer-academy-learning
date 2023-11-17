@@ -29,6 +29,24 @@ class SessionDao {
     });
   }
 
+  public async getSessionsByStudentId(studentId: string): Promise<Session[]> {
+    return this.prisma.session.findMany({
+      where: {
+        students: {
+          some: {
+            id: studentId,
+          },
+        },
+      },
+      include: {
+        students: true,
+        teacher: true,
+        // attendances: true,
+      },
+      orderBy: [{ start: 'desc' }],
+    });
+  }
+
   public async getSessionsInPastWeekByTeacherId(
     teacherId: string,
   ): Promise<Session[]> {
