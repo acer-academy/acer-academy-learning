@@ -71,6 +71,7 @@ import { AttemptAdaptiveQuiz } from '../pages/subject/quiz/AttemptAdaptiveQuiz';
 import { ViewAllAssignments } from '../pages/subject/assignment/ViewAllAssignments';
 import { ViewAssignment } from '../pages/subject/assignment/ViewAssignment';
 import { Attendance } from '../pages/attendance/Attendance';
+import { StudentDashboard } from '../pages/dashboard/StudentDashboard';
 
 export function App() {
   const queryClient = new QueryClient();
@@ -100,10 +101,7 @@ export function App() {
                   </EnforceLoginStatePageWrapper>
                 }
               >
-                <Route
-                  path={DASHBOARD}
-                  element={<div>Welcome to AcerTech!</div>}
-                />
+                <Route path={DASHBOARD} element={<StudentDashboard />} />
                 <Route path={SUBJECTS}>
                   <Route path={SUBJECTS} element={<Subjects />} />
                   <Route path={SUBJECT_MAIN} element={<Subject />} />
