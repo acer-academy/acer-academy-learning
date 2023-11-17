@@ -19,7 +19,11 @@ export const SideBarSection = ({ section }: SideBarSection) => {
         {section.children?.map((item) => (
           <li key={item.name}>
             {(item.children && (
-              <DisclosureMenuItem key={item.name} item={item} />
+              <DisclosureMenuItem
+                disableNavigateOnClick
+                key={item.name}
+                item={item}
+              />
             )) || (
               <DisclosureLeafItem isChild={false} key={item.name} item={item} />
             )}

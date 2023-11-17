@@ -41,7 +41,6 @@ import {
   CREATE_QUIZ,
   QUIZZES,
   VIEW_CLASSES,
-  BOOK_CLASSES,
   UPDATE_QUIZ,
   VIEW_QUIZ_ANALYTICS,
   QUIZ_ANALYTICS_MGMT,
@@ -63,7 +62,6 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import { UpdateQuestion } from '../pages/question-bank/UpdateQuestion';
 import { Subjects } from '../pages/subjects/Subjects';
 import { Subject } from '../pages/subjects/Subject';
-import Calendar from '../pages/scheduling/Calendar';
 import CalendarPage from '../pages/calendar/CalendarPage';
 import { CreateQuiz } from '../pages/quiz/CreateQuiz';
 import { QuizManagement } from '../pages/quiz/QuizManagement';
@@ -191,7 +189,6 @@ export function App() {
                 {/* Scheduling routes */}
                 <Route path={SCHEDULING}>
                   <Route path={VIEW_CLASSES} element={<CalendarPage />} />
-                  <Route path={BOOK_CLASSES} element={<Calendar />} />
                   <Route
                     path={SESSIONS_FOR_ATTENDANCE}
                     element={<AttendanceManagement />}

@@ -8,6 +8,8 @@ export type NavigationMenuItem = {
     } & React.RefAttributes<SVGSVGElement>
   >;
   children?: NavigationMenuItem[];
+  // Means that path must match URL exactly
+  isStrict?: boolean;
 };
 
 export type NavigationSection = {

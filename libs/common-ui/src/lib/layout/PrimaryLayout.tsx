@@ -143,12 +143,36 @@ export const PrimaryLayout = ({
                     {[...navigationMenu, accountNavigation].map(
                       (item) =>
                         (item.children && (
-                          <DisclosureMenuItem item={item} key={item.name} />
+                          <DisclosureMenuItem
+                            activeTextStyle={'text-white'}
+                            textStyle={getThemeClassName(
+                              'text',
+                              role,
+                              true,
+                              700,
+                            )}
+                            panelBgStyle="bg-white text-gray-900"
+                            textHoverStyle={'hover:text-white'}
+                            bgStyle={'bg-gray-900'}
+                            bgHoverStyle={getThemeClassName(
+                              'hover:bg',
+                              role,
+                              false,
+                              700,
+                            )}
+                            item={item}
+                            key={item.name}
+                          />
                         )) || (
                           <DisclosureLeafItem
                             activeColor={'text-white'}
-                            textColor={'text-student-primary-700'}
-                            textHoverColor={'hover:text-gray-500'}
+                            textColor={getThemeClassName(
+                              'text',
+                              role,
+                              true,
+                              700,
+                            )}
+                            textHoverColor={'hover:text-white'}
                             groupHoverColor={getThemeClassName(
                               'group-hover:text',
                               role,
@@ -156,7 +180,12 @@ export const PrimaryLayout = ({
                               700,
                             )}
                             bgColor={'bg-gray-900'}
-                            bgHoverColor={'hover:bg-gray-100'}
+                            bgHoverColor={getThemeClassName(
+                              'hover:bg',
+                              role,
+                              false,
+                              700,
+                            )}
                             item={item}
                             key={item.name}
                             isChild={false}

@@ -39,11 +39,13 @@ export class TakeService {
       takenById,
       quizId,
       studentAnswers,
+      attemptedAt,
     }: {
       timeTaken: number;
       takenById: string;
       quizId: string;
       studentAnswers: TakeAnswer[];
+      attemptedAt?: string;
     } = takeData;
     let totalMarks = 0;
     const studentAnswersMap: Map<string, TakeAnswer[]> = new Map();
@@ -90,7 +92,7 @@ export class TakeService {
           ? quizQuestionMarks
           : 0;
     }
-    const formattedTakeData = {
+    const formattedTakeData: Prisma.TakeCreateInput = {
       marks: totalMarks,
       timeTaken: timeTaken,
       takenBy: {
@@ -105,6 +107,10 @@ export class TakeService {
         },
       },
     };
+
+    if (attemptedAt) {
+      formattedTakeData.attemptedAt = new Date(attemptedAt);
+    }
     return this.takeDao.createTake(formattedTakeData);
   }
 

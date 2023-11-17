@@ -4,6 +4,7 @@ import { NavLink, useLocation, useParams } from 'react-router-dom';
 import { classNames } from '../../utils/classNames';
 import { getThemeClassName } from '../../utils/getThemeClassName';
 import { useThemeContext } from '../contexts/ThemeContext';
+import { LayoutRole } from '../constants';
 
 export type DisclosureChildItem = {
   item: NavigationMenuItem;
@@ -62,8 +63,10 @@ export const DisclosureLeafItem = ({
     if (!path) {
       return false;
     }
-    return location.pathname.includes(path);
-  }, [location, path]);
+    return item.isStrict
+      ? location.pathname === path
+      : location.pathname.includes(path);
+  }, [location, path, item]);
 
   return (
     <NavLink
@@ -72,12 +75,23 @@ export const DisclosureLeafItem = ({
         // Needs to be fixed later on
         containsPath
           ? `
-          ${bgColor ?? getThemeClassName('bg', role, true, 700)} 
+          ${
+            bgColor ??
+            (role === LayoutRole.Admin
+              ? getThemeClassName('bg', role, true, 700)
+              : getThemeClassName('bg', role, true, 900))
+          } 
             ${activeColor ?? 'text-white'}`
-          : `${textColor ?? getThemeClassName('text', role, true, 200)} ${
-              textHoverColor ?? 'hover:text-white'
-            } ${
-              bgHoverColor ?? getThemeClassName('hover:bg', role, true, 700)
+          : `${
+              textColor ??
+              (role === LayoutRole.Admin
+                ? getThemeClassName('text', role, true, 200)
+                : 'text-gray-900')
+            } ${textHoverColor ?? 'hover:text-white'} ${
+              bgHoverColor ??
+              (role === LayoutRole.Admin
+                ? getThemeClassName('hover:bg', role, true, 700)
+                : getThemeClassName('hover:bg', role, false, 700))
             }`,
         sizeStyles,
       )}

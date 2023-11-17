@@ -15,8 +15,9 @@ import {
   REWARDS,
   SETTINGS,
   SUBJECTS,
+  SUBJECT_MAIN,
   TAKES,
-  VIEW_CLASSES,
+  PAST_ATTENDANCE,
   ZOOM_LINK,
 } from './routes';
 import {
@@ -29,6 +30,7 @@ import {
   Cog6ToothIcon,
   QuestionMarkCircleIcon,
   BookOpenIcon,
+  ChartBarIcon,
 } from '@heroicons/react/24/outline';
 export const NAV_SECTIONS: NavigationMenuItem[] = [
   {
@@ -39,6 +41,12 @@ export const NAV_SECTIONS: NavigationMenuItem[] = [
     name: 'SUBJECTS',
     path: SUBJECTS,
     children: [
+      {
+        name: 'Overview',
+        path: SUBJECT_MAIN,
+        icon: ChartBarIcon,
+        isStrict: true,
+      },
       { name: 'Assignments', path: ASSIGNMENTS, icon: PaperClipIcon },
       {
         name: 'Quizzes',
@@ -62,8 +70,8 @@ export const NAV_SECTIONS: NavigationMenuItem[] = [
     name: 'BOOKING',
     path: BOOKING,
     children: [
-      { name: 'View Classes', path: VIEW_CLASSES, icon: PaperClipIcon },
       { name: 'Book Classes', path: BOOK_CLASSES, icon: CalculatorIcon },
+      { name: 'View Past Attendance', path: PAST_ATTENDANCE, icon: PaperClipIcon },
       { name: 'Buy Credits', path: BUY_CREDITS, icon: VideoCameraIcon },
       { name: 'Past Transactions', path: PAST_TRANSACTIONS, icon: LinkIcon },
     ],

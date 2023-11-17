@@ -11,22 +11,38 @@ import { useThemeContext } from '../contexts/ThemeContext';
 import { LayoutRole } from '../constants';
 
 export type DisclosureMenuItemProps = {
+  disableNavigateOnClick?: boolean;
+  textStyle?: string;
+  activeTextStyle?: string;
+  textHoverStyle?: string;
+  bgStyle?: string;
+  bgHoverStyle?: string;
+  panelBgStyle?: string;
   item: NavigationMenuItem;
 };
 
-export const DisclosureMenuItem = ({ item }: DisclosureMenuItemProps) => {
+export const DisclosureMenuItem = ({
+  disableNavigateOnClick,
+  textHoverStyle,
+  activeTextStyle,
+  textStyle,
+  bgStyle,
+  bgHoverStyle,
+  item,
+  panelBgStyle,
+}: DisclosureMenuItemProps) => {
   const [isActive] = useMenuItem(item);
   const { role } = useThemeContext();
 
   const disclosureProps = useMemo<Partial<DisclosureButtonProps<ElementType>>>(
     () =>
-      item.path
+      item.path && !disableNavigateOnClick
         ? {
             as: NavLink,
             to: item.path,
           }
         : {},
-    [item],
+    [item, disableNavigateOnClick],
   );
   return (
     <Disclosure as="div">
@@ -36,18 +52,17 @@ export const DisclosureMenuItem = ({ item }: DisclosureMenuItemProps) => {
             {...disclosureProps}
             className={classNames(
               isActive
-                ? `${getThemeClassName('bg', role, true, 700)} ${
+                ? `${bgStyle ?? getThemeClassName('bg', role, true, 700)} ${
                     role === LayoutRole.Admin ? 'text-white' : 'text-gray-700'
-                  }`
+                  } ${activeTextStyle ?? 'text-white'}`
                 : // : 'text-admin-primary-200 hover:text-white hover:bg-admin-primary-700',
                   `
-                    ${getThemeClassName('text', role, true, 200)}
-                   hover:text-white ${getThemeClassName(
-                     'hover:bg',
-                     role,
-                     true,
-                     700,
-                   )}`,
+                    ${textStyle ?? getThemeClassName('text', role, true, 200)}
+                   ${textHoverStyle ?? 'hover:text-white'} 
+                   ${
+                     bgHoverStyle ??
+                     getThemeClassName('hover:bg', role, true, 700)
+                   }`,
               `group flex items-center w-full text-left ${
                 open ? 'rounded-t-md' : 'rounded-md'
               } p-2 gap-x-3 text-base leading-6 font-semibold`,
@@ -57,14 +72,11 @@ export const DisclosureMenuItem = ({ item }: DisclosureMenuItemProps) => {
               <item.icon
                 className={classNames(
                   isActive
-                    ? `text-white`
+                    ? `${activeTextStyle ?? 'text-white'}`
                     : // : `text-admin-primary-200 group-hover:text-white`,
-                      `${getThemeClassName(
-                        'text',
-                        role,
-                        true,
-                        200,
-                      )} group-hover:text-white`,
+                      `${
+                        textStyle ?? getThemeClassName('text', role, true, 200)
+                      } group-hover:text-white`,
                   'h-6 w-6 shrink-0',
                 )}
                 aria-hidden="true"
@@ -88,7 +100,9 @@ export const DisclosureMenuItem = ({ item }: DisclosureMenuItemProps) => {
           </Disclosure.Button>
           <Disclosure.Panel
             as="ul"
-            className={`rounded-b ${getThemeClassName('bg', role, true, 900)}`}
+            className={`rounded-b ${
+              panelBgStyle ?? getThemeClassName('bg', role, true, 900)
+            }`}
           >
             {item.children?.map((subItem) => (
               <DisclosureLeafItem key={subItem.name} item={subItem} />

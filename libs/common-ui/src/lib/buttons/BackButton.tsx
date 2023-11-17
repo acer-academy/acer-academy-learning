@@ -1,9 +1,4 @@
-import React, {
-  ButtonHTMLAttributes,
-  DetailedHTMLProps,
-  useEffect,
-  useState,
-} from 'react';
+import React, { ButtonHTMLAttributes, DetailedHTMLProps } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { GenericButton } from './GenericButton';
 import { ArrowUturnLeftIcon } from '@heroicons/react/24/outline';
@@ -26,17 +21,12 @@ export const BackButton = ({ path, className }: BackButtonProps) => {
     }
   };
 
-  useEffect(() => {
-    console.log(className);
-  }, [className]);
-
   return (
     <GenericButton
       text="Back"
       type="button"
-      icon={<ArrowUturnLeftIcon className="h-4 w-4" />}
+      leftIcon={<ArrowUturnLeftIcon className="h-4 w-4" />}
       onClick={handleOnClick}
-      className={className ?? 'hover:bg-gray-700'}
     />
   );
 };

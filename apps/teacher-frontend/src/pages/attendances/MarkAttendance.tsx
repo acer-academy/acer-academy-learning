@@ -88,7 +88,7 @@ export const MarkAttendance: React.FC = () => {
               setGenerateQrCode(true);
             }}
           >
-            Generate QrCode
+            Generate QR Code
           </button>
         </div>
       </div>

@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import moment from 'moment';
+import { getCentreById } from '@acer-academy-learning/data-access';
 
 interface EventModalProps {
   onClose: () => void;
@@ -7,6 +8,25 @@ interface EventModalProps {
 }
 
 export const EventModal: React.FC<EventModalProps> = ({ onClose, event }) => {
+
+  const [centreData, setCentreData] = useState(null);
+
+  useEffect(() => {
+    const fetchCentre = async () => {
+      try {
+        const centreData = await getCentreById(event.classroom.centreId);
+        setCentreData(centreData.data);
+        console.log(centreData);
+      } catch (error) {
+        console.error('Error fetching session details:', error);
+        // Optional: Handle error, e.g., show error message
+      }
+    };
+
+    fetchCentre();
+  }, [event.id]);
+
+
   return (
     <div className="fixed z-10 inset-0 overflow-y-auto">
       <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
@@ -21,30 +41,51 @@ export const EventModal: React.FC<EventModalProps> = ({ onClose, event }) => {
             <div className="mt-2">
               <p>
                 <strong>Start:</strong>{' '}
-                {moment(event?.start).format('MMMM Do YYYY, h:mm:ss a')}
+                {moment(event?.start).format('MMMM Do YYYY, h:mm a')}
               </p>
               <p>
                 <strong>End:</strong>{' '}
-                {moment(event?.end).format('MMMM Do YYYY, h:mm:ss a')}
+                {moment(event?.end).format('MMMM Do YYYY, h:mm a')}
+              </p>
+              <div className="w-full border-t border-gray-300 mt-2 mb-2" />
+              <p>
+                <strong>Centre:</strong> {centreData?.name}
               </p>
               <p>
-                <strong>Teacher:</strong> {event?.teacher?.firstName}{' '}
-                {event?.data?.session?.teacher?.lastName}
-              </p>
-              <p>
-                <strong>Email:</strong> {event?.teacher?.email}
-              </p>
-              <p>
-                <strong>Levels:</strong> {event?.levels?.join(', ')}
-              </p>
-              <p>
-                <strong>Subjects:</strong> {event?.subjects?.join(', ')}
-              </p>
-              <p>
-                <strong>Centre:</strong> {event?.classroom?.centre?.name}
+                <strong>Address:</strong> {centreData?.address}
               </p>
               <p>
                 <strong>Classroom:</strong> {event?.classroom?.name}
+              </p>
+              <div className="w-full border-t border-gray-300 mt-2 mb-2" />
+               <p>
+                <strong>Levels:</strong> {event?.levels?.join(', ')}
+              </p>
+              <p>
+                <strong>Subjects:</strong>{' '}
+                {event?.subjects
+                  ?.map(
+                    (subject) =>
+                      subject.charAt(0) + subject.slice(1).toLowerCase(),
+                  )
+                  .join(', ')}
+              </p>
+              <div className="w-full border-t border-gray-300 mt-2 mb-2" />
+
+              <p>
+                <strong>Teacher:</strong> {event?.teacher?.firstName}{' '}
+                {event?.teacher?.lastName}
+              </p>
+              <div className="w-full border-t border-gray-300 mt-2 mb-2" />
+              <p>
+                <strong>Students:</strong>{' '}
+                {event?.students
+                  ?.map((student) => student.firstName)
+                  .join(', ')}
+              </p>
+              <p>
+                <strong>Available slots:</strong>{' '}
+                {event?.classroom.capacity - event?.students.length}
               </p>
             </div>
           </div>

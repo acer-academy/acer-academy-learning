@@ -80,8 +80,8 @@ class ClassService {
     classId: string,
     classData: Prisma.ClassUncheckedUpdateInput,
     sessionData: Prisma.SessionUncheckedUpdateInput,
-    addStudentIdArr: Array<String>,
-    removeStudentIdArr: Array<String>,
+    addStudentIdArr: Array<string>,
+    removeStudentIdArr: Array<string>,
   ): Promise<Session[]> {
     const sessions: Session[] = await SessionService.getFutureSessionsOfClass(
       classId,
@@ -146,6 +146,7 @@ class ClassService {
           },
         };
       }
+      let totalBooking = addStudentIdArr.length - removeStudentIdArr.length;
       for (const index in sessions) {
         if (sessions[index].id === sessionId) {
           start = true;
@@ -154,6 +155,16 @@ class ClassService {
           if (sessions[index].start < currDate) {
             await SessionService.deleteSession(sessions[index].id);
           } else {
+            const check = await SessionService.checkCapacityAvailability(
+              sessions[index].id,
+              sessions[index].classroomId,
+              totalBooking,
+            );
+            if (!check) {
+              throw new Error(
+                'Unable to update sessions because classroom has hit its maximum capacity.',
+              );
+            }
             const updatedSession = await SessionService.updateSession(
               sessions[index].id,
               {

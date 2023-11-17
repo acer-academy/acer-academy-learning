@@ -28,7 +28,7 @@ export const PrimaryDesktopSideBar = ({
                   <DisclosureLeafItem
                     activeColor={'text-white'}
                     textColor={getThemeClassName('text', role, true, 700)}
-                    textHoverColor={'hover:text-gray-500'}
+                    textHoverColor={'hover:text-white'}
                     groupHoverColor={getThemeClassName(
                       'group-hover:text',
                       role,
@@ -36,7 +36,12 @@ export const PrimaryDesktopSideBar = ({
                       700,
                     )}
                     bgColor={'bg-gray-900'}
-                    bgHoverColor={'hover:bg-gray-100'}
+                    bgHoverColor={getThemeClassName(
+                      'hover:bg',
+                      role,
+                      false,
+                      700,
+                    )}
                     item={item}
                     key={item.name}
                     isChild={false}

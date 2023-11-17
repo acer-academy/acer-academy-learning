@@ -7,7 +7,11 @@ import { ClassroomData } from 'libs/data-access/src/lib/types/classroom';
 import { Admin } from 'libs/data-access/src/lib/types/admin';
 import { Teacher, TeacherData } from 'libs/data-access/src/lib/types/teacher';
 import { useAuth } from '@acer-academy-learning/common-ui';
-import { useToast } from '@acer-academy-learning/common-ui';
+import {
+  GenericBadge,
+  GenericComboBox,
+  useToast,
+} from '@acer-academy-learning/common-ui';
 import './CalendarView.css';
 import { ClassFrequencyEnum } from '@prisma/client';
 import { XMarkIcon } from '@heroicons/react/24/solid';
@@ -24,6 +28,8 @@ import {
   deleteSession,
   updateSession,
 } from '@acer-academy-learning/data-access';
+import { StudentData } from 'libs/data-access/src/lib/types/student';
+import { getAllStudents as apiGetAllStudents } from '@acer-academy-learning/data-access';
 
 interface EventFormProps {
   session: SessionData;
@@ -76,6 +82,10 @@ export default function EventForm({
     // add more rows as needed
   ];
 
+  const areAllFieldsValidated = (errors: FormErrors) => {
+    return Object.values(errors).every((value) => value === null);
+  };
+
   const { displayToast, ToastType } = useToast();
   const [centres, setCentres] = useState<CentreData[]>([]);
   const [classrooms, setClassrooms] = useState<ClassroomData[]>([]);
@@ -98,6 +108,11 @@ export default function EventForm({
     session.teacherId || '',
   );
 
+  //remark
+  const [allocatedStudents, setAllocatedStudents] = useState<string[]>(
+    session.students ? session.students.map(student => student.id) : []
+  );
+
   const { user } = useAuth<Admin>();
 
   const [sessionState, setSessionState] = useState({
@@ -113,7 +128,18 @@ export default function EventForm({
     end: sessionData.end,
     teacherId: selectedTeacher,
     classId: null,
+    students: session.students
   });
+
+  interface FormErrors {
+    dateError: string | null;
+    recurringEndDateError: string | null;
+    selectedTeacher: string | null;
+    selectedCentre: string | null;
+    selectedClassroom: string | null;
+    selectedLevels: string | null;
+    selectedSubjects: string | null;
+  }
 
   const [isRecurring, setIsRecurring] = useState(
     sessionData.class ? true : false,
@@ -136,6 +162,45 @@ export default function EventForm({
     frequency: recurringType as ClassFrequencyEnum,
   });
 
+  const [formErrors, setFormErrors] = useState<FormErrors>({
+    dateError: null,
+    recurringEndDateError: null,
+    selectedTeacher: null,
+    selectedCentre: null,
+    selectedClassroom: null,
+    selectedLevels: null,
+    selectedSubjects: null,
+  });
+
+  const validateForm = () => {
+    const newErrors = {
+      ...formErrors, // retain any other previous errors not checked here
+      dateError:
+        sessionState.end <= sessionState.start
+          ? 'Start date needs to be before end date'
+          : null,
+      recurringEndDateError:
+        isRecurring && recurringState.endRecurringDate <= sessionState.end
+          ? 'Recurring end date needs to be after end time date'
+          : null,
+      selectedTeacher: !selectedTeacher ? 'Teacher needs to be selected' : null,
+      selectedCentre: !selectedCentre ? 'Centre needs to be selected' : null,
+      selectedClassroom: !selectedClassroom
+        ? 'Classroom needs to be selected'
+        : null,
+      selectedLevels:
+        sessionState.levels.length === 0
+          ? 'At least one level needs to be selected'
+          : null,
+      selectedSubjects:
+        sessionState.subjects.length === 0
+          ? 'At least one subject needs to be selected'
+          : null,
+    };
+
+    return newErrors;
+  };
+
   useEffect(() => {
     setRecurringState((prevState) => ({
       ...prevState,
@@ -157,6 +222,7 @@ export default function EventForm({
         .map((subject) => SubjectEnum[subject as keyof typeof SubjectEnum]),
       classroomId: selectedClassroom,
       teacherId: selectedTeacher,
+      //students:allocatedStudents,
       // ... any other fields you want to watch
     }));
   }, [
@@ -165,6 +231,7 @@ export default function EventForm({
     selectedLevels,
     selectedSubjects,
     selectedTeacher,
+    //allocatedStudents
   ]);
 
   const label = session?.id ? 'Update' : 'Create';
@@ -284,23 +351,47 @@ export default function EventForm({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    const errors = validateForm();
+
+    setFormErrors(errors);
+
+    //issue is that even tho it sets state in validateform function above for formErrors, it doesnt take the latest state why, do i need it to be async?
+
+    areAllFieldsValidated(errors);
+
+    if (!areAllFieldsValidated(errors)) {
+      return;
+    }
+
     if (!session.id) {
       if (!isRecurring) {
-        const response = await createSession(sessionState);
-        if (response) {
+        try {
+          const response = await createSession(sessionState, allocatedStudents);
+          console.log(response)
+          if (response) {
+            onClose();
+            await fetchSessions();
+            displayToast('Session created successfully!', ToastType.SUCCESS);
+          }
+        } catch (err) {
           onClose();
-          await fetchSessions();
-          displayToast('Session created successfully!', ToastType.SUCCESS);
+          displayToast(`${err.response.data.error}`, ToastType.ERROR);
         }
       } else {
-        const response = await createRecurringClass([
-          recurringState,
-          sessionState,
-        ]);
-        if (response) {
+        try {
+          const response = await createRecurringClass([
+            recurringState,
+            sessionState,
+            allocatedStudents
+          ]);
+          if (response) {
+            onClose();
+            await fetchSessions();
+            displayToast('Session created successfully!', ToastType.SUCCESS);
+          }
+        } catch (err) {
           onClose();
-          await fetchSessions();
-          displayToast('Session created successfully!', ToastType.SUCCESS);
+          displayToast(`${err.response.data.error}`, ToastType.ERROR);
         }
       }
     } else {
@@ -314,14 +405,23 @@ export default function EventForm({
 
   const handleUpdateSession = async (sessionId: string, sessionState: any) => {
     try {
-      const response = await updateSession(session.id, sessionState);
+      const initialStudents =  session.students ? session.students.map(student => student.id) : []
+      const latestStudents = allocatedStudents
+      const addStudentIdArr = latestStudents.filter(student => !initialStudents.includes(student));
+      const removeStudentIdArr = initialStudents.filter(student => !latestStudents.includes(student));
+
+      const {students, ...sessionStateWithoutStudents} = sessionState;
+
+      const response = await updateSession(session.id, sessionStateWithoutStudents, addStudentIdArr, removeStudentIdArr);
       if (response) {
         onClose();
         await fetchSessions();
         displayToast('Session updated successfully!', ToastType.SUCCESS);
       }
     } catch (err) {
-      // setError(err);
+      console.log(err);
+      onClose();
+      displayToast(`${err.response.data.error}`, ToastType.ERROR);
     } finally {
       // setLoading(false);
     }
@@ -333,10 +433,20 @@ export default function EventForm({
   ) => {
     try {
       if (session.class) {
+
+          // get original ids from session.students
+      const initialStudents =  session.students ? session.students.map(student => student.id) : []
+      // get latest student ids from allocatedStudents
+      const latestStudents = allocatedStudents
+
+      const addStudentIdArr = latestStudents.filter(student => !initialStudents.includes(student));
+      const removeStudentIdArr = initialStudents.filter(student => !latestStudents.includes(student));
         //is recurring
         const response = await updateRecurringClass(sessionId, classId, [
           recurringState,
           sessionState,
+          addStudentIdArr,
+          removeStudentIdArr
         ]);
         if (response) {
           setShowUpdateModal(false);
@@ -346,7 +456,8 @@ export default function EventForm({
         }
       }
     } catch (err) {
-      // setError(err);
+      onClose();
+      displayToast(`${err.response.data.error}`, ToastType.ERROR);
     } finally {
       // setLoading(false);
     }
@@ -367,6 +478,25 @@ export default function EventForm({
   const closeUpdateModal = () => {
     setShowUpdateModal(false);
   };
+
+  const [allStudents, setAllStudents] = useState<StudentData[]>([]);
+
+  const getAllStudents = async () => {
+    try {
+      const response = await apiGetAllStudents();
+      const studentData = response.data;
+      setAllStudents(studentData.students);
+    } catch (error) {
+      displayToast(
+        'Students could not be retrieved from the server.',
+        ToastType.ERROR,
+      );
+    }
+  };
+
+  useEffect(() => {
+    getAllStudents();
+  }, []);
 
   return (
     <div className="modal">
@@ -413,6 +543,10 @@ export default function EventForm({
               />
             </div>
           </div>
+
+          {formErrors.dateError && (
+            <div className="text-red-500">{formErrors.dateError}</div>
+          )}
 
           <div className="mt-2">
             <label className="flex items-center">
@@ -463,6 +597,11 @@ export default function EventForm({
                     className="w-[450px] block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   />
                 </div>
+                {formErrors.recurringEndDateError && (
+                  <div className="text-red-500">
+                    {formErrors.recurringEndDateError}
+                  </div>
+                )}
               </div>
             )}
           </div>
@@ -491,6 +630,9 @@ export default function EventForm({
                 ))}
               </select>
             </div>
+            {formErrors.selectedTeacher && (
+              <div className="text-red-500">{formErrors.selectedTeacher}</div>
+            )}
           </div>
 
           <div className="mt-4">
@@ -519,6 +661,9 @@ export default function EventForm({
                 ))}
               </select>
             </div>
+            {formErrors.selectedCentre && (
+              <div className="text-red-500">{formErrors.selectedCentre}</div>
+            )}
           </div>
 
           <div className="mt-4">
@@ -547,7 +692,43 @@ export default function EventForm({
                 ))}
               </select>
             </div>
+            {formErrors.selectedClassroom && (
+              <div className="text-red-500">{formErrors.selectedClassroom}</div>
+            )}
           </div>
+
+          <div className="flex flex-wrap my-4 gap-4">
+            {allocatedStudents.length > 0 ? (
+              allStudents
+                .filter((student) => allocatedStudents.includes(student.id))
+                .map((student) => (
+                  <div key={student.id}>
+                    <GenericBadge
+                      badge={`${student.firstName} ${student.lastName}`}
+                      onRemove={() =>
+                        setAllocatedStudents(
+                          allocatedStudents.filter((id) => id !== student.id),
+                        )
+                      }
+                    ></GenericBadge>
+                  </div>
+                ))
+            ) : (
+              <span className="text-gray-600 italic mx-2">
+                No students have been allocated to this session yet.
+              </span>
+            )}
+          </div>
+
+          <GenericComboBox
+            options={allStudents.map((student) => student.id)}
+            onChange={(selectedIds) => setAllocatedStudents(selectedIds)}
+            selected={allocatedStudents}
+            displayValue={(id) => {
+              const curr = allStudents.find((student) => student.id == id);
+              return curr ? `${curr.firstName} ${curr.lastName}` : '';
+            }}
+          ></GenericComboBox>
 
           <div className="flex items-center mt-4">
             <label
@@ -573,6 +754,9 @@ export default function EventForm({
                 </div>
               ))}
             </div>
+            {formErrors.selectedLevels && (
+              <div className="text-red-500">{formErrors.selectedLevels}</div>
+            )}
           </div>
 
           <div className="flex items-center mt-6">
@@ -597,6 +781,9 @@ export default function EventForm({
                 ))}
               </div>
             </div>
+            {formErrors.selectedSubjects && (
+              <div className="text-red-500">{formErrors.selectedSubjects}</div>
+            )}
           </div>
 
           <div className="flex justify-center mt-4 space-x-4">

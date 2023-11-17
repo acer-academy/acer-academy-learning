@@ -4,13 +4,17 @@ import { QuizQuestionService } from './QuizQuestionService';
 import {
   QuizQuestionTypeEnum,
   QuizQuestion,
-  TakeAnswer,
   QuizAnswer,
-  Quiz,
+  QuizQuestionTopicEnum,
 } from '@prisma/client';
 import { QuizAnswerService } from './QuizAnswerService';
 import { QuizOnQuizQuestionDao } from '../dao/QuizOnQuizQuestionDao';
 import { TakeService } from './TakeService';
+import { TakeDao } from '../dao/TakeDao';
+import { AllTakesStudentParams } from '../types/takes';
+import { ElementOf, ThenArg } from '../types';
+import { SubjectWiseMetaData } from '../types/statistics';
+
 class QuizStatisticsService {
   constructor(
     private takeAnswerService = new TakeAnswerService(),
@@ -19,6 +23,7 @@ class QuizStatisticsService {
     private quizAnswerService = new QuizAnswerService(),
     private quizOnQuizQuestionDao = new QuizOnQuizQuestionDao(),
     private quizService = new QuizService(),
+    private takeDao = new TakeDao(),
   ) {}
 
   // View correct/incorrect statistics per question
@@ -220,6 +225,130 @@ class QuizStatisticsService {
       averageTotalTimeTaken: averageTotalTimeTaken,
       quizDetails: rest,
       quizQuestions: formattedQuizQuestions,
+    };
+  }
+
+  public async getQuizStatisticsStudentTakesFilteredBy(
+    filter: AllTakesStudentParams,
+  ) {
+    return this.takeDao.getAllTakesOfStudent(filter);
+  }
+
+  public async getTotalMarksByQuizId(quizId: string) {
+    const res = await this.quizService.getQuizById(quizId);
+    return res.totalMarks;
+  }
+
+  private processTakeAnswersForAverageScore(
+    take: ElementOf<
+      ThenArg<ReturnType<typeof this.getQuizStatisticsStudentTakesFilteredBy>>
+    >,
+    topicToMetadataMap: Map<string, SubjectWiseMetaData>,
+    questionIdToPreviousMarksMap: Map<string, number>,
+  ) {
+    const takeAnswers = take.studentAnswers;
+    // 1. Group up answers by questionId
+    const questionIdToAnswerMap = new Map<string, typeof takeAnswers>();
+    takeAnswers.forEach((answer) => {
+      const currentQuestionId = answer.question.id;
+      const currentAnswerArray =
+        questionIdToAnswerMap.get(currentQuestionId) ?? [];
+      currentAnswerArray.push(answer);
+      if (!questionIdToAnswerMap.has(currentQuestionId)) {
+        questionIdToAnswerMap.set(currentQuestionId, currentAnswerArray);
+      }
+    });
+
+    // 2. For each question, check if it is correct and assign in a map based on topics chosen
+    questionIdToAnswerMap.forEach((value) => {
+      const currentQuestion = value[0].question;
+      const correctOptionsByStudent = value.filter((value) => value.isCorrect);
+      const correctOptions = currentQuestion.answers.filter(
+        (value) => value.isCorrect,
+      );
+      const isCorrect =
+        correctOptionsByStudent.length === correctOptions.length;
+      const topics = currentQuestion.topics;
+      topics.map((topic) => {
+        //@TODO: To change if ever refactor topics
+        const currentMetaData = topicToMetadataMap.get(topic) ?? {
+          marksAchieved: 0,
+          totalMarks: 0,
+          questionIdToTakeIdMap: {},
+        };
+        currentMetaData.marksAchieved += isCorrect ? 1 : 0;
+        currentMetaData.totalMarks++;
+        if (isCorrect) {
+          delete currentMetaData.questionIdToTakeIdMap[currentQuestion.id];
+        } else {
+          currentMetaData.questionIdToTakeIdMap[currentQuestion.id] = take.id;
+        }
+
+        // Remove previous marks recorded if encountered before
+        if (questionIdToPreviousMarksMap.has(currentQuestion.id)) {
+          currentMetaData.marksAchieved -= questionIdToPreviousMarksMap.get(
+            currentQuestion.id,
+          );
+          currentMetaData.totalMarks--;
+        }
+
+        if (!topicToMetadataMap.has(topic)) {
+          topicToMetadataMap.set(topic, currentMetaData);
+        }
+      });
+      // Update previous marks to new
+      questionIdToPreviousMarksMap.set(currentQuestion.id, isCorrect ? 1 : 0);
+    });
+  }
+
+  public async getQuizStatisticsStudentSpiderChartDataBy(data: {
+    filter: AllTakesStudentParams;
+    onlyAttemptedTopics: boolean;
+    topics?: QuizQuestionTopicEnum[];
+  }) {
+    const topicToMetaDataMap = new Map<string, SubjectWiseMetaData>();
+    const questionIdToPreviousMarksMap = new Map<string, number>();
+    const filter = data.filter;
+    const latestDatesByQuizId =
+      await this.takeDao.getLatestAttemptDateOfQuizzesForStudentsWhere(filter);
+    for (const latestDate of latestDatesByQuizId) {
+      const startDate = latestDate._max.attemptedAt;
+      const quizId = latestDate.quizId;
+      filter.startDate = startDate.toISOString();
+      filter.quizIds = [quizId];
+
+      const currentTake = await this.getQuizStatisticsStudentTakesFilteredBy(
+        filter,
+      );
+
+      this.processTakeAnswersForAverageScore(
+        currentTake[0],
+        topicToMetaDataMap,
+        questionIdToPreviousMarksMap,
+      );
+    }
+    // Group for each question
+    const topics = data.topics;
+    const labelsArr = [];
+    const dataArr = [];
+    const metaDataArr = [];
+    // Datasets are identified by index
+    [...topicToMetaDataMap.keys()]
+      .sort((topic, anotherTopic) => topic.localeCompare(anotherTopic))
+      .forEach((topic) => {
+        if (topics && !topics.includes(topic as QuizQuestionTopicEnum)) {
+          return;
+        }
+        const value = topicToMetaDataMap.get(topic);
+        labelsArr.push(topic);
+        dataArr.push((value.marksAchieved / value.totalMarks) * 10);
+        metaDataArr.push(value.questionIdToTakeIdMap ?? {});
+      });
+
+    return {
+      labelsArr: labelsArr,
+      dataArr: dataArr,
+      metaDataArr: metaDataArr,
     };
   }
 }

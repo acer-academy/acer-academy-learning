@@ -1,4 +1,4 @@
-import { Session, Prisma, PrismaClient } from '@prisma/client';
+import { Session, Student, Prisma, PrismaClient } from '@prisma/client';
 
 class SessionDao {
   private prisma: PrismaClient;
@@ -26,6 +26,29 @@ class SessionDao {
         class: true,
       },
       orderBy: [{ start: 'asc' }],
+    });
+  }
+
+  public async getSessionsByStudentIdBeforeToday(studentId: string): Promise<Session[]> {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Set to start of today
+    return this.prisma.session.findMany({
+      where: {
+        start: {
+          lt: today,
+        },
+        students: {
+          some: {
+            id: studentId,
+          },
+        },
+      },
+      include: {
+        students: true,
+        teacher: true,
+        // attendances: true,
+      },
+      orderBy: [{ start: 'desc' }],
     });
   }
 
@@ -144,6 +167,18 @@ class SessionDao {
     return this.prisma.session.findUnique({
       where: { id },
       include: { teacher: true, class: true, classroom: true, students: true },
+    });
+  }
+
+  public async getStudentsInSession(sessionId: string): Promise<Student[]> {
+    return this.prisma.student.findMany({
+      where: {
+        sessions: {
+          some: {
+            id: sessionId,
+          },
+        },
+      },
     });
   }
 

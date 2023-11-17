@@ -7,6 +7,7 @@ import {
   validateSessionDate,
   validateClassAndSessionExist,
   validateParamStudentExists,
+  validateEnoughCapacity,
 } from '../middleware/validationMiddleware';
 import { MessageService, MessageTemplate } from '../services/MessageService';
 
@@ -44,6 +45,19 @@ sessionRouter.get('/:id', async (req, res) => {
   }
 });
 
+sessionRouter.get('/student/:studentId', async (req, res) => {
+  try {
+    const { studentId } = req.params;
+    const sessions = await SessionService.getSessionsByStudentIdBeforeToday(
+      studentId,
+    );
+    return res.status(200).json(sessions);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: error.message });
+  }
+});
+
 sessionRouter.get('/week/:teacherId', async (req, res) => {
   try {
     const { teacherId } = req.params;
@@ -65,7 +79,7 @@ sessionRouter.post(
   async (req, res) => {
     try {
       const input: Prisma.SessionUncheckedCreateInput = req.body[0];
-      const studentIdArr: Array<String> = req.body[1];
+      const studentIdArr: Array<string> = req.body[1];
       const session = await SessionService.createSession(input, studentIdArr);
       // Send whatsapp message
       await messageService.sendWhatsappMessage(MessageTemplate.NEW_CLASS_ALERT);
@@ -86,8 +100,8 @@ sessionRouter.put(
     try {
       const { id } = req.params;
       const input: Prisma.SessionUncheckedUpdateInput = req.body[0];
-      const addStudentIdArr: Array<String> = req.body[1];
-      const removeStudentIdArr: Array<String> = req.body[2];
+      const addStudentIdArr: Array<string> = req.body[1];
+      const removeStudentIdArr: Array<string> = req.body[2];
       const session = await SessionService.updateSession(
         id,
         input,
@@ -109,6 +123,7 @@ sessionRouter.put(
 sessionRouter.put(
   '/book/:sessionId/:studentId',
   validateClassAndSessionExist,
+  validateEnoughCapacity,
   validateParamStudentExists,
   async (req, res) => {
     try {

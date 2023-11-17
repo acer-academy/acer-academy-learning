@@ -20,7 +20,8 @@ export const Attendance: React.FC = () => {
   const { user } = useAuth<Student>();
   const { displayToast, ToastType } = useToast();
   const [session, setSession] = useState<SessionData>();
-  const [attendance, setAttendance] = useState<AttendanceData>();
+  const [isEditing, setIsEditing] = useState(false);
+  const [attendance, setAttendance] = useState(false);
 
   const getSession = async () => {
     try {
@@ -39,8 +40,11 @@ export const Attendance: React.FC = () => {
         sessionId || '',
         user?.id || '',
       );
-      const attendance: AttendanceData = response.data;
-      setAttendance(attendance);
+      if (response.data.length === 0) {
+        setAttendance(false);
+      } else {
+        setAttendance(true);
+      }
     } catch (err: any) {
       displayToast(`${err.response.data.error}`, ToastType.ERROR);
       console.log(err);
@@ -49,11 +53,13 @@ export const Attendance: React.FC = () => {
 
   const markAttendance = async () => {
     try {
+      setIsEditing(true);
       const createAttendance: AttendanceCreateData = {
         studentId: user?.id || '',
         sessionId: sessionId || '',
       };
       await apiCreateAttendance(createAttendance);
+      setIsEditing(false);
       displayToast('Attendance marked!', ToastType.SUCCESS);
     } catch (err: any) {
       displayToast(`${err.response.data.error}`, ToastType.ERROR);
@@ -64,7 +70,7 @@ export const Attendance: React.FC = () => {
   useEffect(() => {
     getSession();
     getAttendance();
-  }, []);
+  }, [isEditing]);
 
   return (
     (session && (
@@ -87,17 +93,17 @@ export const Attendance: React.FC = () => {
         {session.students?.some((student) => student.id === user?.id) ? (
           attendance ? (
             <button
-              onClick={() => markAttendance()}
-              className="flex w-80 items-center justify-center rounded-md bg-student-primary-900 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-student-secondary-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-student-secondary-600"
-            >
-              I'm here
-            </button>
-          ) : (
-            <button
               disabled={true}
               className="inline-flex w-80 justify-center px-4 py-2 text-sm font-medium text-white rounded-md focus:outline-none bg-gray-300 text-gray-500 cursor-not-allowed"
             >
               Attendance marked
+            </button>
+          ) : (
+            <button
+              onClick={() => markAttendance()}
+              className="flex w-80 items-center justify-center rounded-md bg-student-primary-900 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-student-secondary-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-student-secondary-600"
+            >
+              I'm here
             </button>
           )
         ) : (

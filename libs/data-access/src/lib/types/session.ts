@@ -1,4 +1,5 @@
 import { LevelEnum, SubjectEnum } from './CommonTypes';
+import { AttendanceData } from './attendance';
 import { ClassData } from './class';
 import { ClassroomData } from './classroom';
 import { StudentData } from './student';
@@ -17,6 +18,7 @@ export interface SessionData {
   teacher: TeacherData;
   classroom: ClassroomData;
   class: ClassData | null;
+  attendance?: AttendanceData[];
 }
 
 export interface SessionCreateData {

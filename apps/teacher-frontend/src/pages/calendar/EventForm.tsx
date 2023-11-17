@@ -6,7 +6,11 @@ import { CentreData } from 'libs/data-access/src/lib/types/centre';
 import { ClassroomData } from 'libs/data-access/src/lib/types/classroom';
 import { Teacher } from 'libs/data-access/src/lib/types/teacher';
 import { useAuth } from '@acer-academy-learning/common-ui';
-import { useToast } from '@acer-academy-learning/common-ui';
+import {
+  GenericBadge,
+  GenericComboBox,
+  useToast,
+} from '@acer-academy-learning/common-ui';
 import './CalendarView.css';
 import { ClassFrequencyEnum } from '@prisma/client';
 import { XMarkIcon } from '@heroicons/react/24/solid';
@@ -22,6 +26,8 @@ import {
   deleteSession,
   updateSession,
 } from '@acer-academy-learning/data-access';
+import { StudentData } from 'libs/data-access/src/lib/types/student';
+import { getAllStudents as apiGetAllStudents } from '@acer-academy-learning/data-access';
 
 interface EventFormProps {
   session: SessionData;
@@ -37,7 +43,6 @@ export default function EventForm({
   const [sessionData, setSessionData] = useState({
     ...session,
   });
-  //   console.log(session);
 
   enum LevelEnum {
     P1 = 'P1',
@@ -96,6 +101,10 @@ export default function EventForm({
     session.levels || [],
   );
 
+  const [allocatedStudents, setAllocatedStudents] = useState<string[]>(
+    session.students ? session.students.map(student => student.id) : []
+  );
+
   const { user } = useAuth<Teacher>();
 
   const [sessionState, setSessionState] = useState({
@@ -111,6 +120,7 @@ export default function EventForm({
     end: sessionData.end,
     teacherId: user.id,
     classId: null,
+    students: session.students
   });
 
   interface FormErrors {
@@ -151,94 +161,6 @@ export default function EventForm({
     selectedLevels: null,
     selectedSubjects: null,
   });
-
-  // useEffect(() => {
-  //   if (sessionState.end <= sessionState.start) {
-  //     setFormErrors((prevErrors) => ({
-  //       ...prevErrors,
-  //       dateError: 'Start date needs to be before end date',
-  //     }));
-  //   } else {
-  //     setFormErrors((prevErrors) => ({
-  //       ...prevErrors,
-  //       dateError: null,
-  //     }));
-  //   }
-
-  //   if (recurringState.endRecurringDate <= sessionState.end) {
-  //     setFormErrors((prevErrors) => ({
-  //       ...prevErrors,
-  //       recurringEndDateError:
-  //         'Recurring end date needs to be after end time date',
-  //     }));
-  //   } else {
-  //     setFormErrors((prevErrors) => ({
-  //       ...prevErrors,
-  //       recurringEndDateError: null,
-  //     }));
-  //   }
-
-  //   // Check selectedCentre
-  //   if (!selectedCentre) {
-  //     setFormErrors((prevErrors) => ({
-  //       ...prevErrors,
-  //       selectedCentre: 'Centre needs to be selected',
-  //     }));
-  //   } else {
-  //     setFormErrors((prevErrors) => ({
-  //       ...prevErrors,
-  //       selectedCentre: null,
-  //     }));
-  //   }
-
-  //   // Check selectedClassroom
-  //   if (!selectedClassroom) {
-  //     setFormErrors((prevErrors) => ({
-  //       ...prevErrors,
-  //       selectedClassroom: 'Classroom needs to be selected',
-  //     }));
-  //   } else {
-  //     setFormErrors((prevErrors) => ({
-  //       ...prevErrors,
-  //       selectedClassroom: null,
-  //     }));
-  //   }
-
-  //   // Check selectedLevels
-  //   if (selectedLevels.length === 0) {
-  //     setFormErrors((prevErrors) => ({
-  //       ...prevErrors,
-  //       selectedLevels: 'At least one level needs to be selected',
-  //     }));
-  //   } else {
-  //     setFormErrors((prevErrors) => ({
-  //       ...prevErrors,
-  //       selectedLevels: null,
-  //     }));
-  //   }
-
-  //   // Check selectedSubjects
-  //   if (selectedSubjects.length === 0) {
-  //     setFormErrors((prevErrors) => ({
-  //       ...prevErrors,
-  //       selectedSubjects: 'At least one subject needs to be selected',
-  //     }));
-  //   } else {
-  //     setFormErrors((prevErrors) => ({
-  //       ...prevErrors,
-  //       selectedSubjects: null,
-  //     }));
-  //   }
-
-  //   // You can add similar conditions for `start` and `end` if needed.
-  // }, [
-  //   sessionState,
-  //   selectedCentre,
-  //   selectedClassroom,
-  //   selectedLevels,
-  //   selectedSubjects,
-  //   recurringState,
-  // ]);
 
   const validateForm = () => {
     const newErrors = {
@@ -408,7 +330,7 @@ export default function EventForm({
     if (!session.id) {
       if (!isRecurring) {
         try {
-          const response = await createSession(sessionState);
+          const response = await createSession(sessionState, allocatedStudents);
           if (response) {
             onClose();
             await fetchSessions();
@@ -423,6 +345,7 @@ export default function EventForm({
           const response = await createRecurringClass([
             recurringState,
             sessionState,
+            allocatedStudents
           ]);
           if (response) {
             onClose();
@@ -445,7 +368,14 @@ export default function EventForm({
 
   const handleUpdateSession = async (sessionId: string, sessionState: any) => {
     try {
-      const response = await updateSession(session.id, sessionState);
+      const initialStudents =  session.students ? session.students.map(student => student.id) : []
+      const latestStudents = allocatedStudents
+      const addStudentIdArr = latestStudents.filter(student => !initialStudents.includes(student));
+      const removeStudentIdArr = initialStudents.filter(student => !latestStudents.includes(student));
+
+      const {students, ...sessionStateWithoutStudents} = sessionState;
+
+      const response = await updateSession(session.id, sessionStateWithoutStudents, addStudentIdArr, removeStudentIdArr);
       if (response) {
         onClose();
         await fetchSessions();
@@ -466,10 +396,20 @@ export default function EventForm({
   ) => {
     try {
       if (session.class) {
+
+              // get original ids from session.students
+      const initialStudents =  session.students ? session.students.map(student => student.id) : []
+      // get latest student ids from allocatedStudents
+      const latestStudents = allocatedStudents
+
+      const addStudentIdArr = latestStudents.filter(student => !initialStudents.includes(student));
+      const removeStudentIdArr = initialStudents.filter(student => !latestStudents.includes(student));
         //is recurring
         const response = await updateRecurringClass(sessionId, classId, [
           recurringState,
           sessionState,
+          addStudentIdArr,
+          removeStudentIdArr
         ]);
         if (response) {
           setShowUpdateModal(false);
@@ -501,6 +441,25 @@ export default function EventForm({
   const closeUpdateModal = () => {
     setShowUpdateModal(false);
   };
+  
+  const [allStudents, setAllStudents] = useState<StudentData[]>([]);
+
+  const getAllStudents = async () => {
+    try {
+      const response = await apiGetAllStudents();
+      const studentData = response.data;
+      setAllStudents(studentData.students);
+    } catch (error) {
+      displayToast(
+        'Students could not be retrieved from the server.',
+        ToastType.ERROR,
+      );
+    }
+  };
+
+  useEffect(() => {
+    getAllStudents();
+  }, []);
 
   return (
     <div className="modal">
@@ -672,6 +631,39 @@ export default function EventForm({
               <div className="text-red-500">{formErrors.selectedClassroom}</div>
             )}
           </div>
+
+          <div className="flex flex-wrap my-4 gap-4">
+            {allocatedStudents.length > 0 ? (
+              allStudents
+                .filter((student) => allocatedStudents.includes(student.id))
+                .map((student) => (
+                  <div key={student.id}>
+                    <GenericBadge
+                      badge={`${student.firstName} ${student.lastName}`}
+                      onRemove={() =>
+                        setAllocatedStudents(
+                          allocatedStudents.filter((id) => id !== student.id),
+                        )
+                      }
+                    ></GenericBadge>
+                  </div>
+                ))
+            ) : (
+              <span className="text-gray-600 italic mx-2">
+                No students have been allocated to this session yet.
+              </span>
+            )}
+          </div>
+
+          <GenericComboBox
+            options={allStudents.map((student) => student.id)}
+            onChange={(selectedIds) => setAllocatedStudents(selectedIds)}
+            selected={allocatedStudents}
+            displayValue={(id) => {
+              const curr = allStudents.find((student) => student.id == id);
+              return curr ? `${curr.firstName} ${curr.lastName}` : '';
+            }}
+          ></GenericComboBox>
 
           <div className="flex items-center mt-4">
             <label
