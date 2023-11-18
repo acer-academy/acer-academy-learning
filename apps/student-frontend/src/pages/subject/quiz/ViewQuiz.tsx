@@ -45,9 +45,7 @@ export const ViewQuiz = () => {
   return (
     (!isLoading && quiz && (
       <div className="space-y-4 flex flex-col h-full">
-        <div className="w-5">
-          <BackButton />
-        </div>
+        <BackButton />
         <h1 className="text-3xl font-bold tracking-tight ">{quiz.title}</h1>
         <GenericTabs tabs={viewQuizTabs} />
         {(location.hash.slice(1) === STATISTICS_HASH && (
