@@ -36,6 +36,8 @@ import assignmentRouter from './routers/assignmentRouter';
 import assignmentAttemptRouter from './routers/assignmentAttemptRouter';
 import announcementRouter from './routers/announcementRouter';
 import statisticsRouter from './routers/statisticsRouter';
+import rewardRouter from './routers/rewardRouter';
+import redemptionRouter from './routers/redemptionRouter';
 
 dotenv.config();
 
@@ -119,6 +121,8 @@ app.use('/api/v1/assignments', assignmentRouter);
 app.use('/api/v1/assignment-attempts', assignmentAttemptRouter);
 app.use('/api/v1/announcements', announcementRouter);
 app.use('/api/v1/statistics', statisticsRouter);
+app.use('/api/v1/rewards', rewardRouter);
+app.use('/api/v1/redemptions', redemptionRouter);
 
 // Start the server
 const server = app.listen(port, () => {
