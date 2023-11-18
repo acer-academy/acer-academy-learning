@@ -56,6 +56,7 @@ import {
   ANNOUNCEMENTS,
   CREATE_ANNOUNCEMENT,
   UPDATE_ANNOUNCEMENT,
+  VIEW_ANNOUNCEMENT,
 } from '../libs/routes';
 import { CreateQuestion } from '../pages/question-bank/CreateQuestion';
 import { QueryClient, QueryClientProvider } from 'react-query';
@@ -81,6 +82,7 @@ import { AnnouncementManagement } from '../pages/announcements/AnnouncementManag
 import { CreateAnnouncement } from '../pages/announcements/CreateAnnouncement';
 import { EditAnnouncementWrapper } from '../pages/announcements/EditAnnouncementWrapper';
 import { RewardAndRedemptionManagement } from '../pages/rewards/RewardAndRedemptionManagement';
+import { ViewAnnouncement } from '../pages/announcements/ViewAnnouncement';
 
 export function App() {
   const queryClient = new QueryClient();
@@ -112,6 +114,10 @@ export function App() {
                   <Route
                     path={ANNOUNCEMENTS}
                     element={<AnnouncementManagement />}
+                  />
+                  <Route
+                    path={VIEW_ANNOUNCEMENT}
+                    element={<ViewAnnouncement />}
                   />
                   <Route
                     path={CREATE_ANNOUNCEMENT}
