@@ -105,7 +105,7 @@ export const ViewAllAssignments: React.FC = () => {
                     key={assignment.id}
                     assignment={assignment}
                     studentId={user?.id ?? ''}
-                    className="hover:bg-student-secondary-700"
+                    className="hover:bg-student-secondary-100"
                   />
                 ))}
             </ul>
