@@ -24,11 +24,11 @@ export const GenericInput = ({
   const roleInputStyles = useMemo(() => {
     switch (role) {
       case LayoutRole.Admin:
-        return `ring-gray-500 focus:ring-admin-primary-700`;
+        return `ring-gray-300 focus:ring-admin-primary-700`;
       case LayoutRole.Teacher:
-        return `ring-gray-500 focus:ring-teacher-secondary-700`;
+        return `ring-gray-300 focus:ring-teacher-secondary-700`;
       case LayoutRole.Student:
-        return `ring-gray-500 focus:ring-student-secondary-700`;
+        return `ring-gray-300 focus:ring-student-secondary-700`;
       default:
         break;
     }
