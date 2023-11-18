@@ -12,7 +12,9 @@ export class RedemptionDao {
   }
 
   public async getAllRedemptions(): Promise<Redemption[]> {
-    return this.prismaClient.redemption.findMany();
+    return this.prismaClient.redemption.findMany({
+      include: { student: true, reward: true },
+    });
   }
 
   public async getRedemptionById(
@@ -20,6 +22,7 @@ export class RedemptionDao {
   ): Promise<Redemption | null> {
     return this.prismaClient.redemption.findUnique({
       where: { id: redemptionId },
+      include: { student: true, reward: true },
     });
   }
 
@@ -28,6 +31,7 @@ export class RedemptionDao {
   ): Promise<Redemption[]> {
     return this.prismaClient.redemption.findMany({
       where: { studentId },
+      include: { student: true, reward: true },
     });
   }
 
@@ -39,6 +43,7 @@ export class RedemptionDao {
       data: {
         isRedeemed: true,
       },
+      include: { student: true, reward: true },
     });
   }
 }

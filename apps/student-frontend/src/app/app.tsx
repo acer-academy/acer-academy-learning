@@ -75,6 +75,7 @@ import { ViewAssignment } from '../pages/subject/assignment/ViewAssignment';
 import { Attendance } from '../pages/attendance/Attendance';
 import { StudentDashboard } from '../pages/dashboard/StudentDashboard';
 import { AttendanceManagement } from '../pages/attendance/AttendanceManagement';
+import { RewardAndRedemptionManagement } from '../pages/rewards/RewardsManagement';
 
 export function App() {
   const queryClient = new QueryClient();
@@ -139,7 +140,10 @@ export function App() {
                 </Route>
                 <Route path={BOOKING}>
                   <Route path={BOOK_CLASSES} element={<CalendarPage />} />
-                  <Route path={PAST_ATTENDANCE} element={<AttendanceManagement />} />
+                  <Route
+                    path={PAST_ATTENDANCE}
+                    element={<AttendanceManagement />}
+                  />
                   <Route
                     path={BUY_CREDITS}
                     element={<CreditBundleManagement />}
@@ -149,7 +153,10 @@ export function App() {
                     element={<TransactionManagement />}
                   />
                 </Route>
-                <Route path={REWARDS} element={<div>Home</div>} />
+                <Route
+                  path={REWARDS}
+                  element={<RewardAndRedemptionManagement />}
+                />
                 <Route path={ATTENDANCE} element={<Attendance />} />
                 <Route path={ACCOUNT}>
                   <Route path={PROFILE} element={<StudentProfile />} />
