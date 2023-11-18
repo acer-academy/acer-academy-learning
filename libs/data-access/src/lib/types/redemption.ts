@@ -1,8 +1,12 @@
+import { RewardData } from "./reward";
+import { StudentData } from "./student";
+
 export interface RedemptionData {
   id: string;
   createdAt: string;
   isRedeemed: boolean;
-  studentId: string;
+  student: StudentData;
+  reward: RewardData;
 }
 
 export interface RedemptionPostData {

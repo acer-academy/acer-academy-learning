@@ -80,6 +80,7 @@ import { MarkAttendance } from '../pages/attendances/MarkAttendance';
 import { AnnouncementManagement } from '../pages/announcements/AnnouncementManagement';
 import { CreateAnnouncement } from '../pages/announcements/CreateAnnouncement';
 import { EditAnnouncementWrapper } from '../pages/announcements/EditAnnouncementWrapper';
+import { RewardAndRedemptionManagement } from '../pages/rewards/RewardAndRedemptionManagement';
 
 export function App() {
   const queryClient = new QueryClient();
@@ -196,7 +197,12 @@ export function App() {
                   <Route path={MARK_ATTENDANCE} element={<MarkAttendance />} />
                 </Route>
                 {/* Rewards routes */}
-                <Route path={REWARDS} />
+                <Route path={REWARDS}>
+                  <Route
+                    path={REWARDS}
+                    element={<RewardAndRedemptionManagement />}
+                  />
+                </Route>
                 <Route path={ACCOUNT}>
                   <Route path={PROFILE} element={<TeacherProfile />} />
                   <Route path={CHANGE_PASSWORD} element={<ChangePassword />} />
