@@ -27,6 +27,7 @@ export const BackButton = ({ path, className }: BackButtonProps) => {
       type="button"
       leftIcon={<ArrowUturnLeftIcon className="h-4 w-4" />}
       onClick={handleOnClick}
+      className="w-max"
     />
   );
 };
