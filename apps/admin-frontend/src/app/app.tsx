@@ -46,6 +46,7 @@ import {
   BOOK_CLASSES,
   MARK_ATTENDANCE,
   SESSIONS_FOR_ATTENDANCE,
+  REWARDS,
 } from '../libs/routes';
 import AdminForgotPassword from '../pages/entry/AdminForgotPassword';
 import AdminResetPassword from '../pages/entry/AdminResetPassword';
@@ -58,6 +59,7 @@ import { ClassCreditManagement } from '../pages/classCredit/ClassCreditManagemen
 import CalendarPage from '../pages/calendar/CalendarPage';
 import { AttendanceManagement } from '../pages/attendance/AttendanceManagement';
 import { MarkAttendance } from '../pages/attendance/MarkAttendance';
+import { RewardManagement } from '../pages/rewards/RewardManagement';
 
 export default function App() {
   return (
@@ -103,6 +105,7 @@ export default function App() {
                 <Route path={TRANSACTION} element={<TransactionsComponent />} />
                 <Route path={PROMOTION} element={<PromotionManagement />} />
                 <Route path={TERM} element={<TermManagement />} />
+                <Route path={REWARDS} element={<RewardManagement />} />
               </Route>
 
               <Route path={SCHEDULING_RESOURCES} element={<Outlet />}>
