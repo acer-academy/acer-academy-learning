@@ -27,13 +27,13 @@ export async function getAnnouncementById(
 
 export async function getAnnouncementsByTeacherId(
   teacherId: string,
-): Promise<AxiosResponse<AnnouncementData>> {
+): Promise<AxiosResponse<AnnouncementData[]>> {
   return client.get(`${URL}/teacher/${teacherId}`);
 }
 
 export async function getAnnouncementsByStudentId(
   studentId: string,
-): Promise<AxiosResponse<AnnouncementData>> {
+): Promise<AxiosResponse<AnnouncementData[]>> {
   return client.get(`${URL}/student/${studentId}`);
 }
 
