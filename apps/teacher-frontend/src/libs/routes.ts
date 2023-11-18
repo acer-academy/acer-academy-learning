@@ -32,6 +32,7 @@ export const VIEW_ASSIGNMENT_ATTEMPTS = `${VIEW_ASSIGNMENT}/attempts`;
 export const ANNOUNCEMENTS = '/announcements';
 export const CREATE_ANNOUNCEMENT = `${ANNOUNCEMENTS}/create`;
 export const UPDATE_ANNOUNCEMENT = `${ANNOUNCEMENTS}/edit/:announcementId`;
+export const VIEW_ANNOUNCEMENT = `${ANNOUNCEMENTS}/:announcementId`;
 
 // Analytics
 export const ANALYTICS = '/analytics';
