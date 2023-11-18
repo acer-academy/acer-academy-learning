@@ -27,6 +27,7 @@ import {
   BOOK_CLASSES,
   SCHEDULING_RESOURCES,
   SESSIONS_FOR_ATTENDANCE,
+  REWARDS,
 } from './routes';
 export const NAV_SECTIONS: NavigationMenuItem[] = [
   {
@@ -52,6 +53,7 @@ export const NAV_SECTIONS: NavigationMenuItem[] = [
           { name: 'Credit Bundle', path: CREDIT_BUNDLE },
           { name: 'Promotions', path: PROMOTION },
           { name: 'Terms', path: TERM },
+          { name: 'Rewards', path: REWARDS },
         ],
       },
       {

@@ -14,18 +14,18 @@ export const RewardCreateModal: React.FC<RewardCreateModalProps> = ({
 }) => {
   const [rewardData, setRewardData] = useState<RewardPostData>({
     name: '',
-    pointsNeeded: 0,
+    pointsNeeded: 1,
   });
 
-  const isRewardNameValid = (rewardName: string) => {
+  const isRewardNameInvalid = (rewardName: string) => {
     return currentRewards.some(
       (reward) =>
         reward.name.toLowerCase().trim() === rewardName.toLowerCase().trim(),
     );
   };
 
-  const isPointsValid = (points: number) => {
-    return points > 0;
+  const isPointsInvalid = (points: number) => {
+    return points <= 0;
   };
 
   return (
@@ -50,7 +50,7 @@ export const RewardCreateModal: React.FC<RewardCreateModalProps> = ({
                   name="name"
                   id="name"
                   className={`block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ${
-                    isRewardNameValid(rewardData.name)
+                    isRewardNameInvalid(rewardData.name)
                       ? 'ring-red-300 text-red-900 focus:ring-red-500'
                       : 'ring-gray-300 text-gray-900 focus:ring-admin-primary-700'
                   } placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6`}
@@ -66,7 +66,7 @@ export const RewardCreateModal: React.FC<RewardCreateModalProps> = ({
                   aria-describedby="name-error"
                 />
               </div>
-              {isRewardNameValid(rewardData.name) && (
+              {isRewardNameInvalid(rewardData.name) && (
                 <p
                   className="absolute b-0 text-sm text-red-600"
                   id="name-error"
@@ -88,7 +88,7 @@ export const RewardCreateModal: React.FC<RewardCreateModalProps> = ({
                   name="pointsNeeded"
                   id="pointsNeeded"
                   className={`block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ${
-                    isPointsValid(rewardData.pointsNeeded)
+                    isPointsInvalid(rewardData.pointsNeeded)
                       ? 'ring-red-300 text-red-900 focus:ring-red-500'
                       : 'ring-gray-300 text-gray-900 focus:ring-admin-primary-700'
                   } placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6`}
@@ -104,7 +104,7 @@ export const RewardCreateModal: React.FC<RewardCreateModalProps> = ({
                   aria-describedby="address-error"
                 />
               </div>
-              {isPointsValid(rewardData.pointsNeeded) && (
+              {isPointsInvalid(rewardData.pointsNeeded) && (
                 <p
                   className="absolute b-0 text-sm text-red-600"
                   id="address-error"
@@ -124,13 +124,13 @@ export const RewardCreateModal: React.FC<RewardCreateModalProps> = ({
             </button>
             <button
               disabled={
-                isPointsValid(rewardData.pointsNeeded) ||
-                isRewardNameValid(rewardData.name)
+                isPointsInvalid(rewardData.pointsNeeded) ||
+                isRewardNameInvalid(rewardData.name)
               }
               className={`inline-flex justify-center px-4 py-2 text-sm font-medium text-white rounded-md focus:outline-none
                     ${
-                      isPointsValid(rewardData.pointsNeeded) ||
-                      isRewardNameValid(rewardData.name)
+                      isPointsInvalid(rewardData.pointsNeeded) ||
+                      isRewardNameInvalid(rewardData.name)
                         ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
                         : 'bg-admin-primary-700 hover:bg-admin-primary-900 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-admin-primary-500'
                     }`}

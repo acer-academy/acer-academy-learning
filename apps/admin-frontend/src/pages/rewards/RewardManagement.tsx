@@ -40,6 +40,7 @@ export const RewardManagement: React.FC = () => {
     try {
       await apiCreateReward(reward);
       displayToast('Successfully created reward!', ToastType.SUCCESS);
+      setIsCreateModalOpen(false);
       fetchRewards();
     } catch (error) {
       displayToast('Error: ' + error, ToastType.ERROR);
@@ -50,6 +51,7 @@ export const RewardManagement: React.FC = () => {
     try {
       await apiUpdateReward(id, reward);
       displayToast('Successfully updated reward!', ToastType.SUCCESS);
+      setIsUpdateModalOpen(false);
       fetchRewards();
     } catch (error) {
       displayToast('Error: ' + error, ToastType.ERROR);
@@ -60,6 +62,7 @@ export const RewardManagement: React.FC = () => {
     try {
       await apiDeleteReward(deleteRewardId);
       displayToast('Successfully deleted reward!', ToastType.SUCCESS);
+      setIsDeleteModalOpen(false);
       fetchRewards();
     } catch (error) {
       displayToast('Error: ' + error, ToastType.ERROR);
@@ -183,7 +186,7 @@ export const RewardManagement: React.FC = () => {
                   </table>
                 ) : (
                   <div className="text-gray-500 text-center py-4">
-                    No promotions have been created yet.
+                    No rewards have been created yet.
                   </div>
                 )}
               </div>
