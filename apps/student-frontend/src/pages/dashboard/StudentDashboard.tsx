@@ -1,7 +1,7 @@
 import { LexOutput, useAuth, useToast } from '@acer-academy-learning/common-ui';
 import {
   AnnouncementData,
-  getAllAnnouncements,
+  getAnnouncementsByStudentId,
 } from '@acer-academy-learning/data-access';
 import { Student } from 'libs/data-access/src/lib/types/student';
 import moment from 'moment';
@@ -14,16 +14,17 @@ export const StudentDashboard: React.FC = () => {
   const { displayToast, ToastType } = useToast();
 
   const fetchAnnouncements = async () => {
-    try {
-      const response = await getAllAnnouncements();
-      const announcements = response.data;
-      setAnnouncements(announcements);
-    } catch (error) {
-      displayToast(
-        'Announcements could not be retrieved from the server.',
-        ToastType.ERROR,
-      );
-      console.log(error);
+    if (authUser) {
+      try {
+        const response = await getAnnouncementsByStudentId(authUser.id);
+        setAnnouncements(response.data);
+      } catch (error) {
+        displayToast(
+          'Announcements could not be retrieved from the server.',
+          ToastType.ERROR,
+        );
+        console.log(error);
+      }
     }
   };
   useEffect(() => {
