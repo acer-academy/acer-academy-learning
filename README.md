@@ -10,6 +10,16 @@ Acer Academy is on a rapid expansion trajectory, seeking to enhance its existing
 
 ✨ Visit our [project website](https://uvents.nus.edu.sg/event/23rd-steps/module/IS4103/project/14)! ✨
 
+## Table of Contents
+
+- [System Overview](#system-overview)
+  - [Teacher Course Management System](#teacher-course-management-system)
+  - [Student Learning System](#student-learning-system)
+  - [Admin Management System](#admin-management-system)
+- [🌟 Innovative Features 🌟](#innovative-features)
+- [Tech Stack](#tech-stack)
+- [How to Locally Deploy Our System](#how-to-locally-deploy-our-system)
+
 ## System Overview
 
 AcerTech consists of three distinct front-end systems tailored to cater to the specific needs of different stakeholders:
@@ -25,6 +35,21 @@ The Student Learning System is focused on enhancing the academic experience for 
 ### Admin Management System
 
 Acer Academy's administrators play a pivotal role in overseeing the institution's operations. The Admin Management System equips them with the necessary tools for efficient management, covering tasks such as center and employee/student profile management, transaction oversight, and promotional activities.
+
+## Innovative Features
+
+- Adaptive learning quiz
+- QR code for attendance
+- WhatsApp Business integration
+- Stripe integration
+- Rich text editor
+
+Other core features:
+- Question bank & quizzes
+- Score analytics
+- Class scheduling
+- Booking system
+- Payments for class credits
 
 ## Tech Stack
 
