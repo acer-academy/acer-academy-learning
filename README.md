@@ -6,7 +6,7 @@
 
 Acer Academy is on a rapid expansion trajectory, seeking to enhance its existing operational procedures while venturing into the development of an online learning platform. The primary goal of AcerTech is to reduce inefficiencies, streamline processes, and ensure preparedness for unexpected disruptions, such as the challenges posed by the COVID-19 pandemic. AcerTech is designed to complement Acer Academy's traditional in-person instructional sessions, aiming to advance and augment students' educational experiences.
 
-*Note: This project was created for IS4103 Information Systems Capstone Project, in collaboration with a tuition centre chain. *
+*Note: This project was created for IS4103 Information Systems Capstone Project, in collaboration with a tuition centre chain.*
 
 ✨ Visit our [project website](https://uvents.nus.edu.sg/event/23rd-steps/module/IS4103/project/14)! ✨
 
